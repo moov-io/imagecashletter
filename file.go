@@ -1,23 +1,20 @@
 // Copyright 2018 The x9 Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
-//
-// Package x9 reads and writes x9 files.
-//
-// https://en.wikipedia.org/wiki/Substitute_check
-//
-// http://www.frbservices.org.
-//
-// The Federal Reserve Banks uses the Accredited Standards Committee X9’s Specifications for Electronic Exchange of
-// Check and Image Data in providing its suite of Check 21 services.
 
 package x9
 
 // ICL File Records that are identified as Mandatory are required to support Federal Reserve processing of an image
 // file.
-
-// First two position of all Record Types. These codes are uniquely assigned to
-// the first 2 bytes of each row in a file.
+//
+// https://en.wikipedia.org/wiki/Substitute_check
+//
+// http://www.frbservices.org
+//
+// The Federal Reserve Banks uses the Accredited Standards Committee X9’s Specifications (X9.100-187–2016) for
+// Electronic Exchange of Check and Image Data in providing its suite of Check 21 services.
+//
+// Record Types
 const (
 	fileHeaderPos           = "01"
 	cashLetterHeaderPos     = "10"
@@ -31,13 +28,13 @@ const (
 	returnAddendumBPos      = "33"
 	returnAddendumCPos      = "34"
 	returnAddendumDPos      = "35"
-	accountTotalsDetailPos  = "40"
-	nonHitTotalsDetailPos   = "41"
+	//no longer supported by the standard - accountTotalsDetailPos  = "40"
+	//no longer supported by the standard  - nonHitTotalsDetailPos   = "41"
 	imageViewDetailPos      = "50"
 	imageViewDataPos        = "52"
 	imageViewAnalysisPos    = "54"
 	bundleControlPos        = "70"
-	boxSummaryPos           = "75"
+	//no longer supported by the standard - boxSummaryPos           = "75"
 	routingNumberSummaryPos = "85"
 	cashLetterControlPos    = "90"
 	fileControlPos          = "99"
