@@ -524,7 +524,7 @@ func (v *validator) isViewDescriptor(code string) error {
 }
 
 // isDigitalSignatureIndicator ensures DigitalSignatureIndicator of a ImageViewDetail is valid
-func (v *validator) isDigitalSignatureIndicator (code int) error {
+func (v *validator) isDigitalSignatureIndicator(code int) error {
 	switch code {
 	case
 		// Digital Signature is not present
