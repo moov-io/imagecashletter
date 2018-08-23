@@ -34,6 +34,17 @@ func (c *converters) parseSimpleDate(s string) time.Time {
 	return t
 }
 
+// formatYYYYMMDDDate takes a time.Time and returns a string of YYYYMMDD
+func (c *converters) formatYYYYMMDDDate(t time.Time) string {
+	return t.Format("20060102")
+}
+
+// parseYYYMMDDDate returns a time.Time when passed time as YYYYMMDD
+func (c *converters) parseYYYMMDDDate(s string) time.Time {
+	t, _ := time.Parse("20060102", s)
+	return t
+}
+
 // formatSimpleTime returns a string of HHMM when  passed a time.Time
 func (c *converters) formatSimpleTime(t time.Time) string {
 	return t.Format("1504")

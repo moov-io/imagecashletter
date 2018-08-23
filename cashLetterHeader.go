@@ -113,6 +113,8 @@ type CashLetterHeader struct {
 	// Z: Not Same Type–Documentation associated with each item in Cash Letter will be different. The Check Detail
 	// Record (Type 25) or Return Record (Type 31) has to be interrogated for further information.
 	DocumentationTypeIndicator string `json:"documentationTypeIndicator"`
+	// OriginatorContactName is the name of contact at the institution that creates the cash letter.
+	OriginatorContactName string `json:"originatorContactName"`
 	// OriginatorContactPhoneNumber is the phone number of the contact at the institution that creates
 	// the cash letter.
 	OriginatorContactPhoneNumber string `json:"originatorContactPhoneNumber"`
