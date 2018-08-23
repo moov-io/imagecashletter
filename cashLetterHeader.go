@@ -57,6 +57,7 @@ type CashLetterHeader struct {
 	//  C Check Digit
 	ECEInstitutionRoutingNumber string `json:"eceInstitutionRoutingNumber"`
 	// CashLetterBusinessDate is the business date of the cash letter.
+	// Format: YYYYMMDD, where: YYYY year, MM month, DD day
 	// Values:
 	// YYYY 1993 through 9999
 	// MM 01 through 12
