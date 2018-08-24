@@ -14,7 +14,7 @@ import "time"
 type ImageViewDetail struct {
 	// ID is a client defined string used as a reference to this record.
 	ID string `json:"id"`
-	// RecordType defines the type of record.
+	// recordType defines the type of record.
 	recordType string
 	// ImageIndicator is a code that indicates the presence and disposition of an image view conveyed in the related
 	// ImageViewData.  When an image view is not present (0) then certain conditional fields in this ImageViewDetail and
@@ -129,7 +129,7 @@ type ImageViewDetail struct {
 	// Values:
 	// 0: Sender can recreate the image view for the duration of the agreed upon retention time frames.
 	// 1: Sender cannot recreate image view.
-	ImageRecreateIndicator int `json:"imageViewFormatIndicator"`
+	ImageRecreateIndicator int `json:"imageRecreateIndicator"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`
 	// reserved is a field reserved for future use.  Reserved should be blank.

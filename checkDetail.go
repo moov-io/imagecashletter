@@ -38,9 +38,9 @@ type CheckDetail struct {
 	// Amount identifies the amount of the check.  All amounts fields have two implied decimal points.
 	// e.g., 100000 is $1,000.00
 	Amount int `json:"amount"`
-	// ECEItemSequenceNumber identifies a number assigned by the institution that creates the Check Detail Record.
+	// EceInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
 	// Field must contain a numeric value. It cannot be all blanks.
-	ECEItemSequenceNumber string `json:"eceItemSequenceNumber"`
+	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
 	// ToDo: CashLetterHeader.CashLetterDocumentation = "Z", CheckDetail.DocumentationTypeIndicator cannot be Z.
 	// ToDo: CheckDetail.DocumentationTypeIndicator is defined CashLetterHeader.CashLetterDocumentation = "Z" should
 	// ToDo: Z, and this value supersedes.

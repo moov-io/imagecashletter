@@ -12,7 +12,7 @@ import "time"
 type BundleHeader struct {
 	// ID is a client defined string used as a reference to this record.
 	ID string `json:"id"`
-	// RecordType defines the type of record.
+	// recordType defines the type of record.
 	recordType string
 	// A code that identifies the type of bundle. It is the same value as the CollectionTypeIndicator
 	// in the CashLetterHeader within which the bundle is contained, unless the CollectionTypeIndicator
@@ -69,7 +69,7 @@ type BundleHeader struct {
 	// BundleSequenceNumber is a number assigned by the institution that creates the bundle. Usually denotes
 	// the relative position of the bundle within the cash letter.  NumericBlank
 	BundleSequenceNumber int `json:"BundleSequenceNumber,omitempty"`
-	// CycleNumber is a code assigned by the institution that creates the bundle. Denotes the cycle under which
+	// CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which
 	// the bundle is created.
 	CycleNumber string `json:"cycleNumber"`
 	// reserved is a field reserved for future use.  Reserved should be blank.
