@@ -66,7 +66,16 @@ type BundleHeader struct {
 	BundleID string `json:"bundleID"`
 	// BundleSequenceNumber is a number assigned by the institution that creates the bundle. Usually denotes
 	// the relative position of the bundle within the cash letter.  NumericBlank
-	SequenceNumber string `json:"sequenceNumber"`
+	SequenceNumber int `json:"sequenceNumber,omitempty"`
+	// CycleNumber is a code assigned by the institution that creates the bundle. Denotes the cycle under which
+	// the bundle is created.
+	CycleNumber string `json:"cycleNumber"`
+	// reserved is a field reserved for future use.  Reserved should be blank.
+	reserved string
+	// UserField identifies a field used at the discretion of users of the standard.
+	UserField string `json:"userField"`
+	// reservedTwo is a field reserved for future use.  Reserved should be blank.
+	reservedTwo string
 	// validator is composed for x9 data validation
 	validator
 	// converters is composed for x9 to golang Converters

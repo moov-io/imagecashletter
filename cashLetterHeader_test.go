@@ -31,6 +31,9 @@ func testMockCashLetterHeader(t testing.TB) {
 	/*	if err := chl.Validate(); err != nil {
 		t.Error("mockCashLetterHeader does not validate and will break other tests: ", err)
 	}*/
+	if clh.recordType != "10" {
+		t.Error("recordType does not validate and will break other tests")
+	}
 	if clh.CollectionTypeIndicator != "01" {
 		t.Error("CollectionTypeIndicator does not validate and will break other tests")
 	}
