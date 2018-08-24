@@ -14,6 +14,51 @@ type ImageViewData struct {
 	ID string `json:"id"`
 	// RecordType defines the type of record.
 	recordType string
+	// EceInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the
+	// bundle header.  Format: TTTTAAAAC, where:
+	// TTTT Federal Reserve Prefix
+	// AAAA ABA Institution Identifier
+	// C Check Digit
+	// For a number that identifies a non-financial institution: NNNNNNNNN
+	EceInstitutionRoutingNumber string `json:"eceInstitutionRoutingNumber"`
+	// BundleBusinessDate is the business date of the bundle.
+	// Values:
+	// YYYY 1993 through 9999
+	// MM 01 through 12
+	// DD 01 through 31
+
+	//CycleNumber
+
+	//EceInstitutionItemSequenceNumber
+
+	//SecurityOriginatorName
+
+	//SecurityAuthenticatorName
+
+	//SecurityKeyName
+
+	//ClippingOrigin
+
+	//ClippingCoordinateH1
+
+	//ClippingCoordinateH2
+
+	//ClippingCoordinateV1
+
+	//ClippingCoordinateV2
+
+	//LengthImageReferenceKey
+
+	//ImageReferenceKey
+
+	//LengthDigitalSignature
+
+	//DigitalSignature
+
+	//LengthImageData
+
+	//ImageData
+
 }
 
 // NewImageViewData returns a new ImageViewData with default values for non exported fields

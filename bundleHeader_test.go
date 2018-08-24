@@ -12,10 +12,10 @@ func mockBundleHeader() *BundleHeader {
 	bh.CollectionTypeIndicator = "01"
 	bh.DestinationRoutingNumber = "231380104"
 	bh.ECEInstitutionRoutingNumber = "121042882"
-	bh.BusinessDate = bh.parseYYYMMDDDate("20182308")
-	bh.CreationDate = bh.parseYYYMMDDDate("20182308")
+	bh.BundleBusinessDate = bh.parseYYYMMDDDate("20182308")
+	bh.BundleCreationDate = bh.parseYYYMMDDDate("20182308")
 	bh.BundleID = "9999"
-	bh.SequenceNumber = 1
+	bh.BundleSequenceNumber = 1
 	bh.CycleNumber = "001"
 	bh.UserField = ""
 	return bh
@@ -39,16 +39,16 @@ func testMockBundleHeader(t testing.TB) {
 	if bh.ECEInstitutionRoutingNumber != "121042882" {
 		t.Error("ECEInstitutionRoutingNumber does not validate and will break other tests")
 	}
-	if bh.BusinessDate != bh.parseYYYMMDDDate("20182308") {
+	if bh.BundleBusinessDate != bh.parseYYYMMDDDate("20182308") {
 		t.Error("Business Date does not validate and will break other tests")
 	}
-	if bh.CreationDate != bh.parseYYYMMDDDate("20182308") {
+	if bh.BundleCreationDate != bh.parseYYYMMDDDate("20182308") {
 		t.Error("CreationDate does not validate and will break other tests")
 	}
 	if bh.BundleID != "9999" {
 		t.Error("BundleID does not validate and will break other tests")
 	}
-	if bh.SequenceNumber != 1 {
+	if bh.BundleSequenceNumber != 1 {
 		t.Error("SequenceNumber does not validate and will break other tests")
 	}
 	if bh.CycleNumber != "001" {

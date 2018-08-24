@@ -16,15 +16,15 @@ type CashLetterControl struct {
 	ID string `json:"id"`
 	// RecordType defines the type of record.
 	recordType string
-	// BundleCount identifies the total number of bundles within the cash letter.
-	BundleCount int `json:"bundleCount"`
+	// CashLetterBundleCount identifies the total number of bundles within the cash letter.
+	CashLetterBundleCount int `json:"cashLetterBundleCount"`
 	// CashLetterItemsCount identifies the total number of items within the cash letter.
-	ItemsCount int `json:"itemsCount"`
+	CashLetterItemsCount int `json:"cashLetterItemsCount"`
 	// ToDo: int64 by default on 64bit - string for 32 bit?
 	// CashLetterTotalAmount identifies the total dollar value of all item amounts within the cash letter.
-	TotalAmount int `json:"totalAmount"`
+	CashLetterTotalAmount int `json:"cashLetterTotalAmount"`
 	// CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter.
-	ImagesCount int `json:"imagesCount"`
+	CashLetterImagesCount int `json:"cashLetterImagesCount"`
 	// ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl.
 	ECEInstitutionName string `json:"eceInstitutionName"`
 	// SettlementDate identifies the date that the institution that creates the cash letter expects settlement.

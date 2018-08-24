@@ -45,16 +45,18 @@ type CashLetterHeader struct {
 	// arrangement.
 	CollectionTypeIndicator string `json:"collectionTypeIndicator"`
 	// DestinationRoutingNumber contains the routing and transit number of the institution that
-	// receives and processes the cash letter or the bundle.
+	// receives and processes the cash letter or the bundle.  Format: TTTTAAAAC, where:
 	//  TTTT Federal Reserve Prefix
 	//  AAAA ABA Institution Identifier
 	//  C Check Digit
+	//	For a number that identifies a non-financial institution: NNNNNNNNN
 	DestinationRoutingNumber string `json:"destinationRoutingNumber"`
 	// ECEInstitutionRoutingNumber contains the routing and transit number of the institution that
-	// that creates the Cash Letter Header Record.
+	// that creates the Cash Letter Header Record.  Format: TTTTAAAAC, where:
 	//  TTTT Federal Reserve Prefix
 	//  AAAA ABA Institution Identifier
 	//  C Check Digit
+	//	For a number that identifies a non-financial institution: NNNNNNNNN
 	ECEInstitutionRoutingNumber string `json:"eceInstitutionRoutingNumber"`
 	// CashLetterBusinessDate is the business date of the cash letter.
 	// Format: YYYYMMDD, where: YYYY year, MM month, DD day
@@ -62,7 +64,7 @@ type CashLetterHeader struct {
 	// YYYY 1993 through 9999
 	// MM 01 through 12
 	// DD 01 through 31
-	BusinessDate time.Time `json:"businessDate"`
+	CashLetterBusinessDate time.Time `json:"cashLetterBusinessDate"`
 	// CashLetterCreationDate is the date that the cash letter is created which shall be in Eastern
 	// Time zone format. Other time zones may be used under clearing arrangements.
 	// Format: YYYYMMDD, where: YYYY year, MM month, DD day
@@ -70,14 +72,14 @@ type CashLetterHeader struct {
 	// YYYY 1993 through 9999
 	// MM 01 through 12
 	// DD 01 through 31
-	CreationDate time.Time `json:"creationDate"`
+	CashLetterCreationDate time.Time `json:"cashLetterCreationDate"`
 	// CashLetterCreationTime is the time that the cash letter is created.  Default time shall be in
 	// Eastern Time zone format. Other time zones may be used under clearing arrangements.
 	// Format: hhmm, where: hh hour, mm minute
 	// Values:
 	// hh '00' through '23'
 	// mm '00' through '59'
-	CreationTime time.Time `json:"creationTime"`
+	CashLetterCreationTime time.Time `json:"cashLetterCreationTime"`
 	// CashLetterRecordTypeIndicator is a code that indicates the presence of records or the type of
 	// records contained in the cash letter.   If an image is associated with any Check Detail Record
 	// (Type 25) or Return Record (Type 31), the cash letter must have a Cash Letter Record Type Indicator
@@ -93,7 +95,7 @@ type CashLetterHeader struct {
 	// with CollectionTypeIndicator values of 01, 02 or 03. ItemsCount and TotalAmount of the CashLetterControl with
 	// a RecordTypeIndicator value of F must equal the corresponding fields in a CashLetter with a RecordTypeIndicator
 	// value of E.
-	RecordTypeIndicator string `json:"recordTypeIndicator"`
+	CashLetterRecordTypeIndicator string `json:"cashLetterRecordTypeIndicator"`
 	// CashLetterDocumentationTypeIndicator is a code that indicates the type of documentation that supports
 	// all check records in the cash letter
 	// Values:
@@ -112,7 +114,7 @@ type CashLetterHeader struct {
 	// M: No image provided, Electronic Check provided separately
 	// Z: Not Same Type–Documentation associated with each item in Cash Letter will be different. The Check Detail
 	// Record (Type 25) or Return Record (Type 31) has to be interrogated for further information.
-	DocumentationTypeIndicator string `json:"documentationTypeIndicator"`
+	CashLetterDocumentationTypeIndicator string `json:"cashLetterdocumentationTypeIndicator"`
 	// OriginatorContactName is the name of contact at the institution that creates the cash letter.
 	OriginatorContactName string `json:"originatorContactName"`
 	// OriginatorContactPhoneNumber is the phone number of the contact at the institution that creates

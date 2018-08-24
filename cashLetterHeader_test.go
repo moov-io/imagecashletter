@@ -12,11 +12,11 @@ func mockCashLetterHeader() *CashLetterHeader {
 	clh.CollectionTypeIndicator = "01"
 	clh.DestinationRoutingNumber = "231380104"
 	clh.ECEInstitutionRoutingNumber = "121042882"
-	clh.BusinessDate = clh.parseYYYMMDDDate("20182308")
-	clh.CreationDate = clh.parseYYYMMDDDate("20182308")
-	clh.CreationTime = clh.parseSimpleTime("1358")
-	clh.RecordTypeIndicator = "N"
-	clh.DocumentationTypeIndicator = "A"
+	clh.CashLetterBusinessDate = clh.parseYYYMMDDDate("20182308")
+	clh.CashLetterCreationDate = clh.parseYYYMMDDDate("20182308")
+	clh.CashLetterCreationTime = clh.parseSimpleTime("1358")
+	clh.CashLetterRecordTypeIndicator = "N"
+	clh.CashLetterDocumentationTypeIndicator = "A"
 	clh.OriginatorContactName = "Contact Name"
 	clh.OriginatorContactPhoneNumber = "5558675552"
 	clh.FedWorkType = ""
@@ -43,19 +43,19 @@ func testMockCashLetterHeader(t testing.TB) {
 	if clh.ECEInstitutionRoutingNumber != "121042882" {
 		t.Error("ECEInstitutionRoutingNumber does not validate and will break other tests")
 	}
-	if clh.BusinessDate != clh.parseYYYMMDDDate("20182308") {
+	if clh.CashLetterBusinessDate != clh.parseYYYMMDDDate("20182308") {
 		t.Error("Business Date does not validate and will break other tests")
 	}
-	if clh.CreationDate != clh.parseYYYMMDDDate("20182308") {
+	if clh.CashLetterCreationDate != clh.parseYYYMMDDDate("20182308") {
 		t.Error("CreationDate does not validate and will break other tests")
 	}
-	if clh.CreationTime != clh.parseSimpleTime("1358") {
+	if clh.CashLetterCreationTime != clh.parseSimpleTime("1358") {
 		t.Error("CreationTime does not validate and will break other tests")
 	}
-	if clh.RecordTypeIndicator != "N" {
+	if clh.CashLetterRecordTypeIndicator != "N" {
 		t.Error("RecordTypeIndicator does not validate and will break other tests")
 	}
-	if clh.DocumentationTypeIndicator != "A" {
+	if clh.CashLetterDocumentationTypeIndicator != "A" {
 		t.Error("DocumentationTypeIndicator does not validate and will break other tests")
 	}
 	if clh.OriginatorContactName != "Contact Name" {

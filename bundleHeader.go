@@ -37,36 +37,38 @@ type BundleHeader struct {
 	// in the Return Record (Type 31).
 	CollectionTypeIndicator string `json:"collectionTypeIndicator"`
 	// DestinationRoutingNumber contains the routing and transit number of the institution that
-	// receives and processes the cash letter or the bundle.
+	// receives and processes the cash letter or the bundle.  Format: TTTTAAAAC, where:
 	//  TTTT Federal Reserve Prefix
 	//  AAAA ABA Institution Identifier
 	//  C Check Digit
+	//	For a number that identifies a non-financial institution: NNNNNNNNN
 	DestinationRoutingNumber string `json:"destinationRoutingNumber"`
 	// ECEInstitutionRoutingNumber contains the routing and transit number of the institution that
-	// that creates the bundle header .
-	//  TTTT Federal Reserve Prefix
-	//  AAAA ABA Institution Identifier
-	//  C Check Digit
+	// that creates the bundle header.  Format: TTTTAAAAC, where:
+	//	TTTT Federal Reserve Prefix
+	//	AAAA ABA Institution Identifier
+	//	C Check Digit
+	//	For a number that identifies a non-financial institution: NNNNNNNNN
 	ECEInstitutionRoutingNumber string `json:"eceInstitutionRoutingNumber"`
-	// BundleBusinessDate is the business date of the cash letter.
+	// BundleBusinessDate is the business date of the bundle.
 	// Values:
 	// YYYY 1993 through 9999
 	// MM 01 through 12
 	// DD 01 through 31
-	BusinessDate time.Time `json:"businessDate"`
-	// BundleCreationDate is the date that the cash letter is created. It is Eastern Time zone format unless
+	BundleBusinessDate time.Time `json:"bundleBusinessDate"`
+	// BundleCreationDate is the date that the bundle is created. It is Eastern Time zone format unless
 	// different clearing arrangements have been made
 	// Format: YYYYMMDD, where: YYYY year, MM month, DD day
 	// Values:
 	// YYYY 1993 through 9999
 	// MM 01 through 12
 	// DD 01 through 31
-	CreationDate time.Time `json:"creationDate"`
+	BundleCreationDate time.Time `json:"bundleCreationDate"`
 	// BundleID is number that identifies the bundle, assigned by the institution that creates the bundle.
 	BundleID string `json:"bundleID"`
 	// BundleSequenceNumber is a number assigned by the institution that creates the bundle. Usually denotes
 	// the relative position of the bundle within the cash letter.  NumericBlank
-	SequenceNumber int `json:"sequenceNumber,omitempty"`
+	BundleSequenceNumber int `json:"BundleSequenceNumber,omitempty"`
 	// CycleNumber is a code assigned by the institution that creates the bundle. Denotes the cycle under which
 	// the bundle is created.
 	CycleNumber string `json:"cycleNumber"`
