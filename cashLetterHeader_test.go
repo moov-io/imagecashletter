@@ -28,9 +28,9 @@ func mockCashLetterHeader() *CashLetterHeader {
 // testMockCashLetterHeader creates an ICL CashLetterHeader
 func testMockCashLetterHeader(t testing.TB) {
 	clh := mockCashLetterHeader()
-	/*	if err := chl.Validate(); err != nil {
+	if err := clh.Validate(); err != nil {
 		t.Error("mockCashLetterHeader does not validate and will break other tests: ", err)
-	}*/
+	}
 	if clh.recordType != "10" {
 		t.Error("recordType does not validate and will break other tests")
 	}

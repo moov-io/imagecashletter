@@ -4,7 +4,10 @@
 
 package x9
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 // Errors specific to a BundleHeader Record
 
@@ -93,13 +96,29 @@ func NewBundleHeader() *BundleHeader {
 }
 
 // Parse takes the input record string and parses the BundleHeader values
+func (bh *BundleHeader) Parse(record string) {
+}
 
-// String writes the BundleHeader struct to a variable length string.
+// String writes the BundleHeader struct to a string.
+func (bh *BundleHeader) String() string {
+	var buf strings.Builder
+	buf.Grow(80)
+	return buf.String()
+}
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
+func (bh *BundleHeader) Validate() error {
+	if err := bh.fieldInclusion(); err != nil {
+		return err
+	}
+	return nil
+}
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
+func (bh *BundleHeader) fieldInclusion() error {
+	return nil
+}
 
 // Get properties

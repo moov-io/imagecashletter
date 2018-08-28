@@ -4,7 +4,11 @@
 
 package x9
 
-import "time"
+import (
+	"fmt"
+	"strings"
+	"time"
+)
 
 // ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 
@@ -80,10 +84,9 @@ type CashLetterHeader struct {
 	// hh '00' through '23'
 	// mm '00' through '59'
 	CashLetterCreationTime time.Time `json:"cashLetterCreationTime"`
-	// CashLetterRecordTypeIndicator is a code that indicates the presence of records or the type of
-	// records contained in the cash letter.   If an image is associated with any Check Detail Record
-	// (Type 25) or Return Record (Type 31), the cash letter must have a Cash Letter Record Type Indicator
-	// of I or F.
+	// CashLetterRecordTypeIndicator is a code that indicates the presence of records or the type of records contained
+	// in the cash letter.   If an image is associated with any CheckDetail or Return, the cash letter must have a
+	// CashLetter.RecordTypeIndicator of I or F.
 	// Values:
 	// N: No electronic check records or image records (Type 2x’s, 3x’s, 5x’s); e.g., an empty cash letter.
 	// E: Cash letter contains electronic check records with no images (Type 2x’s and 3x’s only).
@@ -149,13 +152,39 @@ func NewCashLetterHeader() *CashLetterHeader {
 }
 
 // Parse takes the input record string and parses the CashLetterHeader values
+func (clh *CashLetterHeader) Parse(record string) {
+	// Character position 1-2, Always "10"
+	clh.recordType = "01"
+}
 
-// String writes the CashLetterHeader struct to a variable length string.
+// String writes the CashLetterHeader struct to a string.
+func (clh *CashLetterHeader) String() string {
+	var buf strings.Builder
+	buf.Grow(80)
+	buf.WriteString(clh.recordType)
+	return buf.String()
+}
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
+func (clh *CashLetterHeader) Validate() error {
+	if err := clh.fieldInclusion(); err != nil {
+		return err
+	}
+	if clh.recordType != "10" {
+		msg := fmt.Sprintf(msgRecordType, 10)
+		return &FieldError{FieldName: "recordType", Value: clh.recordType, Msg: msg}
+	}
+	return nil
+}
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
+func (clh *CashLetterHeader) fieldInclusion() error {
+	if clh.recordType == "" {
+		return &FieldError{FieldName: "recordType", Value: clh.recordType, Msg: msgFieldInclusion}
+	}
+	return nil
+}
 
 // Get properties

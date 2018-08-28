@@ -95,7 +95,7 @@ func NewCheckDetailAddendumC() *CheckDetailAddendumC {
 
 // Parse takes the input record string and parses the CheckDetailAddendumC values
 
-// String writes the CheckDetailAddendumC struct to a variable length string.
+// String writes the CheckDetailAddendumC struct to a string.
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.

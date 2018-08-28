@@ -187,7 +187,7 @@ type ImageViewAnalysis struct {
 	// 0: Test not done
 	// 1: From the image the payor bank name and address is unusable and unreadable
 	// 2: From the image the payor bank name and address is usable and readable
-	PayeeEndorsementUsability  int `json:"payeeEndorsementUsability"`
+	PayeeEndorsementUsability int `json:"payeeEndorsementUsability"`
 	// BOFDEndorsementUsability is a code that indicates if the Bank of First Deposit (BOFD) endorsement Area of
 	// Interest is usable and readable from the image. The definition of the Area of Interest for image usability
 	// testing purposes is specific to the imaging institution's own defined requirements and/or constraints.
@@ -209,7 +209,6 @@ type ImageViewAnalysis struct {
 	UserField string `json:"userField"`
 	// reservedThree is a field reserved for future use.  Reserved should be blank.
 	reservedThree string
-
 }
 
 // NewImageViewAnalysis returns a new ImageViewAnalysis with default values for non exported fields
@@ -222,7 +221,7 @@ func NewImageViewAnalysis() *ImageViewAnalysis {
 
 // Parse takes the input record string and parses the ImageViewAnalysis values
 
-// String writes the ImageViewAnalysis struct to a variable length string.
+// String writes the ImageViewAnalysis struct to a string.
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.

@@ -103,7 +103,8 @@ type FileHeader struct {
 // NewFileHeader returns a new FileHeader with default values for non exported fields
 func NewFileHeader() FileHeader {
 	fh := FileHeader{
-		recordType: "01",
+		recordType:    "01",
+		StandardLevel: "35",
 	}
 	return fh
 }
@@ -140,8 +141,7 @@ func (fh *FileHeader) Parse(record string) {
 	fh.CompanionDocumentIndicator = record[79:80]
 }
 
-// String writes the FileHeader struct to a variable length string.
-
+// String writes the FileHeader struct to a string.
 func (fh *FileHeader) String() string {
 	var buf strings.Builder
 	buf.Grow(80)
@@ -184,16 +184,16 @@ func (fh *FileHeader) Validate() error {
 	if err := fh.isAlphanumeric(fh.ImmediateOriginName); err != nil {
 		return &FieldError{FieldName: "ImmediateOriginName", Value: fh.ImmediateOriginName, Msg: err.Error()}
 	}
-	/*	if fh.CountryCode == "US" {
-			if err := fh.isCompanionDocumentIndicatorUS(fh.CompanionDocumentIndicator); err != nil {
+	if fh.CountryCode == "US" {
+		if err := fh.isCompanionDocumentIndicatorUS(fh.CompanionDocumentIndicator); err != nil {
 			return &FieldError{FieldName: "CompanionDocumentIndicator", Value: fh.CompanionDocumentIndicator, Msg: err.Error()}
-			}
 		}
-		if fh.CountryCode == "CA" {
-			if err := fh.isCompanionDocumentIndicatorCA(fh.CompanionDocumentIndicator); err != nil {
-				return &FieldError{FieldName: "CompanionDocumentIndicator", Value: fh.CompanionDocumentIndicator, Msg: err.Error()}
-			}
-		}*/
+	}
+	if fh.CountryCode == "CA" {
+		if err := fh.isCompanionDocumentIndicatorCA(fh.CompanionDocumentIndicator); err != nil {
+			return &FieldError{FieldName: "CompanionDocumentIndicator", Value: fh.CompanionDocumentIndicator, Msg: err.Error()}
+		}
+	}
 	return nil
 }
 
@@ -259,7 +259,7 @@ func (fh *FileHeader) ImmediateDestinationNameField() string {
 	return fh.alphaField(fh.ImmediateDestinationName, 18)
 }
 
-// ImmediateOriginNameField gets the ImmImmediateOriginName field padded
+// ImmediateOriginNameField gets the ImmediateOriginName field padded
 func (fh *FileHeader) ImmediateOriginNameField() string {
 	return fh.alphaField(fh.ImmediateOriginName, 18)
 }

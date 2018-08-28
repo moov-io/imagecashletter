@@ -52,7 +52,7 @@ func NewBundleControl() *BundleControl {
 
 // Parse takes the input record string and parses the BundleControl values
 
-// String writes the BundleControl struct to a variable length string.
+// String writes the BundleControl struct to a string.
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.

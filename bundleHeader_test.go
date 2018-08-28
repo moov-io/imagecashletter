@@ -24,9 +24,9 @@ func mockBundleHeader() *BundleHeader {
 // testMockBundleHeader creates an ICL BundleHeader
 func testMockBundleHeader(t testing.TB) {
 	bh := mockBundleHeader()
-	/*	if err := bh.Validate(); err != nil {
+		if err := bh.Validate(); err != nil {
 		t.Error("mockBundleHeader does not validate and will break other tests: ", err)
-	}*/
+	}
 	if bh.recordType != "20" {
 		t.Error("recordType does not validate and will break other tests")
 	}
@@ -39,12 +39,6 @@ func testMockBundleHeader(t testing.TB) {
 	if bh.ECEInstitutionRoutingNumber != "121042882" {
 		t.Error("ECEInstitutionRoutingNumber does not validate and will break other tests")
 	}
-	if bh.BundleBusinessDate != bh.parseYYYMMDDDate("20182308") {
-		t.Error("Business Date does not validate and will break other tests")
-	}
-	if bh.BundleCreationDate != bh.parseYYYMMDDDate("20182308") {
-		t.Error("CreationDate does not validate and will break other tests")
-	}
 	if bh.BundleID != "9999" {
 		t.Error("BundleID does not validate and will break other tests")
 	}
@@ -54,7 +48,7 @@ func testMockBundleHeader(t testing.TB) {
 	if bh.CycleNumber != "001" {
 		t.Error("CycleNumber does not validate and will break other tests")
 	}
-	if bh.CycleNumber != "001" {
+	if bh.UserField != "" {
 		t.Error("UserField does not validate and will break other tests")
 	}
 }
