@@ -7,9 +7,18 @@ package x9
 import (
 	"errors"
 	"fmt"
+	"regexp"
 )
 
 var (
+	upperAlphanumericRegex = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
+	alphanumericRegex      = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
+	msgAlphanumeric        = "has non alphanumeric characters"
+	msgUpperAlpha          = "is not uppercase A-Z or 0-9"
+	msgFieldInclusion      = "is a mandatory field and has a default value"
+	//msgFieldRequired       = "is a required field"
+	//msgValidFieldLength    = "is not length %d"
+
 	msgInvalid = "is an invalid %v"
 )
 
@@ -90,9 +99,12 @@ func (v *validator) isDocumentationTypeIndicator(code string) error {
 func (v *validator) isStandardLevel(code string) error {
 	switch code {
 	case
-		// DSTU X9.37 - 2003
-		// Current Support is for 03
-		"03":
+		// 03: DSTU X9.37 - 2003
+		"03",
+		// 30: X9.100-187-2008
+		"30",
+		// 35: X9.100-187-2013 and 2016
+		"35":
 		return nil
 	}
 	msg := fmt.Sprintf(msgInvalid, "StandardLevel")
@@ -124,6 +136,32 @@ func (v *validator) isTestIndicator(code string) error {
 		return nil
 	}
 	msg := fmt.Sprintf(msgInvalid, "TestIndicator")
+	return errors.New(msg)
+}
+
+// isCompanionDocumentIndicatorUS ensures CompanionDocumentIndicatorUS of a FileHeader is valid
+func (v *validator) isCompanionDocumentIndicatorUS(code string) error {
+	switch code {
+	case
+		// 0–9 Reserved for United States use
+		"", "0", "1", "2", "3", "4", "5", "6", "7":
+		// Other - as defined by clearing arrangements. - Not implemented
+		return nil
+	}
+	msg := fmt.Sprintf(msgInvalid, "CompanionDocumentIndicatorUS")
+	return errors.New(msg)
+}
+
+// isCompanionDocumentIndicatorCA ensures CompanionDocumentIndicatorCA of a FileHeader is valid
+func (v *validator) isCompanionDocumentIndicatorCA(code string) error {
+	switch code {
+	case
+		// A-J Reserved for Canadian use
+		"", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J":
+		// Other - as defined by clearing arrangements. - Not implemented
+		return nil
+	}
+	msg := fmt.Sprintf(msgInvalid, "CompanionDocumentIndicatorCA")
 	return errors.New(msg)
 }
 
@@ -619,4 +657,21 @@ func (v *validator) isOverrideIndicator(code string) error {
 	}
 	msg := fmt.Sprintf(msgInvalid, "OverrideIndicator")
 	return errors.New(msg)
+}
+
+// isUpperAlphanumeric checks if string only contains ASCII alphanumeric upper case characters
+func (v *validator) isUpperAlphanumeric(s string) error {
+	if upperAlphanumericRegex.MatchString(s) {
+		return errors.New(msgUpperAlpha)
+	}
+	return nil
+}
+
+// isAlphanumeric checks if a string only contains ASCII alphanumeric characters
+func (v *validator) isAlphanumeric(s string) error {
+	if alphanumericRegex.MatchString(s) {
+		// ^[ A-Za-z0-9_@./#&+-]*$/
+		return errors.New(msgAlphanumeric)
+	}
+	return nil
 }

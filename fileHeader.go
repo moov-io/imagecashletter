@@ -4,12 +4,19 @@
 
 package x9
 
-import "time"
+import (
+	"fmt"
+	"strings"
+	"time"
+)
 
 // ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 // ToDo: ASCII vs EBCDIC
 
-// Errors specific to a FileHeader Record
+// Errors specific to a File Header Record
+var (
+	msgRecordType = "received expecting %d"
+)
 
 // FileHeader Record is mandatory
 type FileHeader struct {
@@ -17,7 +24,7 @@ type FileHeader struct {
 	ID string `json:"id"`
 	// recordType defines the type of record.
 	recordType string
-	// standardLevel identifies the standard level of the file.  Current support is for DSTU X9.37 - 2003
+	// standardLevel identifies the standard level of the file.
 	// Values: 03, 30, 35
 	// 03: DSTU X9.37 - 2003
 	// 30: X9.100-187-2008
@@ -80,7 +87,6 @@ type FileHeader struct {
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`
 	// CompanionDocumentIndicator identifies a field used to indicate the Companion Document being used.
-	//
 	// Shall be present only under clearing arrangements. Companion Document usage and values
 	// defined by clearing arrangements.
 	// Values:
@@ -97,45 +103,183 @@ type FileHeader struct {
 // NewFileHeader returns a new FileHeader with default values for non exported fields
 func NewFileHeader() FileHeader {
 	fh := FileHeader{
-		recordType:    "01",
-		StandardLevel: "03",
+		recordType: "01",
 	}
 	return fh
 }
 
 // Parse takes the input record string and parses the FileHeader values
 func (fh *FileHeader) Parse(record string) {
-	// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format)
-	// (character position 1-2) Always "01"
+	// Character position 1-2, Always "01"
 	fh.recordType = "01"
-	// (03-04)
+	// 03-04
 	fh.StandardLevel = fh.parseStringField(record[2:4])
-	//
-
-	//
-
-	//
-
-	//
-
-	//
-
-	//
-
-	//
-
-	//
-
-	//
-
+	// 05-05
+	fh.TestFileIndicator = record[4:5]
+	// 06-14
+	fh.ImmediateDestination = fh.parseStringField(record[5:14])
+	// 15-23
+	fh.ImmediateOrigin = fh.parseStringField(record[14:23])
+	// 24-31
+	fh.FileCreationDate = fh.parseYYYMMDDDate(record[23:31])
+	// 32-35
+	fh.FileCreationTime = fh.parseSimpleTime(record[31:35])
+	// 36-36
+	fh.ResendIndicator = record[35:36]
+	// 37-54
+	fh.ImmediateDestinationName = fh.parseStringField(record[36:54])
+	// 55-72
+	fh.ImmediateOriginName = fh.parseStringField(record[54:72])
+	// 73-73
+	fh.FileIDModifier = record[72:73]
+	// 74-75
+	fh.CountryCode = fh.parseStringField(record[73:75])
+	// 76-79
+	fh.UserField = fh.parseStringField(record[75:79])
+	// 80-80
+	fh.CompanionDocumentIndicator = record[79:80]
 }
 
 // String writes the FileHeader struct to a variable length string.
 
+func (fh *FileHeader) String() string {
+	var buf strings.Builder
+	buf.Grow(80)
+	buf.WriteString(fh.recordType)
+	buf.WriteString(fh.StandardLevel)
+	buf.WriteString(fh.TestFileIndicator)
+	buf.WriteString(fh.ImmediateDestinationField())
+	buf.WriteString(fh.ImmediateOriginNameField())
+	buf.WriteString(fh.FileCreationDateField())
+	buf.WriteString(fh.FileCreationTimeField())
+	buf.WriteString(fh.ResendIndicator)
+	buf.WriteString(fh.ImmediateDestinationNameField())
+	buf.WriteString(fh.ImmediateOriginNameField())
+	buf.WriteString(fh.FileIDModifier)
+	buf.WriteString(fh.CountryCodeField())
+	buf.WriteString(fh.UserFieldField())
+	buf.WriteString(fh.CompanionDocumentIndicator)
+	return buf.String()
+}
+
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
+func (fh *FileHeader) Validate() error {
+	if err := fh.fieldInclusion(); err != nil {
+		return err
+	}
+	if fh.recordType != "01" {
+		msg := fmt.Sprintf(msgRecordType, 01)
+		return &FieldError{FieldName: "recordType", Value: fh.recordType, Msg: msg}
+	}
+	if err := fh.isStandardLevel(fh.StandardLevel); err != nil {
+		return &FieldError{FieldName: "StandardLevel", Value: fh.StandardLevel, Msg: err.Error()}
+	}
+	if err := fh.isResendIndicator(fh.ResendIndicator); err != nil {
+		return &FieldError{FieldName: "ResendIndicator", Value: fh.ResendIndicator, Msg: err.Error()}
+	}
+	if err := fh.isAlphanumeric(fh.ImmediateDestinationName); err != nil {
+		return &FieldError{FieldName: "ImmediateDestinationName", Value: fh.ImmediateDestinationName, Msg: err.Error()}
+	}
+	if err := fh.isAlphanumeric(fh.ImmediateOriginName); err != nil {
+		return &FieldError{FieldName: "ImmediateOriginName", Value: fh.ImmediateOriginName, Msg: err.Error()}
+	}
+	/*	if fh.CountryCode == "US" {
+			if err := fh.isCompanionDocumentIndicatorUS(fh.CompanionDocumentIndicator); err != nil {
+			return &FieldError{FieldName: "CompanionDocumentIndicator", Value: fh.CompanionDocumentIndicator, Msg: err.Error()}
+			}
+		}
+		if fh.CountryCode == "CA" {
+			if err := fh.isCompanionDocumentIndicatorCA(fh.CompanionDocumentIndicator); err != nil {
+				return &FieldError{FieldName: "CompanionDocumentIndicator", Value: fh.CompanionDocumentIndicator, Msg: err.Error()}
+			}
+		}*/
+	return nil
+}
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
+func (fh *FileHeader) fieldInclusion() error {
+	if fh.recordType == "" {
+		return &FieldError{FieldName: "recordType", Value: fh.recordType, Msg: msgFieldInclusion}
+	}
+	if fh.StandardLevel == "" {
+		return &FieldError{FieldName: "StandardLevel", Value: fh.StandardLevel, Msg: msgFieldInclusion}
+	}
+	if fh.TestFileIndicator == "" {
+		return &FieldError{FieldName: "TestFileIndicator", Value: fh.TestFileIndicator, Msg: msgFieldInclusion}
+	}
+	if fh.ImmediateDestination == "" {
+		return &FieldError{FieldName: "ImmediateDestination", Value: fh.ImmediateDestination, Msg: msgFieldInclusion}
+	}
+	if fh.ImmediateDestination == "000000000" {
+		return &FieldError{FieldName: "ImmediateDestination", Value: fh.ImmediateDestination, Msg: msgFieldInclusion}
+	}
+	if fh.ImmediateOrigin == "" {
+		return &FieldError{FieldName: "ImmediateOrigin", Value: fh.ImmediateOrigin, Msg: msgFieldInclusion}
+	}
+	if fh.ImmediateOrigin == "000000000" {
+		return &FieldError{FieldName: "ImmediateOrigin", Value: fh.ImmediateOrigin, Msg: msgFieldInclusion}
+	}
+	if fh.FileCreationDate.IsZero() {
+		return &FieldError{FieldName: "FileCreationDate", Value: fh.FileCreationDate.String(), Msg: msgFieldInclusion}
+	}
+	if fh.FileCreationTime.IsZero() {
+		return &FieldError{FieldName: "FileCreationTime", Value: fh.FileCreationTime.String(), Msg: msgFieldInclusion}
+	}
+	if fh.ResendIndicator == "" {
+		return &FieldError{FieldName: "ResendIndicator", Value: fh.ResendIndicator, Msg: msgFieldInclusion}
+	}
+	return nil
 
-// Get properties
+}
+
+// ImmediateDestinationField gets the immediate destination routing number
+func (fh *FileHeader) ImmediateDestinationField() string {
+	return fh.stringField(fh.ImmediateDestination, 9)
+}
+
+// ImmediateOriginField gets the immediate origin routing number
+func (fh *FileHeader) ImmediateOriginField() string {
+	return fh.stringField(fh.ImmediateOrigin, 9)
+}
+
+// FileCreationDateField gets the file creation date in YYMMDD format
+func (fh *FileHeader) FileCreationDateField() string {
+	return fh.formatYYYYMMDDDate(fh.FileCreationDate)
+}
+
+// FileCreationTimeField gets the file creation time in HHMM format
+func (fh *FileHeader) FileCreationTimeField() string {
+	return fh.formatSimpleTime(fh.FileCreationTime)
+}
+
+// ImmediateDestinationNameField gets the ImmediateDestinationName field padded
+func (fh *FileHeader) ImmediateDestinationNameField() string {
+	return fh.alphaField(fh.ImmediateDestinationName, 18)
+}
+
+// ImmediateOriginNameField gets the ImmImmediateOriginName field padded
+func (fh *FileHeader) ImmediateOriginNameField() string {
+	return fh.alphaField(fh.ImmediateOriginName, 18)
+}
+
+// CountryCodeField gets the CountryCode field
+func (fh *FileHeader) CountryCodeField() string {
+	return fh.alphaField(fh.CountryCode, 2)
+}
+
+// UserFieldField gets the UserField field
+func (fh *FileHeader) UserFieldField() string {
+	return fh.alphaField(fh.UserField, 4)
+}
+
+// FileIDModifierField gets the FileIDModifier field
+func (fh *FileHeader) FileIDModifierField() string {
+	return fh.alphaField(fh.FileIDModifier, 1)
+}
+
+// CompanionDocumentIndicatorField gets the CompanionDocumentIndicator field
+func (fh *FileHeader) CompanionDocumentIndicatorField() string {
+	return fh.alphaField(fh.CompanionDocumentIndicator, 1)
+}

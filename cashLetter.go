@@ -10,10 +10,10 @@ type CashLetter struct {
 	ID string `json:"id"`
 	// CashLetterHeader is an ICL Cash Letter Header Record
 	CashLetterHeader *CashLetterHeader `json:"cashLetterHeader,omitempty"`
-	// Bundle is an ICL Bundle
-	Bundle *Bundle `json:"bundle,omitempty"`
-	// ReturnBundle is an ICL Return Bundle
-	//ReturnBundle      *ReturnBundle      `json:"returnBundle,omitempty"`
+	// Bundle is an array of ICL Bundle
+	Bundles []Bundle `json:"bundle,omitempty"`
+	// ReturnBundles is an array of ICL Return Bundle
+	//ReturnBundles      []ReturnBundle      `json:"returnBundle,omitempty"`
 	// CashLetterControl is an ICL Cash Letter Control Record
 	CashLetterControl *CashLetterControl `json:"cashLetterControl,omitempty"`
 	// Converters is composed for x9 to GoLang Converters

@@ -77,7 +77,7 @@ func (c *converters) numericField(n int, max uint) string {
 	return s
 }
 
-/*// stringField slices to max length and zero filled
+// stringField slices to max length and zero filled
 func (c *converters) stringField(s string, max uint) string {
 	ln := uint(len(s))
 	if ln > max {
@@ -85,4 +85,4 @@ func (c *converters) stringField(s string, max uint) string {
 	}
 	s = strings.Repeat("0", int(max-ln)) + s
 	return s
-}*/
+}

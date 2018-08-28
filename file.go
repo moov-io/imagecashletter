@@ -30,15 +30,17 @@ const (
 	returnAddendumDPos      = "35"
 	//no longer supported by the standard - accountTotalsDetailPos  = "40"
 	//no longer supported by the standard  - nonHitTotalsDetailPos   = "41"
-	imageViewDetailPos      = "50"
-	imageViewDataPos        = "52"
-	imageViewAnalysisPos    = "54"
-	bundleControlPos        = "70"
+	imageViewDetailPos   = "50"
+	imageViewDataPos     = "52"
+	imageViewAnalysisPos = "54"
+	bundleControlPos     = "70"
 	//no longer supported by the standard - boxSummaryPos           = "75"
 	routingNumberSummaryPos = "85"
 	cashLetterControlPos    = "90"
 	fileControlPos          = "99"
 )
+
+// ToDo: Errors specific to Files
 
 // File is an ICL file
 type File struct {
@@ -46,6 +48,26 @@ type File struct {
 	ID string `json:"id"`
 	// FileHeader is an ICL FileHeader
 	FileHeader FileHeader `json:"fileHeader"`
+	// CashLetters are ICl Cash Letters
+	CashLetters []CashLetter `json:"cashLetters"`
 	// FileHeader is an ICL FileControl
 	FileControl FileControl `json:"fileControl"`
+}
+
+// NewFile constructs a file template with a FileHeader and FileControl.
+func NewFile() *File {
+	return &File{
+		FileHeader:  NewFileHeader(),
+		FileControl: NewFileControl(),
+	}
+}
+
+// Create creates a valid ICL File
+func (f *File) Create() error {
+	return nil
+}
+
+// Validate validates an ICL File
+func (f *File) Validate() error {
+	return nil
 }
