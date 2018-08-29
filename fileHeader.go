@@ -253,7 +253,7 @@ func (fh *FileHeader) ImmediateOriginField() string {
 	return fh.stringField(fh.ImmediateOrigin, 9)
 }
 
-// FileCreationDateField gets the file creation date in YYMMDD format
+// FileCreationDateField gets the file creation date in YYYYMMDD format
 func (fh *FileHeader) FileCreationDateField() string {
 	return fh.formatYYYYMMDDDate(fh.FileCreationDate)
 }

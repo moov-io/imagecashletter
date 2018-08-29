@@ -244,8 +244,14 @@ func (clh *CashLetterHeader) Validate() error {
 	if err := clh.isNumeric(clh.OriginatorContactPhoneNumber); err != nil {
 		return &FieldError{FieldName: "OriginatorContactPhoneNumber", Value: clh.OriginatorContactPhoneNumber, Msg: err.Error()}
 	}
+	if err := clh.isAlphanumeric(clh.FedWorkType); err != nil {
+		return &FieldError{FieldName: "FedWorkType", Value: clh.FedWorkType, Msg: err.Error()}
+	}
 	if err := clh.isReturnsIndicator(clh.ReturnsIndicator); err != nil {
 		return &FieldError{FieldName: "ReturnsIndicator", Value: clh.ReturnsIndicator, Msg: err.Error()}
+	}
+	if err := clh.isAlphanumericSpecial(clh.UserField); err != nil {
+		return &FieldError{FieldName: "UserField", Value: clh.UserField, Msg: err.Error()}
 	}
 	return nil
 }
@@ -300,12 +306,12 @@ func (clh *CashLetterHeader) ECEInstitutionRoutingNumberField() string {
 	return clh.alphaField(clh.ECEInstitutionRoutingNumber, 9)
 }
 
-// CashLetterBusinessDateField gets the CashLetterBusinessDate in YYMMDD format
+// CashLetterBusinessDateField gets the CashLetterBusinessDate in YYYYMMDD format
 func (clh *CashLetterHeader) CashLetterBusinessDateField() string {
 	return clh.formatYYYYMMDDDate(clh.CashLetterBusinessDate)
 }
 
-// CashLetterCreationDateField gets the CashLetterCreationDate in YYMMDD format
+// CashLetterCreationDateField gets the CashLetterCreationDate in YYYYMMDD format
 func (clh *CashLetterHeader) CashLetterCreationDateField() string {
 	return clh.formatYYYYMMDDDate(clh.CashLetterCreationDate)
 }
