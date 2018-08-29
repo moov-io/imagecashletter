@@ -58,6 +58,8 @@ func (v *validator) isCreditTotalIndicator(code int) error {
 func (v *validator) isDocumentationTypeIndicator(code string) error {
 	switch code {
 	case
+		// Conditional value, blank/space indicates no DocumentationTypeIndicator
+		"",
 		// No image provided, paper provided separately
 		"A",
 		// No image provided, paper provided separately, image upon request
@@ -143,8 +145,10 @@ func (v *validator) isTestIndicator(code string) error {
 func (v *validator) isCompanionDocumentIndicatorUS(code string) error {
 	switch code {
 	case
+		// Conditional value, blank/space indicates no CompanionDocumentIndicator
+		"",
 		// 0–9 Reserved for United States use
-		"", "0", "1", "2", "3", "4", "5", "6", "7":
+		"0", "1", "2", "3", "4", "5", "6", "7":
 		// Other - as defined by clearing arrangements. - Not implemented
 		return nil
 	}
@@ -156,8 +160,10 @@ func (v *validator) isCompanionDocumentIndicatorUS(code string) error {
 func (v *validator) isCompanionDocumentIndicatorCA(code string) error {
 	switch code {
 	case
+		// Conditional value, blank/space indicates no CompanionDocumentIndicator
+		"",
 		// A-J Reserved for Canadian use
-		"", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J":
+		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J":
 		// Other - as defined by clearing arrangements. - Not implemented
 		return nil
 	}
@@ -167,8 +173,8 @@ func (v *validator) isCompanionDocumentIndicatorCA(code string) error {
 
 // ***Cash Letter Header Validations***
 
-// isCLCollectionType ensures CollectionTypeIndicator of a CashLetterHeader is valid
-func (v *validator) isCLCollectionType(code string) error {
+// isCollectionTypeIndicator ensures CollectionTypeIndicator of a CashLetterHeader is valid
+func (v *validator) isCollectionTypeIndicator(code string) error {
 	switch code {
 	case
 		// Preliminary Forward Information–Used when information may change and the
@@ -206,12 +212,12 @@ func (v *validator) isCLCollectionType(code string) error {
 		"99":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "CollectionType")
+	msg := fmt.Sprintf(msgInvalid, "CollectionTypeIndicator")
 	return errors.New(msg)
 }
 
-// isCLRecordTypeIndicator ensures CashLetterRecordTypeIndicator of a CashLetterHeader is valid
-func (v *validator) isCLRecordTypeIndicator(code string) error {
+// isCashLetterRecordTypeIndicator ensures CashLetterRecordTypeIndicator of a CashLetterHeader is valid
+func (v *validator) isCashLetterRecordTypeIndicator(code string) error {
 	switch code {
 	case
 		// No electronic check records or image records (Type 2x’s, 3x’s, 5x’s); e.g., an empty cash letter.
@@ -225,12 +231,12 @@ func (v *validator) isCLRecordTypeIndicator(code string) error {
 		"F":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "RecordTypeIndicator")
+	msg := fmt.Sprintf(msgInvalid, "CashLetterRecordTypeIndicator")
 	return errors.New(msg)
 }
 
-// isCLReturnsIndicator ensures ReturnsIndicator of a CashLetterHeader is valid
-func (v *validator) isCLReturnsIndicator(code string) error {
+// isReturnsIndicator ensures ReturnsIndicator of a CashLetterHeader is valid
+func (v *validator) isReturnsIndicator(code string) error {
 	switch code {
 	case
 		// Blank for Forward Presentment

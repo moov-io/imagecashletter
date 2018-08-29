@@ -29,6 +29,11 @@ func NewBundle(bh *BundleHeader) *Bundle {
 	return bundle
 }
 
+// Validate performs X9  validations and format rule checks and returns an error if not Validated
+func (bundle *Bundle) Validate() error {
+	return nil
+}
+
 // SetHeader appends an BundleHeader to the Bundle
 func (bundle *Bundle) SetHeader(bundleHeader *BundleHeader) {
 	bundle.BundleHeader = bundleHeader

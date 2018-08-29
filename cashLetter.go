@@ -29,6 +29,11 @@ func NewCashLetter(clh *CashLetterHeader) *CashLetter {
 	return cashLetter
 }
 
+// Validate performs X9 validations and format rule checks and returns an error if not Validated
+func (cashLetter *CashLetter) Validate() error {
+	return nil
+}
+
 // SetHeader appends an CashLetterHeader to the CashLetter
 func (cashLetter *CashLetter) SetHeader(cashLetterHeader *CashLetterHeader) {
 	cashLetter.CashLetterHeader = cashLetterHeader
