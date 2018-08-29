@@ -298,12 +298,12 @@ func (clh *CashLetterHeader) fieldInclusion() error {
 
 // DestinationRoutingNumberField gets the DestinationRoutingNumber field
 func (clh *CashLetterHeader) DestinationRoutingNumberField() string {
-	return clh.alphaField(clh.DestinationRoutingNumber, 9)
+	return clh.stringField(clh.DestinationRoutingNumber, 9)
 }
 
 // ECEInstitutionRoutingNumberField gets the ECEInstitutionRoutingNumber field
 func (clh *CashLetterHeader) ECEInstitutionRoutingNumberField() string {
-	return clh.alphaField(clh.ECEInstitutionRoutingNumber, 9)
+	return clh.stringField(clh.ECEInstitutionRoutingNumber, 9)
 }
 
 // CashLetterBusinessDateField gets the CashLetterBusinessDate in YYYYMMDD format

@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"fmt"
 	"strings"
 	"time"
 )
@@ -97,12 +98,47 @@ func NewBundleHeader() *BundleHeader {
 
 // Parse takes the input record string and parses the BundleHeader values
 func (bh *BundleHeader) Parse(record string) {
+	// Character position 1-2, Always "10"
+	bh.recordType = "20"
+	// 03-04
+	bh.CollectionTypeIndicator = record[2:4]
+	// 05-13
+	bh.DestinationRoutingNumber = bh.parseStringField(record[4:13])
+	// 14-22
+	bh.ECEInstitutionRoutingNumber = bh.parseStringField(record[13:22])
+	// 23-30
+	bh.BundleBusinessDate = bh.parseYYYMMDDDate(record[22:30])
+	// 31-38
+	bh.BundleCreationDate = bh.parseYYYMMDDDate(record[30:38])
+	// 39-48
+	bh.BundleID = bh.parseStringField(record[38:48])
+	// 49-52
+	bh.BundleSequenceNumber = bh.parseNumField(record[48:52])
+	// 53-54
+	bh.CycleNumber = bh.parseStringField(record[52:54])
+	// 55-63
+	bh.reserved = "         "
+	// 64-68
+	bh.UserField = bh.parseStringField(record[63:68])
+	// 69-80
+	bh.reservedTwo = "            "
 }
 
 // String writes the BundleHeader struct to a string.
 func (bh *BundleHeader) String() string {
 	var buf strings.Builder
 	buf.Grow(80)
+	buf.WriteString(bh.CollectionTypeIndicator)
+	buf.WriteString(bh.DestinationRoutingNumberField())
+	buf.WriteString(bh.ECEInstitutionRoutingNumberField())
+	buf.WriteString(bh.BundleBusinessDateField())
+	buf.WriteString(bh.BundleCreationDateField())
+	buf.WriteString(bh.BundleIDField())
+	buf.WriteString(bh.BundleSequenceNumberField())
+	buf.WriteString(bh.CycleNumberField())
+	buf.WriteString(bh.reservedField())
+	buf.WriteString(bh.UserFieldField())
+	buf.WriteString(bh.reservedTwoField())
 	return buf.String()
 }
 
@@ -112,13 +148,101 @@ func (bh *BundleHeader) Validate() error {
 	if err := bh.fieldInclusion(); err != nil {
 		return err
 	}
+	if bh.recordType != "20" {
+		msg := fmt.Sprintf(msgRecordType, 20)
+		return &FieldError{FieldName: "recordType", Value: bh.recordType, Msg: msg}
+	}
+	if err := bh.isCollectionTypeIndicator(bh.CollectionTypeIndicator); err != nil {
+		return &FieldError{FieldName: "CollectionTypeIndicator",
+			Value: bh.CollectionTypeIndicator, Msg: err.Error()}
+	}
+	if err := bh.isAlphanumeric(bh.BundleID); err != nil {
+		return &FieldError{FieldName: "BundleID", Value: bh.BundleID, Msg: err.Error()}
+	}
+	if err := bh.isAlphanumeric(bh.CycleNumber); err != nil {
+		return &FieldError{FieldName: "CycleNumber,", Value: bh.CycleNumber, Msg: err.Error()}
+	}
+	if err := bh.isAlphanumericSpecial(bh.UserField); err != nil {
+		return &FieldError{FieldName: "UserField", Value: bh.UserField, Msg: err.Error()}
+	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
 func (bh *BundleHeader) fieldInclusion() error {
+	if bh.recordType == "" {
+		return &FieldError{FieldName: "recordType", Value: bh.recordType, Msg: msgFieldInclusion}
+	}
+	if bh.CollectionTypeIndicator == "" {
+		return &FieldError{FieldName: "CollectionTypeIndicator",
+			Value: bh.CollectionTypeIndicator, Msg: msgFieldInclusion}
+	}
+	if bh.DestinationRoutingNumber == "" {
+		return &FieldError{FieldName: "DestinationRoutingNumber",
+			Value: bh.DestinationRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if bh.ECEInstitutionRoutingNumber == "" {
+		return &FieldError{FieldName: "ECEInstitutionRoutingNumber",
+			Value: bh.ECEInstitutionRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if bh.BundleBusinessDate.IsZero() {
+		return &FieldError{FieldName: "BundleBusinessDate",
+			Value: bh.BundleBusinessDate.String(), Msg: msgFieldInclusion}
+	}
+	if bh.BundleCreationDate.IsZero() {
+		return &FieldError{FieldName: "BundleCreationDate",
+			Value: bh.BundleCreationDate.String(), Msg: msgFieldInclusion}
+	}
 	return nil
 }
 
-// Get properties
+// DestinationRoutingNumberField gets the DestinationRoutingNumber field
+func (bh *BundleHeader) DestinationRoutingNumberField() string {
+	return bh.stringField(bh.DestinationRoutingNumber, 9)
+}
+
+// ECEInstitutionRoutingNumberField gets the ECEInstitutionRoutingNumber field
+func (bh *BundleHeader) ECEInstitutionRoutingNumberField() string {
+	return bh.stringField(bh.ECEInstitutionRoutingNumber, 9)
+}
+
+// BundleBusinessDateField gets the BundleBusinessDate in YYYYMMDD format
+func (bh *BundleHeader) BundleBusinessDateField() string {
+	return bh.formatYYYYMMDDDate(bh.BundleBusinessDate)
+}
+
+// BundleCreationDateField gets the BundleCreationDate in YYYYMMDD format
+func (bh *BundleHeader) BundleCreationDateField() string {
+	return bh.formatYYYYMMDDDate(bh.BundleCreationDate)
+}
+
+// BundleIDField gets the BundleID field
+func (bh *BundleHeader) BundleIDField() string {
+	return bh.alphaField(bh.BundleID, 10)
+}
+
+// BundleSequenceNumberField gets the BundleSequenceNumber field
+func (bh *BundleHeader) BundleSequenceNumberField() string {
+	return bh.numericField(bh.BundleSequenceNumber, 4)
+}
+
+// CycleNumberField gets the CycleNumber field
+func (bh *BundleHeader) CycleNumberField() string {
+	return bh.alphaField(bh.CycleNumber, 2)
+}
+
+// reservedField gets reserved - blank space
+func (bh *BundleHeader) reservedField() string {
+	return bh.alphaField(bh.reserved, 9)
+}
+
+// UserFieldField gets the UserField field
+func (bh *BundleHeader) UserFieldField() string {
+	return bh.alphaField(bh.UserField, 5)
+}
+
+// reservedTwoField gets reservedTwo - blank space
+func (bh *BundleHeader) reservedTwoField() string {
+	return bh.alphaField(bh.reservedTwo, 12)
+}
