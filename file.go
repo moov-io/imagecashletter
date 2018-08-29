@@ -4,6 +4,8 @@
 
 package x9
 
+import "fmt"
+
 // ICL File Records that are identified as Mandatory are required to support Federal Reserve processing of an image
 // file.
 //
@@ -40,25 +42,46 @@ const (
 	fileControlPos          = "99"
 )
 
-// ToDo: Errors specific to Files
+// Errors strings specific to parsing a Batch container
+var (
+	//msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
+	// specific messages
+	//msgRecordLength      = "must be 94 characters and found %d"
+	//msgFileBatchOutside  = "outside of current batch"
+	//msgFileBatchInside   = "inside of current batch"
+	msgFileControl       = "none or more than one file control exists"
+	msgFileHeader        = "none or more than one file headers exists"
+	msgUnknownRecordType = "%s is an unknown record type"
+)
+
+// FileError is an error describing issues validating a file
+type FileError struct {
+	FieldName string
+	Value     string
+	Msg       string
+}
+
+func (e *FileError) Error() string {
+	return fmt.Sprintf("%s %s", e.FieldName, e.Msg)
+}
 
 // File is an ICL file
 type File struct {
 	// ID is a client defined string used as a reference to this record
 	ID string `json:"id"`
 	// FileHeader is an ICL FileHeader
-	FileHeader FileHeader `json:"fileHeader"`
+	Header FileHeader `json:"fileHeader"`
 	// CashLetters are ICl Cash Letters
 	CashLetters []CashLetter `json:"cashLetters"`
 	// FileHeader is an ICL FileControl
-	FileControl FileControl `json:"fileControl"`
+	Control FileControl `json:"fileControl"`
 }
 
 // NewFile constructs a file template with a FileHeader and FileControl.
 func NewFile() *File {
 	return &File{
-		FileHeader:  NewFileHeader(),
-		FileControl: NewFileControl(),
+		Header:  NewFileHeader(),
+		Control: NewFileControl(),
 	}
 }
 
