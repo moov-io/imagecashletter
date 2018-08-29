@@ -175,14 +175,20 @@ func (fh *FileHeader) Validate() error {
 	if err := fh.isStandardLevel(fh.StandardLevel); err != nil {
 		return &FieldError{FieldName: "StandardLevel", Value: fh.StandardLevel, Msg: err.Error()}
 	}
+	if err := fh.isTestFileIndicator(fh.TestFileIndicator); err != nil {
+		return &FieldError{FieldName: "TestFileIndicator", Value: fh.TestFileIndicator, Msg: err.Error()}
+	}
 	if err := fh.isResendIndicator(fh.ResendIndicator); err != nil {
 		return &FieldError{FieldName: "ResendIndicator", Value: fh.ResendIndicator, Msg: err.Error()}
 	}
-	if err := fh.isAlphanumeric(fh.ImmediateDestinationName); err != nil {
+	if err := fh.isAlphanumericSpecial(fh.ImmediateDestinationName); err != nil {
 		return &FieldError{FieldName: "ImmediateDestinationName", Value: fh.ImmediateDestinationName, Msg: err.Error()}
 	}
-	if err := fh.isAlphanumeric(fh.ImmediateOriginName); err != nil {
+	if err := fh.isAlphanumericSpecial(fh.ImmediateOriginName); err != nil {
 		return &FieldError{FieldName: "ImmediateOriginName", Value: fh.ImmediateOriginName, Msg: err.Error()}
+	}
+	if err := fh.isAlphanumeric(fh.FileIDModifier); err != nil {
+		return &FieldError{FieldName: "FileIDModifier", Value: fh.FileIDModifier, Msg: err.Error()}
 	}
 	if fh.CountryCode == "US" {
 		if err := fh.isCompanionDocumentIndicatorUS(fh.CompanionDocumentIndicator); err != nil {
@@ -193,6 +199,9 @@ func (fh *FileHeader) Validate() error {
 		if err := fh.isCompanionDocumentIndicatorCA(fh.CompanionDocumentIndicator); err != nil {
 			return &FieldError{FieldName: "CompanionDocumentIndicator", Value: fh.CompanionDocumentIndicator, Msg: err.Error()}
 		}
+	}
+	if err := fh.isAlphanumericSpecial(fh.UserField); err != nil {
+		return &FieldError{FieldName: "UserField", Value: fh.UserField, Msg: err.Error()}
 	}
 	return nil
 }

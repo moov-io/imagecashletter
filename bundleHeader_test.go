@@ -4,7 +4,10 @@
 
 package x9
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 // mockBundleHeader creates a BundleHeader
 func mockBundleHeader() *BundleHeader {
@@ -12,8 +15,8 @@ func mockBundleHeader() *BundleHeader {
 	bh.CollectionTypeIndicator = "01"
 	bh.DestinationRoutingNumber = "231380104"
 	bh.ECEInstitutionRoutingNumber = "121042882"
-	bh.BundleBusinessDate = bh.parseYYYMMDDDate("20182308")
-	bh.BundleCreationDate = bh.parseYYYMMDDDate("20182308")
+	bh.BundleBusinessDate = time.Now()
+	bh.BundleCreationDate = time.Now()
 	bh.BundleID = "9999"
 	bh.BundleSequenceNumber = 1
 	bh.CycleNumber = "001"
@@ -24,7 +27,7 @@ func mockBundleHeader() *BundleHeader {
 // testMockBundleHeader creates an ICL BundleHeader
 func testMockBundleHeader(t testing.TB) {
 	bh := mockBundleHeader()
-		if err := bh.Validate(); err != nil {
+	if err := bh.Validate(); err != nil {
 		t.Error("mockBundleHeader does not validate and will break other tests: ", err)
 	}
 	if bh.recordType != "20" {

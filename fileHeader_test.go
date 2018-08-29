@@ -80,21 +80,3 @@ func BenchmarkMockFileHeader(b *testing.B) {
 		testMockFileHeader(b)
 	}
 }
-
-// parseFileHeader validates parsing a FileHeader
-func parseFileHeader(t testing.TB) {
-
-}
-
-// TestParseFileHeader test validates parsing a FileHeader
-func TestParseFileHeader(t *testing.T) {
-	parseFileHeader(t)
-}
-
-// BenchmarkParseFileHeader benchmark validates parsing a FileHeader
-func BenchmarkParseFileHeader(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		parseFileHeader(b)
-	}
-}

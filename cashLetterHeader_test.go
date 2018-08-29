@@ -4,7 +4,10 @@
 
 package x9
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 // mockCashLetterHeader creates a CashLetterHeader
 func mockCashLetterHeader() *CashLetterHeader {
@@ -12,13 +15,14 @@ func mockCashLetterHeader() *CashLetterHeader {
 	clh.CollectionTypeIndicator = "01"
 	clh.DestinationRoutingNumber = "231380104"
 	clh.ECEInstitutionRoutingNumber = "121042882"
-	clh.CashLetterBusinessDate = clh.parseYYYMMDDDate("20182308")
-	clh.CashLetterCreationDate = clh.parseYYYMMDDDate("20182308")
-	clh.CashLetterCreationTime = clh.parseSimpleTime("1358")
+	clh.CashLetterBusinessDate = time.Now()
+	clh.CashLetterCreationDate = time.Now()
+	clh.CashLetterCreationTime = time.Now()
 	clh.CashLetterRecordTypeIndicator = "N"
 	clh.CashLetterDocumentationTypeIndicator = "A"
 	clh.OriginatorContactName = "Contact Name"
 	clh.OriginatorContactPhoneNumber = "5558675552"
+	clh.CashLetterID = "A1"
 	clh.FedWorkType = ""
 	clh.ReturnsIndicator = ""
 	clh.UserField = ""
@@ -42,15 +46,6 @@ func testMockCashLetterHeader(t testing.TB) {
 	}
 	if clh.ECEInstitutionRoutingNumber != "121042882" {
 		t.Error("ECEInstitutionRoutingNumber does not validate and will break other tests")
-	}
-	if clh.CashLetterBusinessDate != clh.parseYYYMMDDDate("20182308") {
-		t.Error("Business Date does not validate and will break other tests")
-	}
-	if clh.CashLetterCreationDate != clh.parseYYYMMDDDate("20182308") {
-		t.Error("CreationDate does not validate and will break other tests")
-	}
-	if clh.CashLetterCreationTime != clh.parseSimpleTime("1358") {
-		t.Error("CreationTime does not validate and will break other tests")
 	}
 	if clh.CashLetterRecordTypeIndicator != "N" {
 		t.Error("RecordTypeIndicator does not validate and will break other tests")

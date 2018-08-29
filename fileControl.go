@@ -88,6 +88,7 @@ func (fc *FileControl) String() string {
 	buf.WriteString(fc.ImmediateOriginContactNameField())
 	buf.WriteString(fc.ImmediateOriginContactPhoneNumberField())
 	buf.WriteString(fmt.Sprintf("%v", fc.CreditTotalIndicator))
+	buf.WriteString(fc.reservedField())
 	return buf.String()
 }
 

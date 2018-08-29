@@ -117,7 +117,10 @@ type CashLetterHeader struct {
 	// M: No image provided, Electronic Check provided separately
 	// Z: Not Same Type–Documentation associated with each item in Cash Letter will be different. The Check Detail
 	// Record (Type 25) or Return Record (Type 31) has to be interrogated for further information.
-	CashLetterDocumentationTypeIndicator string `json:"cashLetterdocumentationTypeIndicator"`
+	CashLetterDocumentationTypeIndicator string `json:"cashLetterDocumentationTypeIndicator"`
+	// CashLetterID uniquely identifies the cash letter. It is assigned by the institution that creates the cash
+	// letter and must be unique within a Cash Letter Business Date.
+	CashLetterID string `json:"cashLetterID"`
 	// OriginatorContactName is the name of contact at the institution that creates the cash letter.
 	OriginatorContactName string `json:"originatorContactName"`
 	// OriginatorContactPhoneNumber is the phone number of the contact at the institution that creates
@@ -154,7 +157,37 @@ func NewCashLetterHeader() *CashLetterHeader {
 // Parse takes the input record string and parses the CashLetterHeader values
 func (clh *CashLetterHeader) Parse(record string) {
 	// Character position 1-2, Always "10"
-	clh.recordType = "01"
+	clh.recordType = "10"
+	// 03-04
+	clh.CollectionTypeIndicator = record[2:4]
+	// 05-13
+	clh.DestinationRoutingNumber = clh.parseStringField(record[4:13])
+	// 14-22
+	clh.ECEInstitutionRoutingNumber = clh.parseStringField(record[13:22])
+	// 23-30
+	clh.CashLetterBusinessDate = clh.parseYYYMMDDDate(record[22:30])
+	// 31-38
+	clh.CashLetterCreationDate = clh.parseYYYMMDDDate(record[30:38])
+	// 39-42
+	clh.CashLetterCreationTime = clh.parseSimpleTime(record[38:42])
+	// 43-43
+	clh.CashLetterRecordTypeIndicator = record[42:43]
+	// 44-44
+	clh.CashLetterDocumentationTypeIndicator = record[43:44]
+	// 45-52
+	clh.CashLetterID = clh.parseStringField(record[44:52])
+	// 53-66
+	clh.OriginatorContactName = clh.parseStringField(record[52:66])
+	// 67-76
+	clh.OriginatorContactPhoneNumber = clh.parseStringField(record[66:76])
+	// 77-77
+	clh.FedWorkType = record[76:77]
+	// 78-78
+	clh.ReturnsIndicator = record[77:78]
+	// 79-79
+	clh.UserField = record[78:79]
+	// 80-80
+	clh.reserved = " "
 }
 
 // String writes the CashLetterHeader struct to a string.
@@ -162,6 +195,21 @@ func (clh *CashLetterHeader) String() string {
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(clh.recordType)
+	buf.WriteString(clh.CollectionTypeIndicator)
+	buf.WriteString(clh.DestinationRoutingNumberField())
+	buf.WriteString(clh.ECEInstitutionRoutingNumberField())
+	buf.WriteString(clh.CashLetterBusinessDateField())
+	buf.WriteString(clh.CashLetterCreationDateField())
+	buf.WriteString(clh.CashLetterCreationTimeField())
+	buf.WriteString(clh.CashLetterRecordTypeIndicator)
+	buf.WriteString(clh.CashLetterDocumentationTypeIndicator)
+	buf.WriteString(clh.CashLetterIDField())
+	buf.WriteString(clh.OriginatorContactNameField())
+	buf.WriteString(clh.OriginatorContactPhoneNumberField())
+	buf.WriteString(clh.FedWorkTypeField())
+	buf.WriteString(clh.ReturnsIndicatorField())
+	buf.WriteString(clh.UserFieldField())
+	buf.WriteString(clh.reservedField())
 	return buf.String()
 }
 
@@ -175,6 +223,30 @@ func (clh *CashLetterHeader) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 10)
 		return &FieldError{FieldName: "recordType", Value: clh.recordType, Msg: msg}
 	}
+	if err := clh.isCollectionTypeIndicator(clh.CollectionTypeIndicator); err != nil {
+		return &FieldError{FieldName: "CollectionTypeIndicator",
+			Value: clh.CollectionTypeIndicator, Msg: err.Error()}
+	}
+	if err := clh.isCashLetterRecordTypeIndicator(clh.CashLetterRecordTypeIndicator); err != nil {
+		return &FieldError{FieldName: "CashLetterRecordTypeIndicator",
+			Value: clh.CashLetterRecordTypeIndicator, Msg: err.Error()}
+	}
+	if err := clh.isDocumentationTypeIndicator(clh.CashLetterDocumentationTypeIndicator); err != nil {
+		return &FieldError{FieldName: "CashLetterDocumentationTypeIndicator",
+			Value: clh.CashLetterDocumentationTypeIndicator, Msg: err.Error()}
+	}
+	if err := clh.isAlphanumeric(clh.CashLetterID); err != nil {
+		return &FieldError{FieldName: "CashLetterID", Value: clh.CashLetterID, Msg: err.Error()}
+	}
+	if err := clh.isAlphanumericSpecial(clh.OriginatorContactName); err != nil {
+		return &FieldError{FieldName: "OriginatorContactName", Value: clh.OriginatorContactName, Msg: err.Error()}
+	}
+	if err := clh.isNumeric(clh.OriginatorContactPhoneNumber); err != nil {
+		return &FieldError{FieldName: "OriginatorContactPhoneNumber", Value: clh.OriginatorContactPhoneNumber, Msg: err.Error()}
+	}
+	if err := clh.isReturnsIndicator(clh.ReturnsIndicator); err != nil {
+		return &FieldError{FieldName: "ReturnsIndicator", Value: clh.ReturnsIndicator, Msg: err.Error()}
+	}
 	return nil
 }
 
@@ -184,7 +256,96 @@ func (clh *CashLetterHeader) fieldInclusion() error {
 	if clh.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: clh.recordType, Msg: msgFieldInclusion}
 	}
+	if clh.CollectionTypeIndicator == "" {
+		return &FieldError{FieldName: "CollectionTypeIndicator",
+			Value: clh.CollectionTypeIndicator, Msg: msgFieldInclusion}
+	}
+	if clh.DestinationRoutingNumber == "" {
+		return &FieldError{FieldName: "DestinationRoutingNumber",
+			Value: clh.DestinationRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if clh.ECEInstitutionRoutingNumber == "" {
+		return &FieldError{FieldName: "ECEInstitutionRoutingNumber",
+			Value: clh.ECEInstitutionRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if clh.CashLetterBusinessDate.IsZero() {
+		return &FieldError{FieldName: "CashLetterBusinessDate",
+			Value: clh.CashLetterBusinessDate.String(), Msg: msgFieldInclusion}
+	}
+	if clh.CashLetterCreationDate.IsZero() {
+		return &FieldError{FieldName: "CashLetterCreationDate",
+			Value: clh.CashLetterCreationDate.String(), Msg: msgFieldInclusion}
+	}
+	if clh.CashLetterCreationTime.IsZero() {
+		return &FieldError{FieldName: "CashLetterCreationTime",
+			Value: clh.CashLetterCreationTime.String(), Msg: msgFieldInclusion}
+	}
+	if clh.CashLetterRecordTypeIndicator == "" {
+		return &FieldError{FieldName: "CashLetterRecordTypeIndicator",
+			Value: clh.CashLetterRecordTypeIndicator, Msg: msgFieldInclusion}
+	}
+	if clh.CashLetterID == "" {
+		return &FieldError{FieldName: "CashLetterID", Value: clh.CashLetterID, Msg: msgFieldInclusion}
+	}
 	return nil
 }
 
-// Get properties
+// DestinationRoutingNumberField gets the DestinationRoutingNumber field
+func (clh *CashLetterHeader) DestinationRoutingNumberField() string {
+	return clh.alphaField(clh.DestinationRoutingNumber, 9)
+}
+
+// ECEInstitutionRoutingNumberField gets the ECEInstitutionRoutingNumber field
+func (clh *CashLetterHeader) ECEInstitutionRoutingNumberField() string {
+	return clh.alphaField(clh.ECEInstitutionRoutingNumber, 9)
+}
+
+// CashLetterBusinessDateField gets the CashLetterBusinessDate in YYMMDD format
+func (clh *CashLetterHeader) CashLetterBusinessDateField() string {
+	return clh.formatYYYYMMDDDate(clh.CashLetterBusinessDate)
+}
+
+// CashLetterCreationDateField gets the CashLetterCreationDate in YYMMDD format
+func (clh *CashLetterHeader) CashLetterCreationDateField() string {
+	return clh.formatYYYYMMDDDate(clh.CashLetterCreationDate)
+}
+
+// CashLetterCreationTimeField gets the CashLetterCreationTime in HHMM format
+func (clh *CashLetterHeader) CashLetterCreationTimeField() string {
+	return clh.formatSimpleTime(clh.CashLetterCreationTime)
+}
+
+// CashLetterIDField gets the CashLetterID field
+func (clh *CashLetterHeader) CashLetterIDField() string {
+	return clh.alphaField(clh.CashLetterID, 8)
+}
+
+// OriginatorContactNameField gets the OriginatorContactName field
+func (clh *CashLetterHeader) OriginatorContactNameField() string {
+	return clh.alphaField(clh.OriginatorContactName, 14)
+}
+
+// OriginatorContactPhoneNumberField gets the OriginatorContactPhoneNumber field
+func (clh *CashLetterHeader) OriginatorContactPhoneNumberField() string {
+	return clh.alphaField(clh.OriginatorContactPhoneNumber, 10)
+}
+
+// FedWorkTypeField gets the FedWorkType field
+func (clh *CashLetterHeader) FedWorkTypeField() string {
+	return clh.alphaField(clh.FedWorkType, 1)
+}
+
+// ReturnsIndicatorField gets the ReturnsIndicator field
+func (clh *CashLetterHeader) ReturnsIndicatorField() string {
+	return clh.alphaField(clh.ReturnsIndicator, 1)
+}
+
+// UserFieldField gets the UserField field
+func (clh *CashLetterHeader) UserFieldField() string {
+	return clh.alphaField(clh.UserField, 1)
+}
+
+// reservedField gets reserved - blank space
+func (clh *CashLetterHeader) reservedField() string {
+	return clh.alphaField(clh.reserved, 1)
+}

@@ -11,11 +11,15 @@ import (
 )
 
 var (
-	upperAlphanumericRegex = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
-	alphanumericRegex      = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
-	msgAlphanumeric        = "has non alphanumeric characters"
-	msgUpperAlpha          = "is not uppercase A-Z or 0-9"
-	msgFieldInclusion      = "is a mandatory field and has a default value"
+	upperAlphanumericRegex   = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
+	alphanumericRegex        = regexp.MustCompile(`[^ a-zA-Z0-9]`)
+	alphanumericRegexSpecial = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
+	numericRegex             = regexp.MustCompile(`[^ 0-9]`)
+	msgAlphanumeric          = "has non alphanumeric characters"
+	msgAlphanumericSpecial   = "has non alphanumeric or special characters"
+	msgUpperAlpha            = "is not uppercase A-Z or 0-9"
+	msgNumeric               = "is not 0-9"
+	msgFieldInclusion        = "is a mandatory field and has a default value"
 	//msgFieldRequired       = "is a required field"
 	//msgValidFieldLength    = "is not length %d"
 
@@ -127,8 +131,8 @@ func (v *validator) isResendIndicator(code string) error {
 	return errors.New(msg)
 }
 
-// isTestIndicator ensures TestIndicator of a FileHeader is valid
-func (v *validator) isTestIndicator(code string) error {
+// isTestFileIndicator ensures TestFileIndicator of a FileHeader is valid
+func (v *validator) isTestFileIndicator(code string) error {
 	switch code {
 	case
 		// Production File
@@ -137,7 +141,7 @@ func (v *validator) isTestIndicator(code string) error {
 		"T":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "TestIndicator")
+	msg := fmt.Sprintf(msgInvalid, "TestFileIndicator")
 	return errors.New(msg)
 }
 
@@ -678,6 +682,24 @@ func (v *validator) isAlphanumeric(s string) error {
 	if alphanumericRegex.MatchString(s) {
 		// ^[ A-Za-z0-9_@./#&+-]*$/
 		return errors.New(msgAlphanumeric)
+	}
+	return nil
+}
+
+// isAlphanumericSpecial checks if a string only contains ASCII alphanumeric or special characters
+func (v *validator) isAlphanumericSpecial(s string) error {
+	if alphanumericRegexSpecial.MatchString(s) {
+		// ^[ A-Za-z0-9_@./#&+-]*$/
+		return errors.New(msgAlphanumericSpecial)
+	}
+	return nil
+}
+
+// isNumeric checks if a string only contains ASCII numeric (0-9) characters
+func (v *validator) isNumeric(s string) error {
+	if numericRegex.MatchString(s) {
+		// [^ 0-9]
+		return errors.New(msgNumeric)
 	}
 	return nil
 }
