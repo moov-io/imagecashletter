@@ -4,7 +4,11 @@
 
 package x9
 
-import "time"
+import (
+	"fmt"
+	"strings"
+	"time"
+)
 
 // ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 
@@ -49,21 +53,127 @@ type CashLetterControl struct {
 }
 
 // NewCashLetterControl returns a new CashLetterControl with default values for non exported fields
-func NewCashLetterControl() *CashLetterControl {
-	clc := &CashLetterControl{
+func NewCashLetterControl() CashLetterControl {
+	clc := CashLetterControl{
 		recordType: "90",
 	}
 	return clc
 }
 
 // Parse takes the input record string and parses the CashLetterControl values
+func (clc *CashLetterControl) Parse(record string) {
+	// Character position 1-2, Always "90"
+	clc.recordType = "90"
+	// 03-08
+	clc.CashLetterBundleCount = clc.parseNumField(record[2:8])
+	// 09-16
+	clc.CashLetterItemsCount = clc.parseNumField(record[8:16])
+	// 17-30
+	clc.CashLetterTotalAmount = clc.parseNumField(record[16:30])
+	// 31-39
+	clc.CashLetterImagesCount = clc.parseNumField(record[30:39])
+	// 40-57
+	clc.ECEInstitutionName = clc.parseStringField(record[39:57])
+	// 58-65
+	clc.SettlementDate = clc.parseYYYMMDDDate(record[57:65])
+	// 66-66
+	clc.CreditTotalIndicator = clc.parseNumField(record[65:66])
+	// 67-80
+	clc.reserved = "              "
+}
 
 // String writes the CashLetterControl struct to a string.
+func (clc *CashLetterControl) String() string {
+	var buf strings.Builder
+	buf.Grow(80)
+	buf.WriteString(clc.recordType)
+	buf.WriteString(clc.CashLetterBundleCountField())
+	buf.WriteString(clc.CashLetterItemsCountField())
+	buf.WriteString(clc.CashLetterTotalAmountField())
+	buf.WriteString(clc.CashLetterImagesCountField())
+	buf.WriteString(clc.ECEInstitutionNameField())
+	buf.WriteString(clc.SettlementDateField())
+	buf.WriteString(fmt.Sprintf("%v", clc.CreditTotalIndicator))
+	buf.WriteString(clc.reservedField())
+	return buf.String()
+}
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
+func (clc *CashLetterControl) Validate() error {
+	if err := clc.fieldInclusion(); err != nil {
+		return err
+	}
+	if clc.recordType != "90" {
+		msg := fmt.Sprintf(msgRecordType, 90)
+		return &FieldError{FieldName: "recordType", Value: clc.recordType, Msg: msg}
+	}
+	return nil
+}
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
+func (clc *CashLetterControl) fieldInclusion() error {
+	if clc.recordType == "" {
+		return &FieldError{FieldName: "recordType", Value: clc.recordType, Msg: msgFieldInclusion}
+	}
+	/*	if clc.CashLetterBundleCount == 0 {
+		return &FieldError{FieldName: "CashLetterBundleCount",
+			Value: clc.CashLetterBundleCountField(), Msg: msgFieldInclusion}
+	} */
+	if clc.CashLetterItemsCount == 0 {
+		return &FieldError{FieldName: "CashLetterItemsCount",
+			Value: clc.CashLetterItemsCountField(), Msg: msgFieldInclusion}
+	}
+	if clc.CashLetterTotalAmount == 0 {
+		return &FieldError{FieldName: "CashLetterTotalAmount",
+			Value: clc.CashLetterTotalAmountField(), Msg: msgFieldInclusion}
+	}
+	/*
+		if clc.CashLetterImagesCount == 0 {
+			return &FieldError{FieldName: "CashLetterImagesCount",
+				Value: clc.CashLetterImagesCountField(), Msg: msgFieldInclusion}
+		} */
+	return nil
+}
 
-// Get properties
+// CashLetterBundleCountField gets a string of the CashLetterBundleCount zero padded
+func (clc *CashLetterControl) CashLetterBundleCountField() string {
+	return clc.numericField(clc.CashLetterBundleCount, 6)
+}
+
+//CashLetterItemsCountField gets a string of the CashLetterItemsCount zero padded
+func (clc *CashLetterControl) CashLetterItemsCountField() string {
+	return clc.numericField(clc.CashLetterItemsCount, 8)
+}
+
+// CashLetterTotalAmountField gets a string of the CashLetterTotalAmount zero padded
+func (clc *CashLetterControl) CashLetterTotalAmountField() string {
+	return clc.numericField(clc.CashLetterTotalAmount, 14)
+}
+
+// CashLetterImagesCountField gets a string of the CashLetterImagesCount zero padded
+func (clc *CashLetterControl) CashLetterImagesCountField() string {
+	return clc.numericField(clc.CashLetterImagesCount, 9)
+}
+
+// ECEInstitutionNameField gets the ECEInstitutionName field
+func (clc *CashLetterControl) ECEInstitutionNameField() string {
+	return clc.alphaField(clc.ECEInstitutionName, 18)
+}
+
+// SettlementDateField gets the SettlementDate in YYYYMMDD format
+func (clc *CashLetterControl) SettlementDateField() string {
+	return clc.formatYYYYMMDDDate(clc.SettlementDate)
+}
+
+// CreditTotalIndicatorField gets a string of the CreditTotalIndicator field
+func (clc *CashLetterControl) CreditTotalIndicatorField() string {
+	return clc.numericField(clc.CreditTotalIndicator, 1)
+
+}
+
+// reservedField gets reserved - blank space
+func (clc *CashLetterControl) reservedField() string {
+	return clc.alphaField(clc.reserved, 14)
+}

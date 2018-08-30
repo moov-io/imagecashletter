@@ -98,7 +98,7 @@ func NewBundleHeader() *BundleHeader {
 
 // Parse takes the input record string and parses the BundleHeader values
 func (bh *BundleHeader) Parse(record string) {
-	// Character position 1-2, Always "10"
+	// Character position 1-2, Always "20"
 	bh.recordType = "20"
 	// 03-04
 	bh.CollectionTypeIndicator = record[2:4]

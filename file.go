@@ -72,8 +72,11 @@ type File struct {
 	// FileHeader is an ICL FileHeader
 	Header FileHeader `json:"fileHeader"`
 	// CashLetters are ICl Cash Letters
-	CashLetters []CashLetter `json:"cashLetters"`
-	// FileHeader is an ICL FileControl
+	CashLetters []CashLetter `json:"cashLetters,omitempty"`
+	// ToDo: Current logic to add a Bundle is in CashLetter
+	// Bundles are ICL Bundles
+	//Bundles []Bundle `json"bundles"`
+	// FileControl is an ICL FileControl
 	Control FileControl `json:"fileControl"`
 }
 
@@ -90,13 +93,26 @@ func (f *File) Create() error {
 	return nil
 }
 
+// Validate validates an ICL File
+func (f *File) Validate() error {
+	return nil
+}
+
+// SetHeader allows for header to be built.
+func (f *File) SetHeader(h FileHeader) *File {
+	f.Header = h
+	return f
+}
+
 // AddCashLetter appends a CashLetter to the x9.File
 func (f *File) AddCashLetter(cashLetter CashLetter) []CashLetter {
 	f.CashLetters = append(f.CashLetters, cashLetter)
 	return f.CashLetters
 }
 
-// Validate validates an ICL File
-func (f *File) Validate() error {
-	return nil
-}
+// ToDo: Current logic to add a Bundle is in CashLetter
+/*// AddBundle appends a Bundle to the x9.File
+func (f *File) AddBundle(bundle Bundle) []Bundle {
+	f.Bundles = append(f.Bundles, bundle)
+	return f.Bundles
+}*/
