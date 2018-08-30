@@ -46,7 +46,7 @@ const (
 var (
 	//msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
 	// specific messages
-	//msgRecordLength      = "must be 94 characters and found %d"
+	msgRecordLength = "must be at least 80 characters and found %d"
 	//msgFileBatchOutside  = "outside of current batch"
 	//msgFileBatchInside   = "inside of current batch"
 	msgFileControl       = "none or more than one file control exists"
@@ -88,6 +88,12 @@ func NewFile() *File {
 // Create creates a valid ICL File
 func (f *File) Create() error {
 	return nil
+}
+
+// AddCashLetter appends a CashLetter to the x9.File
+func (f *File) AddCashLetter(cashLetter CashLetter) []CashLetter {
+	f.CashLetters = append(f.CashLetters, cashLetter)
+	return f.CashLetters
 }
 
 // Validate validates an ICL File
