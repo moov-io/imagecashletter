@@ -321,17 +321,15 @@ func (v *validator) isMICRValidIndicator(code int) error {
 }
 
 // isBOFDIndicator ensures BOFDIndicator of a CheckDetail is valid
-func (v *validator) isBOFDIndicator(code int) error {
+func (v *validator) isBOFDIndicator(code string) error {
 	switch code {
 	case
-		// Good read
-		1,
-		// Good read, missing field
-		2,
-		// Read error encountered
-		3,
-		// Missing field and read error encountered
-		4:
+		// ECE institution is BOFD
+		"Y",
+		// ECE institution is not BOFD
+		"N",
+		// ECE institution relationship to BOFD is undetermined
+		"U":
 		return nil
 	}
 	msg := fmt.Sprintf(msgInvalid, "BOFDIndicator")

@@ -42,7 +42,7 @@ type CheckDetail struct {
 	OnUs string `json:"onUs"`
 	// Amount identifies the amount of the check.  All amounts fields have two implied decimal points.
 	// e.g., 100000 is $1,000.00
-	Amount int `json:"amount"`
+	ItemAmount int `json:"itemAmount"`
 	// EceInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
 	// Field must contain a numeric value. It cannot be all blanks.
 	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
@@ -176,11 +176,23 @@ func (cd *CheckDetail) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 25)
 		return &FieldError{FieldName: "recordType", Value: cd.recordType, Msg: msg}
 	}
-	if err := cd.isArchiveTypeIndicator(cd.ArchiveTypeIndicator); err != nil {
-		return &FieldError{FieldName: "ArchiveTypeIndicator", Value: cd.ArchiveTypeIndicator, Msg: err.Error()}
+	if err := cd.isDocumentationTypeIndicator(cd.DocumentationTypeIndicator); err != nil {
+		return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cd.DocumentationTypeIndicator, Msg: err.Error()}
+	}
+	if err := cd.isReturnAcceptanceIndicator(cd.ReturnAcceptanceIndicator); err != nil {
+		return &FieldError{FieldName: "ReturnAcceptanceIndicator", Value: cd.ReturnAcceptanceIndicator, Msg: err.Error()}
+	}
+	if err := cd.isMICRValidIndicator(cd.MICRValidIndicator); err != nil {
+		return &FieldError{FieldName: "MICRValidIndicator", Value: cd.MICRValidIndicatorField(), Msg: err.Error()}
+	}
+	if err := cd.isBOFDIndicator(cd.BOFDIndicator); err != nil {
+		return &FieldError{FieldName: "BOFDIndicator", Value: cd.BOFDIndicator, Msg: err.Error()}
 	}
 	if err := cd.isCorrectionIndicator(cd.CorrectionIndicator); err != nil {
 		return &FieldError{FieldName: "CorrectionIndicator", Value: cd.CorrectionIndicatorField(), Msg: err.Error()}
+	}
+	if err := cd.isArchiveTypeIndicator(cd.ArchiveTypeIndicator); err != nil {
+		return &FieldError{FieldName: "ArchiveTypeIndicator", Value: cd.ArchiveTypeIndicator, Msg: err.Error()}
 	}
 	return nil
 }
@@ -198,17 +210,49 @@ func (cd *CheckDetail) fieldInclusion() error {
 	if cd.PayorBankCheckDigit == "" {
 		return &FieldError{FieldName: "PayorBankCheckDigit", Value: cd.PayorBankCheckDigit, Msg: msgFieldInclusion}
 	}
+	if cd.EceInstitutionItemSequenceNumber == "" {
+		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber",
+		Value: cd.EceInstitutionItemSequenceNumber, Msg: msgFieldInclusion}
+	}
 	if cd.BOFDIndicator == "" {
 		return &FieldError{FieldName: "BOFDIndicator", Value: cd.BOFDIndicator, Msg: msgFieldInclusion}
 	}
 	return nil
 }
 
-// Get properties
+// ItemAmountField gets the ItemAmount right justified and zero padded
+func (cd *CheckDetail) ItemAmountField() string {
+	return cd.numericField(cd.ItemAmount, 1)
+}
+
+// EceInstitutionItemSequenceNumberField gets the EceInstitutionItemSequenceNumber
+func (cd *CheckDetail) EceInstitutionItemSequenceNumberField() string {
+	return cd.alphaField(cd.EceInstitutionItemSequenceNumber, 1)
+}
+
+// DocumentationTypeIndicatorField gets the DocumentationTypeIndicator
+func (cd *CheckDetail) DocumentationTypeIndicatorField() string {
+	return cd.alphaField(cd.DocumentationTypeIndicator, 1)
+}
+
+// ReturnAcceptanceIndicatorField gets the ReturnAcceptanceIndicator
+func (cd *CheckDetail) ReturnAcceptanceIndicatorField() string {
+	return cd.alphaField(cd.ReturnAcceptanceIndicator, 1)
+}
+
+// MICRValidIndicatorField gets a string of the MICRValidIndicator field
+func (cd *CheckDetail) MICRValidIndicatorField() string {
+	return cd.numericField(cd.MICRValidIndicator, 1)
+}
 
 // BOFDIndicatorField gets the BOFDIndicator field
 func (cd *CheckDetail) BOFDIndicatorField() string {
 	return cd.alphaField(cd.BOFDIndicator, 1)
+}
+
+// AddendumCountField gets a string of the AddendumCount field
+func (cd *CheckDetail) AddendumCountField() string {
+	return cd.numericField(cd.AddendumCount, 2)
 }
 
 // CorrectionIndicatorField gets a string of the CorrectionIndicator field
