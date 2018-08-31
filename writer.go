@@ -16,7 +16,7 @@ import (
 // x9 formatted files.
 //
 
-
+// Writer struct
 type Writer struct {
 	w       *bufio.Writer
 	lineNum int //current line being written
