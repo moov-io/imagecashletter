@@ -108,6 +108,12 @@ func (clc *CashLetterControl) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 90)
 		return &FieldError{FieldName: "recordType", Value: clc.recordType, Msg: msg}
 	}
+	if err := clc.isAlphanumericSpecial(clc.ECEInstitutionName); err != nil {
+		return &FieldError{FieldName: "ECEInstitutionName", Value: clc.ECEInstitutionName, Msg: err.Error()}
+	}
+	if err := clc.isCreditTotalIndicator(clc.CreditTotalIndicator); err != nil {
+		return &FieldError{FieldName: "CreditTotalIndicator", Value: clc.CreditTotalIndicatorField(), Msg: err.Error()}
+	}
 	return nil
 }
 
@@ -117,10 +123,6 @@ func (clc *CashLetterControl) fieldInclusion() error {
 	if clc.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: clc.recordType, Msg: msgFieldInclusion}
 	}
-	/*	if clc.CashLetterBundleCount == 0 {
-		return &FieldError{FieldName: "CashLetterBundleCount",
-			Value: clc.CashLetterBundleCountField(), Msg: msgFieldInclusion}
-	} */
 	if clc.CashLetterItemsCount == 0 {
 		return &FieldError{FieldName: "CashLetterItemsCount",
 			Value: clc.CashLetterItemsCountField(), Msg: msgFieldInclusion}
@@ -129,11 +131,10 @@ func (clc *CashLetterControl) fieldInclusion() error {
 		return &FieldError{FieldName: "CashLetterTotalAmount",
 			Value: clc.CashLetterTotalAmountField(), Msg: msgFieldInclusion}
 	}
-	/*
-		if clc.CashLetterImagesCount == 0 {
-			return &FieldError{FieldName: "CashLetterImagesCount",
-				Value: clc.CashLetterImagesCountField(), Msg: msgFieldInclusion}
-		} */
+	if clc.SettlementDate.IsZero() {
+		return &FieldError{FieldName: "SettlementDate",
+			Value: clc.SettlementDate.String(), Msg: msgFieldInclusion}
+	}
 	return nil
 }
 

@@ -29,7 +29,7 @@ func mockCashLetterControl() CashLetterControl {
 func testMockCashLetterControl(t testing.TB) {
 	clc := mockCashLetterControl()
 	if err := clc.Validate(); err != nil {
-		t.Error("mockFileControl does not validate and will break other tests: ", err)
+		t.Error("mockCashLetterControl does not validate and will break other tests: ", err)
 	}
 	if clc.recordType != "90" {
 		t.Error("recordType does not validate and will break other tests")

@@ -48,8 +48,8 @@ type BundleControl struct {
 }
 
 // NewBundleControl returns a new BundleControl with default values for non exported fields
-func NewBundleControl() *BundleControl {
-	bc := &BundleControl{
+func NewBundleControl() BundleControl {
+	bc := BundleControl{
 		recordType: "70",
 	}
 	return bc
@@ -104,6 +104,9 @@ func (bc *BundleControl) Validate() error {
 	if err := bc.isAlphanumericSpecial(bc.UserField); err != nil {
 		return &FieldError{FieldName: "UserField", Value: bc.UserField, Msg: err.Error()}
 	}
+	if err := bc.isCreditTotalIndicator(bc.CreditTotalIndicator); err != nil {
+		return &FieldError{FieldName: "CreditTotalIndicator", Value: bc.CreditTotalIndicatorField(), Msg: err.Error()}
+	}
 	return nil
 }
 
@@ -118,9 +121,6 @@ func (bc *BundleControl) fieldInclusion() error {
 	}
 	if bc.BundleTotalAmount == 0 {
 		return &FieldError{FieldName: "BundleTotalAmount", Value: bc.BundleTotalAmountField(), Msg: msgFieldInclusion}
-	}
-	if bc.BundleImagesCount == 0 {
-		return &FieldError{FieldName: "BundleImagesCount", Value: bc.BundleImagesCountField(), Msg: msgFieldInclusion}
 	}
 	return nil
 }

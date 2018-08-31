@@ -102,6 +102,17 @@ func (fc *FileControl) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 99)
 		return &FieldError{FieldName: "recordType", Value: fc.recordType, Msg: msg}
 	}
+	if err := fc.isAlphanumericSpecial(fc.ImmediateOriginContactName); err != nil {
+		return &FieldError{FieldName: "ImmediateOriginContactName",
+		Value: fc.ImmediateOriginContactName, Msg: err.Error()}
+	}
+	if err := fc.isNumeric(fc.ImmediateOriginContactPhoneNumber); err != nil {
+		return &FieldError{FieldName: "ImmediateOriginContactPhoneNumber",
+		Value: fc.ImmediateOriginContactPhoneNumber, Msg: err.Error()}
+	}
+	if err := fc.isCreditTotalIndicator(fc.CreditTotalIndicator); err != nil {
+		return &FieldError{FieldName: "CreditTotalIndicator", Value: fc.CreditTotalIndicatorField(), Msg: err.Error()}
+	}
 	return nil
 }
 
@@ -154,6 +165,11 @@ func (fc *FileControl) ImmediateOriginContactNameField() string {
 // ImmediateOriginContactPhoneNumberField gets the ImmediateOriginContactPhoneNumber field padded
 func (fc *FileControl) ImmediateOriginContactPhoneNumberField() string {
 	return fc.alphaField(fc.ImmediateOriginContactPhoneNumber, 10)
+}
+
+// CreditTotalIndicatorField gets a string of the CreditTotalIndicator field
+func (fc *FileControl) CreditTotalIndicatorField() string {
+	return fc.numericField(fc.CreditTotalIndicator, 1)
 }
 
 // reservedField gets reserved - blank space

@@ -15,7 +15,7 @@ type Bundle struct {
 	// Items are ICL Items: Check Detail Records, Check Detail Addendum Records, and Image Views
 	Items []*CheckDetail `json:"items,omitempty"`
 	// BundleControl is an ICL Bundle Control Record
-	BundleControl *BundleControl `json:"bundleControl,omitempty"`
+	BundleControl BundleControl `json:"bundleControl,omitempty"`
 	// Converters is composed for x9 to GoLang Converters
 	converters
 }
@@ -40,6 +40,6 @@ func (bundle *Bundle) SetHeader(bundleHeader *BundleHeader) {
 }
 
 // SetControl appends an BundleControl to the Bundle
-func (bundle *Bundle) SetControl(bundleControl *BundleControl) {
+func (bundle *Bundle) SetControl(bundleControl BundleControl) {
 	bundle.BundleControl = bundleControl
 }
