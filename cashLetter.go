@@ -22,8 +22,8 @@ type CashLetter struct {
 
 // NewCashLetter takes a CashLetterHeader and returns a CashLetter
 // ToDo:  Follow up on returning a pointer when implementing tests and examples
-func NewCashLetter(clh *CashLetterHeader) *CashLetter {
-	cl := &CashLetter{}
+func NewCashLetter(clh *CashLetterHeader) CashLetter {
+	cl := CashLetter{}
 	cl.SetControl(NewCashLetterControl())
 	cl.SetHeader(clh)
 	return cl

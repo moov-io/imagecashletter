@@ -48,7 +48,7 @@ var (
 	// specific messages
 	msgRecordLength = "must be at least 80 characters and found %d"
 	//msgFileBatchOutside  = "outside of current batch"
-	//msgFileBatchInside   = "inside of current batch"
+	msgFileCashLetterInside   = "inside of current cash letter"
 	msgFileControl       = "none or more than one file control exists"
 	msgFileHeader        = "none or more than one file headers exists"
 	msgUnknownRecordType = "%s is an unknown record type"
