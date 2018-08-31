@@ -153,7 +153,6 @@ func (bc *BundleControl) UserFieldField() string {
 // CreditTotalIndicatorField gets a string of the CreditTotalIndicator field
 func (bc *BundleControl) CreditTotalIndicatorField() string {
 	return bc.numericField(bc.CreditTotalIndicator, 1)
-
 }
 
 // reservedField gets reserved - blank space

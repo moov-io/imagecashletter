@@ -4,6 +4,11 @@
 
 package x9
 
+import (
+	"fmt"
+	"strings"
+)
+
 // ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 
 // Errors specific to a CheckDetail Record
@@ -144,20 +149,74 @@ type CheckDetail struct {
 
 // NewCheckDetail returns a new CheckDetail with default values for non exported fields
 func NewCheckDetail() *CheckDetail {
-	check := &CheckDetail{
+	cd := &CheckDetail{
 		recordType: "25",
 	}
-	return check
+	return cd
 }
 
 // Parse takes the input record string and parses the CheckDetail values
+func (cd *CheckDetail) Parse(record string) {
+}
 
 // String writes the CheckDetail struct to a variable length string.
+func (cd *CheckDetail) String() string {
+	var buf strings.Builder
+	buf.Grow(80)
+	return buf.String()
+}
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
+func (cd *CheckDetail) Validate() error {
+	if err := cd.fieldInclusion(); err != nil {
+		return err
+	}
+	if cd.recordType != "25" {
+		msg := fmt.Sprintf(msgRecordType, 25)
+		return &FieldError{FieldName: "recordType", Value: cd.recordType, Msg: msg}
+	}
+	if err := cd.isArchiveTypeIndicator(cd.ArchiveTypeIndicator); err != nil {
+		return &FieldError{FieldName: "ArchiveTypeIndicator", Value: cd.ArchiveTypeIndicator, Msg: err.Error()}
+	}
+	if err := cd.isCorrectionIndicator(cd.CorrectionIndicator); err != nil {
+		return &FieldError{FieldName: "CorrectionIndicator", Value: cd.CorrectionIndicatorField(), Msg: err.Error()}
+	}
+	return nil
+}
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
+func (cd *CheckDetail) fieldInclusion() error {
+	if cd.recordType == "" {
+		return &FieldError{FieldName: "recordType", Value: cd.recordType, Msg: msgFieldInclusion}
+	}
+	if cd.PayorBankRoutingNumber == "" {
+		return &FieldError{FieldName: "PayorBankRoutingNumber",
+		Value: cd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if cd.PayorBankCheckDigit == "" {
+		return &FieldError{FieldName: "PayorBankCheckDigit", Value: cd.PayorBankCheckDigit, Msg: msgFieldInclusion}
+	}
+	if cd.BOFDIndicator == "" {
+		return &FieldError{FieldName: "BOFDIndicator", Value: cd.BOFDIndicator, Msg: msgFieldInclusion}
+	}
+	return nil
+}
 
 // Get properties
+
+// BOFDIndicatorField gets the BOFDIndicator field
+func (cd *CheckDetail) BOFDIndicatorField() string {
+	return cd.alphaField(cd.BOFDIndicator, 1)
+}
+
+// CorrectionIndicatorField gets a string of the CorrectionIndicator field
+func (cd *CheckDetail) CorrectionIndicatorField() string {
+	return cd.numericField(cd.CorrectionIndicator, 1)
+}
+
+// ArchiveTypeIndicatorField gets the ArchiveTypeIndicator field
+func (cd *CheckDetail) ArchiveTypeIndicatorField() string {
+	return cd.alphaField(cd.ArchiveTypeIndicator, 1)
+}

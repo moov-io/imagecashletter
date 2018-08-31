@@ -171,7 +171,6 @@ func (clc *CashLetterControl) SettlementDateField() string {
 // CreditTotalIndicatorField gets a string of the CreditTotalIndicator field
 func (clc *CashLetterControl) CreditTotalIndicatorField() string {
 	return clc.numericField(clc.CreditTotalIndicator, 1)
-
 }
 
 // reservedField gets reserved - blank space
