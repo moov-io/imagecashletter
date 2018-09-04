@@ -87,7 +87,7 @@ func (fc *FileControl) String() string {
 	buf.WriteString(fc.FileTotalAmountField())
 	buf.WriteString(fc.ImmediateOriginContactNameField())
 	buf.WriteString(fc.ImmediateOriginContactPhoneNumberField())
-	buf.WriteString(fmt.Sprintf("%v", fc.CreditTotalIndicator))
+	buf.WriteString(fc.CreditTotalIndicatorField())
 	buf.WriteString(fc.reservedField())
 	return buf.String()
 }
@@ -104,11 +104,11 @@ func (fc *FileControl) Validate() error {
 	}
 	if err := fc.isAlphanumericSpecial(fc.ImmediateOriginContactName); err != nil {
 		return &FieldError{FieldName: "ImmediateOriginContactName",
-		Value: fc.ImmediateOriginContactName, Msg: err.Error()}
+			Value: fc.ImmediateOriginContactName, Msg: err.Error()}
 	}
 	if err := fc.isNumeric(fc.ImmediateOriginContactPhoneNumber); err != nil {
 		return &FieldError{FieldName: "ImmediateOriginContactPhoneNumber",
-		Value: fc.ImmediateOriginContactPhoneNumber, Msg: err.Error()}
+			Value: fc.ImmediateOriginContactPhoneNumber, Msg: err.Error()}
 	}
 	if err := fc.isCreditTotalIndicator(fc.CreditTotalIndicator); err != nil {
 		return &FieldError{FieldName: "CreditTotalIndicator", Value: fc.CreditTotalIndicatorField(), Msg: err.Error()}

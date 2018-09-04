@@ -157,12 +157,59 @@ func NewCheckDetail() *CheckDetail {
 
 // Parse takes the input record string and parses the CheckDetail values
 func (cd *CheckDetail) Parse(record string) {
+	// Character position 1-2, Always "25"
+	cd.recordType = "25"
+	// 03-17
+	//ToDo:  Add a specific validator for this - NBSM?
+	cd.AuxiliaryOnUs = cd.parseStringField(record[02:17])
+	// 18-18
+	cd.ExternalProcessingCode = cd.parseStringField(record[17:18])
+	// 19-26
+	cd.PayorBankRoutingNumber = cd.parseStringField(record[18:26])
+	// 27-27
+	cd.PayorBankCheckDigit = cd.parseStringField(record[26:27])
+	// 28-47
+	// ToDo:  Add a specific validator for this - NBSMOS?
+	cd.OnUs = cd.parseStringField(record[27:47])
+	// 48-57
+	cd.ItemAmount = cd.parseNumField(record[47:57])
+	// 58-72
+	cd.EceInstitutionItemSequenceNumber = cd.parseStringField(record[57:72])
+	// 73-73
+	cd.DocumentationTypeIndicator = cd.parseStringField(record[72:73])
+	// 74-74
+	cd.ReturnAcceptanceIndicator = cd.parseStringField(record[73:74])
+	// 75-75
+	cd.MICRValidIndicator = cd.parseNumField(record[74:75])
+	// 76-76
+	cd.BOFDIndicator = cd.parseStringField(record[75:76])
+	// 77-78
+	cd.AddendumCount = cd.parseNumField(record[76:78])
+	// 79-79
+	cd.CorrectionIndicator = cd.parseNumField(record[78:79])
+	// 80-80
+	cd.ArchiveTypeIndicator = cd.parseStringField(record[79:80])
 }
 
 // String writes the CheckDetail struct to a variable length string.
 func (cd *CheckDetail) String() string {
 	var buf strings.Builder
 	buf.Grow(80)
+	buf.WriteString(cd.recordType)
+	buf.WriteString(cd.AuxiliaryOnUsField())
+	buf.WriteString(cd.ExternalProcessingCodeField())
+	buf.WriteString(cd.PayorBankRoutingNumberField())
+	buf.WriteString(cd.PayorBankCheckDigit)
+	buf.WriteString(cd.OnUsField())
+	buf.WriteString(cd.ItemAmountField())
+	buf.WriteString(cd.EceInstitutionItemSequenceNumberField())
+	buf.WriteString(cd.DocumentationTypeIndicatorField())
+	buf.WriteString(cd.ReturnAcceptanceIndicatorField())
+	buf.WriteString(cd.MICRValidIndicatorField())
+	buf.WriteString(cd.BOFDIndicatorField())
+	buf.WriteString(cd.AddendumCountField())
+	buf.WriteString(cd.CorrectionIndicatorField())
+	buf.WriteString(cd.ArchiveTypeIndicatorField())
 	return buf.String()
 }
 
@@ -205,14 +252,14 @@ func (cd *CheckDetail) fieldInclusion() error {
 	}
 	if cd.PayorBankRoutingNumber == "" {
 		return &FieldError{FieldName: "PayorBankRoutingNumber",
-		Value: cd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
+			Value: cd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
 	}
 	if cd.PayorBankCheckDigit == "" {
 		return &FieldError{FieldName: "PayorBankCheckDigit", Value: cd.PayorBankCheckDigit, Msg: msgFieldInclusion}
 	}
 	if cd.EceInstitutionItemSequenceNumber == "" {
 		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber",
-		Value: cd.EceInstitutionItemSequenceNumber, Msg: msgFieldInclusion}
+			Value: cd.EceInstitutionItemSequenceNumber, Msg: msgFieldInclusion}
 	}
 	if cd.BOFDIndicator == "" {
 		return &FieldError{FieldName: "BOFDIndicator", Value: cd.BOFDIndicator, Msg: msgFieldInclusion}
@@ -220,22 +267,42 @@ func (cd *CheckDetail) fieldInclusion() error {
 	return nil
 }
 
+// AuxiliaryOnUsField gets the AuxiliaryOnUs field
+func (cd *CheckDetail) AuxiliaryOnUsField() string {
+	return cd.stringField(cd.AuxiliaryOnUs, 15)
+}
+
+// ExternalProcessingCodeField gets the ExternalProcessingCode field - ALos known as Position 44
+func (cd *CheckDetail) ExternalProcessingCodeField() string {
+	return cd.stringField(cd.ExternalProcessingCode, 1)
+}
+
+// PayorBankRoutingNumberField gets the PayorBankRoutingNumber field
+func (cd *CheckDetail) PayorBankRoutingNumberField() string {
+	return cd.stringField(cd.PayorBankRoutingNumber, 8)
+}
+
+// OnUsField gets the OnUs field
+func (cd *CheckDetail) OnUsField() string {
+	return cd.alphaField(cd.OnUs, 20)
+}
+
 // ItemAmountField gets the ItemAmount right justified and zero padded
 func (cd *CheckDetail) ItemAmountField() string {
 	return cd.numericField(cd.ItemAmount, 1)
 }
 
-// EceInstitutionItemSequenceNumberField gets the EceInstitutionItemSequenceNumber
+// EceInstitutionItemSequenceNumberField gets the EceInstitutionItemSequenceNumber field
 func (cd *CheckDetail) EceInstitutionItemSequenceNumberField() string {
 	return cd.alphaField(cd.EceInstitutionItemSequenceNumber, 1)
 }
 
-// DocumentationTypeIndicatorField gets the DocumentationTypeIndicator
+// DocumentationTypeIndicatorField gets the DocumentationTypeIndicator field
 func (cd *CheckDetail) DocumentationTypeIndicatorField() string {
 	return cd.alphaField(cd.DocumentationTypeIndicator, 1)
 }
 
-// ReturnAcceptanceIndicatorField gets the ReturnAcceptanceIndicator
+// ReturnAcceptanceIndicatorField gets the ReturnAcceptanceIndicator field
 func (cd *CheckDetail) ReturnAcceptanceIndicatorField() string {
 	return cd.alphaField(cd.ReturnAcceptanceIndicator, 1)
 }

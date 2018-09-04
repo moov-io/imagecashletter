@@ -86,7 +86,7 @@ func (bc *BundleControl) String() string {
 	buf.WriteString(bc.MICRValidTotalAmountField())
 	buf.WriteString(bc.BundleImagesCountField())
 	buf.WriteString(bc.UserFieldField())
-	buf.WriteString(fmt.Sprintf("%v", bc.CreditTotalIndicator))
+	buf.WriteString(bc.CreditTotalIndicatorField())
 	buf.WriteString(bc.reservedField())
 	return buf.String()
 }

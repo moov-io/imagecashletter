@@ -4,6 +4,8 @@
 
 package x9
 
+import "strings"
+
 // ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 
 // Errors specific to a CheckDetailAddendumB Record
@@ -47,20 +49,35 @@ type CheckDetailAddendumB struct {
 
 // NewCheckDetailAddendumB returns a new CheckDetailAddendumB with default values for non exported fields
 func NewCheckDetailAddendumB() *CheckDetailAddendumB {
-	checkAddendumB := &CheckDetailAddendumB{
+	cdAddendumB := &CheckDetailAddendumB{
 		recordType: "27",
 	}
-	return checkAddendumB
+	return cdAddendumB
 }
 
 // Parse takes the input record string and parses the CheckDetailAddendumB values
+func (cdAddendumB *CheckDetailAddendumB) Parse(record string) {
+	// Character position 1-2, Always "27"
+	cdAddendumB.recordType = "27"
+}
 
 // String writes the CheckDetailAddendumB struct to a string.
+func (cdAddendumB *CheckDetailAddendumB) String() string {
+	var buf strings.Builder
+	buf.Grow(80)
+	return buf.String()
+}
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
+func (cdAddendumB *CheckDetailAddendumB) Validate() error {
+	return nil
+}
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
+func (cdAddendumB *CheckDetailAddendumB) fieldInclusion() error {
+	return nil
+}
 
 // Get properties

@@ -93,7 +93,7 @@ func (clc *CashLetterControl) String() string {
 	buf.WriteString(clc.CashLetterImagesCountField())
 	buf.WriteString(clc.ECEInstitutionNameField())
 	buf.WriteString(clc.SettlementDateField())
-	buf.WriteString(fmt.Sprintf("%v", clc.CreditTotalIndicator))
+	buf.WriteString(clc.CreditTotalIndicatorField())
 	buf.WriteString(clc.reservedField())
 	return buf.String()
 }

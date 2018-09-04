@@ -4,7 +4,10 @@
 
 package x9
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 // ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 
@@ -57,7 +60,7 @@ type CheckDetailAddendumC struct {
 	// 8: Undetermined
 	BOFDConversionIndicator string `json:"endorsingConversionIndicator"`
 	// EndorsingCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
-	// creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount.
+	// creator of this CheckDetailAddendumC Record for fields other than Payor Bank Routing Number and Amount.
 	// Values:
 	// 0: No Repair
 	// 1: Repaired (form of repair unknown)
@@ -71,7 +74,7 @@ type CheckDetailAddendumC struct {
 	UserField string `json:"userField"`
 	//EndorsingBankIdentifier
 	// Values:
-	// 0: Depository Bank (BOFD) - this value is used when the CheckDetailAddendumA Record reflects the Return
+	// 0: Depository Bank (BOFD) - this value is used when the CheckDetailAddendumC Record reflects the Return
 	// Processing Bank in lieu of BOFD.
 	// 1: Other Collecting Bank
 	// 2: Other Returning Bank
@@ -87,20 +90,35 @@ type CheckDetailAddendumC struct {
 
 // NewCheckDetailAddendumC returns a new CheckDetailAddendumC with default values for non exported fields
 func NewCheckDetailAddendumC() *CheckDetailAddendumC {
-	checkAddendumC := &CheckDetailAddendumC{
+	cdAddendumC := &CheckDetailAddendumC{
 		recordType: "28",
 	}
-	return checkAddendumC
+	return cdAddendumC
 }
 
 // Parse takes the input record string and parses the CheckDetailAddendumC values
+func (cdAddendumC *CheckDetailAddendumC) Parse(record string) {
+	// Character position 1-2, Always "28"
+	cdAddendumC.recordType = "28"
+}
 
 // String writes the CheckDetailAddendumC struct to a string.
+func (cdAddendumC *CheckDetailAddendumC) String() string {
+	var buf strings.Builder
+	buf.Grow(80)
+	return buf.String()
+}
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
+func (cdAddendumC *CheckDetailAddendumC) Validate() error {
+	return nil
+}
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
+func (cdAddendumC *CheckDetailAddendumC) fieldInclusion() error {
+	return nil
+}
 
 // Get properties
