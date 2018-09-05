@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"fmt"
 	"strings"
 	"time"
 )
@@ -29,7 +30,7 @@ type CheckDetailAddendumC struct {
 	// AAAA ABA Institution Identifier
 	// C Check Digit
 	// For a number that identifies a non-financial institution: NNNNNNNNN
-	RoutingNumber string `json:"routingNumber"`
+	EndorsingBankRoutingNumber string `json:"endorsingBankRoutingNumber"`
 	// BOFDEndorsementBusinessDate is the business date the check was endorsed.
 	// Format: YYYYMMDD, where: YYYY year, MM month, DD day
 	// Values:
@@ -45,7 +46,7 @@ type CheckDetailAddendumC struct {
 	// N: No this institution did not truncate the original check or, this is not the first endorsement for the
 	// institution or, this item is an IRD not an original check item (EPC equals 4).
 	TruncationIndicator string `json:"truncationIndicator"`
-	// BOFDConversionIndicator is a code that indicates the conversion within the processing institution among
+	// EndorsingConversionIndicator is a code that indicates the conversion within the processing institution among
 	// original paper check, image and IRD. The indicator is specific to the action of institution identified in the
 	// Endorsing Bank RoutingNumber.
 	// Values:
@@ -58,7 +59,7 @@ type CheckDetailAddendumC struct {
 	// 6: Image converted to another image (e.g., transcoded)
 	// 7: Did not convert image (e.g., same as source)
 	// 8: Undetermined
-	BOFDConversionIndicator string `json:"endorsingConversionIndicator"`
+	EndorsingConversionIndicator string `json:"endorsingConversionIndicator"`
 	// EndorsingCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
 	// creator of this CheckDetailAddendumC Record for fields other than Payor Bank Routing Number and Amount.
 	// Values:
@@ -100,25 +101,168 @@ func NewCheckDetailAddendumC() *CheckDetailAddendumC {
 func (cdAddendumC *CheckDetailAddendumC) Parse(record string) {
 	// Character position 1-2, Always "28"
 	cdAddendumC.recordType = "28"
+	// 03-04
+	cdAddendumC.RecordNumber = cdAddendumC.parseNumField(record[02:04])
+	// 05-13
+	cdAddendumC.EndorsingBankRoutingNumber = cdAddendumC.parseStringField(record[04:13])
+	// 14-21
+	cdAddendumC.BOFDEndorsementBusinessDate = cdAddendumC.parseYYYMMDDDate(record[13:21])
+	// 22-36
+	cdAddendumC.EndorsingItemSequenceNumber = cdAddendumC.parseStringField(record[21:36])
+	// 37-37
+	cdAddendumC.TruncationIndicator = cdAddendumC.parseStringField(record[36:37])
+	// 38-38
+	cdAddendumC.EndorsingConversionIndicator = cdAddendumC.parseStringField(record[37:38])
+	// 39-39
+	cdAddendumC.EndorsingCorrectionIndicator = cdAddendumC.parseNumField(record[38:39])
+	// 40-40
+	cdAddendumC.ReturnReason = cdAddendumC.parseStringField(record[39:40])
+	// 41-59
+	cdAddendumC.UserField = cdAddendumC.parseStringField(record[40:59])
+	// 60-60
+	cdAddendumC.EndorsingBankIdentifier = cdAddendumC.parseStringField(record[59:60])
+	// 61-80
+	cdAddendumC.reserved = "                    "
 }
 
 // String writes the CheckDetailAddendumC struct to a string.
 func (cdAddendumC *CheckDetailAddendumC) String() string {
 	var buf strings.Builder
 	buf.Grow(80)
+	buf.WriteString(cdAddendumC.recordType)
+	buf.WriteString(cdAddendumC.RecordNumberField())
+	buf.WriteString(cdAddendumC.EndorsingBankRoutingNumberField())
+	buf.WriteString(cdAddendumC.BOFDEndorsementBusinessDateField())
+	buf.WriteString(cdAddendumC.EndorsingItemSequenceNumberField())
+	buf.WriteString(cdAddendumC.TruncationIndicatorField())
+	buf.WriteString(cdAddendumC.EndorsingConversionIndicatorField())
+	buf.WriteString(cdAddendumC.EndorsingCorrectionIndicatorField())
+	buf.WriteString(cdAddendumC.ReturnReasonField())
+	buf.WriteString(cdAddendumC.UserFieldField())
+	buf.WriteString(cdAddendumC.EndorsingBankIdentifierField())
+	buf.WriteString(cdAddendumC.reservedField())
 	return buf.String()
 }
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (cdAddendumC *CheckDetailAddendumC) Validate() error {
+	if err := cdAddendumC.fieldInclusion(); err != nil {
+		return err
+	}
+	if cdAddendumC.recordType != "28" {
+		msg := fmt.Sprintf(msgRecordType, 28)
+		return &FieldError{FieldName: "recordType", Value: cdAddendumC.recordType, Msg: msg}
+	}
+	if err := cdAddendumC.isNumeric(cdAddendumC.EndorsingBankRoutingNumber); err != nil {
+		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
+			Value: cdAddendumC.EndorsingBankRoutingNumber, Msg: err.Error()}
+	}
+	if err := cdAddendumC.isTruncationIndicator(cdAddendumC.TruncationIndicator); err != nil {
+		return &FieldError{FieldName: "TruncationIndicator",
+			Value: cdAddendumC.TruncationIndicator, Msg: err.Error()}
+	}
+	if err := cdAddendumC.isConversionIndicator(cdAddendumC.EndorsingConversionIndicator); err != nil {
+		return &FieldError{FieldName: "EndorsingConversionIndicator",
+			Value: cdAddendumC.EndorsingConversionIndicator, Msg: err.Error()}
+	}
+	if err := cdAddendumC.isCorrectionIndicator(cdAddendumC.EndorsingCorrectionIndicator); err != nil {
+		return &FieldError{FieldName: "EndorsingCorrectionIndicator",
+			Value: cdAddendumC.EndorsingCorrectionIndicatorField(), Msg: err.Error()}
+	}
+	if err := cdAddendumC.isAlphanumeric(cdAddendumC.ReturnReason); err != nil {
+		return &FieldError{FieldName: "ReturnReason",
+			Value: cdAddendumC.ReturnReason, Msg: err.Error()}
+	}
+	if err := cdAddendumC.isAlphanumericSpecial(cdAddendumC.UserField); err != nil {
+		return &FieldError{FieldName: "UserField", Value: cdAddendumC.UserField, Msg: err.Error()}
+	}
+	if err := cdAddendumC.isAlphanumeric(cdAddendumC.EndorsingBankIdentifier); err != nil {
+		return &FieldError{FieldName: "EndorsingBankIdentifier",
+			Value: cdAddendumC.EndorsingBankIdentifier, Msg: err.Error()}
+	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
 func (cdAddendumC *CheckDetailAddendumC) fieldInclusion() error {
+	if cdAddendumC.recordType == "" {
+		return &FieldError{FieldName: "recordType", Value: cdAddendumC.recordType, Msg: msgFieldInclusion}
+	}
+	if cdAddendumC.RecordNumber == 0 {
+		return &FieldError{FieldName: "RecordNumber", Value: cdAddendumC.RecordNumberField(), Msg: msgFieldInclusion}
+	}
+	if cdAddendumC.EndorsingBankRoutingNumber == "" {
+		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
+			Value: cdAddendumC.EndorsingBankRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if cdAddendumC.EndorsingBankRoutingNumber == "000000000" {
+		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
+			Value: cdAddendumC.EndorsingBankRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if cdAddendumC.BOFDEndorsementBusinessDate.IsZero() {
+		return &FieldError{FieldName: "BOFDEndorsementBusinessDate",
+			Value: cdAddendumC.BOFDEndorsementBusinessDate.String(), Msg: msgFieldInclusion}
+	}
+	if cdAddendumC.TruncationIndicator == "" {
+		return &FieldError{FieldName: "TruncationIndicator",
+			Value: cdAddendumC.TruncationIndicator, Msg: msgFieldInclusion}
+	}
 	return nil
 }
 
-// Get properties
+// RecordNumberField gets a string of the RecordNumber field
+func (cdAddendumC *CheckDetailAddendumC) RecordNumberField() string {
+	return cdAddendumC.numericField(cdAddendumC.RecordNumber, 2)
+}
+
+// EndorsingBankRoutingNumberField gets a string of the EndorsingBankRoutingNumber field
+func (cdAddendumC *CheckDetailAddendumC) EndorsingBankRoutingNumberField() string {
+	return cdAddendumC.stringField(cdAddendumC.EndorsingBankRoutingNumber, 9)
+}
+
+// BOFDEndorsementBusinessDateField gets the BOFDEndorsementBusinessDate in YYYYMMDD format
+func (cdAddendumC *CheckDetailAddendumC) BOFDEndorsementBusinessDateField() string {
+	return cdAddendumC.formatYYYYMMDDDate(cdAddendumC.BOFDEndorsementBusinessDate)
+}
+
+// EndorsingItemSequenceNumberField gets the EndorsingItemSequenceNumber field
+func (cdAddendumC *CheckDetailAddendumC) EndorsingItemSequenceNumberField() string {
+	return cdAddendumC.alphaField(cdAddendumC.EndorsingItemSequenceNumber, 15)
+}
+
+// TruncationIndicatorField gets the TruncationIndicator field
+func (cdAddendumC *CheckDetailAddendumC) TruncationIndicatorField() string {
+	return cdAddendumC.alphaField(cdAddendumC.TruncationIndicator, 1)
+}
+
+// EndorsingConversionIndicatorField gets the EndorsingConversionIndicator field
+func (cdAddendumC *CheckDetailAddendumC) EndorsingConversionIndicatorField() string {
+	return cdAddendumC.alphaField(cdAddendumC.EndorsingConversionIndicator, 1)
+}
+
+// EndorsingCorrectionIndicatorField gets a string of the EndorsingCorrectionIndicator field
+func (cdAddendumC *CheckDetailAddendumC) EndorsingCorrectionIndicatorField() string {
+	return cdAddendumC.numericField(cdAddendumC.EndorsingCorrectionIndicator, 1)
+}
+
+// ReturnReasonField gets the ReturnReason field
+func (cdAddendumC *CheckDetailAddendumC) ReturnReasonField() string {
+	return cdAddendumC.alphaField(cdAddendumC.ReturnReason, 1)
+}
+
+// UserFieldField gets the UserField field
+func (cdAddendumC *CheckDetailAddendumC) UserFieldField() string {
+	return cdAddendumC.alphaField(cdAddendumC.UserField, 19)
+}
+
+// EndorsingBankIdentifierField gets the EndorsingBankIdentifier field
+func (cdAddendumC *CheckDetailAddendumC) EndorsingBankIdentifierField() string {
+	return cdAddendumC.alphaField(cdAddendumC.EndorsingBankIdentifier, 1)
+}
+
+// reservedField gets reserved - blank space
+func (cdAddendumC *CheckDetailAddendumC) reservedField() string {
+	return cdAddendumC.alphaField(cdAddendumC.reserved, 20)
+}

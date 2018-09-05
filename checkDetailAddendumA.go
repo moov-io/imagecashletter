@@ -157,21 +157,21 @@ func (cdAddendumA *CheckDetailAddendumA) Validate() error {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumberr",
 			Value: cdAddendumA.ReturnLocationRoutingNumber, Msg: err.Error()}
 	}
-	if err := cdAddendumA.isNumeric(cdAddendumA.BOFDItemSequenceNumber); err != nil {
+	/*	if err := cdAddendumA.isNumeric(cdAddendumA.BOFDItemSequenceNumber); err != nil {
 		return &FieldError{FieldName: "BOFDItemSequenceNumber",
 			Value: cdAddendumA.BOFDItemSequenceNumber, Msg: err.Error()}
-	}
+	}*/
 	if err := cdAddendumA.isAlphanumericSpecial(cdAddendumA.BOFDAccountNumber); err != nil {
 		return &FieldError{FieldName: "BOFDAccountNumber",
 			Value: cdAddendumA.BOFDAccountNumber, Msg: err.Error()}
 	}
 	if err := cdAddendumA.isAlphanumericSpecial(cdAddendumA.BOFDAccountNumber); err != nil {
 		return &FieldError{FieldName: "BOFDAccountNumber",
-		Value: cdAddendumA.BOFDAccountNumber, Msg: err.Error()}
+			Value: cdAddendumA.BOFDAccountNumber, Msg: err.Error()}
 	}
 	if err := cdAddendumA.isAlphanumericSpecial(cdAddendumA.BOFDBranchCode); err != nil {
 		return &FieldError{FieldName: "BOFDBranchCode",
-		Value: cdAddendumA.BOFDBranchCode, Msg: err.Error()}
+			Value: cdAddendumA.BOFDBranchCode, Msg: err.Error()}
 	}
 	if err := cdAddendumA.isAlphanumericSpecial(cdAddendumA.PayeeName); err != nil {
 		return &FieldError{FieldName: "PayeeName",
@@ -179,15 +179,15 @@ func (cdAddendumA *CheckDetailAddendumA) Validate() error {
 	}
 	if err := cdAddendumA.isTruncationIndicator(cdAddendumA.TruncationIndicator); err != nil {
 		return &FieldError{FieldName: "TruncationIndicator",
-		Value: cdAddendumA.TruncationIndicator, Msg: err.Error()}
+			Value: cdAddendumA.TruncationIndicator, Msg: err.Error()}
 	}
 	if err := cdAddendumA.isConversionIndicator(cdAddendumA.BOFDConversionIndicator); err != nil {
 		return &FieldError{FieldName: "BOFDConversionIndicator",
-		Value: cdAddendumA.BOFDConversionIndicator, Msg: err.Error()}
+			Value: cdAddendumA.BOFDConversionIndicator, Msg: err.Error()}
 	}
 	if err := cdAddendumA.isCorrectionIndicator(cdAddendumA.BOFDCorrectionIndicator); err != nil {
-		return &FieldError{FieldName: "CorrectionIndicator",
-		Value: cdAddendumA.BOFDCorrectionIndicatorField(), Msg: err.Error()}
+		return &FieldError{FieldName: "BOFDCorrectionIndicator",
+			Value: cdAddendumA.BOFDCorrectionIndicatorField(), Msg: err.Error()}
 	}
 	if err := cdAddendumA.isAlphanumericSpecial(cdAddendumA.UserField); err != nil {
 		return &FieldError{FieldName: "UserField", Value: cdAddendumA.UserField, Msg: err.Error()}
@@ -206,15 +206,15 @@ func (cdAddendumA *CheckDetailAddendumA) fieldInclusion() error {
 	}
 	if cdAddendumA.ReturnLocationRoutingNumber == "" {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
-		Value: cdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
+			Value: cdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
 	}
 	if cdAddendumA.ReturnLocationRoutingNumber == "000000000" {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
-		Value: cdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
+			Value: cdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
 	}
 	if cdAddendumA.BOFDEndorsementDate.IsZero() {
 		return &FieldError{FieldName: "BOFDEndorsementDate",
-		Value: cdAddendumA.BOFDEndorsementDate.String(), Msg: msgFieldInclusion}
+			Value: cdAddendumA.BOFDEndorsementDate.String(), Msg: msgFieldInclusion}
 	}
 	if cdAddendumA.TruncationIndicator == "" {
 		return &FieldError{FieldName: "TruncationIndicator",
@@ -222,8 +222,6 @@ func (cdAddendumA *CheckDetailAddendumA) fieldInclusion() error {
 	}
 	return nil
 }
-
-// Get properties
 
 // RecordNumberField gets a string of the RecordNumber field
 func (cdAddendumA *CheckDetailAddendumA) RecordNumberField() string {
