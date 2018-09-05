@@ -15,31 +15,46 @@ type Bundle struct {
 	// Items are ICL Items: Check Detail Records, Check Detail Addendum Records, and Image Views
 	Items []*CheckDetail `json:"items,omitempty"`
 	// BundleControl is an ICL Bundle Control Record
-	BundleControl BundleControl `json:"bundleControl,omitempty"`
+	BundleControl *BundleControl `json:"bundleControl,omitempty"`
 	// Converters is composed for x9 to GoLang Converters
 	converters
 }
 
 // NewBundle takes a BundleHeader and returns a Bundle
 // ToDo:  Follow up on returning a pointer when implementing tests and examples
-func NewBundle(bh *BundleHeader) *Bundle {
-	bundle := &Bundle{}
-	bundle.SetControl(NewBundleControl())
-	bundle.SetHeader(bh)
-	return bundle
+func NewBundle(bh *BundleHeader) Bundle {
+	b := Bundle{}
+	b.SetControl(NewBundleControl())
+	b.SetHeader(bh)
+	return b
 }
 
 // Validate performs X9  validations and format rule checks and returns an error if not Validated
-func (bundle *Bundle) Validate() error {
+func (b *Bundle) Validate() error {
 	return nil
 }
 
+// AddCheckDetail appends a CheckDetail to the Bundle
+func (b *Bundle) AddCheckDetail(check *CheckDetail) {
+	b.Items = append(b.Items, check)
+}
+
 // SetHeader appends an BundleHeader to the Bundle
-func (bundle *Bundle) SetHeader(bundleHeader *BundleHeader) {
-	bundle.BundleHeader = bundleHeader
+func (b *Bundle) SetHeader(bundleHeader *BundleHeader) {
+	b.BundleHeader = bundleHeader
+}
+
+// GetHeader returns the current Bundle header
+func (b *Bundle) GetHeader() *BundleHeader {
+	return b.BundleHeader
 }
 
 // SetControl appends an BundleControl to the Bundle
-func (bundle *Bundle) SetControl(bundleControl BundleControl) {
-	bundle.BundleControl = bundleControl
+func (b *Bundle) SetControl(bundleControl *BundleControl) {
+	b.BundleControl = bundleControl
+}
+
+// GetControl returns the current Bundle Control
+func (b *Bundle) GetControl() *BundleControl {
+	return b.BundleControl
 }

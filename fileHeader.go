@@ -116,7 +116,7 @@ func (fh *FileHeader) Parse(record string) {
 	// 03-04
 	fh.StandardLevel = fh.parseStringField(record[2:4])
 	// 05-05
-	fh.TestFileIndicator = record[4:5]
+	fh.TestFileIndicator = fh.parseStringField(record[4:5])
 	// 06-14
 	fh.ImmediateDestination = fh.parseStringField(record[5:14])
 	// 15-23
@@ -126,19 +126,19 @@ func (fh *FileHeader) Parse(record string) {
 	// 32-35
 	fh.FileCreationTime = fh.parseSimpleTime(record[31:35])
 	// 36-36
-	fh.ResendIndicator = record[35:36]
+	fh.ResendIndicator = fh.parseStringField(record[35:36])
 	// 37-54
 	fh.ImmediateDestinationName = fh.parseStringField(record[36:54])
 	// 55-72
 	fh.ImmediateOriginName = fh.parseStringField(record[54:72])
 	// 73-73
-	fh.FileIDModifier = record[72:73]
+	fh.FileIDModifier = fh.parseStringField(record[72:73])
 	// 74-75
 	fh.CountryCode = fh.parseStringField(record[73:75])
 	// 76-79
 	fh.UserField = fh.parseStringField(record[75:79])
 	// 80-80
-	fh.CompanionDocumentIndicator = record[79:80]
+	fh.CompanionDocumentIndicator = fh.parseStringField(record[79:80])
 }
 
 // String writes the FileHeader struct to a string.
@@ -146,19 +146,19 @@ func (fh *FileHeader) String() string {
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(fh.recordType)
-	buf.WriteString(fh.StandardLevel)
-	buf.WriteString(fh.TestFileIndicator)
+	buf.WriteString(fh.StandardLevelField())
+	buf.WriteString(fh.TestFileIndicatorField())
 	buf.WriteString(fh.ImmediateDestinationField())
-	buf.WriteString(fh.ImmediateOriginNameField())
+	buf.WriteString(fh.ImmediateOriginField())
 	buf.WriteString(fh.FileCreationDateField())
 	buf.WriteString(fh.FileCreationTimeField())
-	buf.WriteString(fh.ResendIndicator)
+	buf.WriteString(fh.ResendIndicatorField())
 	buf.WriteString(fh.ImmediateDestinationNameField())
 	buf.WriteString(fh.ImmediateOriginNameField())
-	buf.WriteString(fh.FileIDModifier)
+	buf.WriteString(fh.FileIDModifierField())
 	buf.WriteString(fh.CountryCodeField())
 	buf.WriteString(fh.UserFieldField())
-	buf.WriteString(fh.CompanionDocumentIndicator)
+	buf.WriteString(fh.CompanionDocumentIndicatorField())
 	return buf.String()
 }
 
@@ -243,24 +243,39 @@ func (fh *FileHeader) fieldInclusion() error {
 
 }
 
-// ImmediateDestinationField gets the immediate destination routing number
+// StandardLevelField gets the StandardLevel field
+func (fh *FileHeader) StandardLevelField() string {
+	return fh.alphaField(fh.StandardLevel, 2)
+}
+
+// TestFileIndicatorField gets the TestFileIndicator field
+func (fh *FileHeader) TestFileIndicatorField() string {
+	return fh.alphaField(fh.TestFileIndicator, 1)
+}
+
+// ImmediateDestinationField gets the ImmediateDestination routing number field
 func (fh *FileHeader) ImmediateDestinationField() string {
 	return fh.stringField(fh.ImmediateDestination, 9)
 }
 
-// ImmediateOriginField gets the immediate origin routing number
+// ImmediateOriginField gets the ImmediateOrigin routing number field
 func (fh *FileHeader) ImmediateOriginField() string {
 	return fh.stringField(fh.ImmediateOrigin, 9)
 }
 
-// FileCreationDateField gets the file creation date in YYYYMMDD format
+// FileCreationDateField gets the FileCreationDate field in YYYYMMDD format
 func (fh *FileHeader) FileCreationDateField() string {
 	return fh.formatYYYYMMDDDate(fh.FileCreationDate)
 }
 
-// FileCreationTimeField gets the file creation time in HHMM format
+// FileCreationTimeField gets the FileCreationTime in HHMM format
 func (fh *FileHeader) FileCreationTimeField() string {
 	return fh.formatSimpleTime(fh.FileCreationTime)
+}
+
+// ResendIndicatorField gets the TestFileIndicator field
+func (fh *FileHeader) ResendIndicatorField() string {
+	return fh.alphaField(fh.ResendIndicator, 1)
 }
 
 // ImmediateDestinationNameField gets the ImmediateDestinationName field padded

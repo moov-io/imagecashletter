@@ -46,12 +46,15 @@ const (
 var (
 	//msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
 	// specific messages
-	msgRecordLength = "must be at least 80 characters and found %d"
-	//msgFileBatchOutside  = "outside of current batch"
-	msgFileCashLetterInside   = "inside of current cash letter"
-	msgFileControl       = "none or more than one file control exists"
-	msgFileHeader        = "none or more than one file headers exists"
-	msgUnknownRecordType = "%s is an unknown record type"
+	msgRecordLength          = "Must be at least 80 characters and found %d"
+	msgFileCashLetterInside  = "Inside of current cash letter"
+	msgFileCashLetterControl = "Cash letter control without a current cash letter"
+	msgFileBundleOutside     = "Outside of current bundle"
+	msgFileBundleInside      = "Inside of current bundle"
+	msgFileBundleControl     = "Bundle control without a current bundle"
+	msgFileControl           = "None or more than one file control exists"
+	msgFileHeader            = "None or more than one file headers exists"
+	msgUnknownRecordType     = "%s is an unknown record type"
 )
 
 // FileError is an error describing issues validating a file

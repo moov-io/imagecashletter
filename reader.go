@@ -215,7 +215,6 @@ func (r *Reader) parseCashLetterHeader() error {
 	if err := clh.Validate(); err != nil {
 		return r.error(err)
 	}
-	
 	// Passing CashLetterHeader into NewCashLetter creates a CashLetter
 	cl := NewCashLetter(clh)
 	r.addCurrentCashLetter(cl)
@@ -225,12 +224,38 @@ func (r *Reader) parseCashLetterHeader() error {
 // parseBundleHeader takes the input record string and parses the BundleHeader values
 func (r *Reader) parseBundleHeader() error {
 	r.recordName = "BundleHeader"
+	if r.currentBundle.BundleHeader != nil {
+		// BundleHeader inside of current Bundle
+		return r.error(&FileError{Msg: msgFileBundleInside})
+	}
+	// Ensure we have a valid BundleHeader before building a Bundle
+	bh := NewBundleHeader()
+	bh.Parse(r.line)
+	if err := bh.Validate(); err != nil {
+		return r.error(err)
+	}
+	// Passing BundleHeader into newBundle creates a Bundle
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
 	return nil
 }
 
 // parseCheckDetail takes the input record string and parses the CheckDetail values
 func (r *Reader) parseCheckDetail() error {
 	r.recordName = "CheckDetail"
+	if r.currentBundle.BundleHeader == nil {
+		return r.error(&FileError{Msg: msgFileBundleOutside})
+	}
+	cd := new(CheckDetail)
+	cd.Parse(r.line)
+	// Ensure we have a valid CheckDetail
+	if err := cd.Validate(); err != nil {
+		return r.error(err)
+	}
+	// Add CheckDetail
+	if r.currentBundle.BundleHeader != nil {
+		r.currentBundle.AddCheckDetail(cd)
+	}
 	return nil
 }
 
@@ -273,17 +298,41 @@ func (r *Reader) parseImageViewAnalysis() error {
 // parseBundleControl takes the input record string and parses the BundleControl values
 func (r *Reader) parseBundleControl() error {
 	r.recordName = "BundleControl"
+	if r.currentBundle.BundleHeader == nil {
+		// BundleControl without a current Bundle
+		return r.error(&FileError{Msg: msgFileBundleControl})
+	}
+	r.currentBundle.GetControl().Parse(r.line)
+	if err := r.currentBundle.GetControl().Validate(); err != nil {
+		return r.error(err)
+	}
 	return nil
 }
 
 // parseCashLetterControl takes the input record string and parses the CashLetterControl values
 func (r *Reader) parseCashLetterControl() error {
 	r.recordName = "CashLetterControl"
+	if r.currentCashLetter.CashLetterHeader == nil {
+		// CashLetterControl without a current CashLetter
+		return r.error(&FileError{Msg: msgFileCashLetterControl})
+	}
+	r.currentCashLetter.GetControl().Parse(r.line)
+	if err := r.currentCashLetter.GetControl().Validate(); err != nil {
+		return r.error(err)
+	}
 	return nil
 }
 
 // parseFileControl takes the input record string and parses the FileControl values
 func (r *Reader) parseFileControl() error {
 	r.recordName = "FileControl"
+	if (FileControl{}) != r.File.Control {
+		// Can be only one file control per file
+		return r.error(&FileError{Msg: msgFileControl})
+	}
+	r.File.Control.Parse(r.line)
+	if err := r.File.Control.Validate(); err != nil {
+		return r.error(err)
+	}
 	return nil
 }

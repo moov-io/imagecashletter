@@ -7,7 +7,7 @@ package x9
 import "testing"
 
 // mockBundleControl creates a BundleControl
-func mockBundleControl() BundleControl {
+func mockBundleControl() *BundleControl {
 	bc := NewBundleControl()
 	// BundleItemsCount - CheckDetail
 	// ToDo: CheckDetailAddendum* and ImageView*

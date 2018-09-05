@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"strings"
 	"testing"
 	"time"
 )
@@ -82,5 +83,101 @@ func BenchmarkMockFileHeader(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testMockFileHeader(b)
+	}
+}
+
+// parseFileHeader validates parsing a file header
+func parseFileHeader(t testing.TB) {
+	var line = "0135T231380104121042882201809051523NCitadel           Wells Fargo        US     "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	if err := r.parseFileHeader(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	record := r.File.Header
+
+	if record.recordType != "01" {
+		t.Errorf("RecordType Expected '01' got: %v", record.recordType)
+	}
+	if record.StandardLevel != "35" {
+		t.Errorf("StandardLevel Expected '35' got: %v", record.StandardLevel)
+	}
+	if record.TestFileIndicator != "T" {
+		t.Errorf("TestFileIndicator 'T' got: %v", record.TestFileIndicator)
+	}
+	if record.ImmediateDestinationField() != "231380104" {
+		t.Errorf("ImmediateDestination Expected '231380104' got: %v", record.ImmediateDestinationField())
+	}
+	if record.ImmediateOriginField() != "121042882" {
+		t.Errorf("ImmediateOrigin Expected '121042882' got: %v", record.ImmediateOriginField())
+	}
+	if record.FileCreationDateField() != "20180905" {
+		t.Errorf("FileCreationDate Expected '20180905' got:'%v'", record.FileCreationDateField())
+	}
+	if record.FileCreationTimeField() != "1523" {
+		t.Errorf("FileCreationTime Expected '1523' got:'%v'", record.FileCreationTimeField())
+	}
+	if record.ResendIndicator != "N" {
+		t.Errorf("ResendIndicator Expected 'N' got: %v", record.ResendIndicator)
+	}
+	if record.ImmediateDestinationNameField() != "Citadel           " {
+		t.Errorf("ImmediateDestinationName Expected 'Citadel           ' got:'%v'", record.ImmediateDestinationNameField())
+	}
+	if record.ImmediateOriginNameField() != "Wells Fargo       " {
+		t.Errorf("ImmediateOriginName Expected 'Wells Fargo       ' got: '%v'", record.ImmediateOriginNameField())
+	}
+	if record.FileIDModifier != "" {
+		t.Errorf("FileIDModifier Expected '' got:'%v'", record.FileIDModifier)
+	}
+	if record.CountryCode != "US" {
+		t.Errorf("CountryCode Expected 'US' got:'%v'", record.CountryCode)
+	}
+	if record.UserField != "" {
+		t.Errorf("UserField Expected '' got:'%v'", record.UserField)
+	}
+	if record.CompanionDocumentIndicator != "" {
+		t.Errorf("CompanionDocumentIndicator Expected '' got:'%v'", record.CompanionDocumentIndicator)
+	}
+}
+
+// TestParseFileHeader test validates parsing a file header
+func TestParseFileHeader(t *testing.T) {
+	parseFileHeader(t)
+}
+
+// BenchmarkParseFileHeader benchmark validates parsing a file header
+func BenchmarkParseFileHeader(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		parseFileHeader(b)
+	}
+}
+
+// testFHString validates that a known parsed file can return to a string of the same value
+func testFHString(t testing.TB) {
+	var line = "0135T231380104121042882201809051523NCitadel           Wells Fargo        US     "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	if err := r.parseFileHeader(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	record := r.File.Header
+
+	if record.String() != line {
+		t.Errorf("Strings do not match")
+	}
+}
+
+// TestFHString tests validating that a known parsed file can return to a string of the same value
+func TestFHString(t *testing.T) {
+	testFHString(t)
+}
+
+// BenchmarkFHString benchmarks validating that a known parsed file
+// can return to a string of the same value
+func BenchmarkFHString(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		testFHString(b)
 	}
 }

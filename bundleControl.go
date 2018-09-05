@@ -48,8 +48,8 @@ type BundleControl struct {
 }
 
 // NewBundleControl returns a new BundleControl with default values for non exported fields
-func NewBundleControl() BundleControl {
-	bc := BundleControl{
+func NewBundleControl() *BundleControl {
+	bc := &BundleControl{
 		recordType: "70",
 	}
 	return bc

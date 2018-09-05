@@ -15,7 +15,7 @@ type CashLetter struct {
 	// ReturnBundles is an array of ICL Return Bundle
 	//ReturnBundles      []ReturnBundle      `json:"returnBundle,omitempty"`
 	// CashLetterControl is an ICL Cash Letter Control Record
-	CashLetterControl CashLetterControl `json:"cashLetterControl,omitempty"`
+	CashLetterControl *CashLetterControl `json:"cashLetterControl,omitempty"`
 	// Converters is composed for x9 to GoLang Converters
 	converters
 }
@@ -34,14 +34,24 @@ func (cl *CashLetter) Validate() error {
 	return nil
 }
 
-// SetHeader appends an CashLetterHeader to the CashLetter
+// SetHeader appends a CashLetterHeader to the CashLetter
 func (cl *CashLetter) SetHeader(cashLetterHeader *CashLetterHeader) {
 	cl.CashLetterHeader = cashLetterHeader
 }
 
-// SetControl appends an CashLetterControl to the CashLetter
-func (cl *CashLetter) SetControl(cashLetterControl CashLetterControl) {
+// GetHeader returns the current CashLetter header
+func (cl *CashLetter) GetHeader() *CashLetterHeader {
+	return cl.CashLetterHeader
+}
+
+// SetControl appends a CashLetterControl to the CashLetter
+func (cl *CashLetter) SetControl(cashLetterControl *CashLetterControl) {
 	cl.CashLetterControl = cashLetterControl
+}
+
+// GetControl returns the current CashLetter Control
+func (cl *CashLetter) GetControl() *CashLetterControl {
+	return cl.CashLetterControl
 }
 
 // AddBundle appends a Bundle to the x9.File.CashLetter

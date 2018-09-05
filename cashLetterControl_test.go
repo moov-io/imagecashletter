@@ -10,7 +10,7 @@ import (
 )
 
 // mockCashLetterControl creates a CashLetterControl
-func mockCashLetterControl() CashLetterControl {
+func mockCashLetterControl() *CashLetterControl {
 	clc := NewCashLetterControl()
 	clc.CashLetterBundleCount = 1
 	// CashLetterItemsCount - CheckDetail
