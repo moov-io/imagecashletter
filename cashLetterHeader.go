@@ -159,7 +159,7 @@ func (clh *CashLetterHeader) Parse(record string) {
 	// Character position 1-2, Always "10"
 	clh.recordType = "10"
 	// 03-04
-	clh.CollectionTypeIndicator = record[2:4]
+	clh.CollectionTypeIndicator = clh.parseStringField(record[2:4])
 	// 05-13
 	clh.DestinationRoutingNumber = clh.parseStringField(record[4:13])
 	// 14-22
@@ -171,9 +171,9 @@ func (clh *CashLetterHeader) Parse(record string) {
 	// 39-42
 	clh.CashLetterCreationTime = clh.parseSimpleTime(record[38:42])
 	// 43-43
-	clh.CashLetterRecordTypeIndicator = record[42:43]
+	clh.CashLetterRecordTypeIndicator = clh.parseStringField(record[42:43])
 	// 44-44
-	clh.CashLetterDocumentationTypeIndicator = record[43:44]
+	clh.CashLetterDocumentationTypeIndicator = clh.parseStringField(record[43:44])
 	// 45-52
 	clh.CashLetterID = clh.parseStringField(record[44:52])
 	// 53-66
@@ -181,11 +181,11 @@ func (clh *CashLetterHeader) Parse(record string) {
 	// 67-76
 	clh.OriginatorContactPhoneNumber = clh.parseStringField(record[66:76])
 	// 77-77
-	clh.FedWorkType = record[76:77]
+	clh.FedWorkType = clh.parseStringField(record[76:77])
 	// 78-78
-	clh.ReturnsIndicator = record[77:78]
+	clh.ReturnsIndicator = clh.parseStringField(record[77:78])
 	// 79-79
-	clh.UserField = record[78:79]
+	clh.UserField = clh.parseStringField(record[78:79])
 	// 80-80
 	clh.reserved = " "
 }
@@ -195,14 +195,14 @@ func (clh *CashLetterHeader) String() string {
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(clh.recordType)
-	buf.WriteString(clh.CollectionTypeIndicator)
+	buf.WriteString(clh.CollectionTypeIndicatorField())
 	buf.WriteString(clh.DestinationRoutingNumberField())
 	buf.WriteString(clh.ECEInstitutionRoutingNumberField())
 	buf.WriteString(clh.CashLetterBusinessDateField())
 	buf.WriteString(clh.CashLetterCreationDateField())
 	buf.WriteString(clh.CashLetterCreationTimeField())
-	buf.WriteString(clh.CashLetterRecordTypeIndicator)
-	buf.WriteString(clh.CashLetterDocumentationTypeIndicator)
+	buf.WriteString(clh.CashLetterRecordTypeIndicatorField())
+	buf.WriteString(clh.CashLetterDocumentationTypeIndicatorField())
 	buf.WriteString(clh.CashLetterIDField())
 	buf.WriteString(clh.OriginatorContactNameField())
 	buf.WriteString(clh.OriginatorContactPhoneNumberField())
@@ -296,6 +296,11 @@ func (clh *CashLetterHeader) fieldInclusion() error {
 	return nil
 }
 
+// CollectionTypeIndicatorField gets the CollectionTypeIndicator field
+func (clh *CashLetterHeader) CollectionTypeIndicatorField() string {
+	return clh.stringField(clh.CollectionTypeIndicator, 2)
+}
+
 // DestinationRoutingNumberField gets the DestinationRoutingNumber field
 func (clh *CashLetterHeader) DestinationRoutingNumberField() string {
 	return clh.stringField(clh.DestinationRoutingNumber, 9)
@@ -319,6 +324,16 @@ func (clh *CashLetterHeader) CashLetterCreationDateField() string {
 // CashLetterCreationTimeField gets the CashLetterCreationTime in HHMM format
 func (clh *CashLetterHeader) CashLetterCreationTimeField() string {
 	return clh.formatSimpleTime(clh.CashLetterCreationTime)
+}
+
+// CashLetterRecordTypeIndicatorField gets the CashLetterRecordTypeIndicator field
+func (clh *CashLetterHeader) CashLetterRecordTypeIndicatorField() string {
+	return clh.alphaField(clh.CashLetterRecordTypeIndicator, 1)
+}
+
+// CashLetterDocumentationTypeIndicatorField gets the CashLetterDocumentationTypeIndicator field
+func (clh *CashLetterHeader) CashLetterDocumentationTypeIndicatorField() string {
+	return clh.alphaField(clh.CashLetterDocumentationTypeIndicator, 1)
 }
 
 // CashLetterIDField gets the CashLetterID field

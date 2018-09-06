@@ -72,7 +72,7 @@ func BenchmarkMockFileControl(b *testing.B) {
 	}
 }
 
-// testParseFileControl parses a known file control record string
+// testParseFileControl parses a known FileControl record string
 func testParseFileControl(t testing.TB) {
 	var line = "9900000100000007000000010000000000100000Contact Name  55586755520               "
 	r := NewReader(strings.NewReader(line))
@@ -107,17 +107,17 @@ func testParseFileControl(t testing.TB) {
 	if record.CreditTotalIndicatorField() != "0" {
 		t.Errorf("CreditTotalIndicator Expected '0' got: %v", record.CreditTotalIndicatorField())
 	}
-	if record.reserved != "               " {
-		t.Errorf("Reserved Expected '               ' got: %v", record.reserved)
+	if record.reservedField() != "               " {
+		t.Errorf("Reserved Expected '               ' got: %v", record.reservedField())
 	}
 }
 
-// TestParseFileControl tests parsing a known file control record string
+// TestParseFileControl tests parsing a known FileControl record string
 func TestParseFileControl(t *testing.T) {
 	testParseFileControl(t)
 }
 
-// BenchmarkParseFileControl benchmarks parsing a known file control record string
+// BenchmarkParseFileControl benchmarks parsing a known FileControl record string
 func BenchmarkParseFileControl(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
@@ -125,7 +125,7 @@ func BenchmarkParseFileControl(b *testing.B) {
 	}
 }
 
-// testFCString validates that a known parsed file can be return to a string of the same value
+// testFCString validates that a known parsed FileControl can be return to a string of the same value
 func testFCString(t testing.TB) {
 	var line = "9900000100000007000000010000000000100000Contact Name  55586755520               "
 	r := NewReader(strings.NewReader(line))
@@ -140,12 +140,12 @@ func testFCString(t testing.TB) {
 	}
 }
 
-// TestFCString tests validating that a known parsed file can be return to a string of the same value
+// TestFCString tests validating that a known parsed FileControl can be return to a string of the same value
 func TestFCString(t *testing.T) {
 	testFCString(t)
 }
 
-// BenchmarkFCString benchmarks validating that a known parsed file can be return to a string of the same value
+// BenchmarkFCString benchmarks validating that a known parsed FileControl can be return to a string of the same value
 func BenchmarkFCString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
