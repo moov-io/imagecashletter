@@ -4,7 +4,10 @@
 
 package x9
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 // mockBundleControl creates a BundleControl
 func mockBundleControl() *BundleControl {
@@ -61,5 +64,93 @@ func BenchmarkMockBundleControl(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testMockBundleControl(b)
+	}
+}
+
+// testParseBundleControl parses a known BundleControl record string
+func testParseBundleControl(t testing.TB) {
+	var line = "70000100000010000000000000000000000                    0                        "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	clh := mockCashLetterHeader()
+	r.addCurrentCashLetter(NewCashLetter(clh))
+	bh := mockBundleHeader()
+	r.currentCashLetter.AddBundle(NewBundle(bh))
+	r.addCurrentBundle(NewBundle(bh))
+	err := r.parseBundleControl()
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	record := r.currentCashLetter.currentBundle.BundleControl
+
+	if record.recordType != "70" {
+		t.Errorf("RecordType Expected '70' got: %v", record.recordType)
+	}
+	if record.BundleItemsCountField() != "0001" {
+		t.Errorf("BundleItemsCountCount Expected '0001' got: %v", record.BundleItemsCountField())
+	}
+	if record.BundleTotalAmountField() != "000000100000" {
+		t.Errorf("BundleTotalAmount Expected '000000100000' got: %v", record.BundleTotalAmountField())
+	}
+	if record.MICRValidTotalAmountField() != "000000000000" {
+		t.Errorf("MICRValidTotalAmount Expected '000000000000' got: %v", record.MICRValidTotalAmountField())
+	}
+	if record.BundleImagesCountField() != "00000" {
+		t.Errorf("BundleImagesCount Expected '00000' got: %v", record.BundleImagesCountField())
+	}
+	if record.UserFieldField() != "                    " {
+		t.Errorf("UserField Expected '                    ' got: %v", record.UserFieldField())
+	}
+	if record.CreditTotalIndicatorField() != "0" {
+		t.Errorf("CreditTotalIndicator Expected '0' got: %v", record.CreditTotalIndicatorField())
+	}
+	if record.reservedField() != "                        " {
+		t.Errorf("Reserved Expected '                        ' got: %v", record.reservedField())
+	}
+}
+
+// TestParseBundleControl tests parsing a known BundleControl record string
+func TestParseBundleControl(t *testing.T) {
+	testParseBundleControl(t)
+}
+
+// BenchmarkParseBundleControl benchmarks parsing a known BundleControl record string
+func BenchmarkParseBundleControl(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		testParseBundleControl(b)
+	}
+}
+
+// testBCString validates that a known parsed BundleControl can be return to a string of the same value
+func testBCString(t testing.TB) {
+	var line = "70000100000010000000000000000000000                    0                        "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	clh := mockCashLetterHeader()
+	r.addCurrentCashLetter(NewCashLetter(clh))
+	bh := mockBundleHeader()
+	r.currentCashLetter.AddBundle(NewBundle(bh))
+	r.addCurrentBundle(NewBundle(bh))
+	err := r.parseBundleControl()
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	record := r.currentCashLetter.currentBundle.BundleControl
+	if record.String() != line {
+		t.Errorf("\nStrings do not match %s\n %s", line, record.String())
+	}
+}
+
+// TestBCString tests validating that a known parsed BundleControl can be return to a string of the same value
+func TestBCString(t *testing.T) {
+	testBCString(t)
+}
+
+// BenchmarkBCString benchmarks validating that a known parsed BundleControl can be return to a string of the same value
+func BenchmarkBCString(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		testBCString(b)
 	}
 }

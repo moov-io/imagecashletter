@@ -128,7 +128,8 @@ func (bh *BundleHeader) Parse(record string) {
 func (bh *BundleHeader) String() string {
 	var buf strings.Builder
 	buf.Grow(80)
-	buf.WriteString(bh.CollectionTypeIndicator)
+	buf.WriteString(bh.recordType)
+	buf.WriteString(bh.CollectionTypeIndicatorField())
 	buf.WriteString(bh.DestinationRoutingNumberField())
 	buf.WriteString(bh.ECEInstitutionRoutingNumberField())
 	buf.WriteString(bh.BundleBusinessDateField())
@@ -197,6 +198,11 @@ func (bh *BundleHeader) fieldInclusion() error {
 	return nil
 }
 
+// CollectionTypeIndicatorField gets the CollectionTypeIndicator field
+func (bh *BundleHeader) CollectionTypeIndicatorField() string {
+	return bh.stringField(bh.CollectionTypeIndicator, 2)
+}
+
 // DestinationRoutingNumberField gets the DestinationRoutingNumber field
 func (bh *BundleHeader) DestinationRoutingNumberField() string {
 	return bh.stringField(bh.DestinationRoutingNumber, 9)
@@ -217,12 +223,12 @@ func (bh *BundleHeader) BundleCreationDateField() string {
 	return bh.formatYYYYMMDDDate(bh.BundleCreationDate)
 }
 
-// BundleIDField gets the BundleID field
+// BundleIDField gets the BundleID field space padded
 func (bh *BundleHeader) BundleIDField() string {
 	return bh.alphaField(bh.BundleID, 10)
 }
 
-// BundleSequenceNumberField gets the BundleSequenceNumber field
+// BundleSequenceNumberField gets the BundleSequenceNumber field zero padded
 func (bh *BundleHeader) BundleSequenceNumberField() string {
 	return bh.numericField(bh.BundleSequenceNumber, 4)
 }

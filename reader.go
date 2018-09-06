@@ -36,10 +36,6 @@ type Reader struct {
 	line string
 	// currentCashLetter is the current CashLetter being parsed
 	currentCashLetter CashLetter
-	// currentBundle is the current Bundle entries being parsed
-	currentBundle Bundle
-	// currentReturnBundle is the current ReturnBundle entries being parsed
-	// currentReturnBundle ReturnBundle
 	// line number of the file being parsed
 	lineNum int
 	// recordName holds the current record name being parsed.
@@ -59,6 +55,12 @@ func (r *Reader) error(err error) error {
 // currentCashLetter will be added to r.File once parsed.
 func (r *Reader) addCurrentCashLetter(cashLetter CashLetter) {
 	r.currentCashLetter = cashLetter
+}
+
+// addCurrentBundle creates the current bundle for the file being read. A successful
+// currentBundle will be added to r.File once parsed.
+func (r *Reader) addCurrentBundle(bundle Bundle) {
+	r.currentCashLetter.currentBundle = bundle
 }
 
 // NewReader returns a new ACH Reader that reads from r.
@@ -153,13 +155,12 @@ func (r *Reader) parseLine() error {
 		if err := r.parseBundleControl(); err != nil {
 			return err
 		}
-		// ToDo: Review/Test this logic for adding Bundles to File.CashLetter
-		if err := r.currentBundle.Validate(); err != nil {
+		if err := r.currentCashLetter.currentBundle.Validate(); err != nil {
 			r.recordName = "Bundles"
 			return r.error(err)
 		}
-		r.currentCashLetter.AddBundle(r.currentBundle)
-		r.currentBundle = Bundle{}
+		r.currentCashLetter.AddBundle(r.currentCashLetter.currentBundle)
+		r.currentCashLetter.currentBundle = Bundle{}
 	case cashLetterControlPos:
 		if err := r.parseCashLetterControl(); err != nil {
 			return err
@@ -223,26 +224,22 @@ func (r *Reader) parseCashLetterHeader() error {
 // parseBundleHeader takes the input record string and parses the BundleHeader values
 func (r *Reader) parseBundleHeader() error {
 	r.recordName = "BundleHeader"
-	if r.currentBundle.BundleHeader != nil {
-		// BundleHeader inside of current Bundle
-		return r.error(&FileError{Msg: msgFileBundleInside})
+	if r.currentCashLetter.currentBundle.BundleHeader == nil {
+		// BundleHeader outside of current Bundle
+		return r.error(&FileError{Msg: msgFileBundleOutside})
 	}
-	bh := NewBundleHeader()
-	bh.Parse(r.line)
-	// Ensure valid BundleHeader
-	if err := bh.Validate(); err != nil {
+	r.currentCashLetter.currentBundle.GetHeader().Parse(r.line)
+	// Ensure valid BundleControl
+	if err := r.currentCashLetter.currentBundle.GetHeader().Validate(); err != nil {
 		return r.error(err)
 	}
-	// Passing BundleHeader into newBundle creates a Bundle
-	b := NewBundle(bh)
-	r.currentCashLetter.AddBundle(b)
 	return nil
 }
 
 // parseCheckDetail takes the input record string and parses the CheckDetail values
 func (r *Reader) parseCheckDetail() error {
 	r.recordName = "CheckDetail"
-	if r.currentBundle.BundleHeader == nil {
+	if r.currentCashLetter.currentBundle.BundleHeader == nil {
 		return r.error(&FileError{Msg: msgFileBundleOutside})
 	}
 	cd := new(CheckDetail)
@@ -252,8 +249,8 @@ func (r *Reader) parseCheckDetail() error {
 		return r.error(err)
 	}
 	// Add CheckDetail
-	if r.currentBundle.BundleHeader != nil {
-		r.currentBundle.AddCheckDetail(cd)
+	if r.currentCashLetter.currentBundle.BundleHeader != nil {
+		r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 	}
 	return nil
 }
@@ -297,15 +294,17 @@ func (r *Reader) parseImageViewAnalysis() error {
 // parseBundleControl takes the input record string and parses the BundleControl values
 func (r *Reader) parseBundleControl() error {
 	r.recordName = "BundleControl"
-	if r.currentBundle.BundleHeader == nil {
+
+	if r.currentCashLetter.currentBundle.BundleControl == nil {
 		// BundleControl without a current Bundle
 		return r.error(&FileError{Msg: msgFileBundleControl})
 	}
-	r.currentBundle.GetControl().Parse(r.line)
+	r.currentCashLetter.currentBundle.GetControl().Parse(r.line)
 	// Ensure valid BundleControl
-	if err := r.currentBundle.GetControl().Validate(); err != nil {
+	if err := r.currentCashLetter.currentBundle.GetControl().Validate(); err != nil {
 		return r.error(err)
 	}
+	//r.currentCashLetter.AddBundle(r.currentCashLetter.currentBundle)
 	return nil
 }
 
@@ -321,6 +320,7 @@ func (r *Reader) parseCashLetterControl() error {
 	if err := r.currentCashLetter.GetControl().Validate(); err != nil {
 		return r.error(err)
 	}
+	//r.File.AddCashLetter(r.currentCashLetter)
 	return nil
 }
 

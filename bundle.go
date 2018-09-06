@@ -13,7 +13,7 @@ type Bundle struct {
 	// BundleHeader is an ICL Bundle Header Record
 	BundleHeader *BundleHeader `json:"bundleHeader,omitempty"`
 	// Items are ICL Items: Check Detail Records, Check Detail Addendum Records, and Image Views
-	Items []*CheckDetail `json:"items,omitempty"`
+	Checks []*CheckDetail `json:"items,omitempty"`
 	// BundleControl is an ICL Bundle Control Record
 	BundleControl *BundleControl `json:"bundleControl,omitempty"`
 	// Converters is composed for x9 to GoLang Converters
@@ -36,7 +36,7 @@ func (b *Bundle) Validate() error {
 
 // AddCheckDetail appends a CheckDetail to the Bundle
 func (b *Bundle) AddCheckDetail(check *CheckDetail) {
-	b.Items = append(b.Items, check)
+	b.Checks = append(b.Checks, check)
 }
 
 // SetHeader appends an BundleHeader to the Bundle
@@ -57,4 +57,9 @@ func (b *Bundle) SetControl(bundleControl *BundleControl) {
 // GetControl returns the current Bundle Control
 func (b *Bundle) GetControl() *BundleControl {
 	return b.BundleControl
+}
+
+// GetChecks returns a slice of check details for the bundle
+func (b *Bundle) GetChecks() []*CheckDetail {
+	return b.Checks
 }
