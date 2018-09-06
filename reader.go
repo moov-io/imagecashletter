@@ -190,11 +190,11 @@ func (r *Reader) parseLine() error {
 func (r *Reader) parseFileHeader() error {
 	r.recordName = "FileHeader"
 	if (FileHeader{}) != r.File.Header {
-		// There can only be one File Header per File exit
+		// There can only be one File Header per File
 		r.error(&FileError{Msg: msgFileHeader})
 	}
 	r.File.Header.Parse(r.line)
-
+	// Ensure valid FileHeader
 	if err := r.File.Header.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -208,10 +208,9 @@ func (r *Reader) parseCashLetterHeader() error {
 		// CashLetterHeader inside of current cash letter
 		return r.error(&FileError{Msg: msgFileCashLetterInside})
 	}
-	// Ensure we have a valid CashLetterHeader before building a CashLetter.
 	clh := NewCashLetterHeader()
 	clh.Parse(r.line)
-
+	// Ensure we have a valid CashLetterHeader
 	if err := clh.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -228,9 +227,9 @@ func (r *Reader) parseBundleHeader() error {
 		// BundleHeader inside of current Bundle
 		return r.error(&FileError{Msg: msgFileBundleInside})
 	}
-	// Ensure we have a valid BundleHeader before building a Bundle
 	bh := NewBundleHeader()
 	bh.Parse(r.line)
+	// Ensure valid BundleHeader
 	if err := bh.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -248,7 +247,7 @@ func (r *Reader) parseCheckDetail() error {
 	}
 	cd := new(CheckDetail)
 	cd.Parse(r.line)
-	// Ensure we have a valid CheckDetail
+	// Ensure valid CheckDetail
 	if err := cd.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -303,6 +302,7 @@ func (r *Reader) parseBundleControl() error {
 		return r.error(&FileError{Msg: msgFileBundleControl})
 	}
 	r.currentBundle.GetControl().Parse(r.line)
+	// Ensure valid BundleControl
 	if err := r.currentBundle.GetControl().Validate(); err != nil {
 		return r.error(err)
 	}
@@ -317,6 +317,7 @@ func (r *Reader) parseCashLetterControl() error {
 		return r.error(&FileError{Msg: msgFileCashLetterControl})
 	}
 	r.currentCashLetter.GetControl().Parse(r.line)
+	// Ensure valid CashLetterControl
 	if err := r.currentCashLetter.GetControl().Validate(); err != nil {
 		return r.error(err)
 	}
@@ -331,6 +332,7 @@ func (r *Reader) parseFileControl() error {
 		return r.error(&FileError{Msg: msgFileControl})
 	}
 	r.File.Control.Parse(r.line)
+	// Ensure valid FileControl
 	if err := r.File.Control.Validate(); err != nil {
 		return r.error(err)
 	}

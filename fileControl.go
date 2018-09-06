@@ -144,7 +144,7 @@ func (fc *FileControl) CashLetterCountField() string {
 
 // TotalRecordCountField gets a string of the TotalRecordCount zero padded
 func (fc *FileControl) TotalRecordCountField() string {
-	return fc.numericField(fc.CashLetterCount, 8)
+	return fc.numericField(fc.TotalRecordCount, 8)
 }
 
 // TotalItemCountField gets a string of TotalItemCount zero padded
