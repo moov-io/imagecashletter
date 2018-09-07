@@ -29,7 +29,6 @@ func NewWriter(w io.Writer) *Writer {
 	}
 }
 
-
 // Writer writes a single x9.file record to w
 func (w *Writer) Write(file *File) error {
 	if err := file.Validate(); err != nil {
@@ -68,8 +67,8 @@ func (w *Writer) Flush() {
 func (w *Writer) writeCashLetter(file *File) error {
 	//CashLetters
 	//Bundles
-		//Items - CheckDetail, Addendum* and ImageView*
+	//Items - CheckDetail, Addendum* and ImageView*
 	//ReturnBundles
-		//Items - ReturnDetail, ReturnAddendum*, and ImageView*
+	//Items - ReturnDetail, ReturnAddendum*, and ImageView*
 	return nil
 }
