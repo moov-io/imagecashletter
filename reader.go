@@ -117,8 +117,6 @@ func (r *Reader) parseLine() error {
 		if err := r.parseCashLetterHeader(); err != nil {
 			return err
 		}
-
-	// ToDo:  Consider if CashLetterRecordTypeIndicator is "N", There should be no bundle, it is an empty cash letter
 	case bundleHeaderPos:
 		if err := r.parseBundleHeader(); err != nil {
 			return err
@@ -155,6 +153,7 @@ func (r *Reader) parseLine() error {
 		if err := r.parseBundleControl(); err != nil {
 			return err
 		}
+		// ToDo: The following logic may need to be moved for gocyclo
 		if err := r.currentCashLetter.currentBundle.Validate(); err != nil {
 			r.recordName = "Bundles"
 			return r.error(err)
@@ -165,7 +164,7 @@ func (r *Reader) parseLine() error {
 		if err := r.parseCashLetterControl(); err != nil {
 			return err
 		}
-		// ToDo: Review/Test this logic for adding CashLetters to File
+		// ToDo: The following logic may need to be moved for gocyclo
 		if err := r.currentCashLetter.Validate(); err != nil {
 			r.recordName = "CashLetters"
 			return r.error(err)
@@ -173,10 +172,6 @@ func (r *Reader) parseLine() error {
 		r.File.AddCashLetter(r.currentCashLetter)
 		r.currentCashLetter = CashLetter{}
 	case fileControlPos:
-		if r.line[:2] == "99" {
-			// final blocking padding
-			break
-		}
 		if err := r.parseFileControl(); err != nil {
 			return err
 		}
