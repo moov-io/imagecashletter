@@ -19,7 +19,7 @@ type CheckDetail struct {
 	ID string `json:"id"`
 	// RecordType defines the type of record.
 	recordType string
-	//AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+	// AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
 	AuxiliaryOnUs string `json:"auxiliaryOnUs"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited
 	// Standards Committee X9. Also known as Position 44.
