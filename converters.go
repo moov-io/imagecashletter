@@ -77,6 +77,17 @@ func (c *converters) numericField(n int, max uint) string {
 	return s
 }
 
+// nbmsField is a numeric-blank/special MICR (NBSM) or numeric-blank/special MICR On-Us (NBSMOS)
+// which are right-justified and blank filled
+func (c *converters) nbsmField(s string, max uint) string {
+	ln := uint(len(s))
+	if ln > max {
+		return s[ln-max:]
+	}
+	s = strings.Repeat(" ", int(max-ln)) + s
+	return s
+}
+
 // stringField slices to max length and zero filled
 func (c *converters) stringField(s string, max uint) string {
 	ln := uint(len(s))
