@@ -5,7 +5,6 @@
 package x9
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 )
@@ -98,8 +97,7 @@ func BenchmarkMockCheckDetail(b *testing.B) {
 
 // parseCheckDetail validates parsing a CheckDetail
 func parseCheckDetail(t testing.TB) {
-	//var line = "25123456789       0313000125558881             0000100000000000000000001GD1Y000B"
-	var line = "25      123456789 031300012             55588810000100000000000000000001GD1Y000B"
+	var line = "25123456789       0313000125558881             0000100000000000000000001GD1Y000B"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -117,7 +115,7 @@ func parseCheckDetail(t testing.TB) {
 		t.Errorf("RecordType Expected '25' got: %v", record.recordType)
 	}
 	if record.AuxiliaryOnUsField() != "      123456789" {
-		t.Errorf("AuxiliaryOnUs Expected '      123456789' got: %v", record.AuxiliaryOnUsField())
+		t.Errorf("CollectionTypeIndicator Expected '      123456789' got: %v", record.AuxiliaryOnUsField())
 	}
 	if record.ExternalProcessingCodeField() != " " {
 		t.Errorf("ExternalProcessingCodeField ' ' got: %v", record.ExternalProcessingCodeField())
@@ -145,68 +143,18 @@ func parseCheckDetail(t testing.TB) {
 		t.Errorf("ReturnAcceptanceIndicator Expected 'D' got: '%v'", record.ReturnAcceptanceIndicatorField())
 	}
 	if record.MICRValidIndicatorField() != "1" {
-		t.Errorf("MICRValidIndicator Expected '01' got:'%v'", record.MICRValidIndicatorField())
+		t.Errorf("ReturnAcceptanceIndicator Expected '01' got:'%v'", record.ReturnAcceptanceIndicatorField())
 	}
 	if record.BOFDIndicatorField() != "Y" {
 		t.Errorf("BOFDIndicator Expected 'Y' got:'%v'", record.BOFDIndicatorField())
 	}
 	if record.AddendumCountField() != "00" {
-		t.Errorf("AddendumCount Expected 'Y' got:'%v'", record.AddendumCountField())
+		t.Errorf("BOFDIndicator Expected 'Y' got:'%v'", record.AddendumCountField())
 	}
 	if record.CorrectionIndicatorField() != "0" {
 		t.Errorf("CorrectionIndicator Expected '0' got:'%v'", record.CorrectionIndicatorField())
 	}
 	if record.ArchiveTypeIndicatorField() != "B" {
 		t.Errorf("ArchiveTypeIndicator Expected 'B' got:'%v'", record.ArchiveTypeIndicatorField())
-	}
-}
-
-// TestParseCheckDetail test validates parsing a CheckDetail
-func TestParseCheckDetail(t *testing.T) {
-	parseCheckDetail(t)
-}
-
-// BenchmarkParseCheckDetail benchmark validates parsing a CheckDetail
-func BenchmarkParseCheckDetail(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		parseCheckDetail(b)
-	}
-}
-
-// testCDString validates that a known parsed CheckDetail can return to a string of the same value
-func testCDString(t testing.TB) {
-	var line = "25      123456789 031300012             55588810000100000000000000000001GD1Y000B"
-	r := NewReader(strings.NewReader(line))
-	r.line = line
-	clh := mockCashLetterHeader()
-	r.addCurrentCashLetter(NewCashLetter(clh))
-	bh := mockBundleHeader()
-	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
-	if err := r.parseCheckDetail(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	record := r.currentCashLetter.currentBundle.GetChecks()[0]
-
-	fmt.Printf("Lineee: %v \n", line)
-	fmt.Printf("String: %v \n", record.String())
-
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
-}
-
-// TestCDString tests validating that a known parsed CheckDetail can return to a string of the same value
-func TestCDString(t *testing.T) {
-	testCDString(t)
-}
-
-// BenchmarkCDString benchmarks validating that a known parsed CheckDetail
-// can return to a string of the same value
-func BenchmarkCDString(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testCDString(b)
 	}
 }

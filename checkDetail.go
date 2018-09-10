@@ -268,12 +268,12 @@ func (cd *CheckDetail) fieldInclusion() error {
 
 // AuxiliaryOnUsField gets the AuxiliaryOnUs field
 func (cd *CheckDetail) AuxiliaryOnUsField() string {
-	return cd.nbsmField(cd.AuxiliaryOnUs, 15)
+	return cd.stringField(cd.AuxiliaryOnUs, 15)
 }
 
 // ExternalProcessingCodeField gets the ExternalProcessingCode field - Also known as Position 44
 func (cd *CheckDetail) ExternalProcessingCodeField() string {
-	return cd.alphaField(cd.ExternalProcessingCode, 1)
+	return cd.stringField(cd.ExternalProcessingCode, 1)
 }
 
 // PayorBankRoutingNumberField gets the PayorBankRoutingNumber field
@@ -288,17 +288,17 @@ func (cd *CheckDetail) PayorBankCheckDigitField() string {
 
 // OnUsField gets the OnUs field
 func (cd *CheckDetail) OnUsField() string {
-	return cd.nbsmField(cd.OnUs, 20)
+	return cd.alphaField(cd.OnUs, 20)
 }
 
 // ItemAmountField gets the ItemAmount right justified and zero padded
 func (cd *CheckDetail) ItemAmountField() string {
-	return cd.numericField(cd.ItemAmount, 10)
+	return cd.numericField(cd.ItemAmount, 1)
 }
 
-// EceInstitutionItemSequenceNumberField gets a string of the EceInstitutionItemSequenceNumber field
+// EceInstitutionItemSequenceNumberField gets the EceInstitutionItemSequenceNumber field
 func (cd *CheckDetail) EceInstitutionItemSequenceNumberField() string {
-	return cd.numericField(cd.EceInstitutionItemSequenceNumber, 15)
+	return cd.numericField(cd.EceInstitutionItemSequenceNumber, 1)
 }
 
 // DocumentationTypeIndicatorField gets the DocumentationTypeIndicator field

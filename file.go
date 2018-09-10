@@ -98,7 +98,7 @@ func (f *File) Create() error {
 		return err
 	}
 
-	if len(f.CashLetters) <= 0  {
+	if len(f.CashLetters) <= 0 {
 		return &FileError{FieldName: "CashLetters", Value: strconv.Itoa(len(f.CashLetters)), Msg: "must have []*CashLetters to be built"}
 	}
 	return nil
