@@ -77,8 +77,8 @@ func (c *converters) numericField(n int, max uint) string {
 	return s
 }
 
-// numericblank/special MICR (NBSM) or numericblank/special MICR On-Us (NBSMOS)
-// are right-justified and blank filled
+// nbmsField is a numericblank/special MICR (NBSM) or numericblank/special MICR On-Us (NBSMOS)
+// which are right-justified and blank filled
 func (c *converters) nbsmField(s string, max uint) string {
 	ln := uint(len(s))
 	if ln > max {
