@@ -5,6 +5,8 @@
 package x9
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -94,9 +96,10 @@ func BenchmarkMockCheckDetail(b *testing.B) {
 	}
 }
 
-/*// parseCheckDetail validates parsing a CheckDetail
+// parseCheckDetail validates parsing a CheckDetail
 func parseCheckDetail(t testing.TB) {
-	var line = "25123456789       031300012"
+	//var line = "25123456789       0313000125558881             0000100000000000000000001GD1Y000B"
+	var line = "25      123456789 031300012             55588810000100000000000000000001GD1Y000B"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -113,17 +116,48 @@ func parseCheckDetail(t testing.TB) {
 	if record.recordType != "25" {
 		t.Errorf("RecordType Expected '25' got: %v", record.recordType)
 	}
-	if record.AuxiliaryOnUsField() != "123456789      " {
-		t.Errorf("CollectionTypeIndicator Expected '123456789      ' got: %v", record.AuxiliaryOnUsField())
+	if record.AuxiliaryOnUsField() != "      123456789" {
+		t.Errorf("AuxiliaryOnUs Expected '      123456789' got: %v", record.AuxiliaryOnUsField())
 	}
-	if record.ExternalProcessingCodeField() != "" {
-		t.Errorf("ExternalProcessingCodeField '' got: %v", record.ExternalProcessingCodeField())
+	if record.ExternalProcessingCodeField() != " " {
+		t.Errorf("ExternalProcessingCodeField ' ' got: %v", record.ExternalProcessingCodeField())
 	}
 	if record.PayorBankRoutingNumberField() != "03130001" {
 		t.Errorf("PayorBankRoutingNumber Expected '03130001' got: %v", record.PayorBankRoutingNumberField())
 	}
 	if record.PayorBankCheckDigitField() != "2" {
 		t.Errorf("PayorBankCheckDigit Expected '2' got:'%v'", record.PayorBankCheckDigitField())
+	}
+	if record.OnUsField() != "             5558881" {
+		t.Errorf("OnUs Expected '             5558881' got:'%v'", record.OnUsField())
+	}
+	if record.ItemAmountField() != "0000100000" {
+		t.Errorf("ItemAmount Expected '0000100000' got:'%v'", record.ItemAmountField())
+	}
+	if record.EceInstitutionItemSequenceNumberField() != "000000000000001" {
+		t.Errorf("EceInstitutionItemSequenceNumber Expected '000000000000001' got:'%v'",
+			record.EceInstitutionItemSequenceNumberField())
+	}
+	if record.DocumentationTypeIndicatorField() != "G" {
+		t.Errorf("DocumentationTypeIndicator Expected 'G' got:'%v'", record.DocumentationTypeIndicatorField())
+	}
+	if record.ReturnAcceptanceIndicatorField() != "D" {
+		t.Errorf("ReturnAcceptanceIndicator Expected 'D' got: '%v'", record.ReturnAcceptanceIndicatorField())
+	}
+	if record.MICRValidIndicatorField() != "1" {
+		t.Errorf("MICRValidIndicator Expected '01' got:'%v'", record.MICRValidIndicatorField())
+	}
+	if record.BOFDIndicatorField() != "Y" {
+		t.Errorf("BOFDIndicator Expected 'Y' got:'%v'", record.BOFDIndicatorField())
+	}
+	if record.AddendumCountField() != "00" {
+		t.Errorf("AddendumCount Expected 'Y' got:'%v'", record.AddendumCountField())
+	}
+	if record.CorrectionIndicatorField() != "0" {
+		t.Errorf("CorrectionIndicator Expected '0' got:'%v'", record.CorrectionIndicatorField())
+	}
+	if record.ArchiveTypeIndicatorField() != "B" {
+		t.Errorf("ArchiveTypeIndicator Expected 'B' got:'%v'", record.ArchiveTypeIndicatorField())
 	}
 }
 
@@ -138,4 +172,41 @@ func BenchmarkParseCheckDetail(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		parseCheckDetail(b)
 	}
-}*/
+}
+
+// testCDString validates that a known parsed CheckDetail can return to a string of the same value
+func testCDString(t testing.TB) {
+	var line = "25      123456789 031300012             55588810000100000000000000000001GD1Y000B"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	clh := mockCashLetterHeader()
+	r.addCurrentCashLetter(NewCashLetter(clh))
+	bh := mockBundleHeader()
+	r.currentCashLetter.AddBundle(NewBundle(bh))
+	r.addCurrentBundle(NewBundle(bh))
+	if err := r.parseCheckDetail(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	record := r.currentCashLetter.currentBundle.GetChecks()[0]
+
+	fmt.Printf("Lineee: %v \n", line)
+	fmt.Printf("String: %v \n", record.String())
+
+	if record.String() != line {
+		t.Errorf("Strings do not match")
+	}
+}
+
+// TestCDString tests validating that a known parsed CheckDetail can return to a string of the same value
+func TestCDString(t *testing.T) {
+	testCDString(t)
+}
+
+// BenchmarkCDString benchmarks validating that a known parsed CheckDetail
+// can return to a string of the same value
+func BenchmarkCDString(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		testCDString(b)
+	}
+}
