@@ -39,7 +39,7 @@ type CheckDetailAddendumC struct {
 	// DD 01 through 31
 	BOFDEndorsementBusinessDate time.Time `json:"bofdEndorsementBusinessDate"`
 	// EndorsingItemSequenceNumber is a number that identifies the item at the endorsing bank.
-	EndorsingItemSequenceNumber string `json:"endorsingItemSequenceNumber"`
+	EndorsingItemSequenceNumber int `json:"endorsingItemSequenceNumber"`
 	// TruncationIndicator identifies if the institution truncated the original check item.
 	// Values: Y: Yes this institution truncated this original check item and this is first endorsement
 	// for the institution.
@@ -108,7 +108,7 @@ func (cdAddendumC *CheckDetailAddendumC) Parse(record string) {
 	// 14-21
 	cdAddendumC.BOFDEndorsementBusinessDate = cdAddendumC.parseYYYMMDDDate(record[13:21])
 	// 22-36
-	cdAddendumC.EndorsingItemSequenceNumber = cdAddendumC.parseStringField(record[21:36])
+	cdAddendumC.EndorsingItemSequenceNumber = cdAddendumC.parseNumField(record[21:36])
 	// 37-37
 	cdAddendumC.TruncationIndicator = cdAddendumC.parseStringField(record[36:37])
 	// 38-38
@@ -229,7 +229,7 @@ func (cdAddendumC *CheckDetailAddendumC) BOFDEndorsementBusinessDateField() stri
 
 // EndorsingItemSequenceNumberField gets the EndorsingItemSequenceNumber field
 func (cdAddendumC *CheckDetailAddendumC) EndorsingItemSequenceNumberField() string {
-	return cdAddendumC.alphaField(cdAddendumC.EndorsingItemSequenceNumber, 15)
+	return cdAddendumC.numericField(cdAddendumC.EndorsingItemSequenceNumber, 15)
 }
 
 // TruncationIndicatorField gets the TruncationIndicator field
