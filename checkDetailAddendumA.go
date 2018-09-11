@@ -39,7 +39,7 @@ type CheckDetailAddendumA struct {
 	// DD 01 through 31
 	BOFDEndorsementDate time.Time `json:"bofdEndorsementDate"`
 	// BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
-	BOFDItemSequenceNumber string `json:"bofdItemSequenceNumber"`
+	BOFDItemSequenceNumber int `json:"bofdItemSequenceNumber"`
 	// BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
 	BOFDAccountNumber string `json:"bofdAccountNumber"`
 	// BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
@@ -104,7 +104,7 @@ func (cdAddendumA *CheckDetailAddendumA) Parse(record string) {
 	// 13-20
 	cdAddendumA.BOFDEndorsementDate = cdAddendumA.parseYYYMMDDDate(record[12:20])
 	// 21-35
-	cdAddendumA.BOFDItemSequenceNumber = cdAddendumA.parseStringField(record[20:35])
+	cdAddendumA.BOFDItemSequenceNumber = cdAddendumA.parseNumField(record[20:35])
 	// 36-53
 	cdAddendumA.BOFDAccountNumber = cdAddendumA.parseStringField(record[35:53])
 	// 54-58
@@ -154,13 +154,9 @@ func (cdAddendumA *CheckDetailAddendumA) Validate() error {
 		return &FieldError{FieldName: "recordType", Value: cdAddendumA.recordType, Msg: msg}
 	}
 	if err := cdAddendumA.isNumeric(cdAddendumA.ReturnLocationRoutingNumber); err != nil {
-		return &FieldError{FieldName: "ReturnLocationRoutingNumberr",
+		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
 			Value: cdAddendumA.ReturnLocationRoutingNumber, Msg: err.Error()}
 	}
-	/*	if err := cdAddendumA.isNumeric(cdAddendumA.BOFDItemSequenceNumber); err != nil {
-		return &FieldError{FieldName: "BOFDItemSequenceNumber",
-			Value: cdAddendumA.BOFDItemSequenceNumber, Msg: err.Error()}
-	}*/
 	if err := cdAddendumA.isAlphanumericSpecial(cdAddendumA.BOFDAccountNumber); err != nil {
 		return &FieldError{FieldName: "BOFDAccountNumber",
 			Value: cdAddendumA.BOFDAccountNumber, Msg: err.Error()}
@@ -240,7 +236,7 @@ func (cdAddendumA *CheckDetailAddendumA) BOFDEndorsementDateField() string {
 
 // BOFDItemSequenceNumberField gets the BOFDItemSequenceNumber field
 func (cdAddendumA *CheckDetailAddendumA) BOFDItemSequenceNumberField() string {
-	return cdAddendumA.alphaField(cdAddendumA.BOFDItemSequenceNumber, 15)
+	return cdAddendumA.numericField(cdAddendumA.BOFDItemSequenceNumber, 15)
 }
 
 // BOFDAccountNumberField gets the BOFDAccountNumber field
