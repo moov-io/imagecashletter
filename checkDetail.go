@@ -355,3 +355,18 @@ func (cd *CheckDetail) AddCheckDetailAddendumC(cdAddendaC CheckDetailAddendumC) 
 	cd.CheckDetailAddendumC = append(cd.CheckDetailAddendumC, cdAddendaC)
 	return cd.CheckDetailAddendumC
 }
+
+// GetCheckDetailAddendumA returns a slice of AddendumA for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailAddendumA() []CheckDetailAddendumA {
+	return cd.CheckDetailAddendumA
+}
+
+// GetCheckDetailAddendumB returns a slice of AddendumB for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailAddendumB() []CheckDetailAddendumB {
+	return cd.CheckDetailAddendumB
+}
+
+// GetCheckDetailAddendumC returns a slice of AddendumC for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailAddendumC() []CheckDetailAddendumC {
+	return cd.CheckDetailAddendumC
+}

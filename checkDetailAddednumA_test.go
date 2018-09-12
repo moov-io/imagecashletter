@@ -135,6 +135,9 @@ func parseCheckDetailAddendumA(t testing.TB) {
 	if record.UserFieldField() != " " {
 		t.Errorf("UserField Expected ' ' got: %v", record.UserFieldField())
 	}
+	if record.reservedField() != "   " {
+		t.Errorf("reserved Expected '   ' got: %v", record.reservedField())
+	}
 }
 
 // TestParseCheckDetailAddendumA test validates parsing a CheckDetailAddendumA

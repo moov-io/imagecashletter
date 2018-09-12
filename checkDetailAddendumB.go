@@ -68,7 +68,7 @@ func (cdAddendumB *CheckDetailAddendumB) Parse(record string) {
 	// 03-03
 	cdAddendumB.ImageReferenceKeyIndicator = cdAddendumB.parseNumField(record[02:03])
 	// 04-18
-	cdAddendumB.MicrofilmArchiveSequenceNumber = cdAddendumB.parseStringField(record[04:18])
+	cdAddendumB.MicrofilmArchiveSequenceNumber = cdAddendumB.parseStringField(record[03:18])
 	// 19-22
 	cdAddendumB.ImageReferenceKeyLength = cdAddendumB.parseStringField(record[18:22])
 	// ToDo:  Follow up on Variable Length
