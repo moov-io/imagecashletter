@@ -52,7 +52,6 @@ func mockCheckDetailAddendum() *CheckDetail {
 	return cd
 }
 
-
 // testMockCheckDetail creates an ICL CheckDetail
 func testMockCheckDetail(t testing.TB) {
 	cd := mockCheckDetail()
