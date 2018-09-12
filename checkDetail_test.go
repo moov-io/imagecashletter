@@ -29,6 +29,30 @@ func mockCheckDetail() *CheckDetail {
 	return cd
 }
 
+// mockCheckDetailAddendum creates a CheckDetail
+func mockCheckDetailAddendum() *CheckDetail {
+	cd := NewCheckDetail()
+	cd.AuxiliaryOnUs = "123456789"
+	cd.ExternalProcessingCode = ""
+	cd.PayorBankRoutingNumber = "03130001"
+	cd.PayorBankCheckDigit = "2"
+	cd.OnUs = "5558881"
+	cd.ItemAmount = 100000 // 1000.00
+	cd.EceInstitutionItemSequenceNumber = 1
+	cd.DocumentationTypeIndicator = "G"
+	cd.ReturnAcceptanceIndicator = "D"
+	cd.MICRValidIndicator = 1
+	cd.BOFDIndicator = "Y"
+	cd.AddendumCount = 0
+	cd.CorrectionIndicator = 0
+	cd.ArchiveTypeIndicator = "B"
+	cd.AddCheckDetailAddendumA(mockCheckDetailAddendumA())
+	cd.AddCheckDetailAddendumB(mockCheckDetailAddendumB())
+	cd.AddCheckDetailAddendumC(mockCheckDetailAddendumC())
+	return cd
+}
+
+
 // testMockCheckDetail creates an ICL CheckDetail
 func testMockCheckDetail(t testing.TB) {
 	cd := mockCheckDetail()

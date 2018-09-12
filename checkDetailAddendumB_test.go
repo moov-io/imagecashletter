@@ -10,7 +10,7 @@ import (
 
 // ToDo: Review Image key Code/Functionality
 // mockCheckDetailAddendumB creates a CheckDetailAddendumB
-func mockCheckDetailAddendumB() *CheckDetailAddendumB {
+func mockCheckDetailAddendumB() CheckDetailAddendumB {
 	cdAddendumB := NewCheckDetailAddendumB()
 	cdAddendumB.ImageReferenceKeyIndicator = 1
 	cdAddendumB.MicrofilmArchiveSequenceNumber = "1A"

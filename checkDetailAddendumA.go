@@ -86,8 +86,8 @@ type CheckDetailAddendumA struct {
 }
 
 // NewCheckDetailAddendumA returns a new CheckDetailAddendumA with default values for non exported fields
-func NewCheckDetailAddendumA() *CheckDetailAddendumA {
-	cdAddendumA := &CheckDetailAddendumA{
+func NewCheckDetailAddendumA() CheckDetailAddendumA {
+	cdAddendumA := CheckDetailAddendumA{
 		recordType: "26",
 	}
 	return cdAddendumA
@@ -234,7 +234,7 @@ func (cdAddendumA *CheckDetailAddendumA) BOFDEndorsementDateField() string {
 	return cdAddendumA.formatYYYYMMDDDate(cdAddendumA.BOFDEndorsementDate)
 }
 
-// BOFDItemSequenceNumberField gets the BOFDItemSequenceNumber field
+// BOFDItemSequenceNumberField gets a string of the BOFDItemSequenceNumber field zero padded
 func (cdAddendumA *CheckDetailAddendumA) BOFDItemSequenceNumberField() string {
 	return cdAddendumA.numericField(cdAddendumA.BOFDItemSequenceNumber, 15)
 }

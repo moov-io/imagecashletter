@@ -54,8 +54,8 @@ type CheckDetailAddendumB struct {
 }
 
 // NewCheckDetailAddendumB returns a new CheckDetailAddendumB with default values for non exported fields
-func NewCheckDetailAddendumB() *CheckDetailAddendumB {
-	cdAddendumB := &CheckDetailAddendumB{
+func NewCheckDetailAddendumB() CheckDetailAddendumB {
+	cdAddendumB := CheckDetailAddendumB{
 		recordType: "27",
 	}
 	return cdAddendumB

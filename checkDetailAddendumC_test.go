@@ -10,7 +10,7 @@ import (
 )
 
 // mockCheckDetailAddendumC creates a CheckDetailAddendumC
-func mockCheckDetailAddendumC() *CheckDetailAddendumC {
+func mockCheckDetailAddendumC() CheckDetailAddendumC {
 	cdAddendumC := NewCheckDetailAddendumC()
 	cdAddendumC.RecordNumber = 1
 	cdAddendumC.EndorsingBankRoutingNumber = "121042882"

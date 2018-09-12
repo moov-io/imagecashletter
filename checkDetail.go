@@ -133,11 +133,11 @@ type CheckDetail struct {
 	// I: None
 	ArchiveTypeIndicator string `json:"archiveTypeIndicator"`
 	// CheckDetailAddendumA
-	CheckDetailAddendumA CheckDetailAddendumA `json:"checkDetailAddendumA"`
+	CheckDetailAddendumA []CheckDetailAddendumA `json:"checkDetailAddendumA"`
 	// CheckDetailAddendumB
-	CheckDetailAddendumB CheckDetailAddendumB `json:"checkDetailAddendumB"`
+	CheckDetailAddendumB []CheckDetailAddendumB `json:"checkDetailAddendumB"`
 	// CheckDetailAddendumC
-	CheckDetailAddendumC CheckDetailAddendumC `json:"checkDetailAddendumC"`
+	CheckDetailAddendumC []CheckDetailAddendumC `json:"checkDetailAddendumC"`
 	// ImageView
 	// ImageView ImageView `json:"imageView"`
 	// validator is composed for x9 data validation
@@ -334,4 +334,24 @@ func (cd *CheckDetail) CorrectionIndicatorField() string {
 // ArchiveTypeIndicatorField gets the ArchiveTypeIndicator field
 func (cd *CheckDetail) ArchiveTypeIndicatorField() string {
 	return cd.alphaField(cd.ArchiveTypeIndicator, 1)
+}
+
+// ToDo:  Potentially use Addendumer?
+
+// AddCheckDetailAddendumA appends an AddendumA to the CheckDetail
+func (cd *CheckDetail) AddCheckDetailAddendumA(cdAddendaA CheckDetailAddendumA) []CheckDetailAddendumA {
+	cd.CheckDetailAddendumA = append(cd.CheckDetailAddendumA, cdAddendaA)
+	return cd.CheckDetailAddendumA
+}
+
+// AddCheckDetailAddendumB appends an AddendumA to the CheckDetail
+func (cd *CheckDetail) AddCheckDetailAddendumB(cdAddendaB CheckDetailAddendumB) []CheckDetailAddendumB {
+	cd.CheckDetailAddendumB = append(cd.CheckDetailAddendumB, cdAddendaB)
+	return cd.CheckDetailAddendumB
+}
+
+// AddCheckDetailAddendumC appends an AddendumCto the CheckDetail
+func (cd *CheckDetail) AddCheckDetailAddendumC(cdAddendaC CheckDetailAddendumC) []CheckDetailAddendumC {
+	cd.CheckDetailAddendumC = append(cd.CheckDetailAddendumC, cdAddendaC)
+	return cd.CheckDetailAddendumC
 }
