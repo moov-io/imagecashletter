@@ -66,9 +66,90 @@ func (w *Writer) Flush() {
 // writeCashLetter writes a CashLetter to a file
 func (w *Writer) writeCashLetter(file *File) error {
 	//CashLetters
-	//Bundles
-	//Items - CheckDetail, Addendum* and ImageView*
-	//ReturnBundles
-	//Items - ReturnDetail, ReturnAddendum*, and ImageView*
+	for _, cl := range file.CashLetters {
+		if _, err := w.w.WriteString(cl.GetHeader().String() + "\n"); err != nil {
+			return err
+		}
+		w.lineNum++
+
+		// Write Bundles
+		if err := w.writeBundle(cl); err != nil {
+			return err
+		}
+
+		if _, err := w.w.WriteString(cl.GetControl().String() + "\n"); err != nil {
+			return err
+		}
+		w.lineNum++
+	}
 	return nil
 }
+
+// writeBundle writes a Bundle to a file
+func (w *Writer) writeBundle(cl CashLetter) error {
+
+	for _, b := range cl.GetBundles() {
+		if _, err := w.w.WriteString(b.GetHeader().String() + "\n"); err != nil {
+			return err
+		}
+		w.lineNum++
+
+		// Write CheckDetails
+		if err := w.writeCheckDetail(b); err != nil {
+			return err
+		}
+
+		if _, err := w.w.WriteString(b.GetControl().String() + "\n"); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// writeCheckDetail writes a CheckDetail to a Bundle
+func (w *Writer) writeCheckDetail(b Bundle) error {
+
+	for _, cd := range b.GetChecks() {
+		if _, err := w.w.WriteString(cd.String() + "\n"); err != nil {
+			return err
+		}
+		w.lineNum++
+
+		// Write CheckDetailsAddendum (A, B, C)
+		if err := w.writeCheckDetailAddendum(cd); err != nil {
+			return err
+		}
+
+	}
+	return nil
+}
+
+// writeCheckDetailAddendum writes a CheckDetailAddendum (A, B, C) to a CheckDetail
+func (w *Writer) writeCheckDetailAddendum(cd *CheckDetail) error {
+	for _, cdAddendumA := range cd.GetCheckDetailAddendumA() {
+		if _, err := w.w.WriteString(cdAddendumA.String() + "\n"); err != nil {
+			return err
+		}
+	}
+	w.lineNum++
+
+	for _, cdAddendumB := range cd.GetCheckDetailAddendumB() {
+		if _, err := w.w.WriteString(cdAddendumB.String() + "\n"); err != nil {
+			return err
+		}
+	}
+	w.lineNum++
+
+	for _, cdAddendumC := range cd.GetCheckDetailAddendumC() {
+		if _, err := w.w.WriteString(cdAddendumC.String() + "\n"); err != nil {
+			return err
+		}
+	}
+	w.lineNum++
+
+	return nil
+}
+
+//Items ImageView*
+//ReturnBundles
+//Items - ReturnDetail, ReturnAddendum*, and ImageView*
