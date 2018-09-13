@@ -106,7 +106,7 @@ func (cdAddendumC *CheckDetailAddendumC) Parse(record string) {
 	// 05-13
 	cdAddendumC.EndorsingBankRoutingNumber = cdAddendumC.parseStringField(record[04:13])
 	// 14-21
-	cdAddendumC.BOFDEndorsementBusinessDate = cdAddendumC.parseYYYMMDDDate(record[13:21])
+	cdAddendumC.BOFDEndorsementBusinessDate = cdAddendumC.parseYYYYMMDDDate(record[13:21])
 	// 22-36
 	cdAddendumC.EndorsingItemSequenceNumber = cdAddendumC.parseNumField(record[21:36])
 	// 37-37

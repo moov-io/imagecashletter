@@ -102,7 +102,7 @@ func (cdAddendumA *CheckDetailAddendumA) Parse(record string) {
 	// 04-12
 	cdAddendumA.ReturnLocationRoutingNumber = cdAddendumA.parseStringField(record[03:12])
 	// 13-20
-	cdAddendumA.BOFDEndorsementDate = cdAddendumA.parseYYYMMDDDate(record[12:20])
+	cdAddendumA.BOFDEndorsementDate = cdAddendumA.parseYYYYMMDDDate(record[12:20])
 	// 21-35
 	cdAddendumA.BOFDItemSequenceNumber = cdAddendumA.parseNumField(record[20:35])
 	// 36-53

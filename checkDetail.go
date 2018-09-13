@@ -138,8 +138,12 @@ type CheckDetail struct {
 	CheckDetailAddendumB []CheckDetailAddendumB `json:"checkDetailAddendumB"`
 	// CheckDetailAddendumC
 	CheckDetailAddendumC []CheckDetailAddendumC `json:"checkDetailAddendumC"`
-	// ImageView
-	// ImageView ImageView `json:"imageView"`
+	// ImageViewDetail
+	ImageViewDetail []ImageViewDetail `json:"imageViewDetail"`
+	// ImageViewData
+	ImageViewData []ImageViewData `json:"imageViewData"`
+	// ImageViewAnalysis
+	ImageViewAnalysis []ImageViewAnalysis `json:"imageViewAnalysis"`
 	// validator is composed for x9 data validation
 	validator
 	// converters is composed for x9 to golang Converters

@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"strings"
 	"time"
 )
 
@@ -138,21 +139,34 @@ type ImageViewData struct {
 }
 
 // NewImageViewData returns a new ImageViewData with default values for non exported fields
-func NewImageViewData() *ImageViewData {
-	imageData := &ImageViewData{
+func NewImageViewData() ImageViewData {
+	ivData := ImageViewData{
 		recordType: "52",
 	}
-	return imageData
+	return ivData
 }
 
 // Parse takes the input record string and parses the ImageViewData values
+func (ivData *ImageViewData) Parse(record string) {
+}
 
 // String writes the ImageViewData struct to a string.
+func (ivData *ImageViewData) String() string {
+	var buf strings.Builder
+	buf.Grow(110)
+	return buf.String()
+}
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
+func (ivData *ImageViewData) Validate() error {
+	return nil
+}
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
+func (ivData *ImageViewData) fieldInclusion() error {
+	return nil
+}
 
 // Get properties

@@ -165,9 +165,9 @@ func (clh *CashLetterHeader) Parse(record string) {
 	// 14-22
 	clh.ECEInstitutionRoutingNumber = clh.parseStringField(record[13:22])
 	// 23-30
-	clh.CashLetterBusinessDate = clh.parseYYYMMDDDate(record[22:30])
+	clh.CashLetterBusinessDate = clh.parseYYYYMMDDDate(record[22:30])
 	// 31-38
-	clh.CashLetterCreationDate = clh.parseYYYMMDDDate(record[30:38])
+	clh.CashLetterCreationDate = clh.parseYYYYMMDDDate(record[30:38])
 	// 39-42
 	clh.CashLetterCreationTime = clh.parseSimpleTime(record[38:42])
 	// 43-43

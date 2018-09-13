@@ -75,7 +75,7 @@ func (clc *CashLetterControl) Parse(record string) {
 	// 40-57
 	clc.ECEInstitutionName = clc.parseStringField(record[39:57])
 	// 58-65
-	clc.SettlementDate = clc.parseYYYMMDDDate(record[57:65])
+	clc.SettlementDate = clc.parseYYYYMMDDDate(record[57:65])
 	// 66-66
 	clc.CreditTotalIndicator = clc.parseNumField(record[65:66])
 	// 67-80

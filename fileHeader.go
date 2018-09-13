@@ -122,7 +122,7 @@ func (fh *FileHeader) Parse(record string) {
 	// 15-23
 	fh.ImmediateOrigin = fh.parseStringField(record[14:23])
 	// 24-31
-	fh.FileCreationDate = fh.parseYYYMMDDDate(record[23:31])
+	fh.FileCreationDate = fh.parseYYYYMMDDDate(record[23:31])
 	// 32-35
 	fh.FileCreationTime = fh.parseSimpleTime(record[31:35])
 	// 36-36

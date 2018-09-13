@@ -40,7 +40,7 @@ func (c *converters) formatYYYYMMDDDate(t time.Time) string {
 }
 
 // parseYYYMMDDDate returns a time.Time when passed time as YYYYMMDD
-func (c *converters) parseYYYMMDDDate(s string) time.Time {
+func (c *converters) parseYYYYMMDDDate(s string) time.Time {
 	t, _ := time.Parse("20060102", s)
 	return t
 }
