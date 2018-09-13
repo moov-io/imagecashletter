@@ -153,6 +153,7 @@ func (bh *BundleHeader) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 20)
 		return &FieldError{FieldName: "recordType", Value: bh.recordType, Msg: msg}
 	}
+	// Mandatory
 	if err := bh.isCollectionTypeIndicator(bh.CollectionTypeIndicator); err != nil {
 		return &FieldError{FieldName: "CollectionTypeIndicator",
 			Value: bh.CollectionTypeIndicator, Msg: err.Error()}

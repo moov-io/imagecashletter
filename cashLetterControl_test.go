@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"log"
 	"strings"
 	"testing"
 	"time"
@@ -78,6 +79,7 @@ func testParseCashLetterControl(t testing.TB) {
 	err := r.parseCashLetterControl()
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.CashLetterControl
 
@@ -133,6 +135,7 @@ func testCLCString(t testing.TB) {
 	err := r.parseCashLetterControl()
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.CashLetterControl
 	if record.String() != line {

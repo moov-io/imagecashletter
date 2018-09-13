@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"log"
 	"strings"
 	"testing"
 	"time"
@@ -96,6 +97,7 @@ func parseCheckDetailAddendumA(t testing.TB) {
 
 	if err := r.parseCheckDetailAddendumA(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.currentBundle.GetChecks()[0].CheckDetailAddendumA[0]
 
@@ -168,6 +170,7 @@ func testCDAddendumAString(t testing.TB) {
 
 	if err := r.parseCheckDetailAddendumA(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.currentBundle.GetChecks()[0].CheckDetailAddendumA[0]
 

@@ -104,8 +104,10 @@ func (bc *BundleControl) Validate() error {
 	if err := bc.isAlphanumericSpecial(bc.UserField); err != nil {
 		return &FieldError{FieldName: "UserField", Value: bc.UserField, Msg: err.Error()}
 	}
-	if err := bc.isCreditTotalIndicator(bc.CreditTotalIndicator); err != nil {
-		return &FieldError{FieldName: "CreditTotalIndicator", Value: bc.CreditTotalIndicatorField(), Msg: err.Error()}
+	if bc.CreditTotalIndicatorField() != "" {
+		if err := bc.isCreditTotalIndicator(bc.CreditTotalIndicator); err != nil {
+			return &FieldError{FieldName: "CreditTotalIndicator", Value: bc.CreditTotalIndicatorField(), Msg: err.Error()}
+		}
 	}
 	return nil
 }

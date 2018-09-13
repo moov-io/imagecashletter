@@ -107,6 +107,7 @@ func (cdAddendumB *CheckDetailAddendumB) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 27)
 		return &FieldError{FieldName: "recordType", Value: cdAddendumB.recordType, Msg: msg}
 	}
+	// Mandatory
 	if err := cdAddendumB.isImageReferenceKeyIndicator(cdAddendumB.ImageReferenceKeyIndicator); err != nil {
 		return &FieldError{FieldName: "ImageReferenceKeyIndicator",
 			Value: cdAddendumB.ImageReferenceKeyIndicatorField(), Msg: err.Error()}
@@ -128,6 +129,10 @@ func (cdAddendumB *CheckDetailAddendumB) Validate() error {
 func (cdAddendumB *CheckDetailAddendumB) fieldInclusion() error {
 	if cdAddendumB.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: cdAddendumB.recordType, Msg: msgFieldInclusion}
+	}
+	if cdAddendumB.ImageReferenceKeyIndicatorField() == "" {
+		return &FieldError{FieldName: "ImageReferenceKeyIndicator",
+			Value: cdAddendumB.ImageReferenceKeyIndicatorField(), Msg: msgFieldInclusion}
 	}
 	if cdAddendumB.ImageReferenceKeyLength == "" {
 		return &FieldError{FieldName: "ImageReferenceKeyLength",

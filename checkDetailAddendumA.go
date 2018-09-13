@@ -173,17 +173,24 @@ func (cdAddendumA *CheckDetailAddendumA) Validate() error {
 		return &FieldError{FieldName: "PayeeName",
 			Value: cdAddendumA.PayeeName, Msg: err.Error()}
 	}
+	// Mandatory
 	if err := cdAddendumA.isTruncationIndicator(cdAddendumA.TruncationIndicator); err != nil {
 		return &FieldError{FieldName: "TruncationIndicator",
 			Value: cdAddendumA.TruncationIndicator, Msg: err.Error()}
 	}
-	if err := cdAddendumA.isConversionIndicator(cdAddendumA.BOFDConversionIndicator); err != nil {
-		return &FieldError{FieldName: "BOFDConversionIndicator",
-			Value: cdAddendumA.BOFDConversionIndicator, Msg: err.Error()}
+	// Conditional
+	if cdAddendumA.BOFDConversionIndicator != "" {
+		if err := cdAddendumA.isConversionIndicator(cdAddendumA.BOFDConversionIndicator); err != nil {
+			return &FieldError{FieldName: "BOFDConversionIndicator",
+				Value: cdAddendumA.BOFDConversionIndicator, Msg: err.Error()}
+		}
 	}
-	if err := cdAddendumA.isCorrectionIndicator(cdAddendumA.BOFDCorrectionIndicator); err != nil {
-		return &FieldError{FieldName: "BOFDCorrectionIndicator",
-			Value: cdAddendumA.BOFDCorrectionIndicatorField(), Msg: err.Error()}
+	// Conditional
+	if cdAddendumA.BOFDCorrectionIndicatorField() != "" {
+		if err := cdAddendumA.isCorrectionIndicator(cdAddendumA.BOFDCorrectionIndicator); err != nil {
+			return &FieldError{FieldName: "BOFDCorrectionIndicator",
+				Value: cdAddendumA.BOFDCorrectionIndicatorField(), Msg: err.Error()}
+		}
 	}
 	if err := cdAddendumA.isAlphanumericSpecial(cdAddendumA.UserField); err != nil {
 		return &FieldError{FieldName: "UserField", Value: cdAddendumA.UserField, Msg: err.Error()}

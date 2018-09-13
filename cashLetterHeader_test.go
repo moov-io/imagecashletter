@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"log"
 	"strings"
 	"testing"
 	"time"
@@ -97,6 +98,7 @@ func parseCashLetterHeader(t testing.TB) {
 	r.line = line
 	if err := r.parseCashLetterHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.CashLetterHeader
 
@@ -170,6 +172,7 @@ func testCLHString(t testing.TB) {
 	r.line = line
 	if err := r.parseCashLetterHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.CashLetterHeader
 	if record.String() != line {

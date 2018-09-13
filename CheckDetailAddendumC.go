@@ -158,17 +158,24 @@ func (cdAddendumC *CheckDetailAddendumC) Validate() error {
 		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
 			Value: cdAddendumC.EndorsingBankRoutingNumber, Msg: err.Error()}
 	}
+	// Mandatory
 	if err := cdAddendumC.isTruncationIndicator(cdAddendumC.TruncationIndicator); err != nil {
 		return &FieldError{FieldName: "TruncationIndicator",
 			Value: cdAddendumC.TruncationIndicator, Msg: err.Error()}
 	}
-	if err := cdAddendumC.isConversionIndicator(cdAddendumC.EndorsingConversionIndicator); err != nil {
-		return &FieldError{FieldName: "EndorsingConversionIndicator",
-			Value: cdAddendumC.EndorsingConversionIndicator, Msg: err.Error()}
+	// Conditional
+	if cdAddendumC.EndorsingConversionIndicator != "" {
+		if err := cdAddendumC.isConversionIndicator(cdAddendumC.EndorsingConversionIndicator); err != nil {
+			return &FieldError{FieldName: "EndorsingConversionIndicator",
+				Value: cdAddendumC.EndorsingConversionIndicator, Msg: err.Error()}
+		}
 	}
-	if err := cdAddendumC.isCorrectionIndicator(cdAddendumC.EndorsingCorrectionIndicator); err != nil {
-		return &FieldError{FieldName: "EndorsingCorrectionIndicator",
-			Value: cdAddendumC.EndorsingCorrectionIndicatorField(), Msg: err.Error()}
+	// Conditional
+	if cdAddendumC.EndorsingCorrectionIndicatorField() != "" {
+		if err := cdAddendumC.isCorrectionIndicator(cdAddendumC.EndorsingCorrectionIndicator); err != nil {
+			return &FieldError{FieldName: "EndorsingCorrectionIndicator",
+				Value: cdAddendumC.EndorsingCorrectionIndicatorField(), Msg: err.Error()}
+		}
 	}
 	if err := cdAddendumC.isAlphanumeric(cdAddendumC.ReturnReason); err != nil {
 		return &FieldError{FieldName: "ReturnReason",

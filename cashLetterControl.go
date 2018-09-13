@@ -111,8 +111,10 @@ func (clc *CashLetterControl) Validate() error {
 	if err := clc.isAlphanumericSpecial(clc.ECEInstitutionName); err != nil {
 		return &FieldError{FieldName: "ECEInstitutionName", Value: clc.ECEInstitutionName, Msg: err.Error()}
 	}
-	if err := clc.isCreditTotalIndicator(clc.CreditTotalIndicator); err != nil {
-		return &FieldError{FieldName: "CreditTotalIndicator", Value: clc.CreditTotalIndicatorField(), Msg: err.Error()}
+	if clc.CreditTotalIndicatorField() != "" {
+		if err := clc.isCreditTotalIndicator(clc.CreditTotalIndicator); err != nil {
+			return &FieldError{FieldName: "CreditTotalIndicator", Value: clc.CreditTotalIndicatorField(), Msg: err.Error()}
+		}
 	}
 	return nil
 }

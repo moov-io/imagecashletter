@@ -226,23 +226,37 @@ func (cd *CheckDetail) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 25)
 		return &FieldError{FieldName: "recordType", Value: cd.recordType, Msg: msg}
 	}
+	// Conditional, validator contains ""
 	if err := cd.isDocumentationTypeIndicator(cd.DocumentationTypeIndicator); err != nil {
 		return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cd.DocumentationTypeIndicator, Msg: err.Error()}
 	}
-	if err := cd.isReturnAcceptanceIndicator(cd.ReturnAcceptanceIndicator); err != nil {
-		return &FieldError{FieldName: "ReturnAcceptanceIndicator", Value: cd.ReturnAcceptanceIndicator, Msg: err.Error()}
+	// Conditional
+	if cd.ReturnAcceptanceIndicator != "" {
+		if err := cd.isReturnAcceptanceIndicator(cd.ReturnAcceptanceIndicator); err != nil {
+			return &FieldError{FieldName: "ReturnAcceptanceIndicator", Value: cd.ReturnAcceptanceIndicator, Msg: err.Error()}
+		}
 	}
-	if err := cd.isMICRValidIndicator(cd.MICRValidIndicator); err != nil {
-		return &FieldError{FieldName: "MICRValidIndicator", Value: cd.MICRValidIndicatorField(), Msg: err.Error()}
+	// Conditional
+	if cd.MICRValidIndicatorField() != "" {
+		if err := cd.isMICRValidIndicator(cd.MICRValidIndicator); err != nil {
+			return &FieldError{FieldName: "MICRValidIndicator", Value: cd.MICRValidIndicatorField(), Msg: err.Error()}
+		}
 	}
+	// Mandatory
 	if err := cd.isBOFDIndicator(cd.BOFDIndicator); err != nil {
 		return &FieldError{FieldName: "BOFDIndicator", Value: cd.BOFDIndicator, Msg: err.Error()}
 	}
-	if err := cd.isCorrectionIndicator(cd.CorrectionIndicator); err != nil {
-		return &FieldError{FieldName: "CorrectionIndicator", Value: cd.CorrectionIndicatorField(), Msg: err.Error()}
+	// Conditional
+	if cd.CorrectionIndicatorField() != "" {
+		if err := cd.isCorrectionIndicator(cd.CorrectionIndicator); err != nil {
+			return &FieldError{FieldName: "CorrectionIndicator", Value: cd.CorrectionIndicatorField(), Msg: err.Error()}
+		}
 	}
-	if err := cd.isArchiveTypeIndicator(cd.ArchiveTypeIndicator); err != nil {
-		return &FieldError{FieldName: "ArchiveTypeIndicator", Value: cd.ArchiveTypeIndicator, Msg: err.Error()}
+	// Conditional
+	if cd.ArchiveTypeIndicator != "" {
+		if err := cd.isArchiveTypeIndicator(cd.ArchiveTypeIndicator); err != nil {
+			return &FieldError{FieldName: "ArchiveTypeIndicator", Value: cd.ArchiveTypeIndicator, Msg: err.Error()}
+		}
 	}
 	return nil
 }

@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"log"
 	"strings"
 	"testing"
 	"time"
@@ -83,6 +84,7 @@ func parseBundleHeader(t testing.TB) {
 
 	if err := r.parseBundleHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 
 	record := r.currentCashLetter.currentBundle.BundleHeader
@@ -149,6 +151,7 @@ func testBHString(t testing.TB) {
 	r.addCurrentBundle(NewBundle(bh))
 	if err := r.parseBundleHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.currentBundle.BundleHeader
 	if record.String() != line {
