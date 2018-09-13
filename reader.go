@@ -319,18 +319,63 @@ func (r *Reader) parseCheckDetailAddendumC() error {
 // parseImageViewDetail takes the input record string and parses the ImageViewDetail values
 func (r *Reader) parseImageViewDetail() error {
 	r.recordName = "ImageViewDetail"
+	if r.currentCashLetter.currentBundle.GetChecks() == nil {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "ImageViewDetail", Msg: msg})
+	}
+	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "ImageViewDetail", Msg: msg})
+	}
+	ivDetail := NewImageViewDetail()
+	ivDetail.Parse(r.line)
+	if err := ivDetail.Validate(); err != nil {
+		return err
+	}
+	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
+	r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewDetail(ivDetail)
 	return nil
 }
 
 // parseImageViewData takes the input record string and parses the ImageViewData values
 func (r *Reader) parseImageViewData() error {
 	r.recordName = "ImageViewData"
+	if r.currentCashLetter.currentBundle.GetChecks() == nil {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
+	}
+	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
+	}
+	ivData := NewImageViewData()
+	ivData.Parse(r.line)
+	if err := ivData.Validate(); err != nil {
+		return err
+	}
+	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
+	r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewData(ivData)
 	return nil
 }
 
 // parseImageViewAnalysis takes the input record string and parses the ImageViewAnalysis values
 func (r *Reader) parseImageViewAnalysis() error {
 	r.recordName = "ImageViewAnalysis"
+	if r.currentCashLetter.currentBundle.GetChecks() == nil {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "ImageViewAnalysis", Msg: msg})
+	}
+	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "ImageViewAnalysis", Msg: msg})
+	}
+	ivAnalysis := NewImageViewAnalysis()
+	ivAnalysis.Parse(r.line)
+	if err := ivAnalysis.Validate(); err != nil {
+		return err
+	}
+	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
+	r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewAnalysis(ivAnalysis)
 	return nil
 }
 

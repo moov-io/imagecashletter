@@ -52,7 +52,7 @@ func mockCheckDetailAddendum() *CheckDetail {
 	return cd
 }
 
-// testMockCheckDetail creates an ICL CheckDetail
+// testMockCheckDetail creates a CheckDetail
 func testMockCheckDetail(t testing.TB) {
 	cd := mockCheckDetail()
 	if err := cd.Validate(); err != nil {
@@ -110,7 +110,7 @@ func TestMockCheckDetail(t *testing.T) {
 	testMockCheckDetail(t)
 }
 
-// BenchmarkMockCheckDetail benchmarks creating an ICL CheckDetail
+// BenchmarkMockCheckDetail benchmarks creating a CheckDetail
 func BenchmarkMockCheckDetail(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {

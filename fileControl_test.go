@@ -28,7 +28,7 @@ func mockFileControl() FileControl {
 	return fc
 }
 
-// testMockFileControl creates an ICL FileControl
+// testMockFileControl creates a ICL FileControl
 func testMockFileControl(t testing.TB) {
 	fc := mockFileControl()
 	if err := fc.Validate(); err != nil {
@@ -60,7 +60,7 @@ func testMockFileControl(t testing.TB) {
 	}
 }
 
-// TestMockFileControl tests creating an ICL FileControl
+// TestMockFileControl tests creating a FileControl
 func TestMockFileControl(t *testing.T) {
 	testMockFileControl(t)
 }
