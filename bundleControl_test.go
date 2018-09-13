@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"log"
 	"strings"
 	"testing"
 )
@@ -80,6 +81,7 @@ func testParseBundleControl(t testing.TB) {
 	err := r.parseBundleControl()
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.currentBundle.BundleControl
 
@@ -135,6 +137,7 @@ func testBCString(t testing.TB) {
 	err := r.parseBundleControl()
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.currentBundle.BundleControl
 	if record.String() != line {

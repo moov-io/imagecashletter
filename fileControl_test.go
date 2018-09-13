@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"log"
 	"strings"
 	"testing"
 )
@@ -80,6 +81,7 @@ func testParseFileControl(t testing.TB) {
 	err := r.parseFileControl()
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.File.Control
 
@@ -133,6 +135,7 @@ func testFCString(t testing.TB) {
 	err := r.parseFileControl()
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.File.Control
 	if record.String() != line {

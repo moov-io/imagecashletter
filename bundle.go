@@ -4,7 +4,7 @@
 
 package x9
 
-// Errors specific to a ImageView
+// Errors specific to a Bundle
 
 // Bundle contains forward items (checks)
 type Bundle struct {

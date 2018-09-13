@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"log"
 	"strings"
 	"testing"
 	"time"
@@ -97,6 +98,7 @@ func parseCashLetterHeader(t testing.TB) {
 	r.line = line
 	if err := r.parseCashLetterHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.CashLetterHeader
 
@@ -104,10 +106,10 @@ func parseCashLetterHeader(t testing.TB) {
 		t.Errorf("RecordType Expected '10' got: %v", record.recordType)
 	}
 	if record.CollectionTypeIndicatorField() != "01" {
-		t.Errorf("CollectionTypeIndicator Expected '01' got: %v", record.CollectionTypeIndicator)
+		t.Errorf("CollectionTypeIndicator Expected '01' got: %v", record.CollectionTypeIndicatorField())
 	}
 	if record.DestinationRoutingNumberField() != "231380104" {
-		t.Errorf("DestinationRoutingNumber '231380104' got: %v", record.DestinationRoutingNumber)
+		t.Errorf("DestinationRoutingNumber '231380104' got: %v", record.DestinationRoutingNumberField())
 	}
 	if record.ECEInstitutionRoutingNumberField() != "121042882" {
 		t.Errorf("ECEInstitutionRoutingNumber Expected '121042882' got: %v", record.ECEInstitutionRoutingNumberField())
@@ -170,6 +172,7 @@ func testCLHString(t testing.TB) {
 	r.line = line
 	if err := r.parseCashLetterHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.CashLetterHeader
 	if record.String() != line {

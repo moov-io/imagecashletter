@@ -35,6 +35,7 @@ func NewCashLetter(clh *CashLetterHeader) CashLetter {
 
 // Validate performs X9 validations and format rule checks and returns an error if not Validated
 func (cl *CashLetter) Validate() error {
+	// ToDo:  If CashLetterRecordTypeIndicator is "N", There should be no bundle, it is an empty cash letter
 	return nil
 }
 

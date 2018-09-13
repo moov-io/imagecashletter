@@ -110,8 +110,11 @@ func (fc *FileControl) Validate() error {
 		return &FieldError{FieldName: "ImmediateOriginContactPhoneNumber",
 			Value: fc.ImmediateOriginContactPhoneNumber, Msg: err.Error()}
 	}
-	if err := fc.isCreditTotalIndicator(fc.CreditTotalIndicator); err != nil {
-		return &FieldError{FieldName: "CreditTotalIndicator", Value: fc.CreditTotalIndicatorField(), Msg: err.Error()}
+	// Conditional
+	if fc.CreditTotalIndicatorField() != "" {
+		if err := fc.isCreditTotalIndicator(fc.CreditTotalIndicator); err != nil {
+			return &FieldError{FieldName: "CreditTotalIndicator", Value: fc.CreditTotalIndicatorField(), Msg: err.Error()}
+		}
 	}
 	return nil
 }

@@ -107,9 +107,9 @@ func (bh *BundleHeader) Parse(record string) {
 	// 14-22
 	bh.ECEInstitutionRoutingNumber = bh.parseStringField(record[13:22])
 	// 23-30
-	bh.BundleBusinessDate = bh.parseYYYMMDDDate(record[22:30])
+	bh.BundleBusinessDate = bh.parseYYYYMMDDDate(record[22:30])
 	// 31-38
-	bh.BundleCreationDate = bh.parseYYYMMDDDate(record[30:38])
+	bh.BundleCreationDate = bh.parseYYYYMMDDDate(record[30:38])
 	// 39-48
 	bh.BundleID = bh.parseStringField(record[38:48])
 	// 49-52
@@ -153,6 +153,7 @@ func (bh *BundleHeader) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 20)
 		return &FieldError{FieldName: "recordType", Value: bh.recordType, Msg: msg}
 	}
+	// Mandatory
 	if err := bh.isCollectionTypeIndicator(bh.CollectionTypeIndicator); err != nil {
 		return &FieldError{FieldName: "CollectionTypeIndicator",
 			Value: bh.CollectionTypeIndicator, Msg: err.Error()}

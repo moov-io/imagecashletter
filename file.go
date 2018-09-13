@@ -4,7 +4,10 @@
 
 package x9
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 // ICL File Records that are identified as Mandatory are required to support Federal Reserve processing of an image
 // file.
@@ -76,9 +79,6 @@ type File struct {
 	Header FileHeader `json:"fileHeader"`
 	// CashLetters are ICl Cash Letters
 	CashLetters []CashLetter `json:"cashLetters,omitempty"`
-	// ToDo: Current logic to add a Bundle is in CashLetter
-	// Bundles are ICL Bundles
-	//Bundles []Bundle `json"bundles"`
 	// FileControl is an ICL FileControl
 	Control FileControl `json:"fileControl"`
 }
@@ -93,6 +93,14 @@ func NewFile() *File {
 
 // Create creates a valid ICL File
 func (f *File) Create() error {
+	// Requires a valid FileHeader to build FileControl
+	if err := f.Header.Validate(); err != nil {
+		return err
+	}
+
+	if len(f.CashLetters) <= 0 {
+		return &FileError{FieldName: "CashLetters", Value: strconv.Itoa(len(f.CashLetters)), Msg: "must have []*CashLetters to be built"}
+	}
 	return nil
 }
 
@@ -112,10 +120,3 @@ func (f *File) AddCashLetter(cashLetter CashLetter) []CashLetter {
 	f.CashLetters = append(f.CashLetters, cashLetter)
 	return f.CashLetters
 }
-
-// ToDo: Current logic to add a Bundle is in CashLetter
-/*// AddBundle appends a Bundle to the x9.File
-func (f *File) AddBundle(bundle Bundle) []Bundle {
-	f.Bundles = append(f.Bundles, bundle)
-	return f.Bundles
-}*/

@@ -117,8 +117,6 @@ func (r *Reader) parseLine() error {
 		if err := r.parseCashLetterHeader(); err != nil {
 			return err
 		}
-
-	// ToDo:  Consider if CashLetterRecordTypeIndicator is "N", There should be no bundle, it is an empty cash letter
 	case bundleHeaderPos:
 		if err := r.parseBundleHeader(); err != nil {
 			return err
@@ -155,6 +153,7 @@ func (r *Reader) parseLine() error {
 		if err := r.parseBundleControl(); err != nil {
 			return err
 		}
+		// ToDo: The following logic may need to be moved for gocyclo
 		if err := r.currentCashLetter.currentBundle.Validate(); err != nil {
 			r.recordName = "Bundles"
 			return r.error(err)
@@ -165,7 +164,7 @@ func (r *Reader) parseLine() error {
 		if err := r.parseCashLetterControl(); err != nil {
 			return err
 		}
-		// ToDo: Review/Test this logic for adding CashLetters to File
+		// ToDo: The following logic may need to be moved for gocyclo
 		if err := r.currentCashLetter.Validate(); err != nil {
 			r.recordName = "CashLetters"
 			return r.error(err)
@@ -173,10 +172,6 @@ func (r *Reader) parseLine() error {
 		r.File.AddCashLetter(r.currentCashLetter)
 		r.currentCashLetter = CashLetter{}
 	case fileControlPos:
-		if r.line[:2] == "99" {
-			// final blocking padding
-			break
-		}
 		if err := r.parseFileControl(); err != nil {
 			return err
 		}
@@ -258,18 +253,66 @@ func (r *Reader) parseCheckDetail() error {
 // parseCheckDetailAddendumA takes the input record string and parses the CheckDetailAddendumA values
 func (r *Reader) parseCheckDetailAddendumA() error {
 	r.recordName = "CheckDetailAddendumA"
+	if r.currentCashLetter.currentBundle.GetChecks() == nil {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
+	}
+	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
+	}
+	cdAddendumA := NewCheckDetailAddendumA()
+	cdAddendumA.Parse(r.line)
+	if err := cdAddendumA.Validate(); err != nil {
+		return err
+	}
+	// ToDo research Pointer for CheckAddendum*, also see about use of currentCheckDetail
+	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
+	//r.currentCashLetter.currentBundle.Checks[entryIndex].CheckDetailAddendumA = cdAddendumA
+	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumA(cdAddendumA)
 	return nil
 }
 
 // parseCheckDetailAddendumB takes the input record string and parses the CheckDetailAddendumB values
 func (r *Reader) parseCheckDetailAddendumB() error {
 	r.recordName = "CheckDetailAddendumB"
+	if r.currentCashLetter.currentBundle.GetChecks() == nil {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
+	}
+	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
+	}
+	cdAddendumB := NewCheckDetailAddendumB()
+	cdAddendumB.Parse(r.line)
+	if err := cdAddendumB.Validate(); err != nil {
+		return err
+	}
+	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
+	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumB(cdAddendumB)
 	return nil
 }
 
 // parseCheckDetailAddendumC takes the input record string and parses the CheckDetailAddendumC values
 func (r *Reader) parseCheckDetailAddendumC() error {
 	r.recordName = "CheckDetailAddendumC"
+
+	if r.currentCashLetter.currentBundle.GetChecks() == nil {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
+	}
+	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
+	}
+	cdAddendumC := NewCheckDetailAddendumC()
+	cdAddendumC.Parse(r.line)
+	if err := cdAddendumC.Validate(); err != nil {
+		return err
+	}
+	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
+	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumC(cdAddendumC)
 	return nil
 }
 

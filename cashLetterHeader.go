@@ -165,9 +165,9 @@ func (clh *CashLetterHeader) Parse(record string) {
 	// 14-22
 	clh.ECEInstitutionRoutingNumber = clh.parseStringField(record[13:22])
 	// 23-30
-	clh.CashLetterBusinessDate = clh.parseYYYMMDDDate(record[22:30])
+	clh.CashLetterBusinessDate = clh.parseYYYYMMDDDate(record[22:30])
 	// 31-38
-	clh.CashLetterCreationDate = clh.parseYYYMMDDDate(record[30:38])
+	clh.CashLetterCreationDate = clh.parseYYYYMMDDDate(record[30:38])
 	// 39-42
 	clh.CashLetterCreationTime = clh.parseSimpleTime(record[38:42])
 	// 43-43
@@ -223,14 +223,17 @@ func (clh *CashLetterHeader) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 10)
 		return &FieldError{FieldName: "recordType", Value: clh.recordType, Msg: msg}
 	}
+	// Mandatory
 	if err := clh.isCollectionTypeIndicator(clh.CollectionTypeIndicator); err != nil {
 		return &FieldError{FieldName: "CollectionTypeIndicator",
 			Value: clh.CollectionTypeIndicator, Msg: err.Error()}
 	}
+	// Mandatory
 	if err := clh.isCashLetterRecordTypeIndicator(clh.CashLetterRecordTypeIndicator); err != nil {
 		return &FieldError{FieldName: "CashLetterRecordTypeIndicator",
 			Value: clh.CashLetterRecordTypeIndicator, Msg: err.Error()}
 	}
+	// Conditional validator contains ""
 	if err := clh.isDocumentationTypeIndicator(clh.CashLetterDocumentationTypeIndicator); err != nil {
 		return &FieldError{FieldName: "CashLetterDocumentationTypeIndicator",
 			Value: clh.CashLetterDocumentationTypeIndicator, Msg: err.Error()}
@@ -247,6 +250,7 @@ func (clh *CashLetterHeader) Validate() error {
 	if err := clh.isAlphanumeric(clh.FedWorkType); err != nil {
 		return &FieldError{FieldName: "FedWorkType", Value: clh.FedWorkType, Msg: err.Error()}
 	}
+	// Mandatory
 	if err := clh.isReturnsIndicator(clh.ReturnsIndicator); err != nil {
 		return &FieldError{FieldName: "ReturnsIndicator", Value: clh.ReturnsIndicator, Msg: err.Error()}
 	}
@@ -265,6 +269,10 @@ func (clh *CashLetterHeader) fieldInclusion() error {
 	if clh.CollectionTypeIndicator == "" {
 		return &FieldError{FieldName: "CollectionTypeIndicator",
 			Value: clh.CollectionTypeIndicator, Msg: msgFieldInclusion}
+	}
+	if clh.CashLetterRecordTypeIndicator == "" {
+		return &FieldError{FieldName: "CashLetterRecordTypeIndicator",
+			Value: clh.CashLetterRecordTypeIndicator, Msg: msgFieldInclusion}
 	}
 	if clh.DestinationRoutingNumber == "" {
 		return &FieldError{FieldName: "DestinationRoutingNumber",
@@ -286,13 +294,10 @@ func (clh *CashLetterHeader) fieldInclusion() error {
 		return &FieldError{FieldName: "CashLetterCreationTime",
 			Value: clh.CashLetterCreationTime.String(), Msg: msgFieldInclusion}
 	}
-	if clh.CashLetterRecordTypeIndicator == "" {
-		return &FieldError{FieldName: "CashLetterRecordTypeIndicator",
-			Value: clh.CashLetterRecordTypeIndicator, Msg: msgFieldInclusion}
-	}
 	if clh.CashLetterID == "" {
 		return &FieldError{FieldName: "CashLetterID", Value: clh.CashLetterID, Msg: msgFieldInclusion}
 	}
+	// clh.ReturnsIndicator can be ""
 	return nil
 }
 

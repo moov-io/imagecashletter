@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"log"
 	"strings"
 	"testing"
 	"time"
@@ -93,6 +94,7 @@ func parseFileHeader(t testing.TB) {
 	r.line = line
 	if err := r.parseFileHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.File.Header
 
@@ -160,6 +162,7 @@ func testFHString(t testing.TB) {
 	r.line = line
 	if err := r.parseFileHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.File.Header
 

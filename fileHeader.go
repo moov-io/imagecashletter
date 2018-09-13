@@ -122,7 +122,7 @@ func (fh *FileHeader) Parse(record string) {
 	// 15-23
 	fh.ImmediateOrigin = fh.parseStringField(record[14:23])
 	// 24-31
-	fh.FileCreationDate = fh.parseYYYMMDDDate(record[23:31])
+	fh.FileCreationDate = fh.parseYYYYMMDDDate(record[23:31])
 	// 32-35
 	fh.FileCreationTime = fh.parseSimpleTime(record[31:35])
 	// 36-36
@@ -175,9 +175,11 @@ func (fh *FileHeader) Validate() error {
 	if err := fh.isStandardLevel(fh.StandardLevel); err != nil {
 		return &FieldError{FieldName: "StandardLevel", Value: fh.StandardLevel, Msg: err.Error()}
 	}
+	// Mandatory
 	if err := fh.isTestFileIndicator(fh.TestFileIndicator); err != nil {
 		return &FieldError{FieldName: "TestFileIndicator", Value: fh.TestFileIndicator, Msg: err.Error()}
 	}
+	// Mandatory
 	if err := fh.isResendIndicator(fh.ResendIndicator); err != nil {
 		return &FieldError{FieldName: "ResendIndicator", Value: fh.ResendIndicator, Msg: err.Error()}
 	}
@@ -190,11 +192,13 @@ func (fh *FileHeader) Validate() error {
 	if err := fh.isAlphanumeric(fh.FileIDModifier); err != nil {
 		return &FieldError{FieldName: "FileIDModifier", Value: fh.FileIDModifier, Msg: err.Error()}
 	}
+	// Conditional
 	if fh.CountryCode == "US" {
 		if err := fh.isCompanionDocumentIndicatorUS(fh.CompanionDocumentIndicator); err != nil {
 			return &FieldError{FieldName: "CompanionDocumentIndicator", Value: fh.CompanionDocumentIndicator, Msg: err.Error()}
 		}
 	}
+	// Conditional
 	if fh.CountryCode == "CA" {
 		if err := fh.isCompanionDocumentIndicatorCA(fh.CompanionDocumentIndicator); err != nil {
 			return &FieldError{FieldName: "CompanionDocumentIndicator", Value: fh.CompanionDocumentIndicator, Msg: err.Error()}
@@ -218,6 +222,9 @@ func (fh *FileHeader) fieldInclusion() error {
 	if fh.TestFileIndicator == "" {
 		return &FieldError{FieldName: "TestFileIndicator", Value: fh.TestFileIndicator, Msg: msgFieldInclusion}
 	}
+	if fh.ResendIndicator == "" {
+		return &FieldError{FieldName: "ResendIndicator", Value: fh.ResendIndicator, Msg: msgFieldInclusion}
+	}
 	if fh.ImmediateDestination == "" {
 		return &FieldError{FieldName: "ImmediateDestination", Value: fh.ImmediateDestination, Msg: msgFieldInclusion}
 	}
@@ -235,9 +242,6 @@ func (fh *FileHeader) fieldInclusion() error {
 	}
 	if fh.FileCreationTime.IsZero() {
 		return &FieldError{FieldName: "FileCreationTime", Value: fh.FileCreationTime.String(), Msg: msgFieldInclusion}
-	}
-	if fh.ResendIndicator == "" {
-		return &FieldError{FieldName: "ResendIndicator", Value: fh.ResendIndicator, Msg: msgFieldInclusion}
 	}
 	return nil
 

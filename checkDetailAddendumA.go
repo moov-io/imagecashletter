@@ -39,7 +39,7 @@ type CheckDetailAddendumA struct {
 	// DD 01 through 31
 	BOFDEndorsementDate time.Time `json:"bofdEndorsementDate"`
 	// BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
-	BOFDItemSequenceNumber string `json:"bofdItemSequenceNumber"`
+	BOFDItemSequenceNumber int `json:"bofdItemSequenceNumber"`
 	// BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
 	BOFDAccountNumber string `json:"bofdAccountNumber"`
 	// BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
@@ -86,8 +86,8 @@ type CheckDetailAddendumA struct {
 }
 
 // NewCheckDetailAddendumA returns a new CheckDetailAddendumA with default values for non exported fields
-func NewCheckDetailAddendumA() *CheckDetailAddendumA {
-	cdAddendumA := &CheckDetailAddendumA{
+func NewCheckDetailAddendumA() CheckDetailAddendumA {
+	cdAddendumA := CheckDetailAddendumA{
 		recordType: "26",
 	}
 	return cdAddendumA
@@ -102,9 +102,9 @@ func (cdAddendumA *CheckDetailAddendumA) Parse(record string) {
 	// 04-12
 	cdAddendumA.ReturnLocationRoutingNumber = cdAddendumA.parseStringField(record[03:12])
 	// 13-20
-	cdAddendumA.BOFDEndorsementDate = cdAddendumA.parseYYYMMDDDate(record[12:20])
+	cdAddendumA.BOFDEndorsementDate = cdAddendumA.parseYYYYMMDDDate(record[12:20])
 	// 21-35
-	cdAddendumA.BOFDItemSequenceNumber = cdAddendumA.parseStringField(record[20:35])
+	cdAddendumA.BOFDItemSequenceNumber = cdAddendumA.parseNumField(record[20:35])
 	// 36-53
 	cdAddendumA.BOFDAccountNumber = cdAddendumA.parseStringField(record[35:53])
 	// 54-58
@@ -154,13 +154,9 @@ func (cdAddendumA *CheckDetailAddendumA) Validate() error {
 		return &FieldError{FieldName: "recordType", Value: cdAddendumA.recordType, Msg: msg}
 	}
 	if err := cdAddendumA.isNumeric(cdAddendumA.ReturnLocationRoutingNumber); err != nil {
-		return &FieldError{FieldName: "ReturnLocationRoutingNumberr",
+		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
 			Value: cdAddendumA.ReturnLocationRoutingNumber, Msg: err.Error()}
 	}
-	/*	if err := cdAddendumA.isNumeric(cdAddendumA.BOFDItemSequenceNumber); err != nil {
-		return &FieldError{FieldName: "BOFDItemSequenceNumber",
-			Value: cdAddendumA.BOFDItemSequenceNumber, Msg: err.Error()}
-	}*/
 	if err := cdAddendumA.isAlphanumericSpecial(cdAddendumA.BOFDAccountNumber); err != nil {
 		return &FieldError{FieldName: "BOFDAccountNumber",
 			Value: cdAddendumA.BOFDAccountNumber, Msg: err.Error()}
@@ -177,17 +173,24 @@ func (cdAddendumA *CheckDetailAddendumA) Validate() error {
 		return &FieldError{FieldName: "PayeeName",
 			Value: cdAddendumA.PayeeName, Msg: err.Error()}
 	}
+	// Mandatory
 	if err := cdAddendumA.isTruncationIndicator(cdAddendumA.TruncationIndicator); err != nil {
 		return &FieldError{FieldName: "TruncationIndicator",
 			Value: cdAddendumA.TruncationIndicator, Msg: err.Error()}
 	}
-	if err := cdAddendumA.isConversionIndicator(cdAddendumA.BOFDConversionIndicator); err != nil {
-		return &FieldError{FieldName: "BOFDConversionIndicator",
-			Value: cdAddendumA.BOFDConversionIndicator, Msg: err.Error()}
+	// Conditional
+	if cdAddendumA.BOFDConversionIndicator != "" {
+		if err := cdAddendumA.isConversionIndicator(cdAddendumA.BOFDConversionIndicator); err != nil {
+			return &FieldError{FieldName: "BOFDConversionIndicator",
+				Value: cdAddendumA.BOFDConversionIndicator, Msg: err.Error()}
+		}
 	}
-	if err := cdAddendumA.isCorrectionIndicator(cdAddendumA.BOFDCorrectionIndicator); err != nil {
-		return &FieldError{FieldName: "BOFDCorrectionIndicator",
-			Value: cdAddendumA.BOFDCorrectionIndicatorField(), Msg: err.Error()}
+	// Conditional
+	if cdAddendumA.BOFDCorrectionIndicatorField() != "" {
+		if err := cdAddendumA.isCorrectionIndicator(cdAddendumA.BOFDCorrectionIndicator); err != nil {
+			return &FieldError{FieldName: "BOFDCorrectionIndicator",
+				Value: cdAddendumA.BOFDCorrectionIndicatorField(), Msg: err.Error()}
+		}
 	}
 	if err := cdAddendumA.isAlphanumericSpecial(cdAddendumA.UserField); err != nil {
 		return &FieldError{FieldName: "UserField", Value: cdAddendumA.UserField, Msg: err.Error()}
@@ -238,9 +241,9 @@ func (cdAddendumA *CheckDetailAddendumA) BOFDEndorsementDateField() string {
 	return cdAddendumA.formatYYYYMMDDDate(cdAddendumA.BOFDEndorsementDate)
 }
 
-// BOFDItemSequenceNumberField gets the BOFDItemSequenceNumber field
+// BOFDItemSequenceNumberField gets a string of the BOFDItemSequenceNumber field zero padded
 func (cdAddendumA *CheckDetailAddendumA) BOFDItemSequenceNumberField() string {
-	return cdAddendumA.alphaField(cdAddendumA.BOFDItemSequenceNumber, 15)
+	return cdAddendumA.numericField(cdAddendumA.BOFDItemSequenceNumber, 15)
 }
 
 // BOFDAccountNumberField gets the BOFDAccountNumber field

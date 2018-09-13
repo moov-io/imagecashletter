@@ -447,6 +447,25 @@ func (v *validator) isImageReferenceKeyIndicator(code int) error {
 	return errors.New(msg)
 }
 
+// isEndorsingBankIdentifier ensures EndorsingBankIdentifier of a CheckDetailAddendumC is valid
+func (v *validator) isEndorsingBankIdentifier(code int) error {
+	switch code {
+	case
+		// Depository Bank (BOFD) - this value is used when the CheckDetailAddendumC Record reflects the Return
+		// Processing Bank in lieu of BOFD.
+		0,
+		// Other Collecting Bank
+		1,
+		// Other Returning Bank
+		2,
+		// Payor Bank
+		3:
+		return nil
+	}
+	msg := fmt.Sprintf(msgInvalid, "EndorsingBankIdentifier")
+	return errors.New(msg)
+}
+
 //ImageView
 
 // isImageIndicator ensures ImageIndicator of a ImageViewDetail is valid

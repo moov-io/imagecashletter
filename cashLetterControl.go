@@ -75,7 +75,7 @@ func (clc *CashLetterControl) Parse(record string) {
 	// 40-57
 	clc.ECEInstitutionName = clc.parseStringField(record[39:57])
 	// 58-65
-	clc.SettlementDate = clc.parseYYYMMDDDate(record[57:65])
+	clc.SettlementDate = clc.parseYYYYMMDDDate(record[57:65])
 	// 66-66
 	clc.CreditTotalIndicator = clc.parseNumField(record[65:66])
 	// 67-80
@@ -111,8 +111,10 @@ func (clc *CashLetterControl) Validate() error {
 	if err := clc.isAlphanumericSpecial(clc.ECEInstitutionName); err != nil {
 		return &FieldError{FieldName: "ECEInstitutionName", Value: clc.ECEInstitutionName, Msg: err.Error()}
 	}
-	if err := clc.isCreditTotalIndicator(clc.CreditTotalIndicator); err != nil {
-		return &FieldError{FieldName: "CreditTotalIndicator", Value: clc.CreditTotalIndicatorField(), Msg: err.Error()}
+	if clc.CreditTotalIndicatorField() != "" {
+		if err := clc.isCreditTotalIndicator(clc.CreditTotalIndicator); err != nil {
+			return &FieldError{FieldName: "CreditTotalIndicator", Value: clc.CreditTotalIndicatorField(), Msg: err.Error()}
+		}
 	}
 	return nil
 }

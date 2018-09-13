@@ -19,7 +19,7 @@ type CheckDetail struct {
 	ID string `json:"id"`
 	// RecordType defines the type of record.
 	recordType string
-	//AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+	// AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
 	AuxiliaryOnUs string `json:"auxiliaryOnUs"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited
 	// Standards Committee X9. Also known as Position 44.
@@ -45,7 +45,7 @@ type CheckDetail struct {
 	ItemAmount int `json:"itemAmount"`
 	// EceInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
 	// Field must contain a numeric value. It cannot be all blanks.
-	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
+	EceInstitutionItemSequenceNumber int `json:"eceInstitutionItemSequenceNumber"`
 	// ToDo: CashLetterHeader.CashLetterDocumentation = "Z", CheckDetail.DocumentationTypeIndicator cannot be Z.
 	// ToDo: CheckDetail.DocumentationTypeIndicator is defined CashLetterHeader.CashLetterDocumentation = "Z" should
 	// ToDo: Z, and this value supersedes.
@@ -133,14 +133,17 @@ type CheckDetail struct {
 	// I: None
 	ArchiveTypeIndicator string `json:"archiveTypeIndicator"`
 	// CheckDetailAddendumA
-	CheckDetailAddendumA CheckDetailAddendumA `json:"checkDetailAddendumA"`
+	CheckDetailAddendumA []CheckDetailAddendumA `json:"checkDetailAddendumA"`
 	// CheckDetailAddendumB
-	CheckDetailAddendumB CheckDetailAddendumB `json:"checkDetailAddendumB"`
+	CheckDetailAddendumB []CheckDetailAddendumB `json:"checkDetailAddendumB"`
 	// CheckDetailAddendumC
-	CheckDetailAddendumC CheckDetailAddendumC `json:"checkDetailAddendumC"`
-	// ImageView
-	ImageView ImageView `json:"imageView"`
-
+	CheckDetailAddendumC []CheckDetailAddendumC `json:"checkDetailAddendumC"`
+	// ImageViewDetail
+	ImageViewDetail []ImageViewDetail `json:"imageViewDetail"`
+	// ImageViewData
+	ImageViewData []ImageViewData `json:"imageViewData"`
+	// ImageViewAnalysis
+	ImageViewAnalysis []ImageViewAnalysis `json:"imageViewAnalysis"`
 	// validator is composed for x9 data validation
 	validator
 	// converters is composed for x9 to golang Converters
@@ -174,7 +177,7 @@ func (cd *CheckDetail) Parse(record string) {
 	// 48-57
 	cd.ItemAmount = cd.parseNumField(record[47:57])
 	// 58-72
-	cd.EceInstitutionItemSequenceNumber = cd.parseStringField(record[57:72])
+	cd.EceInstitutionItemSequenceNumber = cd.parseNumField(record[57:72])
 	// 73-73
 	cd.DocumentationTypeIndicator = cd.parseStringField(record[72:73])
 	// 74-74
@@ -199,7 +202,7 @@ func (cd *CheckDetail) String() string {
 	buf.WriteString(cd.AuxiliaryOnUsField())
 	buf.WriteString(cd.ExternalProcessingCodeField())
 	buf.WriteString(cd.PayorBankRoutingNumberField())
-	buf.WriteString(cd.PayorBankCheckDigit)
+	buf.WriteString(cd.PayorBankCheckDigitField())
 	buf.WriteString(cd.OnUsField())
 	buf.WriteString(cd.ItemAmountField())
 	buf.WriteString(cd.EceInstitutionItemSequenceNumberField())
@@ -223,23 +226,37 @@ func (cd *CheckDetail) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 25)
 		return &FieldError{FieldName: "recordType", Value: cd.recordType, Msg: msg}
 	}
+	// Conditional, validator contains ""
 	if err := cd.isDocumentationTypeIndicator(cd.DocumentationTypeIndicator); err != nil {
 		return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cd.DocumentationTypeIndicator, Msg: err.Error()}
 	}
-	if err := cd.isReturnAcceptanceIndicator(cd.ReturnAcceptanceIndicator); err != nil {
-		return &FieldError{FieldName: "ReturnAcceptanceIndicator", Value: cd.ReturnAcceptanceIndicator, Msg: err.Error()}
+	// Conditional
+	if cd.ReturnAcceptanceIndicator != "" {
+		if err := cd.isReturnAcceptanceIndicator(cd.ReturnAcceptanceIndicator); err != nil {
+			return &FieldError{FieldName: "ReturnAcceptanceIndicator", Value: cd.ReturnAcceptanceIndicator, Msg: err.Error()}
+		}
 	}
-	if err := cd.isMICRValidIndicator(cd.MICRValidIndicator); err != nil {
-		return &FieldError{FieldName: "MICRValidIndicator", Value: cd.MICRValidIndicatorField(), Msg: err.Error()}
+	// Conditional
+	if cd.MICRValidIndicatorField() != "" {
+		if err := cd.isMICRValidIndicator(cd.MICRValidIndicator); err != nil {
+			return &FieldError{FieldName: "MICRValidIndicator", Value: cd.MICRValidIndicatorField(), Msg: err.Error()}
+		}
 	}
+	// Mandatory
 	if err := cd.isBOFDIndicator(cd.BOFDIndicator); err != nil {
 		return &FieldError{FieldName: "BOFDIndicator", Value: cd.BOFDIndicator, Msg: err.Error()}
 	}
-	if err := cd.isCorrectionIndicator(cd.CorrectionIndicator); err != nil {
-		return &FieldError{FieldName: "CorrectionIndicator", Value: cd.CorrectionIndicatorField(), Msg: err.Error()}
+	// Conditional
+	if cd.CorrectionIndicatorField() != "" {
+		if err := cd.isCorrectionIndicator(cd.CorrectionIndicator); err != nil {
+			return &FieldError{FieldName: "CorrectionIndicator", Value: cd.CorrectionIndicatorField(), Msg: err.Error()}
+		}
 	}
-	if err := cd.isArchiveTypeIndicator(cd.ArchiveTypeIndicator); err != nil {
-		return &FieldError{FieldName: "ArchiveTypeIndicator", Value: cd.ArchiveTypeIndicator, Msg: err.Error()}
+	// Conditional
+	if cd.ArchiveTypeIndicator != "" {
+		if err := cd.isArchiveTypeIndicator(cd.ArchiveTypeIndicator); err != nil {
+			return &FieldError{FieldName: "ArchiveTypeIndicator", Value: cd.ArchiveTypeIndicator, Msg: err.Error()}
+		}
 	}
 	return nil
 }
@@ -257,9 +274,9 @@ func (cd *CheckDetail) fieldInclusion() error {
 	if cd.PayorBankCheckDigit == "" {
 		return &FieldError{FieldName: "PayorBankCheckDigit", Value: cd.PayorBankCheckDigit, Msg: msgFieldInclusion}
 	}
-	if cd.EceInstitutionItemSequenceNumber == "" {
+	if cd.EceInstitutionItemSequenceNumber == 0 {
 		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber",
-			Value: cd.EceInstitutionItemSequenceNumber, Msg: msgFieldInclusion}
+			Value: cd.EceInstitutionItemSequenceNumberField(), Msg: msgFieldInclusion}
 	}
 	if cd.BOFDIndicator == "" {
 		return &FieldError{FieldName: "BOFDIndicator", Value: cd.BOFDIndicator, Msg: msgFieldInclusion}
@@ -269,12 +286,12 @@ func (cd *CheckDetail) fieldInclusion() error {
 
 // AuxiliaryOnUsField gets the AuxiliaryOnUs field
 func (cd *CheckDetail) AuxiliaryOnUsField() string {
-	return cd.stringField(cd.AuxiliaryOnUs, 15)
+	return cd.nbsmField(cd.AuxiliaryOnUs, 15)
 }
 
-// ExternalProcessingCodeField gets the ExternalProcessingCode field - ALos known as Position 44
+// ExternalProcessingCodeField gets the ExternalProcessingCode field - Also known as Position 44
 func (cd *CheckDetail) ExternalProcessingCodeField() string {
-	return cd.stringField(cd.ExternalProcessingCode, 1)
+	return cd.alphaField(cd.ExternalProcessingCode, 1)
 }
 
 // PayorBankRoutingNumberField gets the PayorBankRoutingNumber field
@@ -282,19 +299,24 @@ func (cd *CheckDetail) PayorBankRoutingNumberField() string {
 	return cd.stringField(cd.PayorBankRoutingNumber, 8)
 }
 
+// PayorBankCheckDigitField gets the PayorBankCheckDigit field
+func (cd *CheckDetail) PayorBankCheckDigitField() string {
+	return cd.stringField(cd.PayorBankCheckDigit, 1)
+}
+
 // OnUsField gets the OnUs field
 func (cd *CheckDetail) OnUsField() string {
-	return cd.alphaField(cd.OnUs, 20)
+	return cd.nbsmField(cd.OnUs, 20)
 }
 
 // ItemAmountField gets the ItemAmount right justified and zero padded
 func (cd *CheckDetail) ItemAmountField() string {
-	return cd.numericField(cd.ItemAmount, 1)
+	return cd.numericField(cd.ItemAmount, 10)
 }
 
-// EceInstitutionItemSequenceNumberField gets the EceInstitutionItemSequenceNumber field
+// EceInstitutionItemSequenceNumberField gets a string of the EceInstitutionItemSequenceNumber field
 func (cd *CheckDetail) EceInstitutionItemSequenceNumberField() string {
-	return cd.alphaField(cd.EceInstitutionItemSequenceNumber, 1)
+	return cd.numericField(cd.EceInstitutionItemSequenceNumber, 15)
 }
 
 // DocumentationTypeIndicatorField gets the DocumentationTypeIndicator field
@@ -330,4 +352,39 @@ func (cd *CheckDetail) CorrectionIndicatorField() string {
 // ArchiveTypeIndicatorField gets the ArchiveTypeIndicator field
 func (cd *CheckDetail) ArchiveTypeIndicatorField() string {
 	return cd.alphaField(cd.ArchiveTypeIndicator, 1)
+}
+
+// ToDo:  Potentially use Addendumer?
+
+// AddCheckDetailAddendumA appends an AddendumA to the CheckDetail
+func (cd *CheckDetail) AddCheckDetailAddendumA(cdAddendaA CheckDetailAddendumA) []CheckDetailAddendumA {
+	cd.CheckDetailAddendumA = append(cd.CheckDetailAddendumA, cdAddendaA)
+	return cd.CheckDetailAddendumA
+}
+
+// AddCheckDetailAddendumB appends an AddendumA to the CheckDetail
+func (cd *CheckDetail) AddCheckDetailAddendumB(cdAddendaB CheckDetailAddendumB) []CheckDetailAddendumB {
+	cd.CheckDetailAddendumB = append(cd.CheckDetailAddendumB, cdAddendaB)
+	return cd.CheckDetailAddendumB
+}
+
+// AddCheckDetailAddendumC appends an AddendumCto the CheckDetail
+func (cd *CheckDetail) AddCheckDetailAddendumC(cdAddendaC CheckDetailAddendumC) []CheckDetailAddendumC {
+	cd.CheckDetailAddendumC = append(cd.CheckDetailAddendumC, cdAddendaC)
+	return cd.CheckDetailAddendumC
+}
+
+// GetCheckDetailAddendumA returns a slice of AddendumA for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailAddendumA() []CheckDetailAddendumA {
+	return cd.CheckDetailAddendumA
+}
+
+// GetCheckDetailAddendumB returns a slice of AddendumB for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailAddendumB() []CheckDetailAddendumB {
+	return cd.CheckDetailAddendumB
+}
+
+// GetCheckDetailAddendumC returns a slice of AddendumC for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailAddendumC() []CheckDetailAddendumC {
+	return cd.CheckDetailAddendumC
 }

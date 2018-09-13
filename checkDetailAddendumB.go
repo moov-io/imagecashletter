@@ -54,8 +54,8 @@ type CheckDetailAddendumB struct {
 }
 
 // NewCheckDetailAddendumB returns a new CheckDetailAddendumB with default values for non exported fields
-func NewCheckDetailAddendumB() *CheckDetailAddendumB {
-	cdAddendumB := &CheckDetailAddendumB{
+func NewCheckDetailAddendumB() CheckDetailAddendumB {
+	cdAddendumB := CheckDetailAddendumB{
 		recordType: "27",
 	}
 	return cdAddendumB
@@ -68,7 +68,7 @@ func (cdAddendumB *CheckDetailAddendumB) Parse(record string) {
 	// 03-03
 	cdAddendumB.ImageReferenceKeyIndicator = cdAddendumB.parseNumField(record[02:03])
 	// 04-18
-	cdAddendumB.MicrofilmArchiveSequenceNumber = cdAddendumB.parseStringField(record[04:18])
+	cdAddendumB.MicrofilmArchiveSequenceNumber = cdAddendumB.parseStringField(record[03:18])
 	// 19-22
 	cdAddendumB.ImageReferenceKeyLength = cdAddendumB.parseStringField(record[18:22])
 	// ToDo:  Follow up on Variable Length
@@ -107,6 +107,7 @@ func (cdAddendumB *CheckDetailAddendumB) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 27)
 		return &FieldError{FieldName: "recordType", Value: cdAddendumB.recordType, Msg: msg}
 	}
+	// Mandatory
 	if err := cdAddendumB.isImageReferenceKeyIndicator(cdAddendumB.ImageReferenceKeyIndicator); err != nil {
 		return &FieldError{FieldName: "ImageReferenceKeyIndicator",
 			Value: cdAddendumB.ImageReferenceKeyIndicatorField(), Msg: err.Error()}
@@ -128,6 +129,10 @@ func (cdAddendumB *CheckDetailAddendumB) Validate() error {
 func (cdAddendumB *CheckDetailAddendumB) fieldInclusion() error {
 	if cdAddendumB.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: cdAddendumB.recordType, Msg: msgFieldInclusion}
+	}
+	if cdAddendumB.ImageReferenceKeyIndicatorField() == "" {
+		return &FieldError{FieldName: "ImageReferenceKeyIndicator",
+			Value: cdAddendumB.ImageReferenceKeyIndicatorField(), Msg: msgFieldInclusion}
 	}
 	if cdAddendumB.ImageReferenceKeyLength == "" {
 		return &FieldError{FieldName: "ImageReferenceKeyLength",

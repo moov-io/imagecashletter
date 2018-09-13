@@ -4,7 +4,11 @@
 
 package x9
 
-import "time"
+import (
+	"fmt"
+	"strings"
+	"time"
+)
 
 // ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 
@@ -169,21 +173,263 @@ type ImageViewDetail struct {
 }
 
 // NewImageViewDetail returns a new ImageViewDetail with default values for non exported fields
-func NewImageViewDetail() *ImageViewDetail {
-	imageDetail := &ImageViewDetail{
+func NewImageViewDetail() ImageViewDetail {
+	ivDetail := ImageViewDetail{
 		recordType: "50",
 	}
-	return imageDetail
+	return ivDetail
 }
 
 // Parse takes the input record string and parses the ImageViewDetail values
+func (ivDetail *ImageViewDetail) Parse(record string) {
+	// Character position 1-2, Always "50"
+	ivDetail.recordType = "50"
+	// 03-03
+	ivDetail.ImageIndicator = ivDetail.parseNumField(record[02:03])
+	// 04-12
+	ivDetail.ImageCreatorRoutingNumber = ivDetail.parseStringField(record[03:12])
+	// 13-20
+	ivDetail.ImageCreatorDate = ivDetail.parseYYYYMMDDDate(record[12:20])
+	// 21-22
+	ivDetail.ImageViewFormatIndicator = ivDetail.parseStringField(record[20:22])
+	// 23-24
+	ivDetail.ImageViewCompressionAlgorithm = ivDetail.parseStringField(record[22:24])
+	// 25-31
+	ivDetail.ImageViewDataSize = ivDetail.parseStringField(record[24:31])
+	// 32-32
+	ivDetail.ViewSideIndicator = ivDetail.parseNumField(record[31:32])
+	// 33-34
+	ivDetail.ViewDescriptor = ivDetail.parseStringField(record[32:34])
+	// 35-35
+	ivDetail.DigitalSignatureIndicator = ivDetail.parseNumField(record[34:35])
+	// 36-37
+	ivDetail.DigitalSignatureMethod = ivDetail.parseStringField(record[35:37])
+	// 38-42
+	ivDetail.SecurityKeySize = ivDetail.parseStringField(record[37:42])
+	// 43-49
+	ivDetail.ProtectedDataStart = ivDetail.parseStringField(record[42:49])
+	// 50-56
+	ivDetail.ProtectedDataLength = ivDetail.parseStringField(record[49:56])
+	// 57-57
+	ivDetail.ImageRecreateIndicator = ivDetail.parseNumField(record[56:57])
+	// 58-65
+	ivDetail.UserField = ivDetail.parseStringField(record[57:65])
+	// 66-66
+	ivDetail.reserved = " "
+	// 67-67
+	ivDetail.OverrideIndicator = ivDetail.parseStringField(record[66:67])
+	// 68-80
+	ivDetail.reservedTwo = "             "
+}
 
 // String writes the ImageViewDetail struct to a string.
+func (ivDetail *ImageViewDetail) String() string {
+	var buf strings.Builder
+	buf.Grow(80)
+	buf.WriteString(ivDetail.recordType)
+	buf.WriteString(ivDetail.ImageIndicatorField())
+	buf.WriteString(ivDetail.ImageCreatorRoutingNumberField())
+	buf.WriteString(ivDetail.ImageCreatorDateField())
+	buf.WriteString(ivDetail.ImageViewFormatIndicatorField())
+	buf.WriteString(ivDetail.ImageViewCompressionAlgorithmField())
+	buf.WriteString(ivDetail.ImageViewDataSizeField())
+	buf.WriteString(ivDetail.ViewSideIndicatorField())
+	buf.WriteString(ivDetail.ViewDescriptorField())
+	buf.WriteString(ivDetail.DigitalSignatureIndicatorField())
+	buf.WriteString(ivDetail.DigitalSignatureMethodField())
+	buf.WriteString(ivDetail.SecurityKeySizeField())
+	buf.WriteString(ivDetail.ProtectedDataStartField())
+	buf.WriteString(ivDetail.ProtectedDataLengthField())
+	buf.WriteString(ivDetail.ImageRecreateIndicatorField())
+	buf.WriteString(ivDetail.UserFieldField())
+	buf.WriteString(ivDetail.reservedField())
+	buf.WriteString(ivDetail.OverrideIndicatorField())
+	buf.WriteString(ivDetail.reservedTwoField())
+	return buf.String()
+}
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
+func (ivDetail *ImageViewDetail) Validate() error {
+
+	if err := ivDetail.fieldInclusion(); err != nil {
+		return err
+	}
+	// Mandatory
+	if ivDetail.recordType != "50" {
+		msg := fmt.Sprintf(msgRecordType, 50)
+		return &FieldError{FieldName: "recordType", Value: ivDetail.recordType, Msg: msg}
+	}
+	// Mandatory
+	if err := ivDetail.isImageIndicator(ivDetail.ImageIndicator); err != nil {
+		return &FieldError{FieldName: "ImageIndicator",
+			Value: ivDetail.ImageIndicatorField(), Msg: err.Error()}
+	}
+	// Conditional
+	if ivDetail.ImageViewFormatIndicator != "" {
+		if err := ivDetail.isImageViewFormatIndicator(ivDetail.ImageViewFormatIndicator); err != nil {
+			return &FieldError{FieldName: "ImageViewFormatIndicator",
+				Value: ivDetail.ImageViewFormatIndicator, Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivDetail.ImageViewCompressionAlgorithm != "" {
+		if err := ivDetail.isImageViewCompressionAlgorithm(ivDetail.ImageViewCompressionAlgorithm); err != nil {
+			return &FieldError{FieldName: "ImageViewCompressionAlgorithm",
+				Value: ivDetail.ImageViewCompressionAlgorithm, Msg: err.Error()}
+		}
+	}
+	// Mandatory
+	if err := ivDetail.isViewSideIndicator(ivDetail.ViewSideIndicator); err != nil {
+		return &FieldError{FieldName: "ViewSideIndicator",
+			Value: ivDetail.ViewSideIndicatorField(), Msg: err.Error()}
+	}
+	// Mandatory
+	if err := ivDetail.isViewDescriptor(ivDetail.ViewDescriptor); err != nil {
+		return &FieldError{FieldName: "ViewDescriptor",
+			Value: ivDetail.ViewDescriptor, Msg: err.Error()}
+	}
+	// Conditional
+	if ivDetail.DigitalSignatureIndicatorField() != "" {
+		if err := ivDetail.isDigitalSignatureIndicator(ivDetail.DigitalSignatureIndicator); err != nil {
+			return &FieldError{FieldName: "DigitalSignatureIndicator",
+				Value: ivDetail.DigitalSignatureIndicatorField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivDetail.DigitalSignatureMethod != "" {
+		if err := ivDetail.isDigitalSignatureMethod(ivDetail.DigitalSignatureMethod); err != nil {
+			return &FieldError{FieldName: "DigitalSignatureMethod",
+				Value: ivDetail.DigitalSignatureMethod, Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivDetail.ImageRecreateIndicatorField() != "" {
+		if err := ivDetail.isImageRecreateIndicator(ivDetail.ImageRecreateIndicator); err != nil {
+			return &FieldError{FieldName: "ImageRecreateIndicator",
+				Value: ivDetail.ImageRecreateIndicatorField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivDetail.OverrideIndicator != "" {
+		if err := ivDetail.isOverrideIndicator(ivDetail.OverrideIndicator); err != nil {
+			return &FieldError{FieldName: "OverrideIndicator",
+				Value: ivDetail.OverrideIndicatorField(), Msg: err.Error()}
+		}
+	}
+	return nil
+}
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
+func (ivDetail *ImageViewDetail) fieldInclusion() error {
+	if ivDetail.recordType == "" {
+		return &FieldError{FieldName: "recordType", Value: ivDetail.recordType, Msg: msgFieldInclusion}
+	}
+	if ivDetail.ImageIndicatorField() == "" {
+		return &FieldError{FieldName: "ImageIndicator", Value: ivDetail.recordType, Msg: msgFieldInclusion}
+	}
+	if ivDetail.ImageCreatorRoutingNumber == "" {
+		return &FieldError{FieldName: "ImageCreatorRoutingNumber", Value: ivDetail.recordType, Msg: msgFieldInclusion}
+	}
+	if ivDetail.ImageCreatorDate.IsZero() {
+		return &FieldError{FieldName: "ImageCreatorDate", Value: ivDetail.recordType, Msg: msgFieldInclusion}
+	}
+	if ivDetail.ViewSideIndicatorField() == "" {
+		return &FieldError{FieldName: "ViewSideIndicator", Value: ivDetail.recordType, Msg: msgFieldInclusion}
+	}
+	if ivDetail.ViewDescriptor == "" {
+		return &FieldError{FieldName: "ViewDescriptor", Value: ivDetail.recordType, Msg: msgFieldInclusion}
+	}
+	return nil
+}
 
-// Get properties
+// ImageIndicatorField gets a string of the ImageIndicator field
+func (ivDetail *ImageViewDetail) ImageIndicatorField() string {
+	return ivDetail.numericField(ivDetail.ImageIndicator, 1)
+}
+
+// ImageCreatorRoutingNumberField gets the ImageCreatorRoutingNumber field
+func (ivDetail *ImageViewDetail) ImageCreatorRoutingNumberField() string {
+	return ivDetail.stringField(ivDetail.ImageCreatorRoutingNumber, 9)
+}
+
+// ImageCreatorDateField gets the ImageCreatorDate field, format YYYYMMDD
+func (ivDetail *ImageViewDetail) ImageCreatorDateField() string {
+	return ivDetail.formatYYYYMMDDDate(ivDetail.ImageCreatorDate)
+}
+
+// ImageViewFormatIndicatorField gets the ImageViewFormatIndicator field
+func (ivDetail *ImageViewDetail) ImageViewFormatIndicatorField() string {
+	return ivDetail.alphaField(ivDetail.ImageViewFormatIndicator, 2)
+}
+
+// ImageViewCompressionAlgorithmField gets the ImageViewCompressionAlgorithm field
+func (ivDetail *ImageViewDetail) ImageViewCompressionAlgorithmField() string {
+	return ivDetail.alphaField(ivDetail.ImageViewCompressionAlgorithm, 2)
+}
+
+// ImageViewDataSizeField gets the ImageViewDataSize field
+func (ivDetail *ImageViewDetail) ImageViewDataSizeField() string {
+	return ivDetail.alphaField(ivDetail.ImageViewDataSize, 7)
+}
+
+// ViewSideIndicatorField gets a string of the ViewSideIndicator field
+func (ivDetail *ImageViewDetail) ViewSideIndicatorField() string {
+	return ivDetail.numericField(ivDetail.ViewSideIndicator, 1)
+}
+
+// ViewDescriptorField gets the ViewDescriptor field
+func (ivDetail *ImageViewDetail) ViewDescriptorField() string {
+	return ivDetail.alphaField(ivDetail.ViewDescriptor, 2)
+}
+
+// DigitalSignatureIndicatorField gets a string of the DigitalSignatureIndicator field
+func (ivDetail *ImageViewDetail) DigitalSignatureIndicatorField() string {
+	return ivDetail.numericField(ivDetail.DigitalSignatureIndicator, 1)
+}
+
+// DigitalSignatureMethodField gets the DigitalSignatureMethod field
+func (ivDetail *ImageViewDetail) DigitalSignatureMethodField() string {
+	return ivDetail.alphaField(ivDetail.DigitalSignatureMethod, 2)
+}
+
+// SecurityKeySizeField gets the SecurityKeySize field
+func (ivDetail *ImageViewDetail) SecurityKeySizeField() string {
+	return ivDetail.alphaField(ivDetail.SecurityKeySize, 5)
+}
+
+// ProtectedDataStartField gets the ProtectedDataStart field
+func (ivDetail *ImageViewDetail) ProtectedDataStartField() string {
+	return ivDetail.alphaField(ivDetail.ProtectedDataStart, 7)
+}
+
+// ProtectedDataLengthField gets the ProtectedDataLength field
+func (ivDetail *ImageViewDetail) ProtectedDataLengthField() string {
+	return ivDetail.alphaField(ivDetail.ProtectedDataLength, 7)
+}
+
+// ImageRecreateIndicatorField gets a string of the ImageRecreateIndicator field
+func (ivDetail *ImageViewDetail) ImageRecreateIndicatorField() string {
+	return ivDetail.numericField(ivDetail.ImageRecreateIndicator, 1)
+}
+
+// UserFieldField gets the UserField field
+func (ivDetail *ImageViewDetail) UserFieldField() string {
+	return ivDetail.alphaField(ivDetail.UserField, 8)
+}
+
+// reservedField gets the reserved field
+func (ivDetail *ImageViewDetail) reservedField() string {
+	return ivDetail.alphaField(ivDetail.reserved, 1)
+}
+
+// OverrideIndicatorField gets the OverrideIndicator field
+func (ivDetail *ImageViewDetail) OverrideIndicatorField() string {
+	return ivDetail.alphaField(ivDetail.OverrideIndicator, 1)
+}
+
+// reservedTwoField gets the reserved field
+func (ivDetail *ImageViewDetail) reservedTwoField() string {
+	return ivDetail.alphaField(ivDetail.reservedTwo, 13)
+}

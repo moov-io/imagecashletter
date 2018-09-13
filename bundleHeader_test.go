@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"log"
 	"strings"
 	"testing"
 	"time"
@@ -83,8 +84,9 @@ func parseBundleHeader(t testing.TB) {
 
 	if err := r.parseBundleHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
-	//record := r.currentCashLetter.Bundles[0].BundleHeader
+
 	record := r.currentCashLetter.currentBundle.BundleHeader
 	if record.recordType != "20" {
 		t.Errorf("RecordType Expected '20' got: %v", record.recordType)
@@ -93,7 +95,7 @@ func parseBundleHeader(t testing.TB) {
 		t.Errorf("CollectionTypeIndicator Expected '01' got: %v", record.CollectionTypeIndicator)
 	}
 	if record.DestinationRoutingNumberField() != "231380104" {
-		t.Errorf("DestinationRoutingNumber '231380104' got: %v", record.DestinationRoutingNumber)
+		t.Errorf("DestinationRoutingNumber '231380104' got: %v", record.DestinationRoutingNumberField())
 	}
 	if record.ECEInstitutionRoutingNumberField() != "121042882" {
 		t.Errorf("ECEInstitutionRoutingNumber Expected '121042882' got: %v", record.ECEInstitutionRoutingNumberField())
@@ -149,6 +151,7 @@ func testBHString(t testing.TB) {
 	r.addCurrentBundle(NewBundle(bh))
 	if err := r.parseBundleHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
 	}
 	record := r.currentCashLetter.currentBundle.BundleHeader
 	if record.String() != line {

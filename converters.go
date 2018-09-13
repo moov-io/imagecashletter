@@ -40,7 +40,7 @@ func (c *converters) formatYYYYMMDDDate(t time.Time) string {
 }
 
 // parseYYYMMDDDate returns a time.Time when passed time as YYYYMMDD
-func (c *converters) parseYYYMMDDDate(s string) time.Time {
+func (c *converters) parseYYYYMMDDDate(s string) time.Time {
 	t, _ := time.Parse("20060102", s)
 	return t
 }
@@ -74,6 +74,17 @@ func (c *converters) numericField(n int, max uint) string {
 		return s[ln-max:]
 	}
 	s = strings.Repeat("0", int(max-ln)) + s
+	return s
+}
+
+// nbmsField is a numeric-blank/special MICR (NBSM) or numeric-blank/special MICR On-Us (NBSMOS)
+// which are right-justified and blank filled
+func (c *converters) nbsmField(s string, max uint) string {
+	ln := uint(len(s))
+	if ln > max {
+		return s[ln-max:]
+	}
+	s = strings.Repeat(" ", int(max-ln)) + s
 	return s
 }
 
