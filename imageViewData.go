@@ -119,7 +119,7 @@ type ImageViewData struct {
 	// Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
 	// Size: 0-99999
-	DigitalSignature []byte`json:"digitalSignature"`
+	DigitalSignature []byte `json:"digitalSignature"`
 	// LengthImageData is the number of bytes in the ImageViewData.ImageData.
 	// Shall be present when ImageViewDetail.ImageIndicator is NOT 0
 	// Values: 0000001–99999999
@@ -182,21 +182,17 @@ func (ivData *ImageViewData) Parse(record string) {
 	// 102-105
 	ivData.LengthImageReferenceKey = ivData.parseStringField(record[101:105])
 	// 106 - (105+X)
-	ivData.ImageReferenceKey = ivData.parseStringField(record[105:106 + int(len(ivData.LengthImageReferenceKey))])
+	ivData.ImageReferenceKey = ivData.parseStringField(record[105 : 106+int(len(ivData.LengthImageReferenceKey))])
 	// (106+X) – (110+X)
-	ivData.LengthDigitalSignature = ivData.parseStringField(record[106 + int(len(ivData.LengthImageReferenceKey)):
-		110 + int(len(ivData.LengthImageReferenceKey))])
+	ivData.LengthDigitalSignature = ivData.parseStringField(record[106+int(len(ivData.LengthImageReferenceKey)) : 110+int(len(ivData.LengthImageReferenceKey))])
 	// (111+X) – (110+X+Y)
-	ivData.DigitalSignature = ivData.stringToBytesField(record[110 + int(len(ivData.LengthImageReferenceKey)):
-		110 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature))])
+	ivData.DigitalSignature = ivData.stringToBytesField(record[110+int(len(ivData.LengthImageReferenceKey)) : 110+int(len(ivData.LengthImageReferenceKey))+int(len(ivData.LengthDigitalSignature))])
 	// (111+X+Y) – (117+X+Y)
-	ivData.LengthImageData = ivData.parseStringField(record[110 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature)):
-		117 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature))])
+	ivData.LengthImageData = ivData.parseStringField(record[110+int(len(ivData.LengthImageReferenceKey))+int(len(ivData.LengthDigitalSignature)) : 117+int(len(ivData.LengthImageReferenceKey))+int(len(ivData.LengthDigitalSignature))])
 	// (118+X+Y) – (117+X+Y+Z)
-	ivData.ImageData = ivData.stringToBytesField(record[117 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature)):
-		117 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature)) + int(len(ivData.LengthImageData))])
+	ivData.ImageData = ivData.stringToBytesField(record[117+int(len(ivData.LengthImageReferenceKey))+int(len(ivData.LengthDigitalSignature)) : 117+int(len(ivData.LengthImageReferenceKey))+int(len(ivData.LengthDigitalSignature))+int(len(ivData.LengthImageData))])
 
-	}
+}
 
 // String writes the ImageViewData struct to a string.
 func (ivData *ImageViewData) String() string {
@@ -275,7 +271,7 @@ func (ivData *ImageViewData) EceInstitutionRoutingNumberField() string {
 
 // BundleBusinessDateField gets the BundleBusinessDate field
 func (ivData *ImageViewData) BundleBusinessDateField() string {
-	return ivData.formatYYYYMMDDDate(ivData.BundleBusinessDate,)
+	return ivData.formatYYYYMMDDDate(ivData.BundleBusinessDate)
 }
 
 // CycleNumberField gets the CycleNumber field
