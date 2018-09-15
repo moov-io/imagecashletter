@@ -181,18 +181,18 @@ func (ivData *ImageViewData) Parse(record string) {
 	ivData.ClippingCoordinateV2 = ivData.parseStringField(record[97:101])
 	// 102-105
 	ivData.LengthImageReferenceKey = ivData.parseStringField(record[101:105])
-	// 106-106 (106+X)
+	// 106 - (105+X)
 	ivData.ImageReferenceKey = ivData.parseStringField(record[105:106 + int(len(ivData.LengthImageReferenceKey))])
+	// (106+X) – (110+X)
 	ivData.LengthDigitalSignature = ivData.parseStringField(record[106 + int(len(ivData.LengthImageReferenceKey)):
 		110 + int(len(ivData.LengthImageReferenceKey))])
-/*	ivData.DigitalSignature = ivData.parseStringField(record[110 + int(len(ivData.LengthImageReferenceKey)):
-		110 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature))])*/
+	// (111+X) – (110+X+Y)
 	ivData.DigitalSignature = ivData.stringToBytesField(record[110 + int(len(ivData.LengthImageReferenceKey)):
 		110 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature))])
+	// (111+X+Y) – (117+X+Y)
 	ivData.LengthImageData = ivData.parseStringField(record[110 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature)):
 		117 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature))])
-/*	ivData.ImageData = ivData.parseStringField(record[117 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature)):
-		117 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature)) + int(len(ivData.LengthImageData))])*/
+	// (118+X+Y) – (117+X+Y+Z)
 	ivData.ImageData = ivData.stringToBytesField(record[117 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature)):
 		117 + int(len(ivData.LengthImageReferenceKey)) + int(len(ivData.LengthDigitalSignature)) + int(len(ivData.LengthImageData))])
 

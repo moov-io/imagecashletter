@@ -26,7 +26,6 @@ func (c *converters) parseStringField(r string) (s string) {
 // stringToBytesField
 func (c *converters) stringToBytesField(r string) (b []byte) {
 	b = []byte(r)
-	//b = []byte(strings.TrimSpace(r))
 	return b
 
 }
