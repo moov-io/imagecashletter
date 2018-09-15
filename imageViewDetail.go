@@ -185,9 +185,9 @@ func (ivDetail *ImageViewDetail) Parse(record string) {
 	// Character position 1-2, Always "50"
 	ivDetail.recordType = "50"
 	// 03-03
-	ivDetail.ImageIndicator = ivDetail.parseNumField(record[02:03])
+	ivDetail.ImageIndicator = ivDetail.parseNumField(record[2:3])
 	// 04-12
-	ivDetail.ImageCreatorRoutingNumber = ivDetail.parseStringField(record[03:12])
+	ivDetail.ImageCreatorRoutingNumber = ivDetail.parseStringField(record[3:12])
 	// 13-20
 	ivDetail.ImageCreatorDate = ivDetail.parseYYYYMMDDDate(record[12:20])
 	// 21-22
