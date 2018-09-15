@@ -102,9 +102,9 @@ func (cdAddendumC *CheckDetailAddendumC) Parse(record string) {
 	// Character position 1-2, Always "28"
 	cdAddendumC.recordType = "28"
 	// 03-04
-	cdAddendumC.RecordNumber = cdAddendumC.parseNumField(record[02:04])
+	cdAddendumC.RecordNumber = cdAddendumC.parseNumField(record[2:4])
 	// 05-13
-	cdAddendumC.EndorsingBankRoutingNumber = cdAddendumC.parseStringField(record[04:13])
+	cdAddendumC.EndorsingBankRoutingNumber = cdAddendumC.parseStringField(record[4:13])
 	// 14-21
 	cdAddendumC.BOFDEndorsementBusinessDate = cdAddendumC.parseYYYYMMDDDate(record[13:21])
 	// 22-36

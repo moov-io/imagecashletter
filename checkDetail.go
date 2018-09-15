@@ -163,8 +163,7 @@ func (cd *CheckDetail) Parse(record string) {
 	// Character position 1-2, Always "25"
 	cd.recordType = "25"
 	// 03-17
-	//ToDo:  Add a specific validator for this - NBSM?
-	cd.AuxiliaryOnUs = cd.parseStringField(record[02:17])
+	cd.AuxiliaryOnUs = cd.parseStringField(record[2:17])
 	// 18-18
 	cd.ExternalProcessingCode = cd.parseStringField(record[17:18])
 	// 19-26
@@ -172,7 +171,6 @@ func (cd *CheckDetail) Parse(record string) {
 	// 27-27
 	cd.PayorBankCheckDigit = cd.parseStringField(record[26:27])
 	// 28-47
-	// ToDo:  Add a specific validator for this - NBSMOS?
 	cd.OnUs = cd.parseStringField(record[27:47])
 	// 48-57
 	cd.ItemAmount = cd.parseNumField(record[47:57])
