@@ -26,7 +26,7 @@ func mockBundleHeader() *BundleHeader {
 	return bh
 }
 
-// testMockBundleHeader creates an ICL BundleHeader
+// testMockBundleHeader creates a BundleHeader
 func testMockBundleHeader(t testing.TB) {
 	bh := mockBundleHeader()
 	if err := bh.Validate(); err != nil {

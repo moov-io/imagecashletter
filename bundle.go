@@ -10,11 +10,11 @@ package x9
 type Bundle struct {
 	// ID is a client defined string used as a reference to this record.
 	ID string `json:"id"`
-	// BundleHeader is an ICL Bundle Header Record
+	// BundleHeader is a Bundle Header Record
 	BundleHeader *BundleHeader `json:"bundleHeader,omitempty"`
-	// Items are ICL Items: Check Detail Records, Check Detail Addendum Records, and Image Views
+	// Items are Items: Check Detail Records, Check Detail Addendum Records, and Image Views
 	Checks []*CheckDetail `json:"items,omitempty"`
-	// BundleControl is an ICL Bundle Control Record
+	// BundleControl is a Bundle Control Record
 	BundleControl *BundleControl `json:"bundleControl,omitempty"`
 	// Converters is composed for x9 to GoLang Converters
 	converters

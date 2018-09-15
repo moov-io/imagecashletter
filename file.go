@@ -9,9 +9,6 @@ import (
 	"strconv"
 )
 
-// ICL File Records that are identified as Mandatory are required to support Federal Reserve processing of an image
-// file.
-//
 // https://en.wikipedia.org/wiki/Substitute_check
 //
 // http://www.frbservices.org
@@ -75,11 +72,11 @@ func (e *FileError) Error() string {
 type File struct {
 	// ID is a client defined string used as a reference to this record
 	ID string `json:"id"`
-	// FileHeader is an ICL FileHeader
+	// FileHeader is a ileHeader
 	Header FileHeader `json:"fileHeader"`
-	// CashLetters are ICl Cash Letters
+	// CashLetters are Cash Letters
 	CashLetters []CashLetter `json:"cashLetters,omitempty"`
-	// FileControl is an ICL FileControl
+	// FileControl is a FileControl
 	Control FileControl `json:"fileControl"`
 }
 

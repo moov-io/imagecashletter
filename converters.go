@@ -23,6 +23,18 @@ func (c *converters) parseStringField(r string) (s string) {
 	return s
 }
 
+// stringToBytesField
+func (c *converters) stringToBytesField(r string) (b []byte) {
+	b = []byte(r)
+	return b
+
+}
+
+// bytesToStringField
+func (c *converters) bytesToStringField(b []byte) string {
+	return string(b[:])
+}
+
 // formatSimpleDate takes a time.Time and returns a string of YYMMDD
 func (c *converters) formatSimpleDate(t time.Time) string {
 	return t.Format("060102")

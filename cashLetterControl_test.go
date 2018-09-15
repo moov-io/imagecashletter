@@ -27,7 +27,7 @@ func mockCashLetterControl() *CashLetterControl {
 	return clc
 }
 
-// testMockCashLetterControl creates an ICL CashLetterControl
+// testMockCashLetterControl creates a CashLetterControl
 func testMockCashLetterControl(t testing.TB) {
 	clc := mockCashLetterControl()
 	if err := clc.Validate(); err != nil {
@@ -61,7 +61,7 @@ func TestMockCashLetterControl(t *testing.T) {
 	testMockCashLetterControl(t)
 }
 
-// BenchmarkMockCashLetterControl benchmarks creating an ICL CashLetterControl
+// BenchmarkMockCashLetterControl benchmarks creating a CashLetterControl
 func BenchmarkMockCashLetterControl(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {

@@ -27,7 +27,7 @@ func mockCheckDetailAddendumC() CheckDetailAddendumC {
 	return cdAddendumC
 }
 
-// testMockCheckDetailAddendumC creates an ICL CheckDetailAddendumC
+// testMockCheckDetailAddendumC creates a CheckDetailAddendumC
 func testMockCheckDetailAddendumC(t testing.TB) {
 	cdAddendumC := mockCheckDetailAddendumC()
 	if err := cdAddendumC.Validate(); err != nil {
@@ -70,7 +70,7 @@ func TestMockCheckDetailAddendumC(t *testing.T) {
 	testMockCheckDetailAddendumC(t)
 }
 
-// BenchmarkMockCheckDetailAddendumC benchmarks creating an ICL CheckDetailAddendumC
+// BenchmarkMockCheckDetailAddendumC benchmarks creating a CheckDetailAddendumC
 func BenchmarkMockCheckDetailAddendumC(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {

@@ -31,7 +31,7 @@ func mockCashLetterHeader() *CashLetterHeader {
 	return clh
 }
 
-// testMockCashLetterHeader creates an ICL CashLetterHeader
+// testMockCashLetterHeader creates a CashLetterHeader
 func testMockCashLetterHeader(t testing.TB) {
 	clh := mockCashLetterHeader()
 	if err := clh.Validate(); err != nil {
@@ -83,7 +83,7 @@ func TestMockCashLetterHeader(t *testing.T) {
 	testMockCashLetterHeader(t)
 }
 
-// BenchmarkMockCashLetterHeader benchmarks creating an ICL CashLetterHeader
+// BenchmarkMockCashLetterHeader benchmarks creating a CashLetterHeader
 func BenchmarkMockCashLetterHeader(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {

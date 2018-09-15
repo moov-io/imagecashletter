@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// A Writer writes an x9.file to an ICL encoded file.
+// A Writer writes an x9.file to an encoded file.
 //
 // As returned by NewWriter, a Writer writes x9file structs into
 // x9 formatted files.

@@ -98,9 +98,9 @@ func (cdAddendumA *CheckDetailAddendumA) Parse(record string) {
 	// Character position 1-2, Always "26"
 	cdAddendumA.recordType = "26"
 	// 03-03
-	cdAddendumA.RecordNumber = cdAddendumA.parseNumField(record[02:03])
+	cdAddendumA.RecordNumber = cdAddendumA.parseNumField(record[2:3])
 	// 04-12
-	cdAddendumA.ReturnLocationRoutingNumber = cdAddendumA.parseStringField(record[03:12])
+	cdAddendumA.ReturnLocationRoutingNumber = cdAddendumA.parseStringField(record[3:12])
 	// 13-20
 	cdAddendumA.BOFDEndorsementDate = cdAddendumA.parseYYYYMMDDDate(record[12:20])
 	// 21-35

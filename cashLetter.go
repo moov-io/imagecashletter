@@ -8,17 +8,17 @@ package x9
 type CashLetter struct {
 	// ID is a client defined string used as a reference to this record.
 	ID string `json:"id"`
-	// CashLetterHeader is an ICL Cash Letter Header Record
+	// CashLetterHeader is a Cash Letter Header Record
 	CashLetterHeader *CashLetterHeader `json:"cashLetterHeader,omitempty"`
 	// Bundle is an array of ICL Bundle
 	Bundles []Bundle `json:"bundles,omitempty"`
-	// ReturnBundles is an array of ICL Return Bundle
+	// ReturnBundles is an array of Return Bundle
 	// ReturnBundles      []ReturnBundle      `json:"returnBundle,omitempty"`
 	// currentBundle is the currentBundle being parsed
 	currentBundle Bundle
 	// currentReturnBundle is the current ReturnBundle being parsed
 	// currentReturnBundle ReturnBundle
-	// CashLetterControl is an ICL Cash Letter Control Record
+	// CashLetterControl is a Cash Letter Control Record
 	CashLetterControl *CashLetterControl `json:"cashLetterControl,omitempty"`
 	// Converters is composed for x9 to GoLang Converters
 	converters

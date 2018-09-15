@@ -30,7 +30,7 @@ func mockFileHeader() FileHeader {
 	return fh
 }
 
-// testMockFileHeader creates an ICL FileHeader
+// testMockFileHeader creates a FileHeader
 func testMockFileHeader(t testing.TB) {
 	fh := mockFileHeader()
 	if err := fh.Validate(); err != nil {
@@ -74,12 +74,12 @@ func testMockFileHeader(t testing.TB) {
 	}
 }
 
-// TestMockFileHeader tests creating an ICL FileHeader
+// TestMockFileHeader tests creating a FileHeader
 func TestMockFileHeader(t *testing.T) {
 	testMockFileHeader(t)
 }
 
-// BenchmarkMockFileHeader benchmarks creating an ICL FileHeader
+// BenchmarkMockFileHeader benchmarks creating a FileHeader
 func BenchmarkMockFileHeader(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
