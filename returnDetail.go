@@ -23,6 +23,8 @@ type ReturnDetail struct {
 	ReturnDetailAddendumB []ReturnDetailAddendumB `json:"returnDetailAddendumB"`
 	// ReturnDetailAddendumC
 	ReturnDetailAddendumC []ReturnDetailAddendumC `json:"returnDetailAddendumC"`
+	// ReturnDetailAddendumD
+	ReturnDetailAddendumD []ReturnDetailAddendumD `json:"returnDetailAddendumD"`
 	// ImageViewDetail
 	ImageViewDetail []ImageViewDetail `json:"imageViewDetail"`
 	// ImageViewData

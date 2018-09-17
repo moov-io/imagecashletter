@@ -26,15 +26,15 @@ type ReturnDetailAddendumC struct {
 // NewReturnDetailAddendumC returns a new ReturnDetailAddendumC with default values for non exported fields
 func NewReturnDetailAddendumC() ReturnDetailAddendumC {
 	rdAddendumC := ReturnDetailAddendumC{
-		recordType: "33",
+		recordType: "34",
 	}
 	return rdAddendumC
 }
 
 // Parse takes the input record string and parses the ReturnDetailAddendumC values
 func (rdAddendumC *ReturnDetailAddendumC) Parse(record string) {
-	// Character position 1-2, Always "33"
-	rdAddendumC.recordType = "33"
+	// Character position 1-2, Always "34"
+	rdAddendumC.recordType = "34"
 
 }
 
@@ -52,8 +52,8 @@ func (rdAddendumC *ReturnDetailAddendumC) Validate() error {
 	if err := rdAddendumC.fieldInclusion(); err != nil {
 		return err
 	}
-	if rdAddendumC.recordType != "33" {
-		msg := fmt.Sprintf(msgRecordType, 33)
+	if rdAddendumC.recordType != "34" {
+		msg := fmt.Sprintf(msgRecordType, 34)
 		return &FieldError{FieldName: "recordType", Value: rdAddendumC.recordType, Msg: msg}
 	}
 	return nil
