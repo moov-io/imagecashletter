@@ -316,6 +316,9 @@ func (ivDetail *ImageViewDetail) Validate() error {
 				Value: ivDetail.OverrideIndicatorField(), Msg: err.Error()}
 		}
 	}
+	if err := ivDetail.isAlphanumericSpecial(ivDetail.UserField); err != nil {
+		return &FieldError{FieldName: "UserField", Value: ivDetail.UserField, Msg: err.Error()}
+	}
 	return nil
 }
 

@@ -4,7 +4,10 @@
 
 package x9
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 // ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 
@@ -211,6 +214,10 @@ type ImageViewAnalysis struct {
 	UserField string `json:"userField"`
 	// reservedThree is a field reserved for future use.  Reserved should be blank.
 	reservedThree string
+	// validator is composed for x9 data validation
+	validator
+	// converters is composed for x9 to golang Converters
+	converters
 }
 
 // NewImageViewAnalysis returns a new ImageViewAnalysis with default values for non exported fields
@@ -223,25 +230,427 @@ func NewImageViewAnalysis() ImageViewAnalysis {
 
 // Parse takes the input record string and parses the ImageViewAnalysis values
 func (ivAnalysis *ImageViewAnalysis) Parse(record string) {
+	// Character position 1-2, Always "54"
+	ivAnalysis.recordType = "54"
+	// 03-03
+	ivAnalysis.GlobalImageQuality = ivAnalysis.parseNumField(record[2:3])
+	// 04-04
+	ivAnalysis.GlobalImageUsability = ivAnalysis.parseNumField(record[3:4])
+	// 05-05
+	ivAnalysis.ImagingBankSpecificTest = ivAnalysis.parseNumField(record[4:5])
+	// 06-06
+	ivAnalysis.PartialImage = ivAnalysis.parseNumField(record[5:6])
+	// 07-07
+	ivAnalysis.ExcessiveImageSkew = ivAnalysis.parseNumField(record[6:7])
+	// 08-8
+	ivAnalysis.PiggybackImage = ivAnalysis.parseNumField(record[7:8])
+	// 09-09
+	ivAnalysis.TooLightOrTooDark = ivAnalysis.parseNumField(record[8:9])
+	// 10-10
+	ivAnalysis.StreaksAndOrBands = ivAnalysis.parseNumField(record[9:10])
+	// 11-11
+	ivAnalysis.BelowMinimumImageSize = ivAnalysis.parseNumField(record[10:11])
+	// 12-12
+	ivAnalysis.ExceedsMaximumImageSize = ivAnalysis.parseNumField(record[11:12])
+	// 13-25
+	ivAnalysis.reserved = "             "
+	// 26-26
+	ivAnalysis.ImageEnabledPOD = ivAnalysis.parseNumField(record[25:26])
+	// 27-27
+	ivAnalysis.SourceDocumentBad = ivAnalysis.parseNumField(record[26:27])
+	// 28-28
+	ivAnalysis.DateUsability = ivAnalysis.parseNumField(record[27:28])
+	// 29-29
+	ivAnalysis.PayeeUsability = ivAnalysis.parseNumField(record[28:29])
+	// 30-30
+	ivAnalysis.ConvenienceAmountUsability = ivAnalysis.parseNumField(record[29:30])
+	// 31-31
+	ivAnalysis.AmountInWordsUsability = ivAnalysis.parseNumField(record[30:31])
+	// 32-32
+	ivAnalysis.SignatureUsability = ivAnalysis.parseNumField(record[31:32])
+	// 33-33
+	ivAnalysis.PayorNameAddressUsability = ivAnalysis.parseNumField(record[32:33])
+	// 34-34
+	ivAnalysis.MICRLineUsability = ivAnalysis.parseNumField(record[33:34])
+	// 35-35
+	ivAnalysis.MemoLineUsability = ivAnalysis.parseNumField(record[34:35])
+	// 36-36
+	ivAnalysis.PayorBankNameAddressUsability = ivAnalysis.parseNumField(record[35:36])
+	// 37-37
+	ivAnalysis.PayeeEndorsementUsability = ivAnalysis.parseNumField(record[36:37])
+	// 38-38
+	ivAnalysis.BOFDEndorsementUsability = ivAnalysis.parseNumField(record[37:38])
+	// 39-39
+	ivAnalysis.TransitEndorsementUsability = ivAnalysis.parseNumField(record[38:39])
+	// 40-45
+	ivAnalysis.reservedTwo = "      "
+	// 46-65
+	ivAnalysis.UserField = ivAnalysis.parseStringField(record[45:65])
+	// 66-80
+	ivAnalysis.reservedThree = "               "
 }
 
 // String writes the ImageViewAnalysis struct to a string.
 func (ivAnalysis *ImageViewAnalysis) String() string {
 	var buf strings.Builder
 	buf.Grow(80)
+	buf.WriteString(ivAnalysis.recordType)
+	buf.WriteString(ivAnalysis.GlobalImageQualityField())
+	buf.WriteString(ivAnalysis.GlobalImageUsabilityField())
+	buf.WriteString(ivAnalysis.ImagingBankSpecificTestField())
+	buf.WriteString(ivAnalysis.PartialImageField())
+	buf.WriteString(ivAnalysis.ExcessiveImageSkewField())
+	buf.WriteString(ivAnalysis.PiggybackImageField())
+	buf.WriteString(ivAnalysis.TooLightOrTooDarkField())
+	buf.WriteString(ivAnalysis.StreaksAndOrBandsField())
+	buf.WriteString(ivAnalysis.BelowMinimumImageSizeField())
+	buf.WriteString(ivAnalysis.ExceedsMaximumImageSizeField())
+	buf.WriteString(ivAnalysis.reservedField())
+	buf.WriteString(ivAnalysis.ImageEnabledPODField())
+	buf.WriteString(ivAnalysis.SourceDocumentBadField())
+	buf.WriteString(ivAnalysis.DateUsabilityField())
+	buf.WriteString(ivAnalysis.PayeeUsabilityField())
+	buf.WriteString(ivAnalysis.ConvenienceAmountUsabilityField())
+	buf.WriteString(ivAnalysis.AmountInWordsUsabilityField())
+	buf.WriteString(ivAnalysis.SignatureUsabilityField())
+	buf.WriteString(ivAnalysis.PayorNameAddressUsabilityField())
+	buf.WriteString(ivAnalysis.MICRLineUsabilityField())
+	buf.WriteString(ivAnalysis.MemoLineUsabilityField())
+	buf.WriteString(ivAnalysis.PayorBankNameAddressUsabilityField())
+	buf.WriteString(ivAnalysis.PayeeEndorsementUsabilityField())
+	buf.WriteString(ivAnalysis.BOFDEndorsementUsabilityField())
+	buf.WriteString(ivAnalysis.TransitEndorsementUsabilityField())
+	buf.WriteString(ivAnalysis.reservedTwoField())
+	buf.WriteString(ivAnalysis.UserFieldField())
+	buf.WriteString(ivAnalysis.reservedThreeField())
 	return buf.String()
 }
 
 // Validate performs X9 format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (ivAnalysis *ImageViewAnalysis) Validate() error {
+	if err := ivAnalysis.fieldInclusion(); err != nil {
+		return err
+	}
+	if ivAnalysis.recordType != "54" {
+		msg := fmt.Sprintf(msgRecordType, 54)
+		return &FieldError{FieldName: "recordType", Value: ivAnalysis.recordType, Msg: msg}
+	}
+	// Mandatory
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.GlobalImageQuality); err != nil {
+		return &FieldError{FieldName: "GlobalImageQuality",
+			Value: ivAnalysis.GlobalImageQualityField(), Msg: err.Error()}
+	}
+	// Mandatory
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.GlobalImageUsability); err != nil {
+		return &FieldError{FieldName: "GlobalImageUsability",
+			Value: ivAnalysis.GlobalImageUsabilityField(), Msg: err.Error()}
+	}
+	// Mandatory
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ImagingBankSpecificTest); err != nil {
+		return &FieldError{FieldName: "ImagingBankSpecificTest",
+			Value: ivAnalysis.ImagingBankSpecificTestField(), Msg: err.Error()}
+	}
+	// Conditional
+	if ivAnalysis.PartialImageField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PartialImage); err != nil {
+			return &FieldError{FieldName: "PartialImage",
+				Value: ivAnalysis.PartialImageField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.ExcessiveImageSkewField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ExcessiveImageSkew); err != nil {
+			return &FieldError{FieldName: "ExcessiveImageSkew",
+				Value: ivAnalysis.ExcessiveImageSkewField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.PiggybackImageField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PiggybackImage); err != nil {
+			return &FieldError{FieldName: "PiggybackImage",
+				Value: ivAnalysis.PiggybackImageField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.TooLightOrTooDarkField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.TooLightOrTooDark); err != nil {
+			return &FieldError{FieldName: "TooLightOrTooDark",
+				Value: ivAnalysis.TooLightOrTooDarkField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.StreaksAndOrBandsField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.StreaksAndOrBands); err != nil {
+			return &FieldError{FieldName: "StreaksAndOrBands",
+				Value: ivAnalysis.StreaksAndOrBandsField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.BelowMinimumImageSizeField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.BelowMinimumImageSize); err != nil {
+			return &FieldError{FieldName: "BelowMinimumImageSize",
+				Value: ivAnalysis.BelowMinimumImageSizeField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.ExceedsMaximumImageSizeField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ExceedsMaximumImageSize); err != nil {
+			return &FieldError{FieldName: "ExceedsMaximumImageSize",
+				Value: ivAnalysis.ExceedsMaximumImageSizeField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.ImageEnabledPODField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ImageEnabledPOD); err != nil {
+			return &FieldError{FieldName: "ImageEnabledPOD",
+				Value: ivAnalysis.ImageEnabledPODField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.SourceDocumentBadField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.SourceDocumentBad); err != nil {
+			return &FieldError{FieldName: "SourceDocumentBad",
+				Value: ivAnalysis.SourceDocumentBadField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.DateUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.DateUsability); err != nil {
+			return &FieldError{FieldName: "DateUsability",
+				Value: ivAnalysis.DateUsabilityField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.PayeeUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayeeUsability); err != nil {
+			return &FieldError{FieldName: "PayeeUsability",
+				Value: ivAnalysis.PayeeUsabilityField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.ConvenienceAmountUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ConvenienceAmountUsability); err != nil {
+			return &FieldError{FieldName: "ConvenienceAmountUsability",
+				Value: ivAnalysis.ConvenienceAmountUsabilityField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.AmountInWordsUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.AmountInWordsUsability); err != nil {
+			return &FieldError{FieldName: "AmountInWordsUsability",
+				Value: ivAnalysis.AmountInWordsUsabilityField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.SignatureUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.SignatureUsability); err != nil {
+			return &FieldError{FieldName: "SignatureUsability",
+				Value: ivAnalysis.SignatureUsabilityField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.PayorNameAddressUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayorNameAddressUsability); err != nil {
+			return &FieldError{FieldName: "PayorNameAddressUsability",
+				Value: ivAnalysis.PayorNameAddressUsabilityField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.MICRLineUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.MICRLineUsability); err != nil {
+			return &FieldError{FieldName: "MICRLineUsability",
+				Value: ivAnalysis.MICRLineUsabilityField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.MemoLineUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.MemoLineUsability); err != nil {
+			return &FieldError{FieldName: "MemoLineUsability",
+				Value: ivAnalysis.MemoLineUsabilityField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.PayorBankNameAddressUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayorBankNameAddressUsability); err != nil {
+			return &FieldError{FieldName: "PayorBankNameAddressUsability",
+				Value: ivAnalysis.PayorBankNameAddressUsabilityField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.PayeeEndorsementUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayeeEndorsementUsability); err != nil {
+			return &FieldError{FieldName: "PayeeEndorsementUsability",
+				Value: ivAnalysis.PayeeEndorsementUsabilityField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.BOFDEndorsementUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.BOFDEndorsementUsability); err != nil {
+			return &FieldError{FieldName: "BOFDEndorsementUsability",
+				Value: ivAnalysis.BOFDEndorsementUsabilityField(), Msg: err.Error()}
+		}
+	}
+	// Conditional
+	if ivAnalysis.TransitEndorsementUsabilityField() != "" {
+		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.TransitEndorsementUsability); err != nil {
+			return &FieldError{FieldName: "TransitEndorsementUsability",
+				Value: ivAnalysis.TransitEndorsementUsabilityField(), Msg: err.Error()}
+		}
+	}
+	if err := ivAnalysis.isAlphanumericSpecial(ivAnalysis.UserField); err != nil {
+		return &FieldError{FieldName: "UserField", Value: ivAnalysis.UserField, Msg: err.Error()}
+	}
+
 	return nil
 }
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
 func (ivAnalysis *ImageViewAnalysis) fieldInclusion() error {
+	if ivAnalysis.recordType == "" {
+		return &FieldError{FieldName: "recordType", Value: ivAnalysis.recordType, Msg: msgFieldInclusion}
+	}
+
 	return nil
 }
 
-// Get properties
+// GlobalImageQualityField gets a string of the GlobalImageQuality field
+func (ivAnalysis *ImageViewAnalysis) GlobalImageQualityField() string {
+	return ivAnalysis.numericField(ivAnalysis.GlobalImageQuality, 1)
+}
+
+// GlobalImageUsabilityField gets a string of the GlobalImageUsability field
+func (ivAnalysis *ImageViewAnalysis) GlobalImageUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.GlobalImageUsability, 1)
+}
+
+// ImagingBankSpecificTestField gets a string of the ImagingBankSpecificTest field
+func (ivAnalysis *ImageViewAnalysis) ImagingBankSpecificTestField() string {
+	return ivAnalysis.numericField(ivAnalysis.ImagingBankSpecificTest, 1)
+}
+
+// PartialImageField gets a string of the PartialImage field
+func (ivAnalysis *ImageViewAnalysis) PartialImageField() string {
+	return ivAnalysis.numericField(ivAnalysis.PartialImage, 1)
+}
+
+// ExcessiveImageSkewField gets a string of the ExcessiveImageSkew field
+func (ivAnalysis *ImageViewAnalysis) ExcessiveImageSkewField() string {
+	return ivAnalysis.numericField(ivAnalysis.ExcessiveImageSkew, 1)
+}
+
+// PiggybackImageField gets a string of the PiggybackImage field
+func (ivAnalysis *ImageViewAnalysis) PiggybackImageField() string {
+	return ivAnalysis.numericField(ivAnalysis.PiggybackImage, 1)
+}
+
+// TooLightOrTooDarkField gets a string of the TooLightOrTooDark field
+func (ivAnalysis *ImageViewAnalysis) TooLightOrTooDarkField() string {
+	return ivAnalysis.numericField(ivAnalysis.TooLightOrTooDark, 1)
+}
+
+// StreaksAndOrBandsField gets a string of the StreaksAndOrBands field
+func (ivAnalysis *ImageViewAnalysis) StreaksAndOrBandsField() string {
+	return ivAnalysis.numericField(ivAnalysis.StreaksAndOrBands, 1)
+}
+
+// BelowMinimumImageSizeField gets a string of the BelowMinimumImageSize field
+func (ivAnalysis *ImageViewAnalysis) BelowMinimumImageSizeField() string {
+	return ivAnalysis.numericField(ivAnalysis.BelowMinimumImageSize, 1)
+}
+
+// ExceedsMaximumImageSizeField gets a string of the ExceedsMaximumImageSize field
+func (ivAnalysis *ImageViewAnalysis) ExceedsMaximumImageSizeField() string {
+	return ivAnalysis.numericField(ivAnalysis.ExceedsMaximumImageSize, 1)
+}
+
+// reservedField gets the reserved field
+func (ivAnalysis *ImageViewAnalysis) reservedField() string {
+	return ivAnalysis.alphaField(ivAnalysis.reserved, 13)
+}
+
+// ImageEnabledPODField gets a string of the ImageEnabledPOD field
+func (ivAnalysis *ImageViewAnalysis) ImageEnabledPODField() string {
+	return ivAnalysis.numericField(ivAnalysis.ImageEnabledPOD, 1)
+}
+
+// SourceDocumentBadField gets a string of the SourceDocumentBad field
+func (ivAnalysis *ImageViewAnalysis) SourceDocumentBadField() string {
+	return ivAnalysis.numericField(ivAnalysis.SourceDocumentBad, 1)
+}
+
+// DateUsabilityField gets a string of the DateUsability field
+func (ivAnalysis *ImageViewAnalysis) DateUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.DateUsability, 1)
+}
+
+// PayeeUsabilityField gets a string of the PayeeUsability field
+func (ivAnalysis *ImageViewAnalysis) PayeeUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.PayeeUsability, 1)
+}
+
+// ConvenienceAmountUsabilityField gets a string of the ConvenienceAmountUsability field
+func (ivAnalysis *ImageViewAnalysis) ConvenienceAmountUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.ConvenienceAmountUsability, 1)
+}
+
+// AmountInWordsUsabilityField gets a string of the AmountInWordsUsability field
+func (ivAnalysis *ImageViewAnalysis) AmountInWordsUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.ConvenienceAmountUsability, 1)
+}
+
+// SignatureUsabilityField gets a string of the SignatureUsability  field
+func (ivAnalysis *ImageViewAnalysis) SignatureUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.SignatureUsability, 1)
+}
+
+// PayorNameAddressUsabilityField gets a string of the PayorNameAddressUsability field
+func (ivAnalysis *ImageViewAnalysis) PayorNameAddressUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.PayorNameAddressUsability, 1)
+}
+
+// MICRLineUsabilityField gets a string of the MICRLineUsability field
+func (ivAnalysis *ImageViewAnalysis) MICRLineUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.MICRLineUsability, 1)
+}
+
+// MemoLineUsabilityField gets a string of the MemoLineUsability field
+func (ivAnalysis *ImageViewAnalysis) MemoLineUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.MemoLineUsability, 1)
+}
+
+// PayorBankNameAddressUsabilityField gets a string of the PayorBankNameAddressUsability field
+func (ivAnalysis *ImageViewAnalysis) PayorBankNameAddressUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.PayorBankNameAddressUsability, 1)
+}
+
+// PayeeEndorsementUsabilityField gets a string of the PayeeEndorsementUsability field
+func (ivAnalysis *ImageViewAnalysis) PayeeEndorsementUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.PayeeEndorsementUsability, 1)
+}
+
+// BOFDEndorsementUsabilityField gets a string of the BOFDEndorsementUsability field
+func (ivAnalysis *ImageViewAnalysis) BOFDEndorsementUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.BOFDEndorsementUsability, 1)
+}
+
+// TransitEndorsementUsabilityField gets a string of the TransitEndorsementUsability field
+func (ivAnalysis *ImageViewAnalysis) TransitEndorsementUsabilityField() string {
+	return ivAnalysis.numericField(ivAnalysis.TransitEndorsementUsability, 1)
+}
+
+// reservedTwoField gets the reservedTwo field
+func (ivAnalysis *ImageViewAnalysis) reservedTwoField() string {
+	return ivAnalysis.alphaField(ivAnalysis.reservedTwo, 6)
+}
+
+// UserFieldField gets the UserField field
+func (ivAnalysis *ImageViewAnalysis) UserFieldField() string {
+	return ivAnalysis.alphaField(ivAnalysis.UserField, 20)
+}
+
+// reservedThreeField gets the reservedThree field
+func (ivAnalysis *ImageViewAnalysis) reservedThreeField() string {
+	return ivAnalysis.alphaField(ivAnalysis.reservedThree, 15)
+}

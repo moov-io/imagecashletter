@@ -329,8 +329,6 @@ func (ivData *ImageViewData) LengthImageReferenceKeyField() string {
 	return ivData.stringField(ivData.LengthImageReferenceKey, 4)
 }
 
-//ToDo: Size for binary data below
-
 // ImageReferenceKeyField gets the ImageReferenceKey field
 func (ivData *ImageViewData) ImageReferenceKeyField() string {
 	return ivData.stringField(ivData.ImageReferenceKey, uint(len(ivData.LengthImageReferenceKeyField())))
@@ -345,7 +343,6 @@ func (ivData *ImageViewData) LengthDigitalSignatureField() string {
 func (ivData *ImageViewData) DigitalSignatureField() string {
 	s := string(ivData.DigitalSignature[:])
 	return ivData.alphaField(s, uint(len(ivData.LengthDigitalSignatureField())))
-	//return ivData.byteToAlphaField(ivData.DigitalSignature, uint(len(ivData.LengthDigitalSignatureField())))
 }
 
 // LengthImageDataField gets the LengthImageData field
@@ -357,5 +354,4 @@ func (ivData *ImageViewData) LengthImageDataField() string {
 func (ivData *ImageViewData) ImageDataField() string {
 	s := string(ivData.ImageData[:])
 	return ivData.alphaField(s, uint(len(ivData.LengthDigitalSignatureField())))
-	//return ivData.byteToAlphaField(ivData.ImageData, uint(len(ivData.LengthImageDataField())))
 }

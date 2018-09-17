@@ -686,6 +686,22 @@ func (v *validator) isOverrideIndicator(code string) error {
 	return errors.New(msg)
 }
 
+// isImageViewAnalysisValid ensures generic properties of imageViewAnalysis are valid
+func (v *validator) isImageViewAnalysisValid(code int) error {
+	switch code {
+	case
+		// Refer to ImageViewAnalysis property
+		0,
+		// Refer to ImageViewAnalysis property
+		1,
+		// Refer to ImageViewAnalysis property
+		2:
+		return nil
+	}
+	msg := fmt.Sprintf(msgInvalid, "ImageRecreateIndicator")
+	return errors.New(msg)
+}
+
 // isUpperAlphanumeric checks if string only contains ASCII alphanumeric upper case characters
 func (v *validator) isUpperAlphanumeric(s string) error {
 	if upperAlphanumericRegex.MatchString(s) {
