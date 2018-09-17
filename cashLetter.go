@@ -13,15 +13,13 @@ type CashLetter struct {
 	// Bundle is an array of ICL Bundle
 	Bundles []Bundle `json:"bundles,omitempty"`
 	// ReturnBundles is an array of Return Bundle
-	// ReturnBundles      []ReturnBundle      `json:"returnBundle,omitempty"`
+	ReturnBundles []ReturnBundle `json:"returnBundle,omitempty"`
 	// currentBundle is the currentBundle being parsed
 	currentBundle Bundle
 	// currentReturnBundle is the current ReturnBundle being parsed
-	// currentReturnBundle ReturnBundle
+	currentReturnBundle ReturnBundle
 	// CashLetterControl is a Cash Letter Control Record
 	CashLetterControl *CashLetterControl `json:"cashLetterControl,omitempty"`
-	// Converters is composed for x9 to GoLang Converters
-	converters
 }
 
 // NewCashLetter takes a CashLetterHeader and returns a CashLetter

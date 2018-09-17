@@ -16,8 +16,6 @@ type Bundle struct {
 	Checks []*CheckDetail `json:"items,omitempty"`
 	// BundleControl is a Bundle Control Record
 	BundleControl *BundleControl `json:"bundleControl,omitempty"`
-	// Converters is composed for x9 to GoLang Converters
-	converters
 }
 
 // NewBundle takes a BundleHeader and returns a Bundle
@@ -59,7 +57,7 @@ func (b *Bundle) GetControl() *BundleControl {
 	return b.BundleControl
 }
 
-// GetChecks returns a slice of check details for the bundle
+// GetChecks returns a slice of check details for the Bundle
 func (b *Bundle) GetChecks() []*CheckDetail {
 	return b.Checks
 }
