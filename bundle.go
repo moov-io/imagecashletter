@@ -12,8 +12,10 @@ type Bundle struct {
 	ID string `json:"id"`
 	// BundleHeader is a Bundle Header Record
 	BundleHeader *BundleHeader `json:"bundleHeader,omitempty"`
-	// Items are Items: Check Detail Records, Check Detail Addendum Records, and Image Views
-	Checks []*CheckDetail `json:"items,omitempty"`
+	// Checks are Check Items: Check Detail Records, Check Detail Addendum Records, and Image Views
+	Checks []*CheckDetail `json:"checks,omitempty"`
+	// Returns are Return Items: Return Detail Records, Return Detail Addendum Records, and Image Views
+	Returns []*ReturnDetail `json:"returns,omitempty"`
 	// BundleControl is a Bundle Control Record
 	BundleControl *BundleControl `json:"bundleControl,omitempty"`
 }
@@ -30,11 +32,6 @@ func NewBundle(bh *BundleHeader) Bundle {
 // Validate performs X9  validations and format rule checks and returns an error if not Validated
 func (b *Bundle) Validate() error {
 	return nil
-}
-
-// AddCheckDetail appends a CheckDetail to the Bundle
-func (b *Bundle) AddCheckDetail(check *CheckDetail) {
-	b.Checks = append(b.Checks, check)
 }
 
 // SetHeader appends an BundleHeader to the Bundle
@@ -57,7 +54,22 @@ func (b *Bundle) GetControl() *BundleControl {
 	return b.BundleControl
 }
 
+// AddCheckDetail appends a CheckDetail to the Bundle
+func (b *Bundle) AddCheckDetail(check *CheckDetail) {
+	b.Checks = append(b.Checks, check)
+}
+
 // GetChecks returns a slice of check details for the Bundle
 func (b *Bundle) GetChecks() []*CheckDetail {
 	return b.Checks
+}
+
+// AddReturnDetail appends a ReturnDetail to the Bundle
+func (b *Bundle) AddReturnDetail(rd *ReturnDetail) {
+	b.Returns = append(b.Returns, rd)
+}
+
+// GetReturns returns a slice of check details for the Bundle
+func (b *Bundle) GetReturns() []*ReturnDetail {
+	return b.Returns
 }

@@ -316,6 +316,113 @@ func (r *Reader) parseCheckDetailAddendumC() error {
 	return nil
 }
 
+// parseReturnDetail takes the input record string and parses the ReturnDetail values
+func (r *Reader) parseReturnDetail() error {
+	r.recordName = "ReturnDetail"
+	if r.currentCashLetter.currentBundle.BundleHeader == nil {
+		return r.error(&FileError{Msg: msgFileBundleOutside})
+	}
+	rd := new(ReturnDetail)
+	rd.Parse(r.line)
+	// Ensure valid ReturnDetail
+	if err := rd.Validate(); err != nil {
+		return r.error(err)
+	}
+	// Add ReturnDetail
+	if r.currentCashLetter.currentBundle.BundleHeader != nil {
+		r.currentCashLetter.currentBundle.AddReturnDetail(rd)
+	}
+	return nil
+}
+
+// parseReturnDetailAddendumA takes the input record string and parses the ReturnDetailAddendumA values
+func (r *Reader) parseReturnDetailAddendumA() error {
+	r.recordName = "ReturnDetailAddendumA"
+	if r.currentCashLetter.currentBundle.GetReturns() == nil {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
+	}
+	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
+	}
+	rdAddendumA := NewReturnDetailAddendumA()
+	rdAddendumA.Parse(r.line)
+	if err := rdAddendumA.Validate(); err != nil {
+		return err
+	}
+	// ToDo research Pointer for ReturnAddendum*, also see about use of currentReturnDetail
+	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
+	//r.currentCashLetter.currentBundle.Returns[entryIndex].ReturnDetailAddendumA = rdAddendumA
+	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumA(rdAddendumA)
+	return nil
+}
+
+// parseReturnDetailAddendumB takes the input record string and parses the ReturnDetailAddendumB values
+func (r *Reader) parseReturnDetailAddendumB() error {
+	r.recordName = "ReturnDetailAddendumB"
+	if r.currentCashLetter.currentBundle.GetReturns() == nil {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
+	}
+	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
+	}
+	rdAddendumB := NewReturnDetailAddendumB()
+	rdAddendumB.Parse(r.line)
+	if err := rdAddendumB.Validate(); err != nil {
+		return err
+	}
+	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
+	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumB(rdAddendumB)
+	return nil
+}
+
+// parseReturnDetailAddendumC takes the input record string and parses the ReturnDetailAddendumC values
+func (r *Reader) parseReturnDetailAddendumC() error {
+	r.recordName = "ReturnDetailAddendumC"
+
+	if r.currentCashLetter.currentBundle.GetReturns() == nil {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
+	}
+	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
+	}
+	rdAddendumC := NewReturnDetailAddendumC()
+	rdAddendumC.Parse(r.line)
+	if err := rdAddendumC.Validate(); err != nil {
+		return err
+	}
+	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
+	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumC(rdAddendumC)
+	return nil
+}
+
+// parseReturnDetail*AddendumD takes the input record string and parses the ReturnDetail*AddendumD values
+func (r *Reader) parseReturnDetailAddendumD() error {
+	r.recordName = "ReturnDetailAddendumC"
+
+	if r.currentCashLetter.currentBundle.GetReturns() == nil {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "*AddendumD", Msg: msg})
+	}
+	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
+		msg := fmt.Sprint(msgFileBundleOutside)
+		return r.error(&FileError{FieldName: "*AddendumD", Msg: msg})
+	}
+	rdAddendumD := NewReturnDetailAddendumD()
+	rdAddendumD.Parse(r.line)
+	if err := rdAddendumD.Validate(); err != nil {
+		return err
+	}
+	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
+	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumD(rdAddendumD)
+	return nil
+}
+
 // parseImageViewDetail takes the input record string and parses the ImageViewDetail values
 func (r *Reader) parseImageViewDetail() error {
 	r.recordName = "ImageViewDetail"

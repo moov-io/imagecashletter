@@ -107,7 +107,7 @@ type CheckDetail struct {
 	// U: ECE institution relationship to BOFD is undetermined
 	BOFDIndicator string `json:"bofdIndicator"`
 	// AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of
-	// CheckDetailAddendumA, CheckDetailAddendumB Record and CheckDetailAddendumC types.  It matches the total number
+	// CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number
 	// of addendum records associated with this item. The standard supports up to 99 addendum records.
 	AddendumCount int `json:"addendumCount"`
 	// CorrectionIndicator identifies whether and how the MICR line was repaired, for fields other than Payor Bank
