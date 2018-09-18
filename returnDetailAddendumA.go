@@ -17,7 +17,7 @@ type ReturnDetailAddendumA struct {
 	ID string `json:"id"`
 	// RecordType defines the type of record.
 	recordType string
-	// RecordNumber representsthe chronological order (oldest to newest) in which each ReturnDetailAddendumA was
+	// RecordNumber represents the chronological order (oldest to newest) in which each ReturnDetailAddendumA was
 	// created. The ReturnDetailAddendumA shall be in sequential order according to this field. ReturnDetailAddendumA
 	// RecordNumber9s) shall be in sequential order starting with 1, indicating the oldest addendum, and incrementing
 	// by 1 for each subsequent addendum.

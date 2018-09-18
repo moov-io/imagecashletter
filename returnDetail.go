@@ -141,6 +141,34 @@ func NewReturnDetail() *ReturnDetail {
 func (rd *ReturnDetail) Parse(record string) {
 	// Character position 1-2, Always "31"
 	rd.recordType = "31"
+	// 03-10
+	rd.PayorBankRoutingNumber = rd.parseStringField(record[2:10])
+	// 11-11
+	rd.PayorBankCheckDigit = rd.parseStringField(record[10:11])
+	// 12-31
+	rd.OnUs = rd.parseStringField(record[11:31])
+	// 32-41
+	rd.ItemAmount = rd.parseNumField(record[31:41])
+	// 42-42
+	rd.ReturnReason = rd.parseStringField(record[41:42])
+	// 43-44
+	rd.AddendumCount = rd.parseNumField(record[42:44])
+	// 45-45
+	rd.DocumentationTypeIndicator = rd.parseStringField(record[44:45])
+	// 46-53
+	rd.ForwardBundleDate = rd.parseYYYYMMDDDate(record[45:53])
+	// 54-68
+	rd.EceInstitutionItemSequenceNumber = rd.parseNumField(record[53:68])
+	// 69-69
+	rd.ExternalProcessingCode = rd.parseStringField(record[68:69])
+	// 70-70
+	rd.ReturnNotificationIndicator = rd.parseNumField(record[69:70])
+	// 71-71
+	rd.ArchiveTypeIndicator = rd.parseStringField(record[70:71])
+	// 72-72
+	rd.TimesReturned = rd.parseNumField(record[71:72])
+	// 73-80
+	rd.reserved = "        "
 }
 
 // String writes the ReturnDetail struct to a variable length string.
@@ -148,6 +176,20 @@ func (rd *ReturnDetail) String() string {
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(rd.recordType)
+	buf.WriteString(rd.PayorBankRoutingNumberField())
+	buf.WriteString(rd.PayorBankCheckDigitField())
+	buf.WriteString(rd.OnUsField())
+	buf.WriteString(rd.ItemAmountField())
+	buf.WriteString(rd.ReturnReasonField())
+	buf.WriteString(rd.AddendumCountField())
+	buf.WriteString(rd.DocumentationTypeIndicatorField())
+	buf.WriteString(rd.ForwardBundleDateField())
+	buf.WriteString(rd.EceInstitutionItemSequenceNumberField())
+	buf.WriteString(rd.ExternalProcessingCodeField())
+	buf.WriteString(rd.ReturnNotificationIndicatorField())
+	buf.WriteString(rd.ArchiveTypeIndicatorField())
+	buf.WriteString(rd.TimesReturnedField())
+	buf.WriteString(rd.reservedField())
 	return buf.String()
 }
 
@@ -161,6 +203,26 @@ func (rd *ReturnDetail) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 31)
 		return &FieldError{FieldName: "recordType", Value: rd.recordType, Msg: msg}
 	}
+	if rd.DocumentationTypeIndicator != "" {
+		if err := rd.isDocumentationTypeIndicator(rd.DocumentationTypeIndicator); err != nil {
+			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: rd.DocumentationTypeIndicator, Msg: err.Error()}
+		}
+	}
+	if rd.ReturnNotificationIndicatorField() != "" {
+		if err := rd.isReturnNotificationIndicator(rd.ReturnNotificationIndicator); err != nil {
+			return &FieldError{FieldName: "ReturnNotificationIndicator", Value: rd.ReturnNotificationIndicatorField(), Msg: err.Error()}
+		}
+	}
+	if rd.ArchiveTypeIndicatorField() != "" {
+		if err := rd.isArchiveTypeIndicator(rd.ArchiveTypeIndicator); err != nil {
+			return &FieldError{FieldName: "ArchiveTypeIndicator", Value: rd.ArchiveTypeIndicatorField(), Msg: err.Error()}
+		}
+	}
+	if rd.TimesReturnedField() != "" {
+		if err := rd.isTimesReturned(rd.TimesReturned); err != nil {
+			return &FieldError{FieldName: "TimesReturned", Value: rd.TimesReturnedField(), Msg: err.Error()}
+		}
+	}
 	return nil
 }
 
@@ -170,7 +232,87 @@ func (rd *ReturnDetail) fieldInclusion() error {
 	if rd.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: rd.recordType, Msg: msgFieldInclusion}
 	}
+	if rd.PayorBankRoutingNumber == "" {
+		return &FieldError{FieldName: "PayorBankRoutingNumber",
+			Value: rd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if rd.PayorBankCheckDigit == "" {
+		return &FieldError{FieldName: "PayorBankCheckDigit", Value: rd.PayorBankCheckDigit, Msg: msgFieldInclusion}
+	}
+	if rd.ReturnReason == "" {
+		return &FieldError{FieldName: "ReturnReason", Value: rd.ReturnReason, Msg: msgFieldInclusion}
+	}
 	return nil
+}
+
+// PayorBankRoutingNumberField gets the PayorBankRoutingNumber field
+func (rd *ReturnDetail) PayorBankRoutingNumberField() string {
+	return rd.stringField(rd.PayorBankRoutingNumber, 8)
+}
+
+// PayorBankCheckDigitField gets the PayorBankCheckDigit field
+func (rd *ReturnDetail) PayorBankCheckDigitField() string {
+	return rd.stringField(rd.PayorBankCheckDigit, 1)
+}
+
+// OnUsField gets the OnUs field
+func (rd *ReturnDetail) OnUsField() string {
+	return rd.nbsmField(rd.OnUs, 20)
+}
+
+// ItemAmountField gets the ItemAmount right justified and zero padded
+func (rd *ReturnDetail) ItemAmountField() string {
+	return rd.numericField(rd.ItemAmount, 10)
+}
+
+// ReturnReasonField gets the ReturnReason field
+func (rd *ReturnDetail) ReturnReasonField() string {
+	return rd.alphaField(rd.ReturnReason, 1)
+}
+
+// AddendumCountField gets a string of the AddendumCount field
+func (rd *ReturnDetail) AddendumCountField() string {
+	return rd.numericField(rd.AddendumCount, 2)
+}
+
+// DocumentationTypeIndicatorField gets the DocumentationTypeIndicator field
+func (rd *ReturnDetail) DocumentationTypeIndicatorField() string {
+	return rd.alphaField(rd.DocumentationTypeIndicator, 1)
+}
+
+// ForwardBundleDateField gets the ForwardBundleDate in YYYYMMDD format
+func (rd *ReturnDetail) ForwardBundleDateField() string {
+	return rd.formatYYYYMMDDDate(rd.ForwardBundleDate)
+}
+
+// EceInstitutionItemSequenceNumberField gets a string of the EceInstitutionItemSequenceNumber field
+func (rd *ReturnDetail) EceInstitutionItemSequenceNumberField() string {
+	return rd.numericField(rd.EceInstitutionItemSequenceNumber, 15)
+}
+
+// ExternalProcessingCodeField gets the ExternalProcessingCode field - Also known as Position 44
+func (rd *ReturnDetail) ExternalProcessingCodeField() string {
+	return rd.alphaField(rd.ExternalProcessingCode, 1)
+}
+
+// ReturnNotificationIndicatorField gets a string of the ReturnNotificationIndicator field
+func (rd *ReturnDetail) ReturnNotificationIndicatorField() string {
+	return rd.numericField(rd.ReturnNotificationIndicator, 1)
+}
+
+// ArchiveTypeIndicatorField gets the ArchiveTypeIndicator field
+func (rd *ReturnDetail) ArchiveTypeIndicatorField() string {
+	return rd.alphaField(rd.ArchiveTypeIndicator, 1)
+}
+
+// TimesReturnedField gets a string of the TimesReturned field
+func (rd *ReturnDetail) TimesReturnedField() string {
+	return rd.numericField(rd.TimesReturned, 1)
+}
+
+// reservedField gets reserved - blank space
+func (rd *ReturnDetail) reservedField() string {
+	return rd.alphaField(rd.reserved, 8)
 }
 
 // AddReturnDetailAddendumA appends an AddendumA to the ReturnDetail
@@ -215,4 +357,37 @@ func (rd *ReturnDetail) AddReturnDetailAddendumD(rdAddendaD ReturnDetailAddendum
 // GetReturnDetailAddendumD returns a slice of AddendumD for the ReturnDetail
 func (rd *ReturnDetail) GetReturnDetailAddendumD() []ReturnDetailAddendumD {
 	return rd.ReturnDetailAddendumD
+}
+
+// AddReturnDetailImageViewDetail appends an ImageViewDetail to the ReturnDetail
+func (rd *ReturnDetail) AddReturnDetailImageViewDetail(ivDetail ImageViewDetail) []ImageViewDetail {
+	rd.ImageViewDetail = append(rd.ImageViewDetail, ivDetail)
+	return rd.ImageViewDetail
+}
+
+// GetReturnDetailImageViewDetail returns a slice of ImageViewDetail for the ReturnDetail
+func (rd *ReturnDetail) GetReturnDetailImageViewDetail() []ImageViewDetail {
+	return rd.ImageViewDetail
+}
+
+// AddReturnDetailImageViewData appends an ImageViewData to the ReturnDetail
+func (rd *ReturnDetail) AddReturnDetailImageViewData(ivData ImageViewData) []ImageViewData {
+	rd.ImageViewData = append(rd.ImageViewData, ivData)
+	return rd.ImageViewData
+}
+
+// GetReturnDetailImageViewData returns a slice of ImageViewData for the ReturnDetail
+func (rd *ReturnDetail) GetReturnDetailImageViewData() []ImageViewData {
+	return rd.ImageViewData
+}
+
+// AddReturnDetailImageViewAnalysis appends an ImageViewAnalysis  to the ReturnDetail
+func (rd *ReturnDetail) AddReturnDetailImageViewAnalysis(ivAnalysis ImageViewAnalysis) []ImageViewAnalysis {
+	rd.ImageViewAnalysis = append(rd.ImageViewAnalysis, ivAnalysis)
+	return rd.ImageViewAnalysis
+}
+
+// GetReturnDetailImageViewAnalysis returns a slice of ImageViewAnalysis for the ReturnDetail
+func (rd *ReturnDetail) GetReturnDetailImageViewAnalysis() []ImageViewAnalysis {
+	return rd.ImageViewAnalysis
 }

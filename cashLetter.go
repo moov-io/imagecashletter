@@ -57,7 +57,7 @@ func (cl *CashLetter) GetControl() *CashLetterControl {
 	return cl.CashLetterControl
 }
 
-// AddBundle appends a Bundle to the x9.File.CashLetter
+// AddBundle appends a Bundle to the CashLetter
 func (cl *CashLetter) AddBundle(bundle Bundle) []Bundle {
 	cl.Bundles = append(cl.Bundles, bundle)
 	return cl.Bundles
@@ -66,4 +66,15 @@ func (cl *CashLetter) AddBundle(bundle Bundle) []Bundle {
 // GetBundles returns a slice of Bundles for the CashLetter
 func (cl *CashLetter) GetBundles() []Bundle {
 	return cl.Bundles
+}
+
+// AddReturnBundle appends a ReturnBundle to the CashLetter
+func (cl *CashLetter) AddReturnBundle(bundle ReturnBundle) []ReturnBundle {
+	cl.ReturnBundles = append(cl.ReturnBundles, bundle)
+	return cl.ReturnBundles
+}
+
+// GetReturnBundles returns a slice of ReturnBundles for the CashLetter
+func (cl *CashLetter) GetReturnBundles() []ReturnBundle {
+	return cl.ReturnBundles
 }

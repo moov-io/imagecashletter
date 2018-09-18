@@ -41,7 +41,7 @@ type ImageViewData struct {
 	// Return.ECEInstitutionItemSequenceNumber associated with the image view conveyed in this Image View Data Record.
 	// The ECE institution must construct the sequence number to guarantee uniqueness for a given routing number,
 	// business day, and cycle number. Must contain a numeric value.
-	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
+	EceInstitutionItemSequenceNumber int `json:"eceInstitutionItemSequenceNumber"`
 	// SecurityOriginatorName is a unique name that creates the Digital Signature for data to be exchanged.
 	// Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
@@ -162,7 +162,7 @@ func (ivData *ImageViewData) Parse(record string) {
 	// 20-21
 	ivData.CycleNumber = ivData.parseStringField(record[19:21])
 	// 22-36
-	ivData.EceInstitutionItemSequenceNumber = ivData.parseStringField(record[21:36])
+	ivData.EceInstitutionItemSequenceNumber = ivData.parseNumField(record[21:36])
 	// 37-52
 	ivData.SecurityOriginatorName = ivData.parseStringField(record[36:52])
 	// 53-68
@@ -279,9 +279,9 @@ func (ivData *ImageViewData) CycleNumberField() string {
 	return ivData.stringField(ivData.CycleNumber, 2)
 }
 
-// EceInstitutionItemSequenceNumberField gets the EceInstitutionItemSequenceNumber field
+// EceInstitutionItemSequenceNumberField gets a string of the EceInstitutionItemSequenceNumber field
 func (ivData *ImageViewData) EceInstitutionItemSequenceNumberField() string {
-	return ivData.stringField(ivData.EceInstitutionItemSequenceNumber, 15)
+	return ivData.numericField(ivData.EceInstitutionItemSequenceNumber, 15)
 }
 
 // SecurityOriginatorNameField gets the SecurityOriginatorName field

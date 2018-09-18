@@ -266,7 +266,7 @@ func (r *Reader) parseCheckDetailAddendumA() error {
 	if err := cdAddendumA.Validate(); err != nil {
 		return err
 	}
-	// ToDo research Pointer for CheckAddendum*, also see about use of currentCheckDetail
+	// ToDo: research Pointer for CheckAddendum*, also see about use of currentCheckDetail
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 	//r.currentCashLetter.currentBundle.Checks[entryIndex].CheckDetailAddendumA = cdAddendumA
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumA(cdAddendumA)

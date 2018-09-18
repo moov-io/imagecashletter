@@ -419,3 +419,36 @@ func (cd *CheckDetail) AddImageViewAnalysis(ivAnalysis ImageViewAnalysis) []Imag
 func (cd *CheckDetail) GetImageViewAnalysis() []ImageViewAnalysis {
 	return cd.ImageViewAnalysis
 }
+
+// AddCheckDetailImageViewDetail appends an ImageViewDetail to the CheckDetail
+func (cd *CheckDetail) AddCheckDetailImageViewDetail(ivDetail ImageViewDetail) []ImageViewDetail {
+	cd.ImageViewDetail = append(cd.ImageViewDetail, ivDetail)
+	return cd.ImageViewDetail
+}
+
+// GetCheckDetailImageViewDetail returns a slice of ImageViewDetail for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailImageViewDetail() []ImageViewDetail {
+	return cd.ImageViewDetail
+}
+
+// AddCheckDetailImageViewData appends an ImageViewData to the CheckDetail
+func (cd *CheckDetail) AddCheckDetailImageViewData(ivData ImageViewData) []ImageViewData {
+	cd.ImageViewData = append(cd.ImageViewData, ivData)
+	return cd.ImageViewData
+}
+
+// GetCheckDetailImageViewData returns a slice of ImageViewData for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailImageViewData() []ImageViewData {
+	return cd.ImageViewData
+}
+
+// AddCheckDetailImageViewAnalysis appends an ImageViewAnalysis  to the CheckDetail
+func (cd *CheckDetail) AddCheckDetailImageViewAnalysis(ivAnalysis ImageViewAnalysis) []ImageViewAnalysis {
+	cd.ImageViewAnalysis = append(cd.ImageViewAnalysis, ivAnalysis)
+	return cd.ImageViewAnalysis
+}
+
+// GetCheckDetailImageViewAnalysis returns a slice of ImageViewAnalysis for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailImageViewAnalysis() []ImageViewAnalysis {
+	return cd.ImageViewAnalysis
+}
