@@ -5,6 +5,7 @@
 package x9
 
 import (
+	"fmt"
 	"log"
 	"strings"
 	"testing"
@@ -16,7 +17,7 @@ func mockCheckDetailAddendumB() CheckDetailAddendumB {
 	cdAddendumB := NewCheckDetailAddendumB()
 	cdAddendumB.ImageReferenceKeyIndicator = 1
 	cdAddendumB.MicrofilmArchiveSequenceNumber = "1A"
-	cdAddendumB.ImageReferenceKeyLength = "0034"
+	cdAddendumB.LengthImageReferenceKey = 0034
 	cdAddendumB.ImageReferenceKey = "0"
 	cdAddendumB.Description = "CD Addendum B"
 	cdAddendumB.UserField = ""
@@ -38,8 +39,8 @@ func testMockCheckDetailAddendumB(t testing.TB) {
 	if cdAddendumB.MicrofilmArchiveSequenceNumber != "1A" {
 		t.Error("MicrofilmArchiveSequenceNumber does not validate and will break other tests")
 	}
-	if cdAddendumB.ImageReferenceKeyLength != "0034" {
-		t.Error("ImageReferenceKeyLength does not validate and will break other tests")
+	if cdAddendumB.LengthImageReferenceKey != 0034 {
+		t.Error("LengthImageReferenceKey does not validate and will break other tests")
 	}
 	if cdAddendumB.ImageReferenceKey != "0" {
 		t.Error("ImageReferenceKey does not validate and will break other tests")
@@ -94,12 +95,12 @@ func parseCheckDetailAddendumB(t testing.TB) {
 		t.Errorf("MicrofilmArchiveSequenceNumber Expected '1A             ' got: %v",
 			record.MicrofilmArchiveSequenceNumberField())
 	}
-	if record.ImageReferenceKeyLengthField() != "0034" {
-		t.Errorf("ImageReferenceKeyLength Expected '0034' got: %v", record.ImageReferenceKeyLengthField())
+	if record.LengthImageReferenceKeyField() != "0034" {
+		t.Errorf("ImageReferenceKeyLength Expected '0034' got: %v", record.LengthImageReferenceKeyField())
 	}
 	if record.ImageReferenceKeyField() != "0                                 " {
 		t.Errorf("ImageReferenceKey Expected '0                                 ' got: %v",
-			record.ImageReferenceKeyLengthField())
+			record.ImageReferenceKeyField())
 	}
 	if record.DescriptionField() != "CD Addendum B  " {
 		t.Errorf("Description Expected 'CD Addendum B  ' got: %v", record.DescriptionField())
@@ -144,7 +145,16 @@ func testCDAddendumBString(t testing.TB) {
 	}
 	record := r.currentCashLetter.currentBundle.GetChecks()[0].CheckDetailAddendumB[0]
 
+	fmt.Printf("Lineee: %v \n", line)
+	fmt.Printf("String: %v \n", record.String())
+
 	if record.String() != line {
+		t.Errorf("Strings do not match")
+	}
+
+	stri := record.String()
+
+	if stri != line {
 		t.Errorf("Strings do not match")
 	}
 }

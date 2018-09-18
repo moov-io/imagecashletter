@@ -353,5 +353,5 @@ func (ivData *ImageViewData) LengthImageDataField() string {
 // ImageDataField gets the ImageData field []byte to string
 func (ivData *ImageViewData) ImageDataField() string {
 	s := string(ivData.ImageData[:])
-	return ivData.alphaField(s, uint(len(ivData.LengthDigitalSignatureField())))
+	return ivData.alphaField(s, uint(len(ivData.LengthImageDataField())))
 }
