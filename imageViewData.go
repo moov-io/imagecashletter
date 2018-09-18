@@ -102,7 +102,7 @@ type ImageViewData struct {
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
 	// Values: 0000	ImageReferenceKey is not present
 	// 0001–9999: Valid when ImageReferenceKey is present
-	LengthImageReferenceKey string `json:"lengthImageReferenceKey"`
+	LengthImageReferenceKey int `json:"lengthImageReferenceKey"`
 	// ImageReferenceKey is assigned by the ECE institution that creates the CheckDetail or Return, and the related
 	// Image View Records. This designator, when used, shall uniquely identify the item image to the ECE institution.
 	// This designator is a special key with significance to the creating institution. It is intended to be used to
@@ -113,7 +113,7 @@ type ImageViewData struct {
 	ImageReferenceKey string `json:"imageReferenceKey"`
 	// LengthDigitalSignature is the number of bytes in the Image View Data.DigitalSignature.
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
-	LengthDigitalSignature string `json:"lengthDigitalSignature"`
+	LengthDigitalSignature int `json:"lengthDigitalSignature"`
 	// DigitalSignature is created by applying the cryptographic algorithm and private/secret key against the data to
 	// be protected. The Digital Signature provides user authentication and data integrity.
 	// Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
@@ -123,7 +123,7 @@ type ImageViewData struct {
 	// LengthImageData is the number of bytes in the ImageViewData.ImageData.
 	// Shall be present when ImageViewDetail.ImageIndicator is NOT 0
 	// Values: 0000001–99999999
-	LengthImageData string `json:"lengthImageData"`
+	LengthImageData int `json:"lengthImageData"`
 	// ImageData contains the image view. The Image Data generally consists of an image header and the image raster
 	// data. The image header provides information that is required to interpret the image raster data. The image
 	// raster data contains the scanned image of the physical item in raster (line by line) format. Each scan line
@@ -180,17 +180,17 @@ func (ivData *ImageViewData) Parse(record string) {
 	// 98-101
 	ivData.ClippingCoordinateV2 = ivData.parseStringField(record[97:101])
 	// 102-105
-	ivData.LengthImageReferenceKey = ivData.parseStringField(record[101:105])
+	ivData.LengthImageReferenceKey = ivData.parseNumField(record[101:105])
 	// 106 - (105+X)
-	ivData.ImageReferenceKey = ivData.parseStringField(record[105 : 106+int(len(ivData.LengthImageReferenceKey))])
+	ivData.ImageReferenceKey = ivData.parseStringField(record[105:ivData.LengthImageReferenceKey])
 	// (106+X) – (110+X)
-	ivData.LengthDigitalSignature = ivData.parseStringField(record[106+int(len(ivData.LengthImageReferenceKey)) : 110+int(len(ivData.LengthImageReferenceKey))])
+	ivData.LengthDigitalSignature = ivData.parseNumField(record[106+ivData.LengthImageReferenceKey : 110+ivData.LengthImageReferenceKey])
 	// (111+X) – (110+X+Y)
-	ivData.DigitalSignature = ivData.stringToBytesField(record[110+int(len(ivData.LengthImageReferenceKey)) : 110+int(len(ivData.LengthImageReferenceKey))+int(len(ivData.LengthDigitalSignature))])
+	ivData.DigitalSignature = ivData.stringToBytesField(record[110+ivData.LengthImageReferenceKey : 110+ivData.LengthImageReferenceKey+ivData.LengthDigitalSignature])
 	// (111+X+Y) – (117+X+Y)
-	ivData.LengthImageData = ivData.parseStringField(record[110+int(len(ivData.LengthImageReferenceKey))+int(len(ivData.LengthDigitalSignature)) : 117+int(len(ivData.LengthImageReferenceKey))+int(len(ivData.LengthDigitalSignature))])
+	ivData.LengthImageData = ivData.parseNumField(record[110+ivData.LengthImageReferenceKey+ivData.LengthDigitalSignature : 117+ivData.LengthImageReferenceKey+ivData.LengthDigitalSignature])
 	// (118+X+Y) – (117+X+Y+Z)
-	ivData.ImageData = ivData.stringToBytesField(record[117+int(len(ivData.LengthImageReferenceKey))+int(len(ivData.LengthDigitalSignature)) : 117+int(len(ivData.LengthImageReferenceKey))+int(len(ivData.LengthDigitalSignature))+int(len(ivData.LengthImageData))])
+	ivData.ImageData = ivData.stringToBytesField(record[117+ivData.LengthImageReferenceKey+ivData.LengthDigitalSignature : 117+ivData.LengthImageReferenceKey+ivData.LengthDigitalSignature+ivData.LengthImageData])
 
 }
 
@@ -326,17 +326,17 @@ func (ivData *ImageViewData) ClippingCoordinateV2Field() string {
 
 // LengthImageReferenceKeyField gets the LengthImageReferenceKey field
 func (ivData *ImageViewData) LengthImageReferenceKeyField() string {
-	return ivData.stringField(ivData.LengthImageReferenceKey, 4)
+	return ivData.numericField(ivData.LengthImageReferenceKey, 4)
 }
 
 // ImageReferenceKeyField gets the ImageReferenceKey field
 func (ivData *ImageViewData) ImageReferenceKeyField() string {
-	return ivData.stringField(ivData.ImageReferenceKey, uint(len(ivData.LengthImageReferenceKeyField())))
+	return ivData.stringField(ivData.ImageReferenceKey, uint(ivData.LengthImageReferenceKey))
 }
 
 // LengthDigitalSignatureField gets the LengthDigitalSignature field
 func (ivData *ImageViewData) LengthDigitalSignatureField() string {
-	return ivData.stringField(ivData.LengthDigitalSignature, 5)
+	return ivData.numericField(ivData.LengthDigitalSignature, 5)
 }
 
 // DigitalSignatureField gets the DigitalSignature field []byte to string
@@ -347,7 +347,7 @@ func (ivData *ImageViewData) DigitalSignatureField() string {
 
 // LengthImageDataField gets the LengthImageData field
 func (ivData *ImageViewData) LengthImageDataField() string {
-	return ivData.stringField(ivData.LengthImageData, 7)
+	return ivData.numericField(ivData.LengthImageData, 7)
 }
 
 // ImageDataField gets the ImageData field []byte to string
