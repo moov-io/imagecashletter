@@ -39,7 +39,7 @@ type CheckDetailAddendumA struct {
 	// DD 01 through 31
 	BOFDEndorsementDate time.Time `json:"bofdEndorsementDate"`
 	// BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
-	BOFDItemSequenceNumber int `json:"bofdItemSequenceNumber"`
+	BOFDItemSequenceNumber string `json:"bofdItemSequenceNumber"`
 	// BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
 	BOFDAccountNumber string `json:"bofdAccountNumber"`
 	// BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
@@ -104,7 +104,7 @@ func (cdAddendumA *CheckDetailAddendumA) Parse(record string) {
 	// 13-20
 	cdAddendumA.BOFDEndorsementDate = cdAddendumA.parseYYYYMMDDDate(record[12:20])
 	// 21-35
-	cdAddendumA.BOFDItemSequenceNumber = cdAddendumA.parseNumField(record[20:35])
+	cdAddendumA.BOFDItemSequenceNumber = cdAddendumA.parseStringField(record[20:35])
 	// 36-53
 	cdAddendumA.BOFDAccountNumber = cdAddendumA.parseStringField(record[35:53])
 	// 54-58
@@ -219,6 +219,10 @@ func (cdAddendumA *CheckDetailAddendumA) fieldInclusion() error {
 		return &FieldError{FieldName: "BOFDEndorsementDate",
 			Value: cdAddendumA.BOFDEndorsementDate.String(), Msg: msgFieldInclusion}
 	}
+	if cdAddendumA.BOFDItemSequenceNumber == "               " {
+		return &FieldError{FieldName: "BOFDItemSequenceNumber",
+			Value: cdAddendumA.BOFDItemSequenceNumber, Msg: msgFieldInclusion}
+	}
 	if cdAddendumA.TruncationIndicator == "" {
 		return &FieldError{FieldName: "TruncationIndicator",
 			Value: cdAddendumA.TruncationIndicator, Msg: msgFieldInclusion}
@@ -243,7 +247,7 @@ func (cdAddendumA *CheckDetailAddendumA) BOFDEndorsementDateField() string {
 
 // BOFDItemSequenceNumberField gets a string of the BOFDItemSequenceNumber field zero padded
 func (cdAddendumA *CheckDetailAddendumA) BOFDItemSequenceNumberField() string {
-	return cdAddendumA.numericField(cdAddendumA.BOFDItemSequenceNumber, 15)
+	return cdAddendumA.alphaField(cdAddendumA.BOFDItemSequenceNumber, 15)
 }
 
 // BOFDAccountNumberField gets the BOFDAccountNumber field

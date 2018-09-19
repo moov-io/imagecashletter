@@ -76,7 +76,7 @@ type ReturnDetail struct {
 	ForwardBundleDate time.Time `json:"bundleBusinessDate"`
 	// EceInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the Return.
 	// Field must contain a numeric value. It cannot be all blanks.
-	EceInstitutionItemSequenceNumber int `json:"eceInstitutionItemSequenceNumber"`
+	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited
 	// Standards Committee X9. Also known as Position 44.
 	ExternalProcessingCode string `json:"externalProcessingCode"`
@@ -158,7 +158,7 @@ func (rd *ReturnDetail) Parse(record string) {
 	// 46-53
 	rd.ForwardBundleDate = rd.parseYYYYMMDDDate(record[45:53])
 	// 54-68
-	rd.EceInstitutionItemSequenceNumber = rd.parseNumField(record[53:68])
+	rd.EceInstitutionItemSequenceNumber = rd.parseStringField(record[53:68])
 	// 69-69
 	rd.ExternalProcessingCode = rd.parseStringField(record[68:69])
 	// 70-70
@@ -242,6 +242,9 @@ func (rd *ReturnDetail) fieldInclusion() error {
 	if rd.ReturnReason == "" {
 		return &FieldError{FieldName: "ReturnReason", Value: rd.ReturnReason, Msg: msgFieldInclusion}
 	}
+	if rd.EceInstitutionItemSequenceNumber == "               " {
+		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber", Value: rd.EceInstitutionItemSequenceNumber, Msg: msgFieldInclusion}
+	}
 	return nil
 }
 
@@ -287,7 +290,7 @@ func (rd *ReturnDetail) ForwardBundleDateField() string {
 
 // EceInstitutionItemSequenceNumberField gets a string of the EceInstitutionItemSequenceNumber field
 func (rd *ReturnDetail) EceInstitutionItemSequenceNumberField() string {
-	return rd.numericField(rd.EceInstitutionItemSequenceNumber, 15)
+	return rd.alphaField(rd.EceInstitutionItemSequenceNumber, 15)
 }
 
 // ExternalProcessingCodeField gets the ExternalProcessingCode field - Also known as Position 44

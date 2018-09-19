@@ -45,7 +45,7 @@ type CheckDetail struct {
 	ItemAmount int `json:"itemAmount"`
 	// EceInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
 	// Field must contain a numeric value. It cannot be all blanks.
-	EceInstitutionItemSequenceNumber int `json:"eceInstitutionItemSequenceNumber"`
+	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
 	// ToDo: CashLetterHeader.CashLetterDocumentation = "Z", CheckDetail.DocumentationTypeIndicator cannot be Z.
 	// ToDo: CheckDetail.DocumentationTypeIndicator is defined CashLetterHeader.CashLetterDocumentation = "Z" should
 	// ToDo: Z, and this value supersedes.
@@ -175,7 +175,7 @@ func (cd *CheckDetail) Parse(record string) {
 	// 48-57
 	cd.ItemAmount = cd.parseNumField(record[47:57])
 	// 58-72
-	cd.EceInstitutionItemSequenceNumber = cd.parseNumField(record[57:72])
+	cd.EceInstitutionItemSequenceNumber = cd.parseStringField(record[57:72])
 	// 73-73
 	cd.DocumentationTypeIndicator = cd.parseStringField(record[72:73])
 	// 74-74
@@ -272,9 +272,9 @@ func (cd *CheckDetail) fieldInclusion() error {
 	if cd.PayorBankCheckDigit == "" {
 		return &FieldError{FieldName: "PayorBankCheckDigit", Value: cd.PayorBankCheckDigit, Msg: msgFieldInclusion}
 	}
-	if cd.EceInstitutionItemSequenceNumber == 0 {
+	if cd.EceInstitutionItemSequenceNumber == "               " {
 		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber",
-			Value: cd.EceInstitutionItemSequenceNumberField(), Msg: msgFieldInclusion}
+			Value: cd.EceInstitutionItemSequenceNumber, Msg: msgFieldInclusion}
 	}
 	if cd.BOFDIndicator == "" {
 		return &FieldError{FieldName: "BOFDIndicator", Value: cd.BOFDIndicator, Msg: msgFieldInclusion}
@@ -314,7 +314,7 @@ func (cd *CheckDetail) ItemAmountField() string {
 
 // EceInstitutionItemSequenceNumberField gets a string of the EceInstitutionItemSequenceNumber field
 func (cd *CheckDetail) EceInstitutionItemSequenceNumberField() string {
-	return cd.numericField(cd.EceInstitutionItemSequenceNumber, 15)
+	return cd.alphaField(cd.EceInstitutionItemSequenceNumber, 15)
 }
 
 // DocumentationTypeIndicatorField gets the DocumentationTypeIndicator field

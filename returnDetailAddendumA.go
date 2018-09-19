@@ -39,7 +39,7 @@ type ReturnDetailAddendumA struct {
 	// DD 01 through 31
 	BOFDEndorsementDate time.Time `json:"bofdEndorsementDate"`
 	// BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
-	BOFDItemSequenceNumber int `json:"bofdItemSequenceNumber"`
+	BOFDItemSequenceNumber string `json:"bofdItemSequenceNumber"`
 	// BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
 	BOFDAccountNumber string `json:"bofdAccountNumber"`
 	// BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
@@ -104,7 +104,7 @@ func (rdAddendumA *ReturnDetailAddendumA) Parse(record string) {
 	// 13-20
 	rdAddendumA.BOFDEndorsementDate = rdAddendumA.parseYYYYMMDDDate(record[12:20])
 	// 21-35
-	rdAddendumA.BOFDItemSequenceNumber = rdAddendumA.parseNumField(record[20:35])
+	rdAddendumA.BOFDItemSequenceNumber = rdAddendumA.parseStringField(record[20:35])
 	// 36-53
 	rdAddendumA.BOFDAccountNumber = rdAddendumA.parseStringField(record[35:53])
 	// 54-58
@@ -216,6 +216,10 @@ func (rdAddendumA *ReturnDetailAddendumA) fieldInclusion() error {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
 			Value: rdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
 	}
+	if rdAddendumA.BOFDItemSequenceNumber == "               " {
+		return &FieldError{FieldName: "BOFDItemSequenceNumber",
+			Value: rdAddendumA.BOFDItemSequenceNumber, Msg: msgFieldInclusion}
+	}
 	if rdAddendumA.BOFDEndorsementDate.IsZero() {
 		return &FieldError{FieldName: "BOFDEndorsementDate",
 			Value: rdAddendumA.BOFDEndorsementDate.String(), Msg: msgFieldInclusion}
@@ -244,7 +248,7 @@ func (rdAddendumA *ReturnDetailAddendumA) BOFDEndorsementDateField() string {
 
 // BOFDItemSequenceNumberField gets a string of the BOFDItemSequenceNumber field zero padded
 func (rdAddendumA *ReturnDetailAddendumA) BOFDItemSequenceNumberField() string {
-	return rdAddendumA.numericField(rdAddendumA.BOFDItemSequenceNumber, 15)
+	return rdAddendumA.alphaField(rdAddendumA.BOFDItemSequenceNumber, 15)
 }
 
 // BOFDAccountNumberField gets the BOFDAccountNumber field

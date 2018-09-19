@@ -17,7 +17,7 @@ func mockCheckDetailAddendumC() CheckDetailAddendumC {
 	cdAddendumC.RecordNumber = 1
 	cdAddendumC.EndorsingBankRoutingNumber = "121042882"
 	cdAddendumC.BOFDEndorsementBusinessDate = time.Now()
-	cdAddendumC.EndorsingItemSequenceNumber = 1
+	cdAddendumC.EndorsingItemSequenceNumber = "1              "
 	cdAddendumC.TruncationIndicator = "Y"
 	cdAddendumC.EndorsingConversionIndicator = "1"
 	cdAddendumC.EndorsingCorrectionIndicator = 0
@@ -42,7 +42,7 @@ func testMockCheckDetailAddendumC(t testing.TB) {
 	if cdAddendumC.EndorsingBankRoutingNumber != "121042882" {
 		t.Error("EndorsingBankRoutingNumber does not validate and will break other tests")
 	}
-	if cdAddendumC.EndorsingItemSequenceNumber != 1 {
+	if cdAddendumC.EndorsingItemSequenceNumber != "1              " {
 		t.Error("EndorsingItemSequenceNumber does not validate and will break other tests")
 	}
 	if cdAddendumC.TruncationIndicator != "Y" {
@@ -80,7 +80,7 @@ func BenchmarkMockCheckDetailAddendumC(b *testing.B) {
 
 // parseCheckDetailAddendumC validates parsing a CheckDetailAddendumC
 func parseCheckDetailAddendumC(t testing.TB) {
-	var line = "280112104288220180905000000000000001Y10A                   0                    "
+	var line = "2801121042882201809051              Y10A                   0                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -112,8 +112,9 @@ func parseCheckDetailAddendumC(t testing.TB) {
 		t.Errorf("BOFDEndorsementBusinessDate Expected '20180905' got: %v",
 			record.BOFDEndorsementBusinessDateField())
 	}
-	if record.EndorsingItemSequenceNumberField() != "000000000000001" {
-		t.Errorf("EndorsingItemSequenceNumber Expected '1' got: %v", record.EndorsingItemSequenceNumberField())
+	if record.EndorsingItemSequenceNumberField() != "1              " {
+		t.Errorf("EndorsingItemSequenceNumber Expected '1              ' got: %v",
+			record.EndorsingItemSequenceNumberField())
 	}
 	if record.TruncationIndicatorField() != "Y" {
 		t.Errorf("TruncationIndicator Expected 'Y' got: %v", record.TruncationIndicatorField())
@@ -150,7 +151,7 @@ func BenchmarkParseCheckDetailAddendumC(b *testing.B) {
 
 // testCDAddendumCString validates that a known parsed CheckDetailAddendumC can return to a string of the same value
 func testCDAddendumCString(t testing.TB) {
-	var line = "280112104288220180905000000000000001Y10A                   0                    "
+	var line = "2801121042882201809051              Y10A                   0                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()

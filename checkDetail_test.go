@@ -18,7 +18,7 @@ func mockCheckDetail() *CheckDetail {
 	cd.PayorBankCheckDigit = "2"
 	cd.OnUs = "5558881"
 	cd.ItemAmount = 100000 // 1000.00
-	cd.EceInstitutionItemSequenceNumber = 1
+	cd.EceInstitutionItemSequenceNumber = "1              "
 	cd.DocumentationTypeIndicator = "G"
 	cd.ReturnAcceptanceIndicator = "D"
 	cd.MICRValidIndicator = 1
@@ -38,7 +38,7 @@ func mockCheckDetailAddendum() *CheckDetail {
 	cd.PayorBankCheckDigit = "2"
 	cd.OnUs = "5558881"
 	cd.ItemAmount = 100000 // 1000.00
-	cd.EceInstitutionItemSequenceNumber = 1
+	cd.EceInstitutionItemSequenceNumber = "1              "
 	cd.DocumentationTypeIndicator = "G"
 	cd.ReturnAcceptanceIndicator = "D"
 	cd.MICRValidIndicator = 1
@@ -79,7 +79,7 @@ func testMockCheckDetail(t testing.TB) {
 	if cd.ItemAmount != 100000 {
 		t.Error("ItemAmount does not validate and will break other tests")
 	}
-	if cd.EceInstitutionItemSequenceNumber != 1 {
+	if cd.EceInstitutionItemSequenceNumber != "1              " {
 		t.Error("EceInstitutionItemSequenceNumber does not validate and will break other tests")
 	}
 	if cd.DocumentationTypeIndicator != "G" {
@@ -120,7 +120,7 @@ func BenchmarkMockCheckDetail(b *testing.B) {
 
 // parseCheckDetail validates parsing a CheckDetail
 func parseCheckDetail(t testing.TB) {
-	var line = "25      123456789 031300012             55588810000100000000000000000001GD1Y000B"
+	var line = "25      123456789 031300012             555888100001000001              GD1Y000B"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -155,8 +155,8 @@ func parseCheckDetail(t testing.TB) {
 	if record.ItemAmountField() != "0000100000" {
 		t.Errorf("ItemAmount Expected '0000100000' got:'%v'", record.ItemAmountField())
 	}
-	if record.EceInstitutionItemSequenceNumberField() != "000000000000001" {
-		t.Errorf("EceInstitutionItemSequenceNumber Expected '000000000000001' got:'%v'",
+	if record.EceInstitutionItemSequenceNumberField() != "1              " {
+		t.Errorf("EceInstitutionItemSequenceNumber Expected '1              ' got:'%v'",
 			record.EceInstitutionItemSequenceNumberField())
 	}
 	if record.DocumentationTypeIndicatorField() != "G" {
@@ -197,7 +197,7 @@ func BenchmarkParseCheckDetail(b *testing.B) {
 
 // testCDString validates that a known parsed CheckDetail can return to a string of the same value
 func testCDString(t testing.TB) {
-	var line = "25      123456789 031300012             55588810000100000000000000000001GD1Y000B"
+	var line = "25      123456789 031300012             555888100001000001              GD1Y000B"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()

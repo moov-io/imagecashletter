@@ -134,6 +134,10 @@ func (cdAddendumB *CheckDetailAddendumB) fieldInclusion() error {
 		return &FieldError{FieldName: "ImageReferenceKeyIndicator",
 			Value: cdAddendumB.ImageReferenceKeyIndicatorField(), Msg: msgFieldInclusion}
 	}
+	if cdAddendumB.MicrofilmArchiveSequenceNumber == "               " {
+		return &FieldError{FieldName: "BOFDItemSequenceNumber",
+			Value: cdAddendumB.MicrofilmArchiveSequenceNumber, Msg: msgFieldInclusion}
+	}
 	if cdAddendumB.LengthImageReferenceKeyField() == "" {
 		return &FieldError{FieldName: "LengthImageReferenceKey",
 			Value: cdAddendumB.LengthImageReferenceKeyField(), Msg: msgFieldInclusion}
