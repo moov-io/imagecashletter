@@ -65,7 +65,7 @@ type CheckDetailAddendumA struct {
 	// 6: Image converted to another image (e.g., transcoded)
 	// 7: Did not convert image (e.g., same as source)
 	// 8: Undetermined
-	BOFDConversionIndicator string `json:"BOFDConversionIndicator"`
+	BOFDConversionIndicator string `json:"bofdConversionIndicator"`
 	// BOFDCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
 	// creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount.
 	// Values:
@@ -74,7 +74,7 @@ type CheckDetailAddendumA struct {
 	// 2: Repaired without Operator intervention
 	// 3: Repaired with Operator intervention
 	// 4: Undetermined if repair has been done or not
-	BOFDCorrectionIndicator int `json:"BOFDCorrectionIndicator"`
+	BOFDCorrectionIndicator int `json:"bofdCorrectionIndicator"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`
 	// reserved is a field reserved for future use.  Reserved should be blank.

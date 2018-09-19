@@ -17,10 +17,10 @@ func mockCheckDetailAddendumC() CheckDetailAddendumC {
 	cdAddendumC.RecordNumber = 1
 	cdAddendumC.EndorsingBankRoutingNumber = "121042882"
 	cdAddendumC.BOFDEndorsementBusinessDate = time.Now()
-	cdAddendumC.EndorsingItemSequenceNumber = "1              "
+	cdAddendumC.EndorsingBankItemSequenceNumber = "1              "
 	cdAddendumC.TruncationIndicator = "Y"
-	cdAddendumC.EndorsingConversionIndicator = "1"
-	cdAddendumC.EndorsingCorrectionIndicator = 0
+	cdAddendumC.EndorsingBankConversionIndicator = "1"
+	cdAddendumC.EndorsingBankCorrectionIndicator = 0
 	cdAddendumC.ReturnReason = "A"
 	cdAddendumC.UserField = ""
 	cdAddendumC.EndorsingBankIdentifier = 0
@@ -42,8 +42,8 @@ func testMockCheckDetailAddendumC(t testing.TB) {
 	if cdAddendumC.EndorsingBankRoutingNumber != "121042882" {
 		t.Error("EndorsingBankRoutingNumber does not validate and will break other tests")
 	}
-	if cdAddendumC.EndorsingItemSequenceNumber != "1              " {
-		t.Error("EndorsingItemSequenceNumber does not validate and will break other tests")
+	if cdAddendumC.EndorsingBankItemSequenceNumber != "1              " {
+		t.Error("EndorsingBankItemSequenceNumber does not validate and will break other tests")
 	}
 	if cdAddendumC.TruncationIndicator != "Y" {
 		t.Error("TruncationIndicator does not validate and will break other tests")
@@ -51,11 +51,11 @@ func testMockCheckDetailAddendumC(t testing.TB) {
 	if cdAddendumC.ReturnReason != "A" {
 		t.Error("ReturnReason does not validate and will break other tests")
 	}
-	if cdAddendumC.EndorsingConversionIndicator != "1" {
-		t.Error("EndorsingConversionIndicator does not validate and will break other tests")
+	if cdAddendumC.EndorsingBankConversionIndicator != "1" {
+		t.Error("EndorsingBankConversionIndicator does not validate and will break other tests")
 	}
-	if cdAddendumC.EndorsingCorrectionIndicator != 0 {
-		t.Error("EndorsingCorrectionIndicator does not validate and will break other tests")
+	if cdAddendumC.EndorsingBankCorrectionIndicator != 0 {
+		t.Error("EndorsingBankCorrectionIndicator does not validate and will break other tests")
 	}
 	if cdAddendumC.UserField != "" {
 		t.Error("UserField does not validate and will break other tests")
@@ -112,18 +112,18 @@ func parseCheckDetailAddendumC(t testing.TB) {
 		t.Errorf("BOFDEndorsementBusinessDate Expected '20180905' got: %v",
 			record.BOFDEndorsementBusinessDateField())
 	}
-	if record.EndorsingItemSequenceNumberField() != "1              " {
-		t.Errorf("EndorsingItemSequenceNumber Expected '1              ' got: %v",
-			record.EndorsingItemSequenceNumberField())
+	if record.EndorsingBankItemSequenceNumberField() != "1              " {
+		t.Errorf("EndorsingBankItemSequenceNumber Expected '1              ' got: %v",
+			record.EndorsingBankItemSequenceNumberField())
 	}
 	if record.TruncationIndicatorField() != "Y" {
 		t.Errorf("TruncationIndicator Expected 'Y' got: %v", record.TruncationIndicatorField())
 	}
-	if record.EndorsingConversionIndicatorField() != "1" {
-		t.Errorf("EndorsingConversionIndicator  Expected '1' got: %v", record.EndorsingConversionIndicatorField())
+	if record.EndorsingBankConversionIndicatorField() != "1" {
+		t.Errorf("EndorsingBankConversionIndicator  Expected '1' got: %v", record.EndorsingBankConversionIndicatorField())
 	}
-	if record.EndorsingCorrectionIndicatorField() != "0" {
-		t.Errorf("EndorsingCorrectionIndicator Expected '0' got: %v", record.EndorsingCorrectionIndicatorField())
+	if record.EndorsingBankCorrectionIndicatorField() != "0" {
+		t.Errorf("EndorsingBankCorrectionIndicator Expected '0' got: %v", record.EndorsingBankCorrectionIndicatorField())
 	}
 	if record.ReturnReasonField() != "A" {
 		t.Errorf("ReturnReason  Expected 'A' got: %v", record.ReturnReasonField())
