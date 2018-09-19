@@ -91,8 +91,6 @@ func (r *Reader) Read() (File, error) {
 		if err := r.parseLine(); err != nil {
 			return r.File, err
 		}
-		return r.File, nil
-
 	}
 	if (FileHeader{}) == r.File.Header {
 		// There must be at least one File Header
@@ -160,6 +158,7 @@ func (r *Reader) parseLine() error {
 		}
 		r.currentCashLetter.AddBundle(r.currentCashLetter.currentBundle)
 		r.currentCashLetter.currentBundle = Bundle{}
+
 	case cashLetterControlPos:
 		if err := r.parseCashLetterControl(); err != nil {
 			return err
