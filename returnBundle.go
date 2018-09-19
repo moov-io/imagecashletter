@@ -17,8 +17,8 @@ type ReturnBundle struct {
 }
 
 // NewReturnBundle takes a BundleHeader and returns a ReturnBundle
-func NewReturnBundle(bh *BundleHeader) ReturnBundle {
-	rb := ReturnBundle{}
+func NewReturnBundle(bh *BundleHeader) *ReturnBundle {
+	rb := new(ReturnBundle)
 	rb.SetControl(NewBundleControl())
 	rb.SetHeader(bh)
 	return rb

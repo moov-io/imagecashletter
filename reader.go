@@ -59,7 +59,7 @@ func (r *Reader) addCurrentCashLetter(cashLetter CashLetter) {
 
 // addCurrentBundle creates the current bundle for the file being read. A successful
 // currentBundle will be added to r.File once parsed.
-func (r *Reader) addCurrentBundle(bundle Bundle) {
+func (r *Reader) addCurrentBundle(bundle *Bundle) {
 	r.currentCashLetter.currentBundle = bundle
 }
 
@@ -147,23 +147,53 @@ func (r *Reader) parseLine() error {
 		if err := r.parseImageViewAnalysis(); err != nil {
 			return err
 		}
+	case returnPos:
+		if err := r.parseReturnDetail(); err != nil {
+			return err
+		}
+	case returnAddendumAPos:
+		if err := r.parseReturnDetailAddendumA(); err != nil {
+			return err
+		}
+	case returnAddendumBPos:
+		if err := r.parseReturnDetailAddendumB(); err != nil {
+			return err
+		}
+	case returnAddendumCPos:
+		if err := r.parseReturnDetailAddendumC(); err != nil {
+			return err
+		}
+	case returnAddendumDPos:
+		if err := r.parseReturnDetailAddendumD(); err != nil {
+			return err
+		}
 	case bundleControlPos:
 		if err := r.parseBundleControl(); err != nil {
 			return err
 		}
-		// ToDo: The following logic may need to be moved for gocyclo
-		if err := r.currentCashLetter.currentBundle.Validate(); err != nil {
-			r.recordName = "Bundles"
-			return r.error(err)
+		if r.currentCashLetter.currentBundle == nil && r.currentCashLetter.currentReturnBundle == nil {
+			r.error(&FileError{Msg: msgFileBundleControl})
 		}
-		r.currentCashLetter.AddBundle(r.currentCashLetter.currentBundle)
-		r.currentCashLetter.currentBundle = Bundle{}
-
+		// Add Bundle or ReturnBundle to CashLetter
+		if r.currentCashLetter.currentBundle != nil {
+			if err := r.currentCashLetter.currentBundle.Validate(); err != nil {
+				r.recordName = "Bundles"
+				return r.error(err)
+			}
+			r.currentCashLetter.AddBundle(r.currentCashLetter.currentBundle)
+			r.currentCashLetter.currentBundle = new(Bundle)
+		} else {
+			if err := r.currentCashLetter.currentReturnBundle.Validate(); err != nil {
+				r.recordName = "ReturnBundles"
+				return r.error(err)
+			}
+			r.currentCashLetter.AddReturnBundle(r.currentCashLetter.currentReturnBundle)
+			r.currentCashLetter.currentReturnBundle = new(ReturnBundle)
+		}
 	case cashLetterControlPos:
 		if err := r.parseCashLetterControl(); err != nil {
 			return err
 		}
-		// ToDo: The following logic may need to be moved for gocyclo
 		if err := r.currentCashLetter.Validate(); err != nil {
 			r.recordName = "CashLetters"
 			return r.error(err)

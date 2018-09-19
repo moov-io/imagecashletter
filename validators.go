@@ -11,19 +11,18 @@ import (
 )
 
 var (
-	upperAlphanumericRegex    = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
-	alphanumericRegex         = regexp.MustCompile(`[^ a-zA-Z0-9]`)
-	alphanumericRegexSpecial  = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
-	numericRegex              = regexp.MustCompile(`[^ 0-9]`)
-	msgAlphanumeric           = "has non alphanumeric characters"
-	msgAlphanumericSpecial    = "has non alphanumeric or special characters"
-	msgUpperAlpha             = "is not uppercase A-Z or 0-9"
+	//upperAlphanumericRegex    = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
+	alphanumericRegex        = regexp.MustCompile(`[^ a-zA-Z0-9]`)
+	alphanumericRegexSpecial = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
+	numericRegex             = regexp.MustCompile(`[^ 0-9]`)
+	msgAlphanumeric          = "has non alphanumeric characters"
+	msgAlphanumericSpecial   = "has non alphanumeric or special characters"
+	//msgUpperAlpha             = "is not uppercase A-Z or 0-9"
 	msgNumeric                = "is not 0-9"
 	msgImageViewAnalysisValid = "image view analysis property is invalid"
 	msgFieldInclusion         = "is a mandatory field and has a default value"
 	//msgFieldRequired       = "is a required field"
 	//msgValidFieldLength    = "is not length %d"
-
 	msgInvalid = "is an invalid %v"
 )
 
@@ -736,14 +735,14 @@ func (v *validator) isTimesReturned(code int) error {
 	return errors.New(msg)
 }
 
-// isUpperAlphanumeric checks if string only contains ASCII alphanumeric upper case characters
+/*// isUpperAlphanumeric checks if string only contains ASCII alphanumeric upper case characters
 func (v *validator) isUpperAlphanumeric(s string) error {
 	if upperAlphanumericRegex.MatchString(s) {
 		return errors.New(msgUpperAlpha)
 	}
 	return nil
 }
-
+*/
 // isAlphanumeric checks if a string only contains ASCII alphanumeric characters
 func (v *validator) isAlphanumeric(s string) error {
 	if alphanumericRegex.MatchString(s) {

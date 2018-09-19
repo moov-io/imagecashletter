@@ -37,9 +37,9 @@ const (
 	imageViewAnalysisPos = "54"
 	bundleControlPos     = "70"
 	//no longer supported by the standard - boxSummaryPos           = "75"
-	routingNumberSummaryPos = "85"
-	cashLetterControlPos    = "90"
-	fileControlPos          = "99"
+	//routingNumberSummaryPos = "85"
+	cashLetterControlPos = "90"
+	fileControlPos       = "99"
 )
 
 // Errors strings specific to parsing a Batch container
@@ -50,11 +50,11 @@ var (
 	msgFileCashLetterInside  = "Inside of current cash letter"
 	msgFileCashLetterControl = "Cash letter control without a current cash letter"
 	msgFileBundleOutside     = "Outside of current bundle"
-	msgFileBundleInside      = "Inside of current bundle"
-	msgFileBundleControl     = "Bundle control without a current bundle"
-	msgFileControl           = "None or more than one file control exists"
-	msgFileHeader            = "None or more than one file headers exists"
-	msgUnknownRecordType     = "%s is an unknown record type"
+	//msgFileBundleInside      = "Inside of current bundle"
+	msgFileBundleControl = "Bundle control without a current bundle"
+	msgFileControl       = "None or more than one file control exists"
+	msgFileHeader        = "None or more than one file headers exists"
+	msgUnknownRecordType = "%s is an unknown record type"
 )
 
 // FileError is an error describing issues validating a file

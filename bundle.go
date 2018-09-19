@@ -22,8 +22,8 @@ type Bundle struct {
 
 // NewBundle takes a BundleHeader and returns a Bundle
 // ToDo:  Follow up on returning a pointer when implementing tests and examples
-func NewBundle(bh *BundleHeader) Bundle {
-	b := Bundle{}
+func NewBundle(bh *BundleHeader) *Bundle {
+	b := new(Bundle)
 	b.SetControl(NewBundleControl())
 	b.SetHeader(bh)
 	return b

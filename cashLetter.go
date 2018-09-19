@@ -11,13 +11,13 @@ type CashLetter struct {
 	// CashLetterHeader is a Cash Letter Header Record
 	CashLetterHeader *CashLetterHeader `json:"cashLetterHeader,omitempty"`
 	// Bundle is an array of ICL Bundle
-	Bundles []Bundle `json:"bundles,omitempty"`
+	Bundles []*Bundle `json:"bundles,omitempty"`
 	// ReturnBundles is an array of Return Bundle
-	ReturnBundles []ReturnBundle `json:"returnBundle,omitempty"`
+	ReturnBundles []*ReturnBundle `json:"returnBundle,omitempty"`
 	// currentBundle is the currentBundle being parsed
-	currentBundle Bundle
+	currentBundle *Bundle
 	// currentReturnBundle is the current ReturnBundle being parsed
-	currentReturnBundle ReturnBundle
+	currentReturnBundle *ReturnBundle
 	// CashLetterControl is a Cash Letter Control Record
 	CashLetterControl *CashLetterControl `json:"cashLetterControl,omitempty"`
 }
@@ -58,23 +58,23 @@ func (cl *CashLetter) GetControl() *CashLetterControl {
 }
 
 // AddBundle appends a Bundle to the CashLetter
-func (cl *CashLetter) AddBundle(bundle Bundle) []Bundle {
+func (cl *CashLetter) AddBundle(bundle *Bundle) []*Bundle {
 	cl.Bundles = append(cl.Bundles, bundle)
 	return cl.Bundles
 }
 
 // GetBundles returns a slice of Bundles for the CashLetter
-func (cl *CashLetter) GetBundles() []Bundle {
+func (cl *CashLetter) GetBundles() []*Bundle {
 	return cl.Bundles
 }
 
 // AddReturnBundle appends a ReturnBundle to the CashLetter
-func (cl *CashLetter) AddReturnBundle(bundle ReturnBundle) []ReturnBundle {
+func (cl *CashLetter) AddReturnBundle(bundle *ReturnBundle) []*ReturnBundle {
 	cl.ReturnBundles = append(cl.ReturnBundles, bundle)
 	return cl.ReturnBundles
 }
 
 // GetReturnBundles returns a slice of ReturnBundles for the CashLetter
-func (cl *CashLetter) GetReturnBundles() []ReturnBundle {
+func (cl *CashLetter) GetReturnBundles() []*ReturnBundle {
 	return cl.ReturnBundles
 }
