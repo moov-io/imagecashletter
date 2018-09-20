@@ -4,13 +4,15 @@
 
 package x9
 
+//ToDo Consider not using ReturnBundle and adding returns to Bundle -  Initial thoughts, I don't like it
+
 // ReturnBundle contains forward items (checks)
 type ReturnBundle struct {
 	// ID is a client defined string used as a reference to this record.
 	ID string `json:"id"`
 	// BundleHeader is a Bundle Header Record for returns
 	BundleHeader *BundleHeader `json:"bundleHeader,omitempty"`
-	// Items are Items: Check Detail Records, Check Detail Addendum Records, and Image Views
+	// Returns: Return Detail Records, Return Detail Addendum Records, and Image Views
 	Returns []*ReturnDetail `json:"items,omitempty"`
 	// BundleControl is a Bundle Control Record
 	BundleControl *BundleControl `json:"bundleControl,omitempty"`

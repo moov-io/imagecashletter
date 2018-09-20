@@ -362,35 +362,35 @@ func (rd *ReturnDetail) GetReturnDetailAddendumD() []ReturnDetailAddendumD {
 	return rd.ReturnDetailAddendumD
 }
 
-// AddReturnDetailImageViewDetail appends an ImageViewDetail to the ReturnDetail
-func (rd *ReturnDetail) AddReturnDetailImageViewDetail(ivDetail ImageViewDetail) []ImageViewDetail {
+// AddImageViewDetail appends an ImageViewDetail to the ReturnDetail
+func (rd *ReturnDetail) AddImageViewDetail(ivDetail ImageViewDetail) []ImageViewDetail {
 	rd.ImageViewDetail = append(rd.ImageViewDetail, ivDetail)
 	return rd.ImageViewDetail
 }
 
-// GetReturnDetailImageViewDetail returns a slice of ImageViewDetail for the ReturnDetail
-func (rd *ReturnDetail) GetReturnDetailImageViewDetail() []ImageViewDetail {
+// GetImageViewDetail returns a slice of ImageViewDetail for the ReturnDetail
+func (rd *ReturnDetail) GetImageViewDetail() []ImageViewDetail {
 	return rd.ImageViewDetail
 }
 
-// AddReturnDetailImageViewData appends an ImageViewData to the ReturnDetail
-func (rd *ReturnDetail) AddReturnDetailImageViewData(ivData ImageViewData) []ImageViewData {
+// AddImageViewData appends an ImageViewData to the ReturnDetail
+func (rd *ReturnDetail) AddImageViewData(ivData ImageViewData) []ImageViewData {
 	rd.ImageViewData = append(rd.ImageViewData, ivData)
 	return rd.ImageViewData
 }
 
-// GetReturnDetailImageViewData returns a slice of ImageViewData for the ReturnDetail
-func (rd *ReturnDetail) GetReturnDetailImageViewData() []ImageViewData {
+// GetImageViewData returns a slice of ImageViewData for the ReturnDetail
+func (rd *ReturnDetail) GetImageViewData() []ImageViewData {
 	return rd.ImageViewData
 }
 
-// AddReturnDetailImageViewAnalysis appends an ImageViewAnalysis  to the ReturnDetail
-func (rd *ReturnDetail) AddReturnDetailImageViewAnalysis(ivAnalysis ImageViewAnalysis) []ImageViewAnalysis {
+// AddImageViewAnalysis appends an ImageViewAnalysis to the ReturnDetail
+func (rd *ReturnDetail) AddImageViewAnalysis(ivAnalysis ImageViewAnalysis) []ImageViewAnalysis {
 	rd.ImageViewAnalysis = append(rd.ImageViewAnalysis, ivAnalysis)
 	return rd.ImageViewAnalysis
 }
 
-// GetReturnDetailImageViewAnalysis returns a slice of ImageViewAnalysis for the ReturnDetail
-func (rd *ReturnDetail) GetReturnDetailImageViewAnalysis() []ImageViewAnalysis {
+// GetImageViewAnalysis returns a slice of ImageViewAnalysis for the ReturnDetail
+func (rd *ReturnDetail) GetImageViewAnalysis() []ImageViewAnalysis {
 	return rd.ImageViewAnalysis
 }

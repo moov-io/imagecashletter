@@ -243,17 +243,17 @@ func (w *Writer) writeReturnDetailAddendum(rd *ReturnDetail) error {
 
 // writeReturnImageView writes ImageViews (Detail, Data, Analysis) to a ReturnDetail
 func (w *Writer) writeReturnImageView(rd *ReturnDetail) error {
-	for _, ivDetail := range rd.GetReturnDetailImageViewDetail() {
+	for _, ivDetail := range rd.GetImageViewDetail() {
 		if _, err := w.w.WriteString(ivDetail.String() + "\n"); err != nil {
 			return err
 		}
 	}
-	for _, ivData := range rd.GetReturnDetailImageViewData() {
+	for _, ivData := range rd.GetImageViewData() {
 		if _, err := w.w.WriteString(ivData.String() + "\n"); err != nil {
 			return err
 		}
 	}
-	for _, ivAnalysis := range rd.GetReturnDetailImageViewAnalysis() {
+	for _, ivAnalysis := range rd.GetImageViewAnalysis() {
 		if _, err := w.w.WriteString(ivAnalysis.String() + "\n"); err != nil {
 			return err
 		}
