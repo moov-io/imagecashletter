@@ -63,13 +63,3 @@ func (b *Bundle) AddCheckDetail(check *CheckDetail) {
 func (b *Bundle) GetChecks() []*CheckDetail {
 	return b.Checks
 }
-
-// AddReturnDetail appends a ReturnDetail to the Bundle
-func (b *Bundle) AddReturnDetail(rd *ReturnDetail) {
-	b.Returns = append(b.Returns, rd)
-}
-
-// GetReturns returns a slice of check details for the Bundle
-func (b *Bundle) GetReturns() []*ReturnDetail {
-	return b.Returns
-}

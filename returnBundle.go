@@ -54,7 +54,7 @@ func (rb *ReturnBundle) GetControl() *BundleControl {
 	return rb.BundleControl
 }
 
-// GetReturns returns a slice of return details for the ReturnBundle
+// GetReturns returns a slice of check details for the ReturnBundle
 func (rb *ReturnBundle) GetReturns() []*ReturnDetail {
 	return rb.Returns
 }

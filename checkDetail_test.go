@@ -23,7 +23,7 @@ func mockCheckDetail() *CheckDetail {
 	cd.ReturnAcceptanceIndicator = "D"
 	cd.MICRValidIndicator = 1
 	cd.BOFDIndicator = "Y"
-	cd.AddendumCount = 0
+	cd.AddendumCount = 3
 	cd.CorrectionIndicator = 0
 	cd.ArchiveTypeIndicator = "B"
 	return cd
@@ -71,7 +71,7 @@ func testMockCheckDetail(t testing.TB) {
 	if cd.BOFDIndicator != "Y" {
 		t.Error("BOFDIndicator does not validate and will break other tests")
 	}
-	if cd.AddendumCount != 0 {
+	if cd.AddendumCount != 3 {
 		t.Error("AddendumCount does not validate and will break other tests")
 	}
 	if cd.CorrectionIndicator != 0 {
@@ -97,7 +97,7 @@ func BenchmarkMockCheckDetail(b *testing.B) {
 
 // parseCheckDetail validates parsing a CheckDetail
 func parseCheckDetail(t testing.TB) {
-	var line = "25      123456789 031300012             555888100001000001              GD1Y000B"
+	var line = "25      123456789 031300012             555888100001000001              GD1Y030B"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -148,8 +148,8 @@ func parseCheckDetail(t testing.TB) {
 	if record.BOFDIndicatorField() != "Y" {
 		t.Errorf("BOFDIndicator Expected 'Y' got:'%v'", record.BOFDIndicatorField())
 	}
-	if record.AddendumCountField() != "00" {
-		t.Errorf("AddendumCount Expected 'Y' got:'%v'", record.AddendumCountField())
+	if record.AddendumCountField() != "03" {
+		t.Errorf("AddendumCount Expected '03' got:'%v'", record.AddendumCountField())
 	}
 	if record.CorrectionIndicatorField() != "0" {
 		t.Errorf("CorrectionIndicator Expected '0' got:'%v'", record.CorrectionIndicatorField())
@@ -174,7 +174,7 @@ func BenchmarkParseCheckDetail(b *testing.B) {
 
 // testCDString validates that a known parsed CheckDetail can return to a string of the same value
 func testCDString(t testing.TB) {
-	var line = "25      123456789 031300012             555888100001000001              GD1Y000B"
+	var line = "25      123456789 031300012             555888100001000001              GD1Y030B"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()

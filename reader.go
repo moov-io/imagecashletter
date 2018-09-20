@@ -57,10 +57,16 @@ func (r *Reader) addCurrentCashLetter(cashLetter CashLetter) {
 	r.currentCashLetter = cashLetter
 }
 
-// addCurrentBundle creates the current bundle for the file being read. A successful
+// addCurrentBundle creates the CurrentBundle for the file being read. A successful
 // currentBundle will be added to r.File once parsed.
 func (r *Reader) addCurrentBundle(bundle *Bundle) {
 	r.currentCashLetter.currentBundle = bundle
+}
+
+// addCurrentReturnBundle creates the CurrentReturnBundle for the file being read. A successful
+// currentReturnBundle will be added to r.File once parsed.
+func (r *Reader) addCurrentReturnBundle(returnBundle *ReturnBundle) {
+	r.currentCashLetter.currentReturnBundle = returnBundle
 }
 
 // NewReader returns a new ACH Reader that reads from r.
@@ -358,8 +364,8 @@ func (r *Reader) parseReturnDetail() error {
 		return r.error(err)
 	}
 	// Add ReturnDetail
-	if r.currentCashLetter.currentBundle.BundleHeader != nil {
-		r.currentCashLetter.currentBundle.AddReturnDetail(rd)
+	if r.currentCashLetter.currentReturnBundle.BundleHeader != nil {
+		r.currentCashLetter.currentReturnBundle.AddReturnDetail(rd)
 	}
 	return nil
 }
@@ -367,11 +373,11 @@ func (r *Reader) parseReturnDetail() error {
 // parseReturnDetailAddendumA takes the input record string and parses the ReturnDetailAddendumA values
 func (r *Reader) parseReturnDetailAddendumA() error {
 	r.recordName = "ReturnDetailAddendumA"
-	if r.currentCashLetter.currentBundle.GetReturns() == nil {
+	if r.currentCashLetter.currentReturnBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
 	}
-	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
+	if len(r.currentCashLetter.currentReturnBundle.GetReturns()) == 0 {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
 	}
@@ -381,20 +387,20 @@ func (r *Reader) parseReturnDetailAddendumA() error {
 		return err
 	}
 	// ToDo research Pointer for ReturnAddendum*, also see about use of currentReturnDetail
-	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
+	entryIndex := len(r.currentCashLetter.currentReturnBundle.GetReturns()) - 1
 	//r.currentCashLetter.currentBundle.Returns[entryIndex].ReturnDetailAddendumA = rdAddendumA
-	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumA(rdAddendumA)
+	r.currentCashLetter.currentReturnBundle.Returns[entryIndex].AddReturnDetailAddendumA(rdAddendumA)
 	return nil
 }
 
 // parseReturnDetailAddendumB takes the input record string and parses the ReturnDetailAddendumB values
 func (r *Reader) parseReturnDetailAddendumB() error {
 	r.recordName = "ReturnDetailAddendumB"
-	if r.currentCashLetter.currentBundle.GetReturns() == nil {
+	if r.currentCashLetter.currentReturnBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
 	}
-	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
+	if len(r.currentCashLetter.currentReturnBundle.GetReturns()) == 0 {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
 	}
@@ -403,8 +409,8 @@ func (r *Reader) parseReturnDetailAddendumB() error {
 	if err := rdAddendumB.Validate(); err != nil {
 		return err
 	}
-	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
-	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumB(rdAddendumB)
+	entryIndex := len(r.currentCashLetter.currentReturnBundle.GetReturns()) - 1
+	r.currentCashLetter.currentReturnBundle.Returns[entryIndex].AddReturnDetailAddendumB(rdAddendumB)
 	return nil
 }
 
@@ -412,11 +418,11 @@ func (r *Reader) parseReturnDetailAddendumB() error {
 func (r *Reader) parseReturnDetailAddendumC() error {
 	r.recordName = "ReturnDetailAddendumC"
 
-	if r.currentCashLetter.currentBundle.GetReturns() == nil {
+	if r.currentCashLetter.currentReturnBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
 	}
-	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
+	if len(r.currentCashLetter.currentReturnBundle.GetReturns()) == 0 {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
 	}
@@ -425,8 +431,8 @@ func (r *Reader) parseReturnDetailAddendumC() error {
 	if err := rdAddendumC.Validate(); err != nil {
 		return err
 	}
-	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
-	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumC(rdAddendumC)
+	entryIndex := len(r.currentCashLetter.currentReturnBundle.GetReturns()) - 1
+	r.currentCashLetter.currentReturnBundle.Returns[entryIndex].AddReturnDetailAddendumC(rdAddendumC)
 	return nil
 }
 
@@ -434,11 +440,11 @@ func (r *Reader) parseReturnDetailAddendumC() error {
 func (r *Reader) parseReturnDetailAddendumD() error {
 	r.recordName = "ReturnDetailAddendumC"
 
-	if r.currentCashLetter.currentBundle.GetReturns() == nil {
+	if r.currentCashLetter.currentReturnBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "*AddendumD", Msg: msg})
 	}
-	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
+	if len(r.currentCashLetter.currentReturnBundle.GetReturns()) == 0 {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "*AddendumD", Msg: msg})
 	}
@@ -447,8 +453,8 @@ func (r *Reader) parseReturnDetailAddendumD() error {
 	if err := rdAddendumD.Validate(); err != nil {
 		return err
 	}
-	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
-	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumD(rdAddendumD)
+	entryIndex := len(r.currentCashLetter.currentReturnBundle.GetReturns()) - 1
+	r.currentCashLetter.currentReturnBundle.Returns[entryIndex].AddReturnDetailAddendumD(rdAddendumD)
 	return nil
 }
 
@@ -470,6 +476,9 @@ func (r *Reader) parseImageViewDetail() error {
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewDetail(ivDetail)
+
+	//ToDo:  Add ReturnBundle logic
+
 	return nil
 }
 
@@ -491,6 +500,8 @@ func (r *Reader) parseImageViewData() error {
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewData(ivData)
+
+	//ToDo:  Add ReturnBundle logic
 	return nil
 }
 
@@ -512,6 +523,8 @@ func (r *Reader) parseImageViewAnalysis() error {
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewAnalysis(ivAnalysis)
+
+	//ToDo:  Add ReturnBundle logic
 	return nil
 }
 
