@@ -10,9 +10,9 @@ type CashLetter struct {
 	ID string `json:"id"`
 	// CashLetterHeader is a Cash Letter Header Record
 	CashLetterHeader *CashLetterHeader `json:"cashLetterHeader,omitempty"`
-	// Bundle is an array of ICL Bundle
+	// Bundles is an array of Bundle
 	Bundles []*Bundle `json:"bundles,omitempty"`
-	// ReturnBundles is an array of Return Bundle
+	// ReturnBundles is an array of ReturnBundle
 	ReturnBundles []*ReturnBundle `json:"returnBundle,omitempty"`
 	// currentBundle is the currentBundle being parsed
 	currentBundle *Bundle

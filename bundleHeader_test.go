@@ -58,12 +58,12 @@ func testMockBundleHeader(t testing.TB) {
 	}
 }
 
-// TestMockBundleHeader tests creating an ICL BundleHeader
+// TestMockBundleHeader tests creating a BundleHeader
 func TestMockBundleHeader(t *testing.T) {
 	testMockBundleHeader(t)
 }
 
-// BenchmarkMockBundleHeader benchmarks creating an ICL BundleHeader
+// BenchmarkMockBundleHeader benchmarks creating a BundleHeader
 func BenchmarkMockBundleHeader(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
@@ -126,12 +126,12 @@ func parseBundleHeader(t testing.TB) {
 	}
 }
 
-// TestParseBundleHeader test validates parsing a BundleHeader
+// TestParseBundleHeader tests validating parsing a BundleHeader
 func TestParseBundleHeader(t *testing.T) {
 	parseBundleHeader(t)
 }
 
-// BenchmarkParseBundleHeader benchmark validates parsing a BundleHeader
+// BenchmarkParseBundleHeader benchmarks validating parsing a BundleHeader
 func BenchmarkParseBundleHeader(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {

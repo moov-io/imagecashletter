@@ -78,7 +78,7 @@ func testMockCashLetterHeader(t testing.TB) {
 	}
 }
 
-// TestMockCashLetterHeader tests creating an ICL CashLetterHeader
+// TestMockCashLetterHeader tests creating a CashLetterHeader
 func TestMockCashLetterHeader(t *testing.T) {
 	testMockCashLetterHeader(t)
 }
@@ -152,12 +152,12 @@ func parseCashLetterHeader(t testing.TB) {
 	}
 }
 
-// TestParseCashLetterHeader test validates parsing a CashLetterHeader
+// TestParseCashLetterHeader tests validating parsing a CashLetterHeader
 func TestParseCashLetterHeader(t *testing.T) {
 	parseCashLetterHeader(t)
 }
 
-// BenchmarkParseCashLetterHeader benchmark validates parsing a CashLetterHeader
+// BenchmarkParseCashLetterHeader benchmarks validating parsing a CashLetterHeader
 func BenchmarkParseCashLetterHeader(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {

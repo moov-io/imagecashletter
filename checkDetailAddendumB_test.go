@@ -28,7 +28,7 @@ func mockCheckDetailAddendumB() CheckDetailAddendumB {
 func testMockCheckDetailAddendumB(t testing.TB) {
 	cdAddendumB := mockCheckDetailAddendumB()
 	if err := cdAddendumB.Validate(); err != nil {
-		t.Error("mockBundleHeader does not validate and will break other tests: ", err)
+		t.Error("MockCheckDetailAddendumB does not validate and will break other tests: ", err)
 	}
 	if cdAddendumB.recordType != "27" {
 		t.Error("recordType does not validate and will break other tests")
@@ -53,7 +53,7 @@ func testMockCheckDetailAddendumB(t testing.TB) {
 	}
 }
 
-// TestMockCheckDetailAddendumB  tests creating an ICL CheckDetailAddendumB
+// TestMockCheckDetailAddendumB tests creating a CheckDetailAddendumB
 func TestMockCheckDetailAddendumB(t *testing.T) {
 	testMockCheckDetailAddendumB(t)
 }
@@ -113,12 +113,12 @@ func parseCheckDetailAddendumB(t testing.TB) {
 	}
 }
 
-// TestParseCheckDetailAddendumB test validates parsing a CheckDetailAddendumB
+// TestParseCheckDetailAddendumB tests validating parsing a CheckDetailAddendumB
 func TestParseCheckDetailAddendumB(t *testing.T) {
 	parseCheckDetailAddendumB(t)
 }
 
-// BenchmarkParseCheckDetailAddendumB benchmark validates parsing a CheckDetailAddendumB
+// BenchmarkParseCheckDetailAddendumB benchmarks validating parsing a CheckDetailAddendumB
 func BenchmarkParseCheckDetailAddendumB(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {

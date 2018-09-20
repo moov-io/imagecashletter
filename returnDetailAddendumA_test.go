@@ -13,58 +13,58 @@ import (
 
 // mockReturnDetailAddendumA creates a ReturnDetailAddendumA
 func mockReturnDetailAddendumA() ReturnDetailAddendumA {
-	RDAddendumA := NewReturnDetailAddendumA()
-	RDAddendumA.RecordNumber = 1
-	RDAddendumA.ReturnLocationRoutingNumber = "121042882"
-	RDAddendumA.BOFDEndorsementDate = time.Now()
-	RDAddendumA.BOFDItemSequenceNumber = "1              "
-	RDAddendumA.BOFDAccountNumber = "938383"
-	RDAddendumA.BOFDBranchCode = "01"
-	RDAddendumA.PayeeName = "Test Payee"
-	RDAddendumA.TruncationIndicator = "Y"
-	RDAddendumA.BOFDConversionIndicator = "1"
-	RDAddendumA.BOFDCorrectionIndicator = 0
-	RDAddendumA.UserField = ""
-	return RDAddendumA
+	rdAddendumA := NewReturnDetailAddendumA()
+	rdAddendumA.RecordNumber = 1
+	rdAddendumA.ReturnLocationRoutingNumber = "121042882"
+	rdAddendumA.BOFDEndorsementDate = time.Now()
+	rdAddendumA.BOFDItemSequenceNumber = "1              "
+	rdAddendumA.BOFDAccountNumber = "938383"
+	rdAddendumA.BOFDBranchCode = "01"
+	rdAddendumA.PayeeName = "Test Payee"
+	rdAddendumA.TruncationIndicator = "Y"
+	rdAddendumA.BOFDConversionIndicator = "1"
+	rdAddendumA.BOFDCorrectionIndicator = 0
+	rdAddendumA.UserField = ""
+	return rdAddendumA
 }
 
 // testMockReturnDetailAddendumA creates a ReturnDetailAddendumA
 func testMockReturnDetailAddendumA(t testing.TB) {
-	RDAddendumA := mockReturnDetailAddendumA()
-	if err := RDAddendumA.Validate(); err != nil {
-		t.Error("mockBundleHeader does not validate and will break other tests: ", err)
+	rdAddendumA := mockReturnDetailAddendumA()
+	if err := rdAddendumA.Validate(); err != nil {
+		t.Error("mockReturnDetailAddendumA does not validate and will break other tests: ", err)
 	}
-	if RDAddendumA.recordType != "32" {
+	if rdAddendumA.recordType != "32" {
 		t.Error("recordType does not validate and will break other tests")
 	}
-	if RDAddendumA.RecordNumber != 1 {
+	if rdAddendumA.RecordNumber != 1 {
 		t.Error("RecordNumber does not validate and will break other tests")
 	}
-	if RDAddendumA.ReturnLocationRoutingNumber != "121042882" {
+	if rdAddendumA.ReturnLocationRoutingNumber != "121042882" {
 		t.Error("ReturnLocationRoutingNumber does not validate and will break other tests")
 	}
-	if RDAddendumA.BOFDItemSequenceNumber != "1              " {
+	if rdAddendumA.BOFDItemSequenceNumber != "1              " {
 		t.Error("BOFDItemSequenceNumber does not validate and will break other tests")
 	}
-	if RDAddendumA.BOFDAccountNumber != "938383" {
+	if rdAddendumA.BOFDAccountNumber != "938383" {
 		t.Error("BOFDAccountNumber does not validate and will break other tests")
 	}
-	if RDAddendumA.BOFDBranchCode != "01" {
+	if rdAddendumA.BOFDBranchCode != "01" {
 		t.Error("BOFDBranchCode does not validate and will break other tests")
 	}
-	if RDAddendumA.PayeeName != "Test Payee" {
+	if rdAddendumA.PayeeName != "Test Payee" {
 		t.Error("PayeeName does not validate and will break other tests")
 	}
-	if RDAddendumA.TruncationIndicator != "Y" {
+	if rdAddendumA.TruncationIndicator != "Y" {
 		t.Error("TruncationIndicator does not validate and will break other tests")
 	}
-	if RDAddendumA.BOFDConversionIndicator != "1" {
+	if rdAddendumA.BOFDConversionIndicator != "1" {
 		t.Error("BOFDConversionIndicator does not validate and will break other tests")
 	}
-	if RDAddendumA.BOFDCorrectionIndicator != 0 {
+	if rdAddendumA.BOFDCorrectionIndicator != 0 {
 		t.Error("BOFDCorrectionIndicator does not validate and will break other tests")
 	}
-	if RDAddendumA.UserField != "" {
+	if rdAddendumA.UserField != "" {
 		t.Error("UserField does not validate and will break other tests")
 	}
 }
@@ -143,12 +143,12 @@ func parseReturnDetailAddendumA(t testing.TB) {
 	}
 }
 
-// TestParseReturnDetailAddendumA test validates parsing a ReturnDetailAddendumA
+// TestParseReturnDetailAddendumA tests validating parsing a ReturnDetailAddendumA
 func TestParseReturnDetailAddendumA(t *testing.T) {
 	parseReturnDetailAddendumA(t)
 }
 
-// BenchmarkParseReturnDetailAddendumA benchmark validates parsing a ReturnDetailAddendumA
+// BenchmarkParseReturnDetailAddendumA benchmarks validatingparsing a ReturnDetailAddendumA
 func BenchmarkParseReturnDetailAddendumA(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {

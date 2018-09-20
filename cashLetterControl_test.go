@@ -56,7 +56,7 @@ func testMockCashLetterControl(t testing.TB) {
 	}
 }
 
-// TestMockCashLetterControl tests creating an ICL CashLetterControl
+// TestMockCashLetterControl tests creating a CashLetterControl
 func TestMockCashLetterControl(t *testing.T) {
 	testMockCashLetterControl(t)
 }

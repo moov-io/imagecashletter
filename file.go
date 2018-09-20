@@ -69,7 +69,7 @@ func (e *FileError) Error() string {
 	return fmt.Sprintf("%s %s", e.FieldName, e.Msg)
 }
 
-// File is an ICL file
+// File is an X9 file
 type File struct {
 	// ID is a client defined string used as a reference to this record
 	ID string `json:"id"`
@@ -89,7 +89,7 @@ func NewFile() *File {
 	}
 }
 
-// Create creates a valid ICL File
+// Create creates a valid X9 File
 func (f *File) Create() error {
 	// Requires a valid FileHeader to build FileControl
 	if err := f.Header.Validate(); err != nil {

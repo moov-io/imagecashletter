@@ -33,7 +33,7 @@ func mockCheckDetail() *CheckDetail {
 func testMockCheckDetail(t testing.TB) {
 	cd := mockCheckDetail()
 	if err := cd.Validate(); err != nil {
-		t.Error("mockBundleHeader does not validate and will break other tests: ", err)
+		t.Error("mockCheckDetail does not validate and will break other tests: ", err)
 	}
 	if cd.recordType != "25" {
 		t.Error("recordType does not validate and will break other tests")
@@ -82,7 +82,7 @@ func testMockCheckDetail(t testing.TB) {
 	}
 }
 
-// TestMockCheckDetail tests creating an ICL CheckDetail
+// TestMockCheckDetail tests creating a CheckDetail
 func TestMockCheckDetail(t *testing.T) {
 	testMockCheckDetail(t)
 }

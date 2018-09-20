@@ -60,7 +60,7 @@ func TestMockBundleControl(t *testing.T) {
 	testMockBundleControl(t)
 }
 
-// BenchmarkMockBundleControl benchmarks creating an ICL BundleControl
+// BenchmarkMockBundleControl benchmarks creating a BundleControl
 func BenchmarkMockBundleControl(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
