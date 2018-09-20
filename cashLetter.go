@@ -8,20 +8,18 @@ package x9
 type CashLetter struct {
 	// ID is a client defined string used as a reference to this record.
 	ID string `json:"id"`
-	// CashLetterHeader is an ICL Cash Letter Header Record
+	// CashLetterHeader is a Cash Letter Header Record
 	CashLetterHeader *CashLetterHeader `json:"cashLetterHeader,omitempty"`
-	// Bundle is an array of ICL Bundle
-	Bundles []Bundle `json:"bundles,omitempty"`
-	// ReturnBundles is an array of ICL Return Bundle
-	// ReturnBundles      []ReturnBundle      `json:"returnBundle,omitempty"`
+	// Bundles is an array of Bundle
+	Bundles []*Bundle `json:"bundles,omitempty"`
+	// ReturnBundles is an array of ReturnBundle
+	ReturnBundles []*ReturnBundle `json:"returnBundle,omitempty"`
 	// currentBundle is the currentBundle being parsed
-	currentBundle Bundle
+	currentBundle *Bundle
 	// currentReturnBundle is the current ReturnBundle being parsed
-	// currentReturnBundle ReturnBundle
-	// CashLetterControl is an ICL Cash Letter Control Record
+	currentReturnBundle *ReturnBundle
+	// CashLetterControl is a Cash Letter Control Record
 	CashLetterControl *CashLetterControl `json:"cashLetterControl,omitempty"`
-	// Converters is composed for x9 to GoLang Converters
-	converters
 }
 
 // NewCashLetter takes a CashLetterHeader and returns a CashLetter
@@ -59,13 +57,24 @@ func (cl *CashLetter) GetControl() *CashLetterControl {
 	return cl.CashLetterControl
 }
 
-// AddBundle appends a Bundle to the x9.File.CashLetter
-func (cl *CashLetter) AddBundle(bundle Bundle) []Bundle {
+// AddBundle appends a Bundle to the CashLetter
+func (cl *CashLetter) AddBundle(bundle *Bundle) []*Bundle {
 	cl.Bundles = append(cl.Bundles, bundle)
 	return cl.Bundles
 }
 
 // GetBundles returns a slice of Bundles for the CashLetter
-func (cl *CashLetter) GetBundles() []Bundle {
+func (cl *CashLetter) GetBundles() []*Bundle {
 	return cl.Bundles
+}
+
+// AddReturnBundle appends a ReturnBundle to the CashLetter
+func (cl *CashLetter) AddReturnBundle(bundle *ReturnBundle) []*ReturnBundle {
+	cl.ReturnBundles = append(cl.ReturnBundles, bundle)
+	return cl.ReturnBundles
+}
+
+// GetReturnBundles returns a slice of ReturnBundles for the CashLetter
+func (cl *CashLetter) GetReturnBundles() []*ReturnBundle {
+	return cl.ReturnBundles
 }

@@ -38,7 +38,7 @@ type CheckDetailAddendumB struct {
 	// 0000: ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
 	// 0001 - 9999: May include Value 0034, and ImageReferenceKey has no special significance to
 	// Image Reference Key (ImageReferenceKey is 1).
-	ImageReferenceKeyLength string `json:"imageReferenceKeyLength"`
+	LengthImageReferenceKey int `json:"imageReferenceKeyLength"`
 	// ImageReferenceKey  is used to find the image of the item in the image data system.
 	ImageReferenceKey string `json:"imageReferenceKey"`
 	//Description describes the transaction
@@ -66,30 +66,30 @@ func (cdAddendumB *CheckDetailAddendumB) Parse(record string) {
 	// Character position 1-2, Always "27"
 	cdAddendumB.recordType = "27"
 	// 03-03
-	cdAddendumB.ImageReferenceKeyIndicator = cdAddendumB.parseNumField(record[02:03])
+	cdAddendumB.ImageReferenceKeyIndicator = cdAddendumB.parseNumField(record[2:3])
 	// 04-18
-	cdAddendumB.MicrofilmArchiveSequenceNumber = cdAddendumB.parseStringField(record[03:18])
+	cdAddendumB.MicrofilmArchiveSequenceNumber = cdAddendumB.parseStringField(record[3:18])
 	// 19-22
-	cdAddendumB.ImageReferenceKeyLength = cdAddendumB.parseStringField(record[18:22])
-	// ToDo:  Follow up on Variable Length
+	cdAddendumB.LengthImageReferenceKey = cdAddendumB.parseNumField(record[18:22])
 	// 23 (22+X)
-	cdAddendumB.ImageReferenceKey = cdAddendumB.parseStringField(record[22:56])
+	cdAddendumB.ImageReferenceKey = cdAddendumB.parseStringField(record[22:cdAddendumB.LengthImageReferenceKey])
 	// 23+X - 37+X
-	cdAddendumB.Description = cdAddendumB.parseStringField(record[56:71])
+	cdAddendumB.Description = cdAddendumB.parseStringField(record[22+cdAddendumB.LengthImageReferenceKey : 37+cdAddendumB.LengthImageReferenceKey])
 	// 38+X - 41+X
-	cdAddendumB.UserField = cdAddendumB.parseStringField(record[71:75])
+	cdAddendumB.UserField = cdAddendumB.parseStringField(record[37+cdAddendumB.LengthImageReferenceKey : 41+cdAddendumB.LengthImageReferenceKey])
 	// 42+X - 46+X
-	cdAddendumB.reserved = cdAddendumB.parseStringField(record[75:80])
+	cdAddendumB.reserved = cdAddendumB.parseStringField(record[41+cdAddendumB.LengthImageReferenceKey : 46+cdAddendumB.LengthImageReferenceKey])
 }
 
 // String writes the CheckDetailAddendumB struct to a string.
 func (cdAddendumB *CheckDetailAddendumB) String() string {
 	var buf strings.Builder
-	buf.Grow(80)
+	buf.Grow(22)
 	buf.WriteString(cdAddendumB.recordType)
 	buf.WriteString(cdAddendumB.ImageReferenceKeyIndicatorField())
 	buf.WriteString(cdAddendumB.MicrofilmArchiveSequenceNumberField())
-	buf.WriteString(cdAddendumB.ImageReferenceKeyLengthField())
+	buf.WriteString(cdAddendumB.LengthImageReferenceKeyField())
+	buf.Grow(cdAddendumB.LengthImageReferenceKey)
 	buf.WriteString(cdAddendumB.ImageReferenceKeyField())
 	buf.WriteString(cdAddendumB.DescriptionField())
 	buf.WriteString(cdAddendumB.UserFieldField())
@@ -134,9 +134,13 @@ func (cdAddendumB *CheckDetailAddendumB) fieldInclusion() error {
 		return &FieldError{FieldName: "ImageReferenceKeyIndicator",
 			Value: cdAddendumB.ImageReferenceKeyIndicatorField(), Msg: msgFieldInclusion}
 	}
-	if cdAddendumB.ImageReferenceKeyLength == "" {
-		return &FieldError{FieldName: "ImageReferenceKeyLength",
-			Value: cdAddendumB.ImageReferenceKeyLength, Msg: msgFieldInclusion}
+	if cdAddendumB.MicrofilmArchiveSequenceNumber == "               " {
+		return &FieldError{FieldName: "BOFDItemSequenceNumber",
+			Value: cdAddendumB.MicrofilmArchiveSequenceNumber, Msg: msgFieldInclusion}
+	}
+	if cdAddendumB.LengthImageReferenceKeyField() == "" {
+		return &FieldError{FieldName: "LengthImageReferenceKey",
+			Value: cdAddendumB.LengthImageReferenceKeyField(), Msg: msgFieldInclusion}
 	}
 	return nil
 }
@@ -151,14 +155,15 @@ func (cdAddendumB *CheckDetailAddendumB) MicrofilmArchiveSequenceNumberField() s
 	return cdAddendumB.alphaField(cdAddendumB.MicrofilmArchiveSequenceNumber, 15)
 }
 
-// ImageReferenceKeyLengthField gets the ImageReferenceKeyLength field
-func (cdAddendumB *CheckDetailAddendumB) ImageReferenceKeyLengthField() string {
-	return cdAddendumB.alphaField(cdAddendumB.ImageReferenceKeyLength, 4)
+// LengthImageReferenceKeyField gets the LengthImageReferenceKey field
+func (cdAddendumB *CheckDetailAddendumB) LengthImageReferenceKeyField() string {
+	return cdAddendumB.numericField(cdAddendumB.LengthImageReferenceKey, 4)
 }
 
 // ImageReferenceKeyField gets the ImageReferenceKey field
 func (cdAddendumB *CheckDetailAddendumB) ImageReferenceKeyField() string {
-	return cdAddendumB.alphaField(cdAddendumB.ImageReferenceKey, 34)
+	// ToDo: Check if +1
+	return cdAddendumB.alphaField(cdAddendumB.ImageReferenceKey, uint(cdAddendumB.LengthImageReferenceKey))
 }
 
 // DescriptionField gets the Description field

@@ -26,7 +26,7 @@ func mockBundleControl() *BundleControl {
 	return bc
 }
 
-// testMockBundleControl creates an ICL BundleControl
+// testMockBundleControl creates an BundleControl
 func testMockBundleControl(t testing.TB) {
 	bc := mockBundleControl()
 	if err := bc.Validate(); err != nil {
@@ -55,12 +55,12 @@ func testMockBundleControl(t testing.TB) {
 	}
 }
 
-// TestMockBundleControl tests creating an ICL BundleControl
+// TestMockBundleControl tests creating a BundleControl
 func TestMockBundleControl(t *testing.T) {
 	testMockBundleControl(t)
 }
 
-// BenchmarkMockBundleControl benchmarks creating an ICL BundleControl
+// BenchmarkMockBundleControl benchmarks creating a BundleControl
 func BenchmarkMockBundleControl(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {

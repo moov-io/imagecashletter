@@ -20,13 +20,13 @@ func mockBundleHeader() *BundleHeader {
 	bh.BundleBusinessDate = time.Now()
 	bh.BundleCreationDate = time.Now()
 	bh.BundleID = "9999"
-	bh.BundleSequenceNumber = 1
+	bh.BundleSequenceNumber = "1"
 	bh.CycleNumber = "01"
 	bh.UserField = ""
 	return bh
 }
 
-// testMockBundleHeader creates an ICL BundleHeader
+// testMockBundleHeader creates a BundleHeader
 func testMockBundleHeader(t testing.TB) {
 	bh := mockBundleHeader()
 	if err := bh.Validate(); err != nil {
@@ -47,7 +47,7 @@ func testMockBundleHeader(t testing.TB) {
 	if bh.BundleID != "9999" {
 		t.Error("BundleID does not validate and will break other tests")
 	}
-	if bh.BundleSequenceNumber != 1 {
+	if bh.BundleSequenceNumber != "1" {
 		t.Error("SequenceNumber does not validate and will break other tests")
 	}
 	if bh.CycleNumber != "01" {
@@ -58,12 +58,12 @@ func testMockBundleHeader(t testing.TB) {
 	}
 }
 
-// TestMockBundleHeader tests creating an ICL BundleHeader
+// TestMockBundleHeader tests creating a BundleHeader
 func TestMockBundleHeader(t *testing.T) {
 	testMockBundleHeader(t)
 }
 
-// BenchmarkMockBundleHeader benchmarks creating an ICL BundleHeader
+// BenchmarkMockBundleHeader benchmarks creating a BundleHeader
 func BenchmarkMockBundleHeader(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
@@ -73,7 +73,7 @@ func BenchmarkMockBundleHeader(b *testing.B) {
 
 // parseBundleHeader validates parsing a BundleHeader
 func parseBundleHeader(t testing.TB) {
-	var line = "200123138010412104288220180905201809059999      000101                          "
+	var line = "200123138010412104288220180905201809059999      1   01                          "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -109,7 +109,7 @@ func parseBundleHeader(t testing.TB) {
 	if record.BundleIDField() != "9999      " {
 		t.Errorf("BundleID Expected '9999      ' got:'%v'", record.BundleIDField())
 	}
-	if record.BundleSequenceNumberField() != "0001" {
+	if record.BundleSequenceNumberField() != "1   " {
 		t.Errorf("BundleSequenceNumber Expected '0001' got: '%v'", record.BundleSequenceNumberField())
 	}
 	if record.CycleNumberField() != "01" {
@@ -126,12 +126,12 @@ func parseBundleHeader(t testing.TB) {
 	}
 }
 
-// TestParseBundleHeader test validates parsing a BundleHeader
+// TestParseBundleHeader tests validating parsing a BundleHeader
 func TestParseBundleHeader(t *testing.T) {
 	parseBundleHeader(t)
 }
 
-// BenchmarkParseBundleHeader benchmark validates parsing a BundleHeader
+// BenchmarkParseBundleHeader benchmarks validating parsing a BundleHeader
 func BenchmarkParseBundleHeader(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
@@ -141,7 +141,7 @@ func BenchmarkParseBundleHeader(b *testing.B) {
 
 // testBHString validates that a known parsed BundleHeader can return to a string of the same value
 func testBHString(t testing.TB) {
-	var line = "200123138010412104288220180905201809059999      000101                          "
+	var line = "200123138010412104288220180905201809059999      1   01                          "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()

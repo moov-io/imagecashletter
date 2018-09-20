@@ -45,7 +45,7 @@ type CheckDetail struct {
 	ItemAmount int `json:"itemAmount"`
 	// EceInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
 	// Field must contain a numeric value. It cannot be all blanks.
-	EceInstitutionItemSequenceNumber int `json:"eceInstitutionItemSequenceNumber"`
+	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
 	// ToDo: CashLetterHeader.CashLetterDocumentation = "Z", CheckDetail.DocumentationTypeIndicator cannot be Z.
 	// ToDo: CheckDetail.DocumentationTypeIndicator is defined CashLetterHeader.CashLetterDocumentation = "Z" should
 	// ToDo: Z, and this value supersedes.
@@ -107,7 +107,7 @@ type CheckDetail struct {
 	// U: ECE institution relationship to BOFD is undetermined
 	BOFDIndicator string `json:"bofdIndicator"`
 	// AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of
-	// CheckDetailAddendumA, CheckDetailAddendumB Record and CheckDetailAddendumC types.  It matches the total number
+	// CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number
 	// of addendum records associated with this item. The standard supports up to 99 addendum records.
 	AddendumCount int `json:"addendumCount"`
 	// CorrectionIndicator identifies whether and how the MICR line was repaired, for fields other than Payor Bank
@@ -163,8 +163,7 @@ func (cd *CheckDetail) Parse(record string) {
 	// Character position 1-2, Always "25"
 	cd.recordType = "25"
 	// 03-17
-	//ToDo:  Add a specific validator for this - NBSM?
-	cd.AuxiliaryOnUs = cd.parseStringField(record[02:17])
+	cd.AuxiliaryOnUs = cd.parseStringField(record[2:17])
 	// 18-18
 	cd.ExternalProcessingCode = cd.parseStringField(record[17:18])
 	// 19-26
@@ -172,12 +171,11 @@ func (cd *CheckDetail) Parse(record string) {
 	// 27-27
 	cd.PayorBankCheckDigit = cd.parseStringField(record[26:27])
 	// 28-47
-	// ToDo:  Add a specific validator for this - NBSMOS?
 	cd.OnUs = cd.parseStringField(record[27:47])
 	// 48-57
 	cd.ItemAmount = cd.parseNumField(record[47:57])
 	// 58-72
-	cd.EceInstitutionItemSequenceNumber = cd.parseNumField(record[57:72])
+	cd.EceInstitutionItemSequenceNumber = cd.parseStringField(record[57:72])
 	// 73-73
 	cd.DocumentationTypeIndicator = cd.parseStringField(record[72:73])
 	// 74-74
@@ -274,9 +272,9 @@ func (cd *CheckDetail) fieldInclusion() error {
 	if cd.PayorBankCheckDigit == "" {
 		return &FieldError{FieldName: "PayorBankCheckDigit", Value: cd.PayorBankCheckDigit, Msg: msgFieldInclusion}
 	}
-	if cd.EceInstitutionItemSequenceNumber == 0 {
+	if cd.EceInstitutionItemSequenceNumber == "               " {
 		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber",
-			Value: cd.EceInstitutionItemSequenceNumberField(), Msg: msgFieldInclusion}
+			Value: cd.EceInstitutionItemSequenceNumber, Msg: msgFieldInclusion}
 	}
 	if cd.BOFDIndicator == "" {
 		return &FieldError{FieldName: "BOFDIndicator", Value: cd.BOFDIndicator, Msg: msgFieldInclusion}
@@ -316,7 +314,7 @@ func (cd *CheckDetail) ItemAmountField() string {
 
 // EceInstitutionItemSequenceNumberField gets a string of the EceInstitutionItemSequenceNumber field
 func (cd *CheckDetail) EceInstitutionItemSequenceNumberField() string {
-	return cd.numericField(cd.EceInstitutionItemSequenceNumber, 15)
+	return cd.alphaField(cd.EceInstitutionItemSequenceNumber, 15)
 }
 
 // DocumentationTypeIndicatorField gets the DocumentationTypeIndicator field
@@ -362,21 +360,15 @@ func (cd *CheckDetail) AddCheckDetailAddendumA(cdAddendaA CheckDetailAddendumA) 
 	return cd.CheckDetailAddendumA
 }
 
+// GetCheckDetailAddendumA returns a slice of AddendumA for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailAddendumA() []CheckDetailAddendumA {
+	return cd.CheckDetailAddendumA
+}
+
 // AddCheckDetailAddendumB appends an AddendumA to the CheckDetail
 func (cd *CheckDetail) AddCheckDetailAddendumB(cdAddendaB CheckDetailAddendumB) []CheckDetailAddendumB {
 	cd.CheckDetailAddendumB = append(cd.CheckDetailAddendumB, cdAddendaB)
 	return cd.CheckDetailAddendumB
-}
-
-// AddCheckDetailAddendumC appends an AddendumCto the CheckDetail
-func (cd *CheckDetail) AddCheckDetailAddendumC(cdAddendaC CheckDetailAddendumC) []CheckDetailAddendumC {
-	cd.CheckDetailAddendumC = append(cd.CheckDetailAddendumC, cdAddendaC)
-	return cd.CheckDetailAddendumC
-}
-
-// GetCheckDetailAddendumA returns a slice of AddendumA for the CheckDetail
-func (cd *CheckDetail) GetCheckDetailAddendumA() []CheckDetailAddendumA {
-	return cd.CheckDetailAddendumA
 }
 
 // GetCheckDetailAddendumB returns a slice of AddendumB for the CheckDetail
@@ -384,7 +376,79 @@ func (cd *CheckDetail) GetCheckDetailAddendumB() []CheckDetailAddendumB {
 	return cd.CheckDetailAddendumB
 }
 
+// AddCheckDetailAddendumC appends an AddendumC to the CheckDetail
+func (cd *CheckDetail) AddCheckDetailAddendumC(cdAddendaC CheckDetailAddendumC) []CheckDetailAddendumC {
+	cd.CheckDetailAddendumC = append(cd.CheckDetailAddendumC, cdAddendaC)
+	return cd.CheckDetailAddendumC
+}
+
 // GetCheckDetailAddendumC returns a slice of AddendumC for the CheckDetail
 func (cd *CheckDetail) GetCheckDetailAddendumC() []CheckDetailAddendumC {
 	return cd.CheckDetailAddendumC
+}
+
+// AddImageViewDetail appends an ImageViewDetail to the CheckDetail
+func (cd *CheckDetail) AddImageViewDetail(ivDetail ImageViewDetail) []ImageViewDetail {
+	cd.ImageViewDetail = append(cd.ImageViewDetail, ivDetail)
+	return cd.ImageViewDetail
+}
+
+// GetImageViewDetail returns a slice of ImageViewDetail for the CheckDetail
+func (cd *CheckDetail) GetImageViewDetail() []ImageViewDetail {
+	return cd.ImageViewDetail
+}
+
+// AddImageViewData appends an ImageViewData to the CheckDetail
+func (cd *CheckDetail) AddImageViewData(ivData ImageViewData) []ImageViewData {
+	cd.ImageViewData = append(cd.ImageViewData, ivData)
+	return cd.ImageViewData
+}
+
+// GetImageViewData returns a slice of ImageViewData for the CheckDetail
+func (cd *CheckDetail) GetImageViewData() []ImageViewData {
+	return cd.ImageViewData
+}
+
+// AddImageViewAnalysis appends an ImageViewAnalysis to the CheckDetail
+func (cd *CheckDetail) AddImageViewAnalysis(ivAnalysis ImageViewAnalysis) []ImageViewAnalysis {
+	cd.ImageViewAnalysis = append(cd.ImageViewAnalysis, ivAnalysis)
+	return cd.ImageViewAnalysis
+}
+
+// GetImageViewAnalysis returns a slice of ImageViewAnalysis for the CheckDetail
+func (cd *CheckDetail) GetImageViewAnalysis() []ImageViewAnalysis {
+	return cd.ImageViewAnalysis
+}
+
+// AddCheckDetailImageViewDetail appends an ImageViewDetail to the CheckDetail
+func (cd *CheckDetail) AddCheckDetailImageViewDetail(ivDetail ImageViewDetail) []ImageViewDetail {
+	cd.ImageViewDetail = append(cd.ImageViewDetail, ivDetail)
+	return cd.ImageViewDetail
+}
+
+// GetCheckDetailImageViewDetail returns a slice of ImageViewDetail for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailImageViewDetail() []ImageViewDetail {
+	return cd.ImageViewDetail
+}
+
+// AddCheckDetailImageViewData appends an ImageViewData to the CheckDetail
+func (cd *CheckDetail) AddCheckDetailImageViewData(ivData ImageViewData) []ImageViewData {
+	cd.ImageViewData = append(cd.ImageViewData, ivData)
+	return cd.ImageViewData
+}
+
+// GetCheckDetailImageViewData returns a slice of ImageViewData for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailImageViewData() []ImageViewData {
+	return cd.ImageViewData
+}
+
+// AddCheckDetailImageViewAnalysis appends an ImageViewAnalysis  to the CheckDetail
+func (cd *CheckDetail) AddCheckDetailImageViewAnalysis(ivAnalysis ImageViewAnalysis) []ImageViewAnalysis {
+	cd.ImageViewAnalysis = append(cd.ImageViewAnalysis, ivAnalysis)
+	return cd.ImageViewAnalysis
+}
+
+// GetCheckDetailImageViewAnalysis returns a slice of ImageViewAnalysis for the CheckDetail
+func (cd *CheckDetail) GetCheckDetailImageViewAnalysis() []ImageViewAnalysis {
+	return cd.ImageViewAnalysis
 }

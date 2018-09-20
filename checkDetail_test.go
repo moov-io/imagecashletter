@@ -18,45 +18,22 @@ func mockCheckDetail() *CheckDetail {
 	cd.PayorBankCheckDigit = "2"
 	cd.OnUs = "5558881"
 	cd.ItemAmount = 100000 // 1000.00
-	cd.EceInstitutionItemSequenceNumber = 1
+	cd.EceInstitutionItemSequenceNumber = "1              "
 	cd.DocumentationTypeIndicator = "G"
 	cd.ReturnAcceptanceIndicator = "D"
 	cd.MICRValidIndicator = 1
 	cd.BOFDIndicator = "Y"
-	cd.AddendumCount = 0
+	cd.AddendumCount = 3
 	cd.CorrectionIndicator = 0
 	cd.ArchiveTypeIndicator = "B"
 	return cd
 }
 
-// mockCheckDetailAddendum creates a CheckDetail
-func mockCheckDetailAddendum() *CheckDetail {
-	cd := NewCheckDetail()
-	cd.AuxiliaryOnUs = "123456789"
-	cd.ExternalProcessingCode = ""
-	cd.PayorBankRoutingNumber = "03130001"
-	cd.PayorBankCheckDigit = "2"
-	cd.OnUs = "5558881"
-	cd.ItemAmount = 100000 // 1000.00
-	cd.EceInstitutionItemSequenceNumber = 1
-	cd.DocumentationTypeIndicator = "G"
-	cd.ReturnAcceptanceIndicator = "D"
-	cd.MICRValidIndicator = 1
-	cd.BOFDIndicator = "Y"
-	cd.AddendumCount = 0
-	cd.CorrectionIndicator = 0
-	cd.ArchiveTypeIndicator = "B"
-	cd.AddCheckDetailAddendumA(mockCheckDetailAddendumA())
-	cd.AddCheckDetailAddendumB(mockCheckDetailAddendumB())
-	cd.AddCheckDetailAddendumC(mockCheckDetailAddendumC())
-	return cd
-}
-
-// testMockCheckDetail creates an ICL CheckDetail
+// testMockCheckDetail creates a CheckDetail
 func testMockCheckDetail(t testing.TB) {
 	cd := mockCheckDetail()
 	if err := cd.Validate(); err != nil {
-		t.Error("mockBundleHeader does not validate and will break other tests: ", err)
+		t.Error("mockCheckDetail does not validate and will break other tests: ", err)
 	}
 	if cd.recordType != "25" {
 		t.Error("recordType does not validate and will break other tests")
@@ -79,7 +56,7 @@ func testMockCheckDetail(t testing.TB) {
 	if cd.ItemAmount != 100000 {
 		t.Error("ItemAmount does not validate and will break other tests")
 	}
-	if cd.EceInstitutionItemSequenceNumber != 1 {
+	if cd.EceInstitutionItemSequenceNumber != "1              " {
 		t.Error("EceInstitutionItemSequenceNumber does not validate and will break other tests")
 	}
 	if cd.DocumentationTypeIndicator != "G" {
@@ -94,7 +71,7 @@ func testMockCheckDetail(t testing.TB) {
 	if cd.BOFDIndicator != "Y" {
 		t.Error("BOFDIndicator does not validate and will break other tests")
 	}
-	if cd.AddendumCount != 0 {
+	if cd.AddendumCount != 3 {
 		t.Error("AddendumCount does not validate and will break other tests")
 	}
 	if cd.CorrectionIndicator != 0 {
@@ -105,12 +82,12 @@ func testMockCheckDetail(t testing.TB) {
 	}
 }
 
-// TestMockCheckDetail tests creating an ICL CheckDetail
+// TestMockCheckDetail tests creating a CheckDetail
 func TestMockCheckDetail(t *testing.T) {
 	testMockCheckDetail(t)
 }
 
-// BenchmarkMockCheckDetail benchmarks creating an ICL CheckDetail
+// BenchmarkMockCheckDetail benchmarks creating a CheckDetail
 func BenchmarkMockCheckDetail(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
@@ -120,7 +97,7 @@ func BenchmarkMockCheckDetail(b *testing.B) {
 
 // parseCheckDetail validates parsing a CheckDetail
 func parseCheckDetail(t testing.TB) {
-	var line = "25      123456789 031300012             55588810000100000000000000000001GD1Y000B"
+	var line = "25      123456789 031300012             555888100001000001              GD1Y030B"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -155,8 +132,8 @@ func parseCheckDetail(t testing.TB) {
 	if record.ItemAmountField() != "0000100000" {
 		t.Errorf("ItemAmount Expected '0000100000' got:'%v'", record.ItemAmountField())
 	}
-	if record.EceInstitutionItemSequenceNumberField() != "000000000000001" {
-		t.Errorf("EceInstitutionItemSequenceNumber Expected '000000000000001' got:'%v'",
+	if record.EceInstitutionItemSequenceNumberField() != "1              " {
+		t.Errorf("EceInstitutionItemSequenceNumber Expected '1              ' got:'%v'",
 			record.EceInstitutionItemSequenceNumberField())
 	}
 	if record.DocumentationTypeIndicatorField() != "G" {
@@ -171,8 +148,8 @@ func parseCheckDetail(t testing.TB) {
 	if record.BOFDIndicatorField() != "Y" {
 		t.Errorf("BOFDIndicator Expected 'Y' got:'%v'", record.BOFDIndicatorField())
 	}
-	if record.AddendumCountField() != "00" {
-		t.Errorf("AddendumCount Expected 'Y' got:'%v'", record.AddendumCountField())
+	if record.AddendumCountField() != "03" {
+		t.Errorf("AddendumCount Expected '03' got:'%v'", record.AddendumCountField())
 	}
 	if record.CorrectionIndicatorField() != "0" {
 		t.Errorf("CorrectionIndicator Expected '0' got:'%v'", record.CorrectionIndicatorField())
@@ -197,7 +174,7 @@ func BenchmarkParseCheckDetail(b *testing.B) {
 
 // testCDString validates that a known parsed CheckDetail can return to a string of the same value
 func testCDString(t testing.TB) {
-	var line = "25      123456789 031300012             55588810000100000000000000000001GD1Y000B"
+	var line = "25      123456789 031300012             555888100001000001              GD1Y030B"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()

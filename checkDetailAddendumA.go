@@ -39,7 +39,7 @@ type CheckDetailAddendumA struct {
 	// DD 01 through 31
 	BOFDEndorsementDate time.Time `json:"bofdEndorsementDate"`
 	// BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
-	BOFDItemSequenceNumber int `json:"bofdItemSequenceNumber"`
+	BOFDItemSequenceNumber string `json:"bofdItemSequenceNumber"`
 	// BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
 	BOFDAccountNumber string `json:"bofdAccountNumber"`
 	// BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
@@ -65,7 +65,7 @@ type CheckDetailAddendumA struct {
 	// 6: Image converted to another image (e.g., transcoded)
 	// 7: Did not convert image (e.g., same as source)
 	// 8: Undetermined
-	BOFDConversionIndicator string `json:"BOFDConversionIndicator"`
+	BOFDConversionIndicator string `json:"bofdConversionIndicator"`
 	// BOFDCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
 	// creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount.
 	// Values:
@@ -74,7 +74,7 @@ type CheckDetailAddendumA struct {
 	// 2: Repaired without Operator intervention
 	// 3: Repaired with Operator intervention
 	// 4: Undetermined if repair has been done or not
-	BOFDCorrectionIndicator int `json:"BOFDCorrectionIndicator"`
+	BOFDCorrectionIndicator int `json:"bofdCorrectionIndicator"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`
 	// reserved is a field reserved for future use.  Reserved should be blank.
@@ -98,13 +98,13 @@ func (cdAddendumA *CheckDetailAddendumA) Parse(record string) {
 	// Character position 1-2, Always "26"
 	cdAddendumA.recordType = "26"
 	// 03-03
-	cdAddendumA.RecordNumber = cdAddendumA.parseNumField(record[02:03])
+	cdAddendumA.RecordNumber = cdAddendumA.parseNumField(record[2:3])
 	// 04-12
-	cdAddendumA.ReturnLocationRoutingNumber = cdAddendumA.parseStringField(record[03:12])
+	cdAddendumA.ReturnLocationRoutingNumber = cdAddendumA.parseStringField(record[3:12])
 	// 13-20
 	cdAddendumA.BOFDEndorsementDate = cdAddendumA.parseYYYYMMDDDate(record[12:20])
 	// 21-35
-	cdAddendumA.BOFDItemSequenceNumber = cdAddendumA.parseNumField(record[20:35])
+	cdAddendumA.BOFDItemSequenceNumber = cdAddendumA.parseStringField(record[20:35])
 	// 36-53
 	cdAddendumA.BOFDAccountNumber = cdAddendumA.parseStringField(record[35:53])
 	// 54-58
@@ -219,6 +219,10 @@ func (cdAddendumA *CheckDetailAddendumA) fieldInclusion() error {
 		return &FieldError{FieldName: "BOFDEndorsementDate",
 			Value: cdAddendumA.BOFDEndorsementDate.String(), Msg: msgFieldInclusion}
 	}
+	if cdAddendumA.BOFDItemSequenceNumber == "               " {
+		return &FieldError{FieldName: "BOFDItemSequenceNumber",
+			Value: cdAddendumA.BOFDItemSequenceNumber, Msg: msgFieldInclusion}
+	}
 	if cdAddendumA.TruncationIndicator == "" {
 		return &FieldError{FieldName: "TruncationIndicator",
 			Value: cdAddendumA.TruncationIndicator, Msg: msgFieldInclusion}
@@ -243,7 +247,7 @@ func (cdAddendumA *CheckDetailAddendumA) BOFDEndorsementDateField() string {
 
 // BOFDItemSequenceNumberField gets a string of the BOFDItemSequenceNumber field zero padded
 func (cdAddendumA *CheckDetailAddendumA) BOFDItemSequenceNumberField() string {
-	return cdAddendumA.numericField(cdAddendumA.BOFDItemSequenceNumber, 15)
+	return cdAddendumA.alphaField(cdAddendumA.BOFDItemSequenceNumber, 15)
 }
 
 // BOFDAccountNumberField gets the BOFDAccountNumber field

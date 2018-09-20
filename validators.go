@@ -11,18 +11,18 @@ import (
 )
 
 var (
-	upperAlphanumericRegex   = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
+	//upperAlphanumericRegex    = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
 	alphanumericRegex        = regexp.MustCompile(`[^ a-zA-Z0-9]`)
 	alphanumericRegexSpecial = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
 	numericRegex             = regexp.MustCompile(`[^ 0-9]`)
 	msgAlphanumeric          = "has non alphanumeric characters"
 	msgAlphanumericSpecial   = "has non alphanumeric or special characters"
-	msgUpperAlpha            = "is not uppercase A-Z or 0-9"
-	msgNumeric               = "is not 0-9"
-	msgFieldInclusion        = "is a mandatory field and has a default value"
+	//msgUpperAlpha             = "is not uppercase A-Z or 0-9"
+	msgNumeric                = "is not 0-9"
+	msgImageViewAnalysisValid = "image view analysis property is invalid"
+	msgFieldInclusion         = "is a mandatory field and has a default value"
 	//msgFieldRequired       = "is a required field"
 	//msgValidFieldLength    = "is not length %d"
-
 	msgInvalid = "is an invalid %v"
 )
 
@@ -686,14 +686,63 @@ func (v *validator) isOverrideIndicator(code string) error {
 	return errors.New(msg)
 }
 
-// isUpperAlphanumeric checks if string only contains ASCII alphanumeric upper case characters
+// isImageViewAnalysisValid ensures generic properties of imageViewAnalysis are valid
+func (v *validator) isImageViewAnalysisValid(code int) error {
+	switch code {
+	case
+		// Refer to ImageViewAnalysis property
+		0,
+		// Refer to ImageViewAnalysis property
+		1,
+		// Refer to ImageViewAnalysis property
+		2:
+		return nil
+	}
+	return errors.New(msgImageViewAnalysisValid)
+}
+
+// Returns
+
+// isReturnNotificationIndicator ensures ReturnNotificationIndicator of ReturnDetail is valid
+func (v *validator) isReturnNotificationIndicator(code int) error {
+	switch code {
+	case
+		// Preliminary notification
+		1,
+		// Final notification
+		2:
+		return nil
+	}
+	msg := fmt.Sprintf(msgInvalid, "ReturnNotificationIndicator")
+	return errors.New(msg)
+}
+
+// isTimesReturned ensures TimeReturned of ReturnDetail is valid
+func (v *validator) isTimesReturned(code int) error {
+	switch code {
+	case
+		// The item has been returned an unknown number of times
+		0,
+		// The item has been returned once
+		1,
+		// The item has been returned twice
+		2,
+		// The item has been returned three times
+		3:
+		return nil
+	}
+	msg := fmt.Sprintf(msgInvalid, "TimesReturned")
+	return errors.New(msg)
+}
+
+/*// isUpperAlphanumeric checks if string only contains ASCII alphanumeric upper case characters
 func (v *validator) isUpperAlphanumeric(s string) error {
 	if upperAlphanumericRegex.MatchString(s) {
 		return errors.New(msgUpperAlpha)
 	}
 	return nil
 }
-
+*/
 // isAlphanumeric checks if a string only contains ASCII alphanumeric characters
 func (v *validator) isAlphanumeric(s string) error {
 	if alphanumericRegex.MatchString(s) {

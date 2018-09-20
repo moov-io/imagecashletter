@@ -72,7 +72,7 @@ type BundleHeader struct {
 	BundleID string `json:"bundleID"`
 	// BundleSequenceNumber is a number assigned by the institution that creates the bundle. Usually denotes
 	// the relative position of the bundle within the cash letter.  NumericBlank
-	BundleSequenceNumber int `json:"BundleSequenceNumber,omitempty"`
+	BundleSequenceNumber string `json:"BundleSequenceNumber,omitempty"`
 	// CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which
 	// the bundle is created.
 	CycleNumber string `json:"cycleNumber"`
@@ -113,7 +113,7 @@ func (bh *BundleHeader) Parse(record string) {
 	// 39-48
 	bh.BundleID = bh.parseStringField(record[38:48])
 	// 49-52
-	bh.BundleSequenceNumber = bh.parseNumField(record[48:52])
+	bh.BundleSequenceNumber = bh.parseStringField(record[48:52])
 	// 53-54
 	bh.CycleNumber = bh.parseStringField(record[52:54])
 	// 55-63
@@ -196,6 +196,10 @@ func (bh *BundleHeader) fieldInclusion() error {
 		return &FieldError{FieldName: "BundleCreationDate",
 			Value: bh.BundleCreationDate.String(), Msg: msgFieldInclusion}
 	}
+	if bh.BundleSequenceNumber == "    " {
+		return &FieldError{FieldName: "BundleSequenceNumber",
+			Value: bh.BundleSequenceNumber, Msg: msgFieldInclusion}
+	}
 	return nil
 }
 
@@ -231,7 +235,7 @@ func (bh *BundleHeader) BundleIDField() string {
 
 // BundleSequenceNumberField gets the BundleSequenceNumber field zero padded
 func (bh *BundleHeader) BundleSequenceNumberField() string {
-	return bh.numericField(bh.BundleSequenceNumber, 4)
+	return bh.alphaField(bh.BundleSequenceNumber, 4)
 }
 
 // CycleNumberField gets the CycleNumber field

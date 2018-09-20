@@ -9,9 +9,6 @@ import (
 	"strconv"
 )
 
-// ICL File Records that are identified as Mandatory are required to support Federal Reserve processing of an image
-// file.
-//
 // https://en.wikipedia.org/wiki/Substitute_check
 //
 // http://www.frbservices.org
@@ -40,24 +37,25 @@ const (
 	imageViewAnalysisPos = "54"
 	bundleControlPos     = "70"
 	//no longer supported by the standard - boxSummaryPos           = "75"
-	routingNumberSummaryPos = "85"
-	cashLetterControlPos    = "90"
-	fileControlPos          = "99"
+	//routingNumberSummaryPos = "85"
+	cashLetterControlPos = "90"
+	fileControlPos       = "99"
 )
 
 // Errors strings specific to parsing a Batch container
 var (
 	//msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
 	// specific messages
-	msgRecordLength          = "Must be at least 80 characters and found %d"
-	msgFileCashLetterInside  = "Inside of current cash letter"
-	msgFileCashLetterControl = "Cash letter control without a current cash letter"
-	msgFileBundleOutside     = "Outside of current bundle"
-	msgFileBundleInside      = "Inside of current bundle"
-	msgFileBundleControl     = "Bundle control without a current bundle"
-	msgFileControl           = "None or more than one file control exists"
-	msgFileHeader            = "None or more than one file headers exists"
-	msgUnknownRecordType     = "%s is an unknown record type"
+	msgRecordLength            = "Must be at least 80 characters and found %d"
+	msgFileCashLetterInside    = "Inside of current cash letter"
+	msgFileCashLetterControl   = "Cash letter control without a current cash letter"
+	msgFileBundleOutside       = "Outside of current bundle"
+	msgFileReturnBundleOutside = "Outside of current return bundle"
+	//msgFileBundleInside      = "Inside of current bundle"
+	msgFileBundleControl = "Bundle control without a current bundle"
+	msgFileControl       = "None or more than one file control exists"
+	msgFileHeader        = "None or more than one file headers exists"
+	msgUnknownRecordType = "%s is an unknown record type"
 )
 
 // FileError is an error describing issues validating a file
@@ -71,15 +69,15 @@ func (e *FileError) Error() string {
 	return fmt.Sprintf("%s %s", e.FieldName, e.Msg)
 }
 
-// File is an ICL file
+// File is an X9 file
 type File struct {
 	// ID is a client defined string used as a reference to this record
 	ID string `json:"id"`
-	// FileHeader is an ICL FileHeader
+	// FileHeader is a ileHeader
 	Header FileHeader `json:"fileHeader"`
-	// CashLetters are ICl Cash Letters
+	// CashLetters are Cash Letters
 	CashLetters []CashLetter `json:"cashLetters,omitempty"`
-	// FileControl is an ICL FileControl
+	// FileControl is a FileControl
 	Control FileControl `json:"fileControl"`
 }
 
@@ -91,7 +89,7 @@ func NewFile() *File {
 	}
 }
 
-// Create creates a valid ICL File
+// Create creates a valid X9 File
 func (f *File) Create() error {
 	// Requires a valid FileHeader to build FileControl
 	if err := f.Header.Validate(); err != nil {

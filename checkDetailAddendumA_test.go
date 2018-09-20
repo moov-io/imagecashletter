@@ -17,7 +17,7 @@ func mockCheckDetailAddendumA() CheckDetailAddendumA {
 	cdAddendumA.RecordNumber = 1
 	cdAddendumA.ReturnLocationRoutingNumber = "121042882"
 	cdAddendumA.BOFDEndorsementDate = time.Now()
-	cdAddendumA.BOFDItemSequenceNumber = 1
+	cdAddendumA.BOFDItemSequenceNumber = "1              "
 	cdAddendumA.BOFDAccountNumber = "938383"
 	cdAddendumA.BOFDBranchCode = "01"
 	cdAddendumA.PayeeName = "Test Payee"
@@ -28,11 +28,11 @@ func mockCheckDetailAddendumA() CheckDetailAddendumA {
 	return cdAddendumA
 }
 
-// testMockCheckDetailAddendumA creates an ICL CheckDetailAddendumA
+// testMockCheckDetailAddendumA creates a CheckDetailAddendumA
 func testMockCheckDetailAddendumA(t testing.TB) {
 	cdAddendumA := mockCheckDetailAddendumA()
 	if err := cdAddendumA.Validate(); err != nil {
-		t.Error("mockBundleHeader does not validate and will break other tests: ", err)
+		t.Error("MockCheckDetailAddendumA does not validate and will break other tests: ", err)
 	}
 	if cdAddendumA.recordType != "26" {
 		t.Error("recordType does not validate and will break other tests")
@@ -43,7 +43,7 @@ func testMockCheckDetailAddendumA(t testing.TB) {
 	if cdAddendumA.ReturnLocationRoutingNumber != "121042882" {
 		t.Error("ReturnLocationRoutingNumber does not validate and will break other tests")
 	}
-	if cdAddendumA.BOFDItemSequenceNumber != 1 {
+	if cdAddendumA.BOFDItemSequenceNumber != "1              " {
 		t.Error("BOFDItemSequenceNumber does not validate and will break other tests")
 	}
 	if cdAddendumA.BOFDAccountNumber != "938383" {
@@ -69,12 +69,12 @@ func testMockCheckDetailAddendumA(t testing.TB) {
 	}
 }
 
-// TestMockCheckDetailAddendumA  tests creating an ICL CheckDetailAddendumA
+// TestMockCheckDetailAddendumA  tests creating a CheckDetailAddendumA
 func TestMockCheckDetailAddendumA(t *testing.T) {
 	testMockCheckDetailAddendumA(t)
 }
 
-// BenchmarkMockCheckDetailAddendumA benchmarks creating an ICL CheckDetailAddendumA
+// BenchmarkMockCheckDetailAddendumA benchmarks creating a CheckDetailAddendumA
 func BenchmarkMockCheckDetailAddendumA(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
@@ -84,7 +84,7 @@ func BenchmarkMockCheckDetailAddendumA(b *testing.B) {
 
 // parseCheckDetailAddendumA validates parsing a CheckDetailAddendumA
 func parseCheckDetailAddendumA(t testing.TB) {
-	var line = "26112104288220180905000000000000001938383            01   Test Payee     Y10    "
+	var line = "261121042882201809051              938383            01   Test Payee     Y10    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -113,8 +113,8 @@ func parseCheckDetailAddendumA(t testing.TB) {
 	if record.BOFDEndorsementDateField() != "20180905" {
 		t.Errorf("BOFDEndorsementDate Expected '20180905' got: %v", record.BOFDEndorsementDateField())
 	}
-	if record.BOFDItemSequenceNumberField() != "000000000000001" {
-		t.Errorf("BOFDItemSequenceNumber Expected '1' got: %v", record.BOFDItemSequenceNumberField())
+	if record.BOFDItemSequenceNumberField() != "1              " {
+		t.Errorf("BOFDItemSequenceNumber Expected '1               ' got: %v", record.BOFDItemSequenceNumberField())
 	}
 	if record.BOFDAccountNumberField() != "938383            " {
 		t.Errorf("BOFDAccountNumber Expected '938383            ' got: %v", record.BOFDAccountNumberField())
@@ -142,12 +142,12 @@ func parseCheckDetailAddendumA(t testing.TB) {
 	}
 }
 
-// TestParseCheckDetailAddendumA test validates parsing a CheckDetailAddendumA
+// TestParseCheckDetailAddendumA tests validating parsing a CheckDetailAddendumA
 func TestParseCheckDetailAddendumA(t *testing.T) {
 	parseCheckDetailAddendumA(t)
 }
 
-// BenchmarkParseCheckDetailAddendumA benchmark validates parsing a CheckDetailAddendumA
+// BenchmarkParseCheckDetailAddendumA benchmarks validating parsing a CheckDetailAddendumA
 func BenchmarkParseCheckDetailAddendumA(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
@@ -157,7 +157,7 @@ func BenchmarkParseCheckDetailAddendumA(b *testing.B) {
 
 // testCDAddendumAString validates that a known parsed CheckDetailAddendumA can return to a string of the same value
 func testCDAddendumAString(t testing.TB) {
-	var line = "26112104288220180905000000000000001938383            01   Test Payee     Y10    "
+	var line = "261121042882201809051              938383            01   Test Payee     Y10    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
