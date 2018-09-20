@@ -209,13 +209,13 @@ func (ivData *ImageViewData) String() string {
 	buf.WriteString(ivData.ClippingCoordinateV1Field())
 	buf.WriteString(ivData.ClippingCoordinateV2Field())
 	buf.WriteString(ivData.LengthImageReferenceKeyField())
-	buf.Grow(int(len(ivData.LengthImageReferenceKeyField())))
+	buf.Grow(int(ivData.LengthImageReferenceKey))
 	buf.WriteString(ivData.ImageReferenceKeyField())
 	buf.WriteString(ivData.LengthDigitalSignatureField())
-	buf.Grow(int(len(ivData.LengthDigitalSignatureField())))
+	buf.Grow(int(ivData.LengthDigitalSignature))
 	buf.WriteString(ivData.DigitalSignatureField())
 	buf.WriteString(ivData.LengthImageDataField())
-	buf.Grow(int(len(ivData.LengthImageDataField())))
+	buf.Grow(int(ivData.LengthImageData))
 	buf.WriteString(ivData.ImageDataField())
 	return buf.String()
 }
@@ -342,7 +342,7 @@ func (ivData *ImageViewData) LengthDigitalSignatureField() string {
 // DigitalSignatureField gets the DigitalSignature field []byte to string
 func (ivData *ImageViewData) DigitalSignatureField() string {
 	s := string(ivData.DigitalSignature[:])
-	return ivData.alphaField(s, uint(len(ivData.LengthDigitalSignatureField())))
+	return ivData.alphaField(s, uint(ivData.LengthDigitalSignature))
 }
 
 // LengthImageDataField gets the LengthImageData field
@@ -353,5 +353,5 @@ func (ivData *ImageViewData) LengthImageDataField() string {
 // ImageDataField gets the ImageData field []byte to string
 func (ivData *ImageViewData) ImageDataField() string {
 	s := string(ivData.ImageData[:])
-	return ivData.alphaField(s, uint(len(ivData.LengthImageDataField())))
+	return ivData.alphaField(s, uint(ivData.LengthImageData))
 }
