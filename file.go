@@ -73,7 +73,7 @@ func (e *FileError) Error() string {
 type File struct {
 	// ID is a client defined string used as a reference to this record
 	ID string `json:"id"`
-	// FileHeader is a ileHeader
+	// FileHeader is a FileHeader
 	Header FileHeader `json:"fileHeader"`
 	// CashLetters are Cash Letters
 	CashLetters []CashLetter `json:"cashLetters,omitempty"`

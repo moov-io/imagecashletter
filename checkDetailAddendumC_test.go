@@ -86,8 +86,9 @@ func parseCheckDetailAddendumC(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
@@ -98,7 +99,7 @@ func parseCheckDetailAddendumC(t testing.TB) {
 	record := r.currentCashLetter.currentBundle.GetChecks()[0].CheckDetailAddendumC[0]
 
 	if record.recordType != "28" {
-		t.Errorf("RecordType Expected '26' got: %v", record.recordType)
+		t.Errorf("RecordType Expected '28' got: %v", record.recordType)
 	}
 	if record.RecordNumberField() != "01" {
 		t.Errorf("RecordNumber Expected '01' got: %v", record.RecordNumberField())
@@ -157,8 +158,9 @@ func testCDAddendumCString(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
@@ -179,7 +181,7 @@ func TestCDAddendumCString(t *testing.T) {
 	testCDAddendumCString(t)
 }
 
-// BenchmarkCDAddendumCString benchmarks validating that a known parsed CheckDetail
+// BenchmarkCDAddendumCString benchmarks validating that a known parsed CheckDetailAddendumC
 // can return to a string of the same value
 func BenchmarkCDAddendumCString(b *testing.B) {
 	b.ReportAllocs()

@@ -5,6 +5,9 @@
 package x9
 
 import (
+	"fmt"
+	"log"
+	"strings"
 	"testing"
 	"time"
 )
@@ -53,5 +56,49 @@ func BenchmarkMockReturnDetailAddendumB(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testMockReturnDetailAddendumB(b)
+	}
+}
+
+// testRDAddendumBString validates that a known parsed ReturnDetailAddendumB can return to a string of the same value
+func testRDAddendumBString(t testing.TB) {
+	//var line = "3301121042882201809051              Y10A                   0                    "
+	var line = "33Payor Bank Name         1234567891              20180905Payor Account Name    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	clh := mockCashLetterHeader()
+	r.addCurrentCashLetter(NewCashLetter(clh))
+	bh := mockBundleHeader()
+	rb := NewReturnBundle(bh)
+	r.currentCashLetter.AddReturnBundle(rb)
+	r.addCurrentReturnBundle(rb)
+	rd := mockReturnDetail()
+	r.currentCashLetter.currentReturnBundle.AddReturnDetail(rd)
+
+	if err := r.parseReturnDetailAddendumB(); err != nil {
+		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
+	}
+	record := r.currentCashLetter.currentReturnBundle.GetReturns()[0].ReturnDetailAddendumB[0]
+
+	fmt.Printf("Lineee: %v \n", line)
+	fmt.Printf("String: %v \n", record.String())
+
+	if record.String() != line {
+		t.Errorf("Strings do not match")
+	}
+}
+
+// TestRDAddendumBString tests validating that a known parsed ReturnDetailAddendumB can return to a string of the
+// same value
+func TestRDAddendumBString(t *testing.T) {
+	testRDAddendumBString(t)
+}
+
+// BenchmarkRDAddendumBString benchmarks validating that a known parsed ReturnDetailAddendumB
+// can return to a string of the same value
+func BenchmarkRDAddendumBString(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		testRDAddendumBString(b)
 	}
 }

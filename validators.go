@@ -44,6 +44,8 @@ func (e *FieldError) Error() string {
 	return fmt.Sprintf("%s %s %s", e.FieldName, e.Value, e.Msg)
 }
 
+// ToDo: return invalid value in error message
+
 // isCreditTotalIndicator ensures CreditTotalIndicator of a FileControl, CashLetterControl, and BundleControl is valid
 func (v *validator) isCreditTotalIndicator(code int) error {
 	switch code {

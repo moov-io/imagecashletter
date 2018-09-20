@@ -90,8 +90,9 @@ func parseCheckDetailAddendumA(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
@@ -163,8 +164,9 @@ func testCDAddendumAString(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
@@ -186,7 +188,7 @@ func TestCDAddendumAString(t *testing.T) {
 	testCDAddendumAString(t)
 }
 
-// BenchmarkCDAddendumAString benchmarks validating that a known parsed CheckDetail
+// BenchmarkCDAddendumAString benchmarks validating that a known parsed CheckDetailAddendumA
 // can return to a string of the same value
 func BenchmarkCDAddendumAString(b *testing.B) {
 	b.ReportAllocs()

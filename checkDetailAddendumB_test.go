@@ -5,7 +5,6 @@
 package x9
 
 import (
-	"fmt"
 	"log"
 	"strings"
 	"testing"
@@ -74,8 +73,9 @@ func parseCheckDetailAddendumB(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
@@ -85,10 +85,10 @@ func parseCheckDetailAddendumB(t testing.TB) {
 	}
 	record := r.currentCashLetter.currentBundle.GetChecks()[0].CheckDetailAddendumB[0]
 	if record.recordType != "27" {
-		t.Errorf("RecordType Expected '26' got: %v", record.recordType)
+		t.Errorf("RecordType Expected '27' got: %v", record.recordType)
 	}
 	if record.ImageReferenceKeyIndicatorField() != "1" {
-		t.Errorf("ImageReferenceKeyIndicator Expected '26' got: %v",
+		t.Errorf("ImageReferenceKeyIndicator Expected '1' got: %v",
 			record.ImageReferenceKeyIndicatorField())
 	}
 	if record.MicrofilmArchiveSequenceNumberField() != "1A             " {
@@ -134,8 +134,9 @@ func testCDAddendumBString(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
@@ -145,16 +146,7 @@ func testCDAddendumBString(t testing.TB) {
 	}
 	record := r.currentCashLetter.currentBundle.GetChecks()[0].CheckDetailAddendumB[0]
 
-	fmt.Printf("Lineee: %v \n", line)
-	fmt.Printf("String: %v \n", record.String())
-
 	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
-
-	stri := record.String()
-
-	if stri != line {
 		t.Errorf("Strings do not match")
 	}
 }
@@ -165,7 +157,7 @@ func TestCDAddendumBString(t *testing.T) {
 	testCDAddendumBString(t)
 }
 
-// BenchmarkCDAddendumBString benchmarks validating that a known parsed CheckDetail
+// BenchmarkCDAddendumBString benchmarks validating that a known parsed CheckDetailAddendumB
 // can return to a string of the same value
 func BenchmarkCDAddendumBString(b *testing.B) {
 	b.ReportAllocs()

@@ -103,7 +103,7 @@ func parseReturnDetailAddendumA(t testing.TB) {
 	record := r.currentCashLetter.currentReturnBundle.GetReturns()[0].ReturnDetailAddendumA[0]
 
 	if record.recordType != "32" {
-		t.Errorf("RecordType Expected '26' got: %v", record.recordType)
+		t.Errorf("RecordType Expected '32' got: %v", record.recordType)
 	}
 	if record.RecordNumberField() != "1" {
 		t.Errorf("RecordNumber Expected '1' got: %v", record.RecordNumberField())
@@ -188,7 +188,7 @@ func TestRDAddendumAString(t *testing.T) {
 	testRDAddendumAString(t)
 }
 
-// BenchmarkRDAddendumAString benchmarks validating that a known parsed ReturnDetail
+// BenchmarkRDAddendumAString benchmarks validating that a known parsed ReturnDetailAddendumA
 // can return to a string of the same value
 func BenchmarkRDAddendumAString(b *testing.B) {
 	b.ReportAllocs()

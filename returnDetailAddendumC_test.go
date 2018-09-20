@@ -4,7 +4,11 @@
 
 package x9
 
-import "testing"
+import (
+	"log"
+	"strings"
+	"testing"
+)
 
 // mockReturnDetailAddendumC creates a ReturnDetailAddendumC
 func mockReturnDetailAddendumC() ReturnDetailAddendumC {
@@ -13,7 +17,7 @@ func mockReturnDetailAddendumC() ReturnDetailAddendumC {
 	rdAddendumC.MicrofilmArchiveSequenceNumber = "1A"
 	rdAddendumC.LengthImageReferenceKey = 0034
 	rdAddendumC.ImageReferenceKey = "0"
-	rdAddendumC.Description = "Return Addendum C"
+	rdAddendumC.Description = "RD Addendum C"
 	rdAddendumC.UserField = ""
 	return rdAddendumC
 }
@@ -39,7 +43,7 @@ func testMockReturnDetailAddendumC(t testing.TB) {
 	if rdAddendumC.ImageReferenceKey != "0" {
 		t.Error("ImageReferenceKey does not validate and will break other tests")
 	}
-	if rdAddendumC.Description != "Return Addendum C" {
+	if rdAddendumC.Description != "RD Addendum C" {
 		t.Error("Description does not validate and will break other tests")
 	}
 	if rdAddendumC.UserField != "" {
@@ -47,15 +51,116 @@ func testMockReturnDetailAddendumC(t testing.TB) {
 	}
 }
 
-// TestMockReturnDetailAddendumC tests creating a ReturnDetailAddendumB
+// TestMockReturnDetailAddendumC tests creating a ReturnDetailAddendumC
 func TestMockReturnDetailAddendumC(t *testing.T) {
-	testMockReturnDetailAddendumB(t)
+	testMockReturnDetailAddendumC(t)
 }
 
-// BenchmarkMockReturnDetailAddendumC benchmarks creating a ReturnDetailAddendumB
+// BenchmarkMockReturnDetailAddendumC benchmarks creating a ReturnDetailAddendumC
 func BenchmarkMockReturnDetailAddendumC(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testMockReturnDetailAddendumC(b)
+	}
+}
+
+// parseReturnDetailAddendumC validates parsing a ReturnDetailAddendumC
+func parseReturnDetailAddendumC(t testing.TB) {
+	var line = "3411A             00340                                 RD Addendum C           "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	clh := mockCashLetterHeader()
+	r.addCurrentCashLetter(NewCashLetter(clh))
+	bh := mockBundleHeader()
+	rb := NewReturnBundle(bh)
+	r.currentCashLetter.AddReturnBundle(rb)
+	r.addCurrentReturnBundle(rb)
+	cd := mockReturnDetail()
+	r.currentCashLetter.currentReturnBundle.AddReturnDetail(cd)
+
+	if err := r.parseReturnDetailAddendumC(); err != nil {
+		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
+	}
+	record := r.currentCashLetter.currentReturnBundle.GetReturns()[0].ReturnDetailAddendumC[0]
+	if record.recordType != "34" {
+		t.Errorf("RecordType Expected '34' got: %v", record.recordType)
+	}
+	if record.ImageReferenceKeyIndicatorField() != "1" {
+		t.Errorf("ImageReferenceKeyIndicator Expected '1' got: %v",
+			record.ImageReferenceKeyIndicatorField())
+	}
+	if record.MicrofilmArchiveSequenceNumberField() != "1A             " {
+		t.Errorf("MicrofilmArchiveSequenceNumber Expected '1A             ' got: %v",
+			record.MicrofilmArchiveSequenceNumberField())
+	}
+	if record.LengthImageReferenceKeyField() != "0034" {
+		t.Errorf("ImageReferenceKeyLength Expected '0034' got: %v", record.LengthImageReferenceKeyField())
+	}
+	if record.ImageReferenceKeyField() != "0                                 " {
+		t.Errorf("ImageReferenceKey Expected '0                                 ' got: %v",
+			record.ImageReferenceKeyField())
+	}
+	if record.DescriptionField() != "RD Addendum C  " {
+		t.Errorf("Description Expected 'RD Addendum C  ' got: %v", record.DescriptionField())
+	}
+	if record.UserFieldField() != "    " {
+		t.Errorf("UserField Expected '    ' got: %v", record.UserFieldField())
+	}
+	if record.reservedField() != "     " {
+		t.Errorf("reserved Expected '     ' got: %v", record.reservedField())
+	}
+}
+
+// TestParseReturnDetailAddendumC tests validating parsing a ReturnDetailAddendumC
+func TestParseReturnDetailAddendumC(t *testing.T) {
+	parseReturnDetailAddendumC(t)
+}
+
+// BenchmarkParseReturnDetailAddendumC benchmarks validating parsing a ReturnDetailAddendumC
+func BenchmarkParseReturnDetailAddendumC(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		parseReturnDetailAddendumC(b)
+	}
+}
+
+// testRDAddendumCString validates that a known parsed ReturnDetailAddendumC can return to a string of the same value
+func testRDAddendumCString(t testing.TB) {
+	var line = "3411A             00340                                 RD Addendum C           "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	clh := mockCashLetterHeader()
+	r.addCurrentCashLetter(NewCashLetter(clh))
+	bh := mockBundleHeader()
+	rb := NewReturnBundle(bh)
+	r.currentCashLetter.AddReturnBundle(rb)
+	r.addCurrentReturnBundle(rb)
+	cd := mockReturnDetail()
+	r.currentCashLetter.currentReturnBundle.AddReturnDetail(cd)
+
+	if err := r.parseReturnDetailAddendumC(); err != nil {
+		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
+	}
+	record := r.currentCashLetter.currentReturnBundle.GetReturns()[0].ReturnDetailAddendumC[0]
+
+	if record.String() != line {
+		t.Errorf("Strings do not match")
+	}
+}
+
+// TestRDAddendumCString tests validating that a known parsed ReturnDetailAddendumC can return to a string of the
+// same value
+func TestRDAddendumCString(t *testing.T) {
+	testRDAddendumCString(t)
+}
+
+// BenchmarkRDAddendumCString benchmarks validating that a known parsed ReturnDetailAddendumC
+// can return to a string of the same value
+func BenchmarkRDAddendumCString(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		testRDAddendumCString(b)
 	}
 }
