@@ -106,7 +106,7 @@ func (r *Reader) Read() (File, error) {
 }
 
 func (r *Reader) parseLine() error {
-	switch r.line[:1] {
+	switch r.line[:2] {
 	case fileHeaderPos:
 		if err := r.parseFileHeader(); err != nil {
 			return err
