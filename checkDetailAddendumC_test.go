@@ -34,34 +34,34 @@ func testMockCheckDetailAddendumC(t testing.TB) {
 		t.Error("mockCheckDetailAddendumC does not validate and will break other tests: ", err)
 	}
 	if cdAddendumC.recordType != "28" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if cdAddendumC.RecordNumber != 1 {
-		t.Error("RecordNumber does not validate and will break other tests")
+		t.Error("RecordNumber does not validate")
 	}
 	if cdAddendumC.EndorsingBankRoutingNumber != "121042882" {
-		t.Error("EndorsingBankRoutingNumber does not validate and will break other tests")
+		t.Error("EndorsingBankRoutingNumber does not validate")
 	}
 	if cdAddendumC.EndorsingBankItemSequenceNumber != "1              " {
-		t.Error("EndorsingBankItemSequenceNumber does not validate and will break other tests")
+		t.Error("EndorsingBankItemSequenceNumber does not validate")
 	}
 	if cdAddendumC.TruncationIndicator != "Y" {
-		t.Error("TruncationIndicator does not validate and will break other tests")
+		t.Error("TruncationIndicator does not validate")
 	}
 	if cdAddendumC.ReturnReason != "A" {
-		t.Error("ReturnReason does not validate and will break other tests")
+		t.Error("ReturnReason does not validate")
 	}
 	if cdAddendumC.EndorsingBankConversionIndicator != "1" {
-		t.Error("EndorsingBankConversionIndicator does not validate and will break other tests")
+		t.Error("EndorsingBankConversionIndicator does not validate")
 	}
 	if cdAddendumC.EndorsingBankCorrectionIndicator != 0 {
-		t.Error("EndorsingBankCorrectionIndicator does not validate and will break other tests")
+		t.Error("EndorsingBankCorrectionIndicator does not validate")
 	}
 	if cdAddendumC.UserField != "" {
-		t.Error("UserField does not validate and will break other tests")
+		t.Error("UserField does not validate")
 	}
 	if cdAddendumC.EndorsingBankIdentifier != 0 {
-		t.Error("EndorsingBankIdentifier does not validate and will break other tests")
+		t.Error("EndorsingBankIdentifier does not validate")
 	}
 }
 

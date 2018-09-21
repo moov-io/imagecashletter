@@ -33,25 +33,25 @@ func testMockBundleControl(t testing.TB) {
 		t.Error("mockBundleControl does not validate and will break other tests: ", err)
 	}
 	if bc.recordType != "70" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if bc.BundleItemsCount != 1 {
-		t.Error("BundleItemsCount does not validate and will break other tests")
+		t.Error("BundleItemsCount does not validate")
 	}
 	if bc.BundleTotalAmount != 100000 {
-		t.Error("BundleTotalAmount does not validate and will break other tests")
+		t.Error("BundleTotalAmount does not validate")
 	}
 	if bc.MICRValidTotalAmount != 0 {
-		t.Error("MICRValidTotalAmount does not validate and will break other tests")
+		t.Error("MICRValidTotalAmount does not validate")
 	}
 	if bc.BundleImagesCount != 0 {
-		t.Error("BundleImagesCount does not validate and will break other tests")
+		t.Error("BundleImagesCount does not validate")
 	}
 	if bc.UserField != "" {
-		t.Error("UserField does not validate and will break other tests")
+		t.Error("UserField does not validate")
 	}
 	if bc.CreditTotalIndicator != 0 {
-		t.Error("CreditTotalIndicator does not validate and will break other tests")
+		t.Error("CreditTotalIndicator does not validate")
 	}
 }
 

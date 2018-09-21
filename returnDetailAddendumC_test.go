@@ -26,28 +26,28 @@ func mockReturnDetailAddendumC() ReturnDetailAddendumC {
 func testMockReturnDetailAddendumC(t testing.TB) {
 	rdAddendumC := mockReturnDetailAddendumC()
 	if err := rdAddendumC.Validate(); err != nil {
-		t.Error("MockReturnDetailAddendumB does not validate and will break other tests: ", err)
+		t.Error("MockReturnDetailAddendumC does not validate and will break other tests: ", err)
 	}
 	if rdAddendumC.recordType != "34" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if rdAddendumC.ImageReferenceKeyIndicator != 1 {
-		t.Error("ImageReferenceKeyIndicator does not validate and will break other tests")
+		t.Error("ImageReferenceKeyIndicator does not validate")
 	}
 	if rdAddendumC.MicrofilmArchiveSequenceNumber != "1A" {
-		t.Error("MicrofilmArchiveSequenceNumber does not validate and will break other tests")
+		t.Error("MicrofilmArchiveSequenceNumber does not validate")
 	}
 	if rdAddendumC.LengthImageReferenceKey != 0034 {
-		t.Error("LengthImageReferenceKey does not validate and will break other tests")
+		t.Error("LengthImageReferenceKey does not validate")
 	}
 	if rdAddendumC.ImageReferenceKey != "0" {
-		t.Error("ImageReferenceKey does not validate and will break other tests")
+		t.Error("ImageReferenceKey does not validate")
 	}
 	if rdAddendumC.Description != "RD Addendum C" {
-		t.Error("Description does not validate and will break other tests")
+		t.Error("Description does not validate")
 	}
 	if rdAddendumC.UserField != "" {
-		t.Error("UserField does not validate and will break other tests")
+		t.Error("UserField does not validate")
 	}
 }
 

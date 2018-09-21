@@ -354,7 +354,7 @@ func (r *Reader) parseCheckDetailAddendumC() error {
 // parseReturnDetail takes the input record string and parses the ReturnDetail values
 func (r *Reader) parseReturnDetail() error {
 	r.recordName = "ReturnDetail"
-	if r.currentCashLetter.currentBundle.BundleHeader == nil {
+	if r.currentCashLetter.currentReturnBundle.BundleHeader == nil {
 		return r.error(&FileError{Msg: msgFileBundleOutside})
 	}
 	rd := new(ReturnDetail)

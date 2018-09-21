@@ -35,34 +35,34 @@ func testMockReturnDetailAddendumD(t testing.TB) {
 		t.Error("MockReturnDetailAddendumD does not validate and will break other tests: ", err)
 	}
 	if rdAddendumD.recordType != "35" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if rdAddendumD.RecordNumber != 1 {
-		t.Error("RecordNumber does not validate and will break other tests")
+		t.Error("RecordNumber does not validate")
 	}
 	if rdAddendumD.EndorsingBankRoutingNumber != "121042882" {
-		t.Error("EndorsingBankRoutingNumber does not validate and will break other tests")
+		t.Error("EndorsingBankRoutingNumber does not validate")
 	}
 	if rdAddendumD.EndorsingBankItemSequenceNumber != "1              " {
-		t.Error("EndorsingBankItemSequenceNumber does not validate and will break other tests")
+		t.Error("EndorsingBankItemSequenceNumber does not validate")
 	}
 	if rdAddendumD.TruncationIndicator != "Y" {
-		t.Error("TruncationIndicator does not validate and will break other tests")
+		t.Error("TruncationIndicator does not validate")
 	}
 	if rdAddendumD.ReturnReason != "A" {
-		t.Error("ReturnReason does not validate and will break other tests")
+		t.Error("ReturnReason does not validate")
 	}
 	if rdAddendumD.EndorsingBankConversionIndicator != "1" {
-		t.Error("EndorsingBankConversionIndicator does not validate and will break other tests")
+		t.Error("EndorsingBankConversionIndicator does not validate")
 	}
 	if rdAddendumD.EndorsingBankCorrectionIndicator != 0 {
-		t.Error("EndorsingBankCorrectionIndicator does not validate and will break other tests")
+		t.Error("EndorsingBankCorrectionIndicator does not validate")
 	}
 	if rdAddendumD.UserField != "" {
-		t.Error("UserField does not validate and will break other tests")
+		t.Error("UserField does not validate")
 	}
 	if rdAddendumD.EndorsingBankIdentifier != 0 {
-		t.Error("EndorsingBankIdentifier does not validate and will break other tests")
+		t.Error("EndorsingBankIdentifier does not validate")
 	}
 }
 

@@ -34,25 +34,25 @@ func testMockCashLetterControl(t testing.TB) {
 		t.Error("mockCashLetterControl does not validate and will break other tests: ", err)
 	}
 	if clc.recordType != "90" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if clc.CashLetterBundleCount != 1 {
-		t.Error("CashLetterBundleCount does not validate and will break other tests")
+		t.Error("CashLetterBundleCount does not validate")
 	}
 	if clc.CashLetterItemsCount != 1 {
-		t.Error("CashLetterItemsCount does not validate and will break other tests")
+		t.Error("CashLetterItemsCount does not validate")
 	}
 	if clc.CashLetterTotalAmount != 100000 {
-		t.Error("CashLetterTotalAmount does not validate and will break other tests")
+		t.Error("CashLetterTotalAmount does not validate")
 	}
 	if clc.CashLetterImagesCount != 0 {
-		t.Error("CashLetterImagesCount does not validate and will break other tests")
+		t.Error("CashLetterImagesCount does not validate")
 	}
 	if clc.ECEInstitutionName != "Wells Fargo" {
-		t.Error("ImmediateOriginContactName does not validate and will break other tests")
+		t.Error("ImmediateOriginContactName does not validate")
 	}
 	if clc.CreditTotalIndicator != 0 {
-		t.Error("CreditTotalIndicator does not validate and will break other tests")
+		t.Error("CreditTotalIndicator does not validate")
 	}
 }
 

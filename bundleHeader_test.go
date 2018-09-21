@@ -33,28 +33,28 @@ func testMockBundleHeader(t testing.TB) {
 		t.Error("mockBundleHeader does not validate and will break other tests: ", err)
 	}
 	if bh.recordType != "20" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if bh.CollectionTypeIndicator != "01" {
-		t.Error("CollectionTypeIndicator does not validate and will break other tests")
+		t.Error("CollectionTypeIndicator does not validate")
 	}
 	if bh.DestinationRoutingNumber != "231380104" {
-		t.Error("DestinationRoutingNumber does not validate and will break other tests")
+		t.Error("DestinationRoutingNumber does not validate")
 	}
 	if bh.ECEInstitutionRoutingNumber != "121042882" {
-		t.Error("ECEInstitutionRoutingNumber does not validate and will break other tests")
+		t.Error("ECEInstitutionRoutingNumber does not validate")
 	}
 	if bh.BundleID != "9999" {
-		t.Error("BundleID does not validate and will break other tests")
+		t.Error("BundleID does not validate")
 	}
 	if bh.BundleSequenceNumber != "1" {
-		t.Error("SequenceNumber does not validate and will break other tests")
+		t.Error("SequenceNumber does not validate")
 	}
 	if bh.CycleNumber != "01" {
-		t.Error("CycleNumber does not validate and will break other tests")
+		t.Error("CycleNumber does not validate")
 	}
 	if bh.UserField != "" {
-		t.Error("UserField does not validate and will break other tests")
+		t.Error("UserField does not validate")
 	}
 }
 

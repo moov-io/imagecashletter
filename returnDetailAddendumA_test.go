@@ -35,37 +35,37 @@ func testMockReturnDetailAddendumA(t testing.TB) {
 		t.Error("mockReturnDetailAddendumA does not validate and will break other tests: ", err)
 	}
 	if rdAddendumA.recordType != "32" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType RecordNumber does not validate")
 	}
 	if rdAddendumA.RecordNumber != 1 {
-		t.Error("RecordNumber does not validate and will break other tests")
+		t.Error("RecordNumber does not validate")
 	}
 	if rdAddendumA.ReturnLocationRoutingNumber != "121042882" {
-		t.Error("ReturnLocationRoutingNumber does not validate and will break other tests")
+		t.Error("ReturnLocationRoutingNumber does not validate")
 	}
 	if rdAddendumA.BOFDItemSequenceNumber != "1              " {
-		t.Error("BOFDItemSequenceNumber does not validate and will break other tests")
+		t.Error("BOFDItemSequenceNumber does not validate")
 	}
 	if rdAddendumA.BOFDAccountNumber != "938383" {
-		t.Error("BOFDAccountNumber does not validate and will break other tests")
+		t.Error("BOFDAccountNumber does not validate")
 	}
 	if rdAddendumA.BOFDBranchCode != "01" {
-		t.Error("BOFDBranchCode does not validate and will break other tests")
+		t.Error("BOFDBranchCode does not validate")
 	}
 	if rdAddendumA.PayeeName != "Test Payee" {
-		t.Error("PayeeName does not validate and will break other tests")
+		t.Error("PayeeName does not validate")
 	}
 	if rdAddendumA.TruncationIndicator != "Y" {
-		t.Error("TruncationIndicator does not validate and will break other tests")
+		t.Error("TruncationIndicator does not validate")
 	}
 	if rdAddendumA.BOFDConversionIndicator != "1" {
-		t.Error("BOFDConversionIndicator does not validate and will break other tests")
+		t.Error("BOFDConversionIndicator does not validate")
 	}
 	if rdAddendumA.BOFDCorrectionIndicator != 0 {
-		t.Error("BOFDCorrectionIndicator does not validate and will break other tests")
+		t.Error("BOFDCorrectionIndicator does not validate")
 	}
 	if rdAddendumA.UserField != "" {
-		t.Error("UserField does not validate and will break other tests")
+		t.Error("UserField does not validate")
 	}
 }
 
@@ -148,7 +148,7 @@ func TestParseReturnDetailAddendumA(t *testing.T) {
 	parseReturnDetailAddendumA(t)
 }
 
-// BenchmarkParseReturnDetailAddendumA benchmarks validatingparsing a ReturnDetailAddendumA
+// BenchmarkParseReturnDetailAddendumA benchmarks validates parsing a ReturnDetailAddendumA
 func BenchmarkParseReturnDetailAddendumA(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {

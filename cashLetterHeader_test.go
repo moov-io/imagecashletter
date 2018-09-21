@@ -38,43 +38,43 @@ func testMockCashLetterHeader(t testing.TB) {
 		t.Error("mockCashLetterHeader does not validate and will break other tests: ", err)
 	}
 	if clh.recordType != "10" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if clh.CollectionTypeIndicator != "01" {
-		t.Error("CollectionTypeIndicator does not validate and will break other tests")
+		t.Error("CollectionTypeIndicator does not validate")
 	}
 	if clh.DestinationRoutingNumber != "231380104" {
-		t.Error("DestinationRoutingNumber does not validate and will break other tests")
+		t.Error("DestinationRoutingNumber does not validate")
 	}
 	if clh.ECEInstitutionRoutingNumber != "121042882" {
-		t.Error("ECEInstitutionRoutingNumber does not validate and will break other tests")
+		t.Error("ECEInstitutionRoutingNumber does not validate")
 	}
 	if clh.CashLetterRecordTypeIndicator != "I" {
-		t.Error("RecordTypeIndicator does not validate and will break other tests")
+		t.Error("RecordTypeIndicator does not validate")
 	}
 	if clh.CashLetterDocumentationTypeIndicator != "G" {
-		t.Error("DocumentationTypeIndicator does not validate and will break other tests")
+		t.Error("DocumentationTypeIndicator does not validate")
 	}
 	if clh.CashLetterID != "A1" {
-		t.Error("CashLetterID does not validate and will break other tests")
+		t.Error("CashLetterID does not validate")
 	}
 	if clh.OriginatorContactName != "Contact Name" {
-		t.Error("OriginatorContactName does not validate and will break other tests")
+		t.Error("OriginatorContactName does not validate")
 	}
 	if clh.OriginatorContactPhoneNumber != "5558675552" {
-		t.Error("OriginatorContactPhoneNumber does not validate and will break other tests")
+		t.Error("OriginatorContactPhoneNumber does not validate")
 	}
 	if clh.FedWorkType != "" {
-		t.Error("FedWorkType does not validate and will break other tests")
+		t.Error("FedWorkType does not validate")
 	}
 	if clh.ReturnsIndicator != "" {
-		t.Error("ReturnsIndicator does not validate and will break other tests")
+		t.Error("ReturnsIndicator does not validate")
 	}
 	if clh.UserField != "" {
-		t.Error("UserField does not validate and will break other tests")
+		t.Error("UserField does not validate")
 	}
 	if clh.reserved != "" {
-		t.Error("Reserved does not validate and will break other tests")
+		t.Error("Reserved does not validate")
 	}
 }
 

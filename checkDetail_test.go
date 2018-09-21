@@ -36,49 +36,49 @@ func testMockCheckDetail(t testing.TB) {
 		t.Error("mockCheckDetail does not validate and will break other tests: ", err)
 	}
 	if cd.recordType != "25" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if cd.AuxiliaryOnUs != "123456789" {
-		t.Error("AuxiliaryOnUs does not validate and will break other tests")
+		t.Error("AuxiliaryOnUs does not validate")
 	}
 	if cd.ExternalProcessingCode != "" {
-		t.Error("ExternalProcessingCode does not validate and will break other tests")
+		t.Error("ExternalProcessingCode does not validate")
 	}
 	if cd.PayorBankRoutingNumber != "03130001" {
-		t.Error("PayorBankRoutingNumber does not validate and will break other tests")
+		t.Error("PayorBankRoutingNumber does not validate")
 	}
 	if cd.PayorBankCheckDigit != "2" {
-		t.Error("PayorBankCheckDigit does not validate and will break other tests")
+		t.Error("PayorBankCheckDigit does not validate")
 	}
 	if cd.OnUs != "5558881" {
-		t.Error("OnUs does not validate and will break other tests")
+		t.Error("OnUs does not validate")
 	}
 	if cd.ItemAmount != 100000 {
-		t.Error("ItemAmount does not validate and will break other tests")
+		t.Error("ItemAmount does not validate")
 	}
 	if cd.EceInstitutionItemSequenceNumber != "1              " {
-		t.Error("EceInstitutionItemSequenceNumber does not validate and will break other tests")
+		t.Error("EceInstitutionItemSequenceNumber does not validate")
 	}
 	if cd.DocumentationTypeIndicator != "G" {
-		t.Error("DocumentationTypeIndicator does not validate and will break other tests")
+		t.Error("DocumentationTypeIndicator does not validate")
 	}
 	if cd.ReturnAcceptanceIndicator != "D" {
-		t.Error("ReturnAcceptanceIndicator does not validate and will break other tests")
+		t.Error("ReturnAcceptanceIndicator does not validate")
 	}
 	if cd.MICRValidIndicator != 1 {
-		t.Error("MICRValidIndicator does not validate and will break other tests")
+		t.Error("MICRValidIndicator does not validate")
 	}
 	if cd.BOFDIndicator != "Y" {
-		t.Error("BOFDIndicator does not validate and will break other tests")
+		t.Error("BOFDIndicator does not validate")
 	}
 	if cd.AddendumCount != 3 {
-		t.Error("AddendumCount does not validate and will break other tests")
+		t.Error("AddendumCount does not validate")
 	}
 	if cd.CorrectionIndicator != 0 {
-		t.Error("CorrectionIndicator does not validate and will break other tests")
+		t.Error("CorrectionIndicator does not validate")
 	}
 	if cd.ArchiveTypeIndicator != "B" {
-		t.Error("ArchiveTypeIndicator does not validate and will break other tests")
+		t.Error("ArchiveTypeIndicator does not validate")
 	}
 }
 
@@ -103,8 +103,9 @@ func parseCheckDetail(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
 
 	if err := r.parseCheckDetail(); err != nil {
 		t.Errorf("%T: %s", err, err)
@@ -180,8 +181,9 @@ func testCDString(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
 	if err := r.parseCheckDetail(); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}

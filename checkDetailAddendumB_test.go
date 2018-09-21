@@ -30,25 +30,25 @@ func testMockCheckDetailAddendumB(t testing.TB) {
 		t.Error("MockCheckDetailAddendumB does not validate and will break other tests: ", err)
 	}
 	if cdAddendumB.recordType != "27" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if cdAddendumB.ImageReferenceKeyIndicator != 1 {
-		t.Error("ImageReferenceKeyIndicator does not validate and will break other tests")
+		t.Error("ImageReferenceKeyIndicator does not validate")
 	}
 	if cdAddendumB.MicrofilmArchiveSequenceNumber != "1A" {
-		t.Error("MicrofilmArchiveSequenceNumber does not validate and will break other tests")
+		t.Error("MicrofilmArchiveSequenceNumber does not validate")
 	}
 	if cdAddendumB.LengthImageReferenceKey != 0034 {
-		t.Error("LengthImageReferenceKey does not validate and will break other tests")
+		t.Error("LengthImageReferenceKey does not validate")
 	}
 	if cdAddendumB.ImageReferenceKey != "0" {
-		t.Error("ImageReferenceKey does not validate and will break other tests")
+		t.Error("ImageReferenceKey does not validate")
 	}
 	if cdAddendumB.Description != "CD Addendum B" {
-		t.Error("Description does not validate and will break other tests")
+		t.Error("Description does not validate")
 	}
 	if cdAddendumB.UserField != "" {
-		t.Error("UserField does not validate and will break other tests")
+		t.Error("UserField does not validate")
 	}
 }
 
