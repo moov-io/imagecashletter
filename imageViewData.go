@@ -41,12 +41,14 @@ type ImageViewData struct {
 	// Return.ECEInstitutionItemSequenceNumber associated with the image view conveyed in this Image View Data Record.
 	// The ECE institution must construct the sequence number to guarantee uniqueness for a given routing number,
 	// business day, and cycle number. Must contain a numeric value.
-	EceInstitutionItemSequenceNumber int `json:"eceInstitutionItemSequenceNumber"`
+	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
 	// SecurityOriginatorName is a unique name that creates the Digital Signature for data to be exchanged.
+	// ToDo: Validation
 	// Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
 	SecurityOriginatorName string `json:"securityOriginatorName"`
 	// SecurityAuthenticatorName is the unique name that performs authentication on received data.
+	// ToDo: Validation
 	// Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
 	SecurityAuthenticatorName string `json:"securityAuthenticatorName"`
@@ -54,6 +56,7 @@ type ImageViewData struct {
 	// to the recipient (authenticator) so the recipient can obtain the key needed to validate the signature. The name
 	// is typically used as an identifier related to the key pair used to sign the image. The name is mutually known to
 	// the security originator and the security authenticator and is unique to this relationship.
+	// ToDo: Validation
 	// Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
 	SecurityKeyName string `json:"securityKeyName"`
@@ -62,13 +65,14 @@ type ImageViewData struct {
 	// correct orientation. When clipping information is present, the nature of the Area of Interest defined by the
 	// clipping rectangle is determined by the value of the ImageViewDetail.ViewDescriptor. Primary front and rear
 	// views shall only have a Defined Value of 0.  Can be blank.
+	// ToDo: Add validator
 	// Values:
 	// 0: Clipping information is not present–full view present
 	// 1: Clipping origin is top left corner of image view
 	// 2: Clipping origin is top right corner of image view
 	// 3: Clipping origin is bottom right corner of image view
 	// 4: Clipping origin is bottom left corner of image view
-	ClippingOrigin string `json:"clippingOrigin"`
+	ClippingOrigin int `json:"clippingOrigin"`
 	// ClippingCoordinateH1 is a number that represents the horizontal offset in pixels from the clipping origin to the
 	// nearest vertical side of the clipping rectangle. The clipping coordinates (h1, h2, v1, v2) convey the clipping
 	// rectangle’s offsets in both horizontal (h) and vertical (v) directions. The offset values collectively establish
@@ -102,18 +106,18 @@ type ImageViewData struct {
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
 	// Values: 0000	ImageReferenceKey is not present
 	// 0001–9999: Valid when ImageReferenceKey is present
-	LengthImageReferenceKey int `json:"lengthImageReferenceKey"`
+	LengthImageReferenceKey string `json:"lengthImageReferenceKey"`
 	// ImageReferenceKey is assigned by the ECE institution that creates the CheckDetail or Return, and the related
 	// Image View Records. This designator, when used, shall uniquely identify the item image to the ECE institution.
 	// This designator is a special key with significance to the creating institution. It is intended to be used to
 	// locate within an archive the unique image associated with the item. The designator could be a full access path
 	// and name that would allow direct look up and access to the image, for example a URL. This shall match
 	// CheckDetailAddendumB.ImageReferenceKey, or ReturnAddendumCImageReferenceKey Record, if used.
-	// Size: 0 –9999
+	// Size: 0 – 9999
 	ImageReferenceKey string `json:"imageReferenceKey"`
 	// LengthDigitalSignature is the number of bytes in the Image View Data.DigitalSignature.
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
-	LengthDigitalSignature int `json:"lengthDigitalSignature"`
+	LengthDigitalSignature string `json:"lengthDigitalSignature"`
 	// DigitalSignature is created by applying the cryptographic algorithm and private/secret key against the data to
 	// be protected. The Digital Signature provides user authentication and data integrity.
 	// Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
@@ -123,7 +127,7 @@ type ImageViewData struct {
 	// LengthImageData is the number of bytes in the ImageViewData.ImageData.
 	// Shall be present when ImageViewDetail.ImageIndicator is NOT 0
 	// Values: 0000001–99999999
-	LengthImageData int `json:"lengthImageData"`
+	LengthImageData string `json:"lengthImageData"`
 	// ImageData contains the image view. The Image Data generally consists of an image header and the image raster
 	// data. The image header provides information that is required to interpret the image raster data. The image
 	// raster data contains the scanned image of the physical item in raster (line by line) format. Each scan line
@@ -162,7 +166,7 @@ func (ivData *ImageViewData) Parse(record string) {
 	// 20-21
 	ivData.CycleNumber = ivData.parseStringField(record[19:21])
 	// 22-36
-	ivData.EceInstitutionItemSequenceNumber = ivData.parseNumField(record[21:36])
+	ivData.EceInstitutionItemSequenceNumber = ivData.parseStringField(record[21:36])
 	// 37-52
 	ivData.SecurityOriginatorName = ivData.parseStringField(record[36:52])
 	// 53-68
@@ -170,7 +174,7 @@ func (ivData *ImageViewData) Parse(record string) {
 	// 69-84
 	ivData.SecurityKeyName = ivData.parseStringField(record[68:84])
 	// 85-85
-	ivData.ClippingOrigin = ivData.parseStringField(record[84:85])
+	ivData.ClippingOrigin = ivData.parseNumField(record[84:85])
 	// 86-89
 	ivData.ClippingCoordinateH1 = ivData.parseStringField(record[85:89])
 	// 90-93
@@ -180,18 +184,20 @@ func (ivData *ImageViewData) Parse(record string) {
 	// 98-101
 	ivData.ClippingCoordinateV2 = ivData.parseStringField(record[97:101])
 	// 102-105
-	ivData.LengthImageReferenceKey = ivData.parseNumField(record[101:105])
+	ivData.LengthImageReferenceKey = ivData.parseStringField(record[101:105])
+	lirk := ivData.parseNumField(ivData.LengthImageReferenceKey)
 	// 106 - (105+X)
-	ivData.ImageReferenceKey = ivData.parseStringField(record[105:ivData.LengthImageReferenceKey])
-	// (106+X) – (110+X)
-	ivData.LengthDigitalSignature = ivData.parseNumField(record[106+ivData.LengthImageReferenceKey : 110+ivData.LengthImageReferenceKey])
-	// (111+X) – (110+X+Y)
-	ivData.DigitalSignature = ivData.stringToBytesField(record[110+ivData.LengthImageReferenceKey : 110+ivData.LengthImageReferenceKey+ivData.LengthDigitalSignature])
-	// (111+X+Y) – (117+X+Y)
-	ivData.LengthImageData = ivData.parseNumField(record[110+ivData.LengthImageReferenceKey+ivData.LengthDigitalSignature : 117+ivData.LengthImageReferenceKey+ivData.LengthDigitalSignature])
-	// (118+X+Y) – (117+X+Y+Z)
-	ivData.ImageData = ivData.stringToBytesField(record[117+ivData.LengthImageReferenceKey+ivData.LengthDigitalSignature : 117+ivData.LengthImageReferenceKey+ivData.LengthDigitalSignature+ivData.LengthImageData])
-
+	ivData.ImageReferenceKey = ivData.parseStringField(record[105 : 105+lirk])
+	// (106 + lirk) – (110 + lirk)
+	ivData.LengthDigitalSignature = ivData.parseStringField(record[105+lirk : 110+lirk])
+	lds := ivData.parseNumField(ivData.LengthDigitalSignature)
+	// (111 + lirk) – (110 + lirk + lds)
+	ivData.DigitalSignature = ivData.stringToBytesField(record[110+lirk : 110+lirk+lds])
+	// (111 + lirk + lds) – (117 + lirk + lds)
+	ivData.LengthImageData = ivData.parseStringField(record[110+lirk+lds : 117+lirk+lds])
+	lid := ivData.parseNumField(ivData.LengthImageData)
+	// (118 + lirk + lds) – (117+lirk + lds + lid)
+	ivData.ImageData = ivData.stringToBytesField(record[117+lirk+lds : 117+lirk+lds+lid])
 }
 
 // String writes the ImageViewData struct to a string.
@@ -200,6 +206,9 @@ func (ivData *ImageViewData) String() string {
 	buf.Grow(105)
 	buf.WriteString(ivData.recordType)
 	buf.WriteString(ivData.EceInstitutionRoutingNumberField())
+	buf.WriteString(ivData.BundleBusinessDateField())
+	buf.WriteString(ivData.CycleNumberField())
+	buf.WriteString(ivData.EceInstitutionItemSequenceNumberField())
 	buf.WriteString(ivData.SecurityOriginatorNameField())
 	buf.WriteString(ivData.SecurityAuthenticatorNameField())
 	buf.WriteString(ivData.SecurityKeyNameField())
@@ -209,13 +218,13 @@ func (ivData *ImageViewData) String() string {
 	buf.WriteString(ivData.ClippingCoordinateV1Field())
 	buf.WriteString(ivData.ClippingCoordinateV2Field())
 	buf.WriteString(ivData.LengthImageReferenceKeyField())
-	buf.Grow(int(ivData.LengthImageReferenceKey))
+	buf.Grow(ivData.parseNumField(ivData.LengthImageReferenceKey))
 	buf.WriteString(ivData.ImageReferenceKeyField())
 	buf.WriteString(ivData.LengthDigitalSignatureField())
-	buf.Grow(int(ivData.LengthDigitalSignature))
+	buf.Grow(ivData.parseNumField(ivData.LengthDigitalSignature))
 	buf.WriteString(ivData.DigitalSignatureField())
 	buf.WriteString(ivData.LengthImageDataField())
-	buf.Grow(int(ivData.LengthImageData))
+	buf.Grow(ivData.parseNumField(ivData.LengthImageData))
 	buf.WriteString(ivData.ImageDataField())
 	return buf.String()
 }
@@ -276,82 +285,82 @@ func (ivData *ImageViewData) BundleBusinessDateField() string {
 
 // CycleNumberField gets the CycleNumber field
 func (ivData *ImageViewData) CycleNumberField() string {
-	return ivData.stringField(ivData.CycleNumber, 2)
+	return ivData.alphaField(ivData.CycleNumber, 2)
 }
 
 // EceInstitutionItemSequenceNumberField gets a string of the EceInstitutionItemSequenceNumber field
 func (ivData *ImageViewData) EceInstitutionItemSequenceNumberField() string {
-	return ivData.numericField(ivData.EceInstitutionItemSequenceNumber, 15)
+	return ivData.alphaField(ivData.EceInstitutionItemSequenceNumber, 15)
 }
 
 // SecurityOriginatorNameField gets the SecurityOriginatorName field
 func (ivData *ImageViewData) SecurityOriginatorNameField() string {
-	return ivData.stringField(ivData.SecurityOriginatorName, 16)
+	return ivData.alphaField(ivData.SecurityOriginatorName, 16)
 }
 
 // SecurityAuthenticatorNameField gets the SecurityAuthenticatorName field
 func (ivData *ImageViewData) SecurityAuthenticatorNameField() string {
-	return ivData.stringField(ivData.SecurityAuthenticatorName, 16)
+	return ivData.alphaField(ivData.SecurityAuthenticatorName, 16)
 }
 
 // SecurityKeyNameField gets the SecurityKeyName field
 func (ivData *ImageViewData) SecurityKeyNameField() string {
-	return ivData.stringField(ivData.SecurityKeyName, 16)
+	return ivData.alphaField(ivData.SecurityKeyName, 16)
 }
 
 // ClippingOriginField gets the ClippingOrigin field
 func (ivData *ImageViewData) ClippingOriginField() string {
-	return ivData.stringField(ivData.ClippingOrigin, 1)
+	return ivData.numericField(ivData.ClippingOrigin, 1)
 }
 
 // ClippingCoordinateH1Field gets the ClippingCoordinateH1 field
 func (ivData *ImageViewData) ClippingCoordinateH1Field() string {
-	return ivData.stringField(ivData.ClippingCoordinateH1, 4)
+	return ivData.alphaField(ivData.ClippingCoordinateH1, 4)
 }
 
 // ClippingCoordinateH2Field gets the ClippingCoordinateH2 field
 func (ivData *ImageViewData) ClippingCoordinateH2Field() string {
-	return ivData.stringField(ivData.ClippingCoordinateH2, 4)
+	return ivData.alphaField(ivData.ClippingCoordinateH2, 4)
 }
 
 // ClippingCoordinateV1Field gets the ClippingCoordinateV1 field
 func (ivData *ImageViewData) ClippingCoordinateV1Field() string {
-	return ivData.stringField(ivData.ClippingCoordinateH1, 4)
+	return ivData.alphaField(ivData.ClippingCoordinateH1, 4)
 }
 
 // ClippingCoordinateV2Field gets the ClippingCoordinateH2 field
 func (ivData *ImageViewData) ClippingCoordinateV2Field() string {
-	return ivData.stringField(ivData.ClippingCoordinateV2, 4)
+	return ivData.alphaField(ivData.ClippingCoordinateV2, 4)
 }
 
 // LengthImageReferenceKeyField gets the LengthImageReferenceKey field
 func (ivData *ImageViewData) LengthImageReferenceKeyField() string {
-	return ivData.numericField(ivData.LengthImageReferenceKey, 4)
+	return ivData.stringField(ivData.LengthImageReferenceKey, 4)
 }
 
 // ImageReferenceKeyField gets the ImageReferenceKey field
 func (ivData *ImageViewData) ImageReferenceKeyField() string {
-	return ivData.stringField(ivData.ImageReferenceKey, uint(ivData.LengthImageReferenceKey))
+	return ivData.alphaField(ivData.ImageReferenceKey, uint(ivData.parseNumField(ivData.LengthImageReferenceKey)))
 }
 
 // LengthDigitalSignatureField gets the LengthDigitalSignature field
 func (ivData *ImageViewData) LengthDigitalSignatureField() string {
-	return ivData.numericField(ivData.LengthDigitalSignature, 5)
+	return ivData.alphaField(ivData.LengthDigitalSignature, 5)
 }
 
 // DigitalSignatureField gets the DigitalSignature field []byte to string
 func (ivData *ImageViewData) DigitalSignatureField() string {
 	s := string(ivData.DigitalSignature[:])
-	return ivData.alphaField(s, uint(ivData.LengthDigitalSignature))
+	return ivData.alphaField(s, uint(ivData.parseNumField(ivData.LengthDigitalSignature)))
 }
 
 // LengthImageDataField gets the LengthImageData field
 func (ivData *ImageViewData) LengthImageDataField() string {
-	return ivData.numericField(ivData.LengthImageData, 7)
+	return ivData.alphaField(ivData.LengthImageData, 7)
 }
 
 // ImageDataField gets the ImageData field []byte to string
 func (ivData *ImageViewData) ImageDataField() string {
 	s := string(ivData.ImageData[:])
-	return ivData.alphaField(s, uint(ivData.LengthImageData))
+	return ivData.alphaField(s, uint(ivData.parseNumField(ivData.LengthImageData)))
 }
