@@ -37,20 +37,21 @@ const (
 	imageViewAnalysisPos = "54"
 	bundleControlPos     = "70"
 	//no longer supported by the standard - boxSummaryPos           = "75"
-	//routingNumberSummaryPos = "85"
-	cashLetterControlPos = "90"
-	fileControlPos       = "99"
+	routingNumberSummaryPos = "85"
+	cashLetterControlPos    = "90"
+	fileControlPos          = "99"
 )
 
 // Errors strings specific to parsing a Batch container
 var (
 	//msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
 	// specific messages
-	msgRecordLength            = "Must be at least 80 characters and found %d"
-	msgFileCashLetterInside    = "Inside of current cash letter"
-	msgFileCashLetterControl   = "Cash letter control without a current cash letter"
-	msgFileBundleOutside       = "Outside of current bundle"
-	msgFileReturnBundleOutside = "Outside of current return bundle"
+	msgRecordLength             = "Must be at least 80 characters and found %d"
+	msgFileCashLetterInside     = "Inside of current cash letter"
+	msgFileCashLetterControl    = "Cash letter control without a current cash letter"
+	msgFileRoutingNumberSummary = "Routing Number Summary without a current cash letter"
+	msgFileBundleOutside        = "Outside of current bundle"
+	msgFileReturnBundleOutside  = "Outside of current return bundle"
 	//msgFileBundleInside      = "Inside of current bundle"
 	msgFileBundleControl = "Bundle control without a current bundle"
 	msgFileControl       = "None or more than one file control exists"
@@ -73,11 +74,11 @@ func (e *FileError) Error() string {
 type File struct {
 	// ID is a client defined string used as a reference to this record
 	ID string `json:"id"`
-	// FileHeader is a FileHeader
+	// FileHeader is an X9 FileHeader
 	Header FileHeader `json:"fileHeader"`
-	// CashLetters are Cash Letters
+	// CashLetters are X9 Cash Letters
 	CashLetters []CashLetter `json:"cashLetters,omitempty"`
-	// FileControl is a FileControl
+	// FileControl is an X9 FileControl
 	Control FileControl `json:"fileControl"`
 }
 

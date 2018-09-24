@@ -196,6 +196,10 @@ func (r *Reader) parseLine() error {
 			r.currentCashLetter.AddReturnBundle(r.currentCashLetter.currentReturnBundle)
 			r.currentCashLetter.currentReturnBundle = new(ReturnBundle)
 		}
+	case routingNumberSummaryPos:
+		if err := r.parseRoutingNumberSummary(); err != nil {
+			return err
+		}
 	case cashLetterControlPos:
 		if err := r.parseCashLetterControl(); err != nil {
 			return err
@@ -636,7 +640,22 @@ func (r *Reader) parseBundleControl() error {
 	if err := r.currentCashLetter.currentBundle.GetControl().Validate(); err != nil {
 		return r.error(err)
 	}
-	//r.currentCashLetter.AddBundle(r.currentCashLetter.currentBundle)
+	return nil
+}
+
+// parseRoutingNumberSummary takes the input record string and parses the RoutingNumberSummary values
+func (r *Reader) parseRoutingNumberSummary() error {
+	r.recordName = "RoutingNumberSummary"
+	if r.currentCashLetter.CashLetterHeader == nil {
+		// RoutingNumberSummary without a current CashLetter
+		return r.error(&FileError{Msg: msgFileRoutingNumberSummary})
+	}
+	rns := NewRoutingNumberSummary()
+	rns.Parse(r.line)
+	if err := rns.Validate(); err != nil {
+		return err
+	}
+	r.currentCashLetter.AddRoutingNumberSummary(rns)
 	return nil
 }
 

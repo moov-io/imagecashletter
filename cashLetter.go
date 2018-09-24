@@ -18,6 +18,8 @@ type CashLetter struct {
 	currentBundle *Bundle
 	// currentReturnBundle is the current ReturnBundle being parsed
 	currentReturnBundle *ReturnBundle
+	// RoutingNumberSummary is an X9 RoutingNumberSummary
+	RoutingNumberSummary []*RoutingNumberSummary `json:"routingNumberSummary,omitempty"`
 	// CashLetterControl is a Cash Letter Control Record
 	CashLetterControl *CashLetterControl `json:"cashLetterControl,omitempty"`
 }
@@ -77,4 +79,15 @@ func (cl *CashLetter) AddReturnBundle(bundle *ReturnBundle) []*ReturnBundle {
 // GetReturnBundles returns a slice of ReturnBundles for the CashLetter
 func (cl *CashLetter) GetReturnBundles() []*ReturnBundle {
 	return cl.ReturnBundles
+}
+
+// AddRoutingNumberSummary appends a RoutingNumberSummary to the CashLetter
+func (cl *CashLetter) AddRoutingNumberSummary(rns *RoutingNumberSummary) []*RoutingNumberSummary {
+	cl.RoutingNumberSummary = append(cl.RoutingNumberSummary, rns)
+	return cl.RoutingNumberSummary
+}
+
+// GetRoutingNumberSummary returns a slice of RoutingNumberSummary for the CashLetter
+func (cl *CashLetter) GetRoutingNumberSummary() []*RoutingNumberSummary {
+	return cl.RoutingNumberSummary
 }
