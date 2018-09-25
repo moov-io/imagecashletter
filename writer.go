@@ -66,20 +66,20 @@ func (w *Writer) Flush() {
 
 // writeCashLetter writes a CashLetter to a file
 func (w *Writer) writeCashLetter(file *File) error {
-	//CashLetters
 	for _, cl := range file.CashLetters {
 		if _, err := w.w.WriteString(cl.GetHeader().String() + "\n"); err != nil {
 			return err
 		}
 		w.lineNum++
-		// Write Bundles
 		if err := w.writeBundle(cl); err != nil {
 			return err
 		}
 		if err := w.writeReturnBundle(cl); err != nil {
 			return err
 		}
-
+		if err := w.writeRoutingNumberSummary(cl); err != nil {
+			return err
+		}
 		if _, err := w.w.WriteString(cl.GetControl().String() + "\n"); err != nil {
 			return err
 		}
@@ -90,49 +90,56 @@ func (w *Writer) writeCashLetter(file *File) error {
 
 // writeBundle writes a Bundle to a CashLetter
 func (w *Writer) writeBundle(cl CashLetter) error {
-
 	for _, b := range cl.GetBundles() {
 		if _, err := w.w.WriteString(b.GetHeader().String() + "\n"); err != nil {
 			return err
 		}
 		w.lineNum++
-
-		// Write CheckDetails
 		if err := w.writeCheckDetail(b); err != nil {
 			return err
 		}
-
+		w.lineNum++
 		if _, err := w.w.WriteString(b.GetControl().String() + "\n"); err != nil {
 			return err
 		}
+		w.lineNum++
 	}
 	return nil
 }
 
 // writeReturnBundle writes a ReturnBundle to a CashLetter
 func (w *Writer) writeReturnBundle(cl CashLetter) error {
-
 	for _, rb := range cl.GetReturnBundles() {
 		if _, err := w.w.WriteString(rb.GetHeader().String() + "\n"); err != nil {
 			return err
 		}
 		w.lineNum++
-
-		// Write ReturnDetails
 		if err := w.writeReturnDetail(rb); err != nil {
 			return err
 		}
+		w.lineNum++
 
 		if _, err := w.w.WriteString(rb.GetControl().String() + "\n"); err != nil {
 			return err
 		}
+		w.lineNum++
+	}
+	return nil
+}
+
+// writeRoutingNumberSummary writes a RoutingNumberSummary to a CashLetter
+func (w *Writer) writeRoutingNumberSummary(cl CashLetter) error {
+	for _, rns := range cl.GetRoutingNumberSummary() {
+		if _, err := w.w.WriteString(rns.String() + "\n"); err != nil {
+			return err
+		}
+		w.lineNum++
 	}
 	return nil
 }
 
 // writeCheckDetail writes a CheckDetail to a Bundle
 func (w *Writer) writeCheckDetail(b *Bundle) error {
-
 	for _, cd := range b.GetChecks() {
 		if _, err := w.w.WriteString(cd.String() + "\n"); err != nil {
 			return err
@@ -169,7 +176,6 @@ func (w *Writer) writeCheckDetailAddendum(cd *CheckDetail) error {
 		}
 	}
 	w.lineNum++
-
 	return nil
 }
 
@@ -237,7 +243,6 @@ func (w *Writer) writeReturnDetailAddendum(rd *ReturnDetail) error {
 		}
 	}
 	w.lineNum++
-
 	return nil
 }
 
