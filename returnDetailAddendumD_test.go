@@ -24,7 +24,6 @@ func mockReturnDetailAddendumD() ReturnDetailAddendumD {
 	rdAddendumD.ReturnReason = "A"
 	rdAddendumD.UserField = ""
 	rdAddendumD.EndorsingBankIdentifier = 0
-	rdAddendumD.UserField = ""
 	return rdAddendumD
 }
 

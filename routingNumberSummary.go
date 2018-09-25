@@ -60,7 +60,7 @@ func (rns *RoutingNumberSummary) String() string {
 	buf.Grow(80)
 	buf.WriteString(rns.recordType)
 	buf.WriteString(rns.CashLetterRoutingNumberField())
-	buf.WriteString(rns.RoutingNumberItemCountField())
+	buf.WriteString(rns.RoutingNumberTotalAmountField())
 	buf.WriteString(rns.RoutingNumberItemCountField())
 	buf.WriteString(rns.UserFieldField())
 	buf.WriteString(rns.reservedField())
