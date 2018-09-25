@@ -14,12 +14,14 @@ type CashLetter struct {
 	Bundles []*Bundle `json:"bundles,omitempty"`
 	// ReturnBundles is an array of ReturnBundle
 	ReturnBundles []*ReturnBundle `json:"returnBundle,omitempty"`
+	// RoutingNumberSummary is an X9 RoutingNumberSummary
+	RoutingNumberSummary []*RoutingNumberSummary `json:"routingNumberSummary,omitempty"`
 	// currentBundle is the currentBundle being parsed
 	currentBundle *Bundle
 	// currentReturnBundle is the current ReturnBundle being parsed
 	currentReturnBundle *ReturnBundle
 	// RoutingNumberSummary is an X9 RoutingNumberSummary
-	RoutingNumberSummary []*RoutingNumberSummary `json:"routingNumberSummary,omitempty"`
+	currentRoutingNumberSummary *RoutingNumberSummary
 	// CashLetterControl is a Cash Letter Control Record
 	CashLetterControl *CashLetterControl `json:"cashLetterControl,omitempty"`
 }

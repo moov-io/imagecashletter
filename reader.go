@@ -69,6 +69,12 @@ func (r *Reader) addCurrentReturnBundle(returnBundle *ReturnBundle) {
 	r.currentCashLetter.currentReturnBundle = returnBundle
 }
 
+// addCurrentRoutingNumberSummary creates the CurrentRoutingNumberSummary for the file being read. A successful
+// currentRoutingNumberSummary will be added to r.File once parsed.
+func (r *Reader) addCurrentRoutingNumberSummary(rns *RoutingNumberSummary) {
+	r.currentCashLetter.currentRoutingNumberSummary = rns
+}
+
 // NewReader returns a new ACH Reader that reads from r.
 func NewReader(r io.Reader) *Reader {
 	return &Reader{
@@ -200,6 +206,8 @@ func (r *Reader) parseLine() error {
 		if err := r.parseRoutingNumberSummary(); err != nil {
 			return err
 		}
+		r.currentCashLetter.AddRoutingNumberSummary(r.currentCashLetter.currentRoutingNumberSummary)
+		r.currentCashLetter.currentRoutingNumberSummary = new(RoutingNumberSummary)
 	case cashLetterControlPos:
 		if err := r.parseCashLetterControl(); err != nil {
 			return err
@@ -650,12 +658,11 @@ func (r *Reader) parseRoutingNumberSummary() error {
 		// RoutingNumberSummary without a current CashLetter
 		return r.error(&FileError{Msg: msgFileRoutingNumberSummary})
 	}
-	rns := NewRoutingNumberSummary()
-	rns.Parse(r.line)
-	if err := rns.Validate(); err != nil {
-		return err
+	r.currentCashLetter.currentRoutingNumberSummary.Parse(r.line)
+	// Ensure valid Routing NUmber Summary
+	if err := r.currentCashLetter.currentRoutingNumberSummary.Validate(); err != nil {
+		return r.error(err)
 	}
-	r.currentCashLetter.AddRoutingNumberSummary(rns)
 	return nil
 }
 
