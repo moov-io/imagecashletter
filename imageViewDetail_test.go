@@ -99,7 +99,7 @@ func TestMockImageViewDetail(t *testing.T) {
 
 // TestParseIVDetail validates parsing an ImageViewDetail
 func TestParseIVDetail(t *testing.T) {
-	var line= "501031300012201809050000000000000000000000000000000000000         0             "
+	var line = "501031300012201809050000000000000000000000000000000000000         0             "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()

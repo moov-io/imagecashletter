@@ -28,8 +28,8 @@ func TestRoutingNumberSummary(t *testing.T) {
 	}
 }
 
-// parseRoutingNumberSummary validates parsing a RoutingNumberSummary
-func parseRoutingNumberSummary(t testing.TB) {
+// TestParseRoutingNumberSummary validates parsing a RoutingNumberSummary
+func TestParseRoutingNumberSummary(t *testing.T) {
 	var line = "8523138010400000000100000000001                                                 "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -62,21 +62,8 @@ func parseRoutingNumberSummary(t testing.TB) {
 	}
 }
 
-// TestParseRoutingNumberSummary test validates parsing a RoutingNumberSummary
-func TestParseRoutingNumberSummary(t *testing.T) {
-	parseRoutingNumberSummary(t)
-}
-
-// BenchmarkParseRoutingNumberSummary benchmark validates parsing a RoutingNumberSummary
-func BenchmarkParseRoutingNumberSummary(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		parseRoutingNumberSummary(b)
-	}
-}
-
-// testRoutingNumberSummaryString validates that a known parsed RoutingNumberSummary can return to a string of the same value
-func testRoutingNumberSummaryString(t testing.TB) {
+// TestRoutingNumberSummaryString validates that a known parsed RoutingNumberSummary can return to a string of the same value
+func TestRoutingNumberSummaryString(t *testing.T) {
 	var line = "8523138010400000000100000000001                                                 "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -98,20 +85,5 @@ func testRoutingNumberSummaryString(t testing.TB) {
 
 	if record.String() != line {
 		t.Errorf("Strings do not match")
-	}
-}
-
-// TestRoutingNumberSummaryString tests validating that a known parsed RoutingNumberSummary can return to a string of the
-// same value
-func TestRoutingNumberSummaryString(t *testing.T) {
-	testRoutingNumberSummaryString(t)
-}
-
-// BenchmarkRoutingNumberSummaryString benchmarks validating that a known parsed RoutingNumberSummaryAddendumB
-// can return to a string of the same value
-func BenchmarkRoutingNumberSummaryString(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testRoutingNumberSummaryString(b)
 	}
 }
