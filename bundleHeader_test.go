@@ -110,7 +110,7 @@ func parseBundleHeader(t testing.TB) {
 		t.Errorf("BundleID Expected '9999      ' got:'%v'", record.BundleIDField())
 	}
 	if record.BundleSequenceNumberField() != "1   " {
-		t.Errorf("BundleSequenceNumber Expected '0001' got: '%v'", record.BundleSequenceNumberField())
+		t.Errorf("BundleSequenceNumber Expected '1   ' got: '%v'", record.BundleSequenceNumberField())
 	}
 	if record.CycleNumberField() != "01" {
 		t.Errorf("CycleNumber Expected '01' got:'%v'", record.CycleNumberField())

@@ -46,6 +46,78 @@ func TestMockImageViewAnalysis(t *testing.T) {
 	if err := ivAnalysis.Validate(); err != nil {
 		t.Error("mockImageViewAnalysis does not validate and will break other tests: ", err)
 	}
+	if ivAnalysis.GlobalImageQuality != 2 {
+		t.Error("GlobalImageQuality does not validate")
+	}
+	if ivAnalysis.GlobalImageUsability != 2 {
+		t.Error("GlobalImageUsability does not validate")
+	}
+	if ivAnalysis.ImagingBankSpecificTest != 0 {
+		t.Error("ImagingBankSpecificTest does not validate")
+	}
+	if ivAnalysis.PartialImage != 2 {
+		t.Error("PartialImage does not validate")
+	}
+	if ivAnalysis.ExcessiveImageSkew != 2 {
+		t.Error("ExcessiveImageSkew does not validate")
+	}
+	if ivAnalysis.PiggybackImage != 2 {
+		t.Error("PiggybackImage does not validate")
+	}
+	if ivAnalysis.TooLightOrTooDark != 2 {
+		t.Error("TooLightOrTooDark does not validate")
+	}
+	if ivAnalysis.StreaksAndOrBands != 2 {
+		t.Error("StreaksAndOrBands does not validate")
+	}
+	if ivAnalysis.BelowMinimumImageSize != 2 {
+		t.Error("BelowMinimumImageSize does not validate")
+	}
+	if ivAnalysis.ExceedsMaximumImageSize != 2 {
+		t.Error("ExceedsMaximumImageSize does not validate")
+	}
+	if ivAnalysis.ImageEnabledPOD != 1 {
+		t.Error("ImageEnabledPOD does not validate")
+	}
+	if ivAnalysis.SourceDocumentBad != 0 {
+		t.Error("SourceDocumentBad does not validate")
+	}
+	if ivAnalysis.DateUsability != 2 {
+		t.Error("DateUsability does not validate")
+	}
+	if ivAnalysis.PayeeUsability != 2 {
+		t.Error("PayeeUsability does not validate")
+	}
+	if ivAnalysis.ConvenienceAmountUsability != 2 {
+		t.Error("ConvenienceAmountUsability does not validate")
+	}
+	if ivAnalysis.AmountInWordsUsability != 2 {
+		t.Error("AmountInWordsUsability does not validate")
+	}
+	if ivAnalysis.SignatureUsability != 2 {
+		t.Error("SignatureUsability does not validate")
+	}
+	if ivAnalysis.PayorNameAddressUsability != 2 {
+		t.Error("PayorNameAddressUsability does not validate")
+	}
+	if ivAnalysis.MICRLineUsability != 2 {
+		t.Error("MICRLineUsability does not validate")
+	}
+	if ivAnalysis.MemoLineUsability != 2 {
+		t.Error("MemoLineUsability does not validate")
+	}
+	if ivAnalysis.PayorBankNameAddressUsability != 2 {
+		t.Error("PayorBankNameAddressUsability does not validate")
+	}
+	if ivAnalysis.PayeeEndorsementUsability != 2 {
+		t.Error("PayeeEndorsementUsability does not validate")
+	}
+	if ivAnalysis.BOFDEndorsementUsability != 2 {
+		t.Error("BOFDEndorsementUsability does not validate")
+	}
+	if ivAnalysis.TransitEndorsementUsability != 2 {
+		t.Error("TransitEndorsementUsability does not validate")
+	}
 }
 
 // TestIVAnalysisString validates that a known parsed ImageViewAnalysis can return to a string of the same value

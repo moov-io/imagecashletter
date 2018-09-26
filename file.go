@@ -78,6 +78,8 @@ type File struct {
 	Header FileHeader `json:"fileHeader"`
 	// CashLetters are X9 Cash Letters
 	CashLetters []CashLetter `json:"cashLetters,omitempty"`
+	// Bundles are X9 Bundles
+	Bundles []Bundle `json:"bundle,omitempty"`
 	// FileControl is an X9 FileControl
 	Control FileControl `json:"fileControl"`
 }
@@ -100,6 +102,24 @@ func (f *File) Create() error {
 	if len(f.CashLetters) <= 0 {
 		return &FileError{FieldName: "CashLetters", Value: strconv.Itoa(len(f.CashLetters)), Msg: "must have []*CashLetters to be built"}
 	}
+
+	// add 2 for FileHeader/control and reset if build was called twice do to error
+	fileCashLetterCount := len(f.CashLetters)
+	fileTotalRecordCount := 2
+	fileTotalItemCount := 0
+	fileTotalAmount := 0
+
+	// create FileControl from calculated values
+	fc := NewFileControl()
+	fc.CashLetterCount = fileCashLetterCount
+	fc.TotalRecordCount = fileTotalRecordCount
+	fc.TotalItemCount = fileTotalItemCount
+	fc.FileTotalAmount = fileTotalAmount
+	// May need to pass in a FC for these values
+	fc.ImmediateOriginContactName = ""
+	fc.ImmediateOriginContactPhoneNumber = ""
+	fc.CreditTotalIndicator = 0
+
 	return nil
 }
 

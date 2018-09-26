@@ -41,6 +41,14 @@ func (cl *CashLetter) Validate() error {
 	return nil
 }
 
+// ToDo:  Add verify
+
+// build creates valid bundle by building sequence numbers and CashLetterControl. An error is returned if
+// the bundle being built has invalid records.
+/*func (cl *CashLetter) build() error {
+	return nil
+}*/
+
 // SetHeader appends a CashLetterHeader to the CashLetter
 func (cl *CashLetter) SetHeader(cashLetterHeader *CashLetterHeader) {
 	cl.CashLetterHeader = cashLetterHeader
