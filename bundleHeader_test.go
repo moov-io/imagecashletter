@@ -80,7 +80,6 @@ func parseBundleHeader(t testing.TB) {
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
 	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
 
 	if err := r.parseBundleHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
@@ -148,7 +147,6 @@ func testBHString(t testing.TB) {
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
 	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
 	if err := r.parseBundleHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
 		log.Fatal(err)

@@ -109,7 +109,7 @@ func (w *Writer) writeBundle(cl CashLetter) error {
 
 // writeReturnBundle writes a ReturnBundle to a CashLetter
 func (w *Writer) writeReturnBundle(cl CashLetter) error {
-	for _, rb := range cl.GetReturnBundles() {
+	for _, rb := range cl.GetBundles() {
 		if _, err := w.w.WriteString(rb.GetHeader().String() + "\n"); err != nil {
 			return err
 		}
@@ -200,7 +200,7 @@ func (w *Writer) writeCheckImageView(cd *CheckDetail) error {
 }
 
 // writeReturnDetail writes a ReturnDetail to a ReturnBundle
-func (w *Writer) writeReturnDetail(b *ReturnBundle) error {
+func (w *Writer) writeReturnDetail(b *Bundle) error {
 	for _, rd := range b.GetReturns() {
 		if _, err := w.w.WriteString(rd.String() + "\n"); err != nil {
 			return err

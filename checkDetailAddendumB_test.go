@@ -15,7 +15,7 @@ import (
 func mockCheckDetailAddendumB() CheckDetailAddendumB {
 	cdAddendumB := NewCheckDetailAddendumB()
 	cdAddendumB.ImageReferenceKeyIndicator = 1
-	cdAddendumB.MicrofilmArchiveSequenceNumber = "1A"
+	cdAddendumB.MicrofilmArchiveSequenceNumber = "1A             "
 	cdAddendumB.LengthImageReferenceKey = 0034
 	cdAddendumB.ImageReferenceKey = "0"
 	cdAddendumB.Description = "CD Addendum B"
@@ -35,7 +35,7 @@ func testMockCheckDetailAddendumB(t testing.TB) {
 	if cdAddendumB.ImageReferenceKeyIndicator != 1 {
 		t.Error("ImageReferenceKeyIndicator does not validate")
 	}
-	if cdAddendumB.MicrofilmArchiveSequenceNumber != "1A" {
+	if cdAddendumB.MicrofilmArchiveSequenceNumber != "1A             " {
 		t.Error("MicrofilmArchiveSequenceNumber does not validate")
 	}
 	if cdAddendumB.LengthImageReferenceKey != 0034 {

@@ -98,15 +98,15 @@ func TestParseReturnDetail(t *testing.T) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	rb := NewReturnBundle(bh)
-	r.currentCashLetter.AddReturnBundle(rb)
-	r.addCurrentReturnBundle(rb)
+	rb := NewBundle(bh)
+	r.currentCashLetter.AddBundle(rb)
+	r.addCurrentBundle(rb)
 
 	if err := r.parseReturnDetail(); err != nil {
 		t.Errorf("%T: %s", err, err)
 		log.Fatal(err)
 	}
-	record := r.currentCashLetter.currentReturnBundle.GetReturns()[0]
+	record := r.currentCashLetter.currentBundle.GetReturns()[0]
 
 	if record.recordType != "31" {
 		t.Errorf("RecordType Expected '31' got: %v", record.recordType)
@@ -158,15 +158,15 @@ func testReturnDetailString(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	rb := NewReturnBundle(bh)
-	r.currentCashLetter.AddReturnBundle(rb)
-	r.addCurrentReturnBundle(rb)
+	rb := NewBundle(bh)
+	r.currentCashLetter.AddBundle(rb)
+	r.addCurrentBundle(rb)
 
 	if err := r.parseReturnDetail(); err != nil {
 		t.Errorf("%T: %s", err, err)
 		log.Fatal(err)
 	}
-	record := r.currentCashLetter.currentReturnBundle.GetReturns()[0]
+	record := r.currentCashLetter.currentBundle.GetReturns()[0]
 
 	if record.String() != line {
 		t.Errorf("Strings do not match")

@@ -40,7 +40,7 @@ func mockImageViewAnalysis() ImageViewAnalysis {
 	return ivAnalysis
 }
 
-// testMockImageViewAnalysis creates an ImageViewAnalysis
+// TestMockImageViewAnalysis creates an ImageViewAnalysis
 func TestMockImageViewAnalysis(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	if err := ivAnalysis.Validate(); err != nil {

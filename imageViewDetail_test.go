@@ -34,7 +34,7 @@ func mockImageViewDetail() ImageViewDetail {
 	return ivDetail
 }
 
-// testMockImageViewDetail creates an ImageViewData
+// TestMockImageViewDetail creates an ImageViewData
 func TestMockImageViewDetail(t *testing.T) {
 	ivDetail := mockImageViewDetail()
 	if err := ivDetail.Validate(); err != nil {

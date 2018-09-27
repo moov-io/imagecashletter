@@ -46,13 +46,13 @@ const (
 var (
 	//msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
 	// specific messages
-	msgRecordLength             = "Must be at least 80 characters and found %d"
+	//msgRecordLength             = "Must be at least 80 characters and found %d"
 	msgFileCashLetterInside     = "Inside of current cash letter"
 	msgFileCashLetterControl    = "Cash letter control without a current cash letter"
 	msgFileRoutingNumberSummary = "Routing Number Summary without a current cash letter"
 	msgFileBundleOutside        = "Outside of current bundle"
-	msgFileReturnBundleOutside  = "Outside of current return bundle"
-	//msgFileBundleInside      = "Inside of current bundle"
+	//msgFileReturnBundleOutside  = "Outside of current return bundle"
+	msgFileBundleInside  = "Inside of current bundle"
 	msgFileBundleControl = "Bundle control without a current bundle"
 	msgFileControl       = "None or more than one file control exists"
 	msgFileHeader        = "None or more than one file headers exists"

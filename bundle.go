@@ -60,7 +60,7 @@ func (b *Bundle) Validate() error {
 
 // build creates valid bundle by building sequence numbers and BundleControl. An error is returned if
 // the bundle being built has invalid records.
-/*func (b *Bundle) build() error {
+func (b *Bundle) build() error {
 	// Requires a valid BundleHeader
 	if err := b.BundleHeader.Validate(); err != nil {
 		return err
@@ -69,7 +69,7 @@ func (b *Bundle) Validate() error {
 		return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "entries", Msg: msgBundleEntries}
 	}
 
-	// Create record sequence numbers
+	//
 	itemCount := 0
 	bundleTotalAmount := 0
 	micrValidTotalAmount := 0
@@ -77,6 +77,7 @@ func (b *Bundle) Validate() error {
 
 	// ToDo: Sequences
 
+	// Forward Items
 	for _, cd := range b.Checks {
 		itemCount = itemCount + 1
 		itemCount = itemCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
@@ -85,6 +86,24 @@ func (b *Bundle) Validate() error {
 		if cd.MICRValidIndicator == 1 {
 			micrValidTotalAmount = micrValidTotalAmount + cd.ItemAmount
 		}
+		// Validate CheckDetailAddendum* and ImageView*
+		if err := b.ValidateForwardItems(cd); err != nil {
+			return err
+		}
+	}
+
+	// Return Items
+	for _, rd := range b.Returns {
+		itemCount = itemCount + 1
+		itemCount = itemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC)
+		itemCount = itemCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
+		bundleTotalAmount = bundleTotalAmount + rd.ItemAmount
+		// ToDo: micrValidTotalAmount for returns?
+		// Validate ReturnDetailAddendum* and ImageView*
+		if err := b.ValidateReturnItems(rd); err != nil {
+			return err
+		}
+
 	}
 
 	// build a BundleControl record
@@ -96,9 +115,18 @@ func (b *Bundle) Validate() error {
 	// ToDo:  Add Credit Functionality?
 	bc.CreditTotalIndicator = 0
 	b.BundleControl = bc
-
 	return nil
-}*/
+}
+
+// Create takes Batch Header and Entries and builds a valid batch
+func (b *Bundle) Create() error {
+	// generates sequence numbers and batch control
+	if err := b.build(); err != nil {
+		return err
+	}
+
+	return b.Validate()
+}
 
 // SetHeader appends an BundleHeader to the Bundle
 func (b *Bundle) SetHeader(bundleHeader *BundleHeader) {
@@ -121,11 +149,98 @@ func (b *Bundle) GetControl() *BundleControl {
 }
 
 // AddCheckDetail appends a CheckDetail to the Bundle
-func (b *Bundle) AddCheckDetail(check *CheckDetail) {
-	b.Checks = append(b.Checks, check)
+func (b *Bundle) AddCheckDetail(cd *CheckDetail) {
+	b.Checks = append(b.Checks, cd)
 }
 
 // GetChecks returns a slice of check details for the Bundle
 func (b *Bundle) GetChecks() []*CheckDetail {
 	return b.Checks
+}
+
+// AddReturnDetail appends a ReturnDetail to the Bundle
+func (b *Bundle) AddReturnDetail(rd *ReturnDetail) {
+	b.Returns = append(b.Returns, rd)
+}
+
+// GetReturns returns a slice of return details for the Bundle
+func (b *Bundle) GetReturns() []*ReturnDetail {
+	return b.Returns
+}
+
+// ValidateForwardItems calls Validate function for check items
+func (b *Bundle) ValidateForwardItems(cd *CheckDetail) error {
+	// Validate items
+	for _, addendumA := range cd.CheckDetailAddendumA {
+		if err := addendumA.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, addendumB := range cd.CheckDetailAddendumB {
+		if err := addendumB.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, addendumC := range cd.CheckDetailAddendumC {
+		if err := addendumC.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, ivDetail := range cd.ImageViewDetail {
+		if err := ivDetail.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, ivData := range cd.ImageViewDetail {
+		if err := ivData.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, ivAnalysis := range cd.ImageViewDetail {
+		if err := ivAnalysis.Validate(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// ValidateReturnItems calls Validate function for return items
+func (b *Bundle) ValidateReturnItems(rd *ReturnDetail) error {
+	// Validate items
+	for _, addendumA := range rd.ReturnDetailAddendumA {
+		if err := addendumA.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, addendumB := range rd.ReturnDetailAddendumB {
+		if err := addendumB.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, addendumC := range rd.ReturnDetailAddendumC {
+		if err := addendumC.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, addendumD := range rd.ReturnDetailAddendumD {
+		if err := addendumD.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, ivDetail := range rd.ImageViewDetail {
+		if err := ivDetail.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, ivData := range rd.ImageViewDetail {
+		if err := ivData.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, ivAnalysis := range rd.ImageViewDetail {
+		if err := ivAnalysis.Validate(); err != nil {
+			return err
+		}
+	}
+	return nil
 }

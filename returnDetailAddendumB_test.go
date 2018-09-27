@@ -66,17 +66,17 @@ func parseReturnDetailAddendumB(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	rb := NewReturnBundle(bh)
-	r.currentCashLetter.AddReturnBundle(rb)
-	r.addCurrentReturnBundle(rb)
+	rb := NewBundle(bh)
+	r.currentCashLetter.AddBundle(rb)
+	r.addCurrentBundle(rb)
 	rd := mockReturnDetail()
-	r.currentCashLetter.currentReturnBundle.AddReturnDetail(rd)
+	r.currentCashLetter.currentBundle.AddReturnDetail(rd)
 
 	if err := r.parseReturnDetailAddendumB(); err != nil {
 		t.Errorf("%T: %s", err, err)
 		log.Fatal(err)
 	}
-	record := r.currentCashLetter.currentReturnBundle.GetReturns()[0].ReturnDetailAddendumB[0]
+	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumB[0]
 
 	if record.recordType != "33" {
 		t.Errorf("RecordType Expected '33' got: %v", record.recordType)
@@ -116,17 +116,17 @@ func testRDAddendumBString(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	rb := NewReturnBundle(bh)
-	r.currentCashLetter.AddReturnBundle(rb)
-	r.addCurrentReturnBundle(rb)
+	rb := NewBundle(bh)
+	r.currentCashLetter.AddBundle(rb)
+	r.addCurrentBundle(rb)
 	rd := mockReturnDetail()
-	r.currentCashLetter.currentReturnBundle.AddReturnDetail(rd)
+	r.currentCashLetter.currentBundle.AddReturnDetail(rd)
 
 	if err := r.parseReturnDetailAddendumB(); err != nil {
 		t.Errorf("%T: %s", err, err)
 		log.Fatal(err)
 	}
-	record := r.currentCashLetter.currentReturnBundle.GetReturns()[0].ReturnDetailAddendumB[0]
+	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumB[0]
 
 	if record.String() != line {
 		t.Errorf("Strings do not match")
