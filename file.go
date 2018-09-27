@@ -103,11 +103,53 @@ func (f *File) Create() error {
 		return &FileError{FieldName: "CashLetters", Value: strconv.Itoa(len(f.CashLetters)), Msg: "must have []*CashLetters to be built"}
 	}
 
-	// add 2 for FileHeader/control and reset if build was called twice do to error
 	fileCashLetterCount := len(f.CashLetters)
+	// add 2 for FileHeader/control and reset if build was called twice do to error
 	fileTotalRecordCount := 2
 	fileTotalItemCount := 0
 	fileTotalAmount := 0
+	cashLetterRecordCount := 0
+	bundleRecordCount := 0
+
+	// CashLetters
+	for _, cl := range f.CashLetters {
+		// Validate CashLetter
+		if err := cl.Validate(); err != nil {
+			return err
+		}
+		cashLetterRecordCount = cashLetterRecordCount + 2
+
+		// Bundles
+		for _, b := range cl.Bundles {
+			// Validate Bundle
+			if err := b.Validate(); err != nil {
+				return err
+			}
+			bundleRecordCount = bundleRecordCount + 2
+
+			// Check Items
+			for _, cd := range b.Checks {
+				if err := b.build(); err != nil {
+					return err
+				}
+				fileTotalItemCount = fileTotalItemCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
+				fileTotalItemCount = fileTotalItemCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
+				fileTotalAmount = fileTotalAmount + cd.ItemAmount
+			}
+
+			// Returns Items
+			for _, rd := range b.Returns {
+				if err := b.build(); err != nil {
+					return err
+				}
+				fileTotalItemCount = fileTotalItemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC)
+				fileTotalItemCount = fileTotalItemCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
+				fileTotalAmount = fileTotalAmount + rd.ItemAmount
+			}
+		}
+	}
+
+	fileTotalRecordCount = cashLetterRecordCount + bundleRecordCount + fileTotalItemCount
 
 	// create FileControl from calculated values
 	fc := NewFileControl()
@@ -119,7 +161,7 @@ func (f *File) Create() error {
 	fc.ImmediateOriginContactName = ""
 	fc.ImmediateOriginContactPhoneNumber = ""
 	fc.CreditTotalIndicator = 0
-
+	f.Control = fc
 	return nil
 }
 

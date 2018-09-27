@@ -50,6 +50,7 @@ type FileControl struct {
 func NewFileControl() FileControl {
 	fc := FileControl{
 		recordType: "99",
+		reserved:   "               ",
 	}
 	return fc
 }

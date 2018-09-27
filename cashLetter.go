@@ -44,10 +44,77 @@ func (cl *CashLetter) Validate() error {
 // ToDo:  Add verify
 
 // build creates valid bundle by building sequence numbers and CashLetterControl. An error is returned if
-// the bundle being built has invalid records.
-/*func (cl *CashLetter) build() error {
+// the CashLetter being built has invalid records.
+func (cl *CashLetter) build() error {
+
+	// Requires a valid BundleHeader
+	if err := cl.CashLetterHeader.Validate(); err != nil {
+		return err
+	}
+
+	// if len(cl.Bundles) == 0, it is an empty cash letter
+	cashLetterBundleCount := len(cl.Bundles)
+	cashLetterItemsCount := 0
+	cashLetterTotalAmount := 0
+	cashLetterImagesCount := 0
+
+	// ToDo: Sequences
+
+	// Bundles
+	for _, b := range cl.Bundles {
+		// Validate Bundle
+		if err := b.Validate(); err != nil {
+			return err
+		}
+
+		// Check Items
+		for _, cd := range b.Checks {
+
+			if err := b.build(); err != nil {
+				return err
+			}
+
+			cashLetterItemsCount = cashLetterItemsCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
+			cashLetterItemsCount = cashLetterItemsCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
+			cashLetterTotalAmount = cashLetterTotalAmount + cd.ItemAmount
+			cashLetterImagesCount = cashLetterImagesCount + len(cd.ImageViewDetail)
+		}
+
+		// Returns Items
+		for _, rd := range b.Returns {
+
+			if err := b.build(); err != nil {
+				return err
+			}
+
+			cashLetterItemsCount = cashLetterItemsCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC)
+			cashLetterItemsCount = cashLetterItemsCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
+			cashLetterTotalAmount = cashLetterTotalAmount + rd.ItemAmount
+			cashLetterImagesCount = cashLetterImagesCount + len(rd.ImageViewDetail)
+		}
+
+	}
+
+	// build a CashLetterControl record
+	clc := NewCashLetterControl()
+
+	clc.CashLetterBundleCount = cashLetterBundleCount
+	clc.CashLetterItemsCount = cashLetterItemsCount
+	clc.CashLetterTotalAmount = cashLetterTotalAmount
+	clc.CashLetterImagesCount = cashLetterImagesCount
+	clc.ECEInstitutionName = ""
+	clc.CreditTotalIndicator = 0
+	cl.CashLetterControl = clc
 	return nil
-}*/
+}
+
+// Create creates a CashLetter of Bundles containing CheckDetail or ReturnDetail
+func (cl *CashLetter) Create() error {
+	if err := cl.build(); err != nil {
+		return err
+	}
+	return cl.Validate()
+}
 
 // SetHeader appends a CashLetterHeader to the CashLetter
 func (cl *CashLetter) SetHeader(cashLetterHeader *CashLetterHeader) {
@@ -79,17 +146,6 @@ func (cl *CashLetter) AddBundle(bundle *Bundle) []*Bundle {
 func (cl *CashLetter) GetBundles() []*Bundle {
 	return cl.Bundles
 }
-
-/*// AddReturnBundle appends a ReturnBundle to the CashLetter
-func (cl *CashLetter) AddReturnBundle(bundle *ReturnBundle) []*ReturnBundle {
-	cl.ReturnBundles = append(cl.ReturnBundles, bundle)
-	return cl.ReturnBundles
-}
-
-// GetReturnBundles returns a slice of ReturnBundles for the CashLetter
-func (cl *CashLetter) GetReturnBundles() []*ReturnBundle {
-	return cl.ReturnBundles
-}*/
 
 // AddRoutingNumberSummary appends a RoutingNumberSummary to the CashLetter
 func (cl *CashLetter) AddRoutingNumberSummary(rns *RoutingNumberSummary) []*RoutingNumberSummary {

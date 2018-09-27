@@ -51,6 +51,7 @@ type BundleControl struct {
 func NewBundleControl() *BundleControl {
 	bc := &BundleControl{
 		recordType: "70",
+		reserved:   "                        ",
 	}
 	return bc
 }

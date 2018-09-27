@@ -39,7 +39,6 @@ type Bundle struct {
 }
 
 // NewBundle takes a BundleHeader and returns a Bundle
-// ToDo:  Follow up on returning a pointer when implementing tests and examples
 func NewBundle(bh *BundleHeader) *Bundle {
 	b := new(Bundle)
 	b.SetControl(NewBundleControl())
@@ -79,6 +78,11 @@ func (b *Bundle) build() error {
 
 	// Forward Items
 	for _, cd := range b.Checks {
+		// Validate CheckDetailAddendum* and ImageView*
+		if err := b.ValidateForwardItems(cd); err != nil {
+			return err
+		}
+
 		itemCount = itemCount + 1
 		itemCount = itemCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
 		itemCount = itemCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
@@ -86,24 +90,27 @@ func (b *Bundle) build() error {
 		if cd.MICRValidIndicator == 1 {
 			micrValidTotalAmount = micrValidTotalAmount + cd.ItemAmount
 		}
-		// Validate CheckDetailAddendum* and ImageView*
-		if err := b.ValidateForwardItems(cd); err != nil {
-			return err
-		}
+
+		bundleImagesCount = bundleImagesCount + len(cd.ImageViewDetail)
+
 	}
 
 	// Return Items
 	for _, rd := range b.Returns {
-		itemCount = itemCount + 1
-		itemCount = itemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC)
-		itemCount = itemCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
-		bundleTotalAmount = bundleTotalAmount + rd.ItemAmount
-		// ToDo: micrValidTotalAmount for returns?
+
 		// Validate ReturnDetailAddendum* and ImageView*
 		if err := b.ValidateReturnItems(rd); err != nil {
 			return err
 		}
 
+		itemCount = itemCount + 1
+		itemCount = itemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC)
+		itemCount = itemCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
+		bundleTotalAmount = bundleTotalAmount + rd.ItemAmount
+
+		// ToDo: micrValidTotalAmount for returns?
+
+		bundleImagesCount = bundleImagesCount + len(rd.ImageViewDetail)
 	}
 
 	// build a BundleControl record
@@ -118,13 +125,11 @@ func (b *Bundle) build() error {
 	return nil
 }
 
-// Create takes Batch Header and Entries and builds a valid batch
+// Create creates a Bundle of CheckDetail or ReturnDetail
 func (b *Bundle) Create() error {
-	// generates sequence numbers and batch control
 	if err := b.build(); err != nil {
 		return err
 	}
-
 	return b.Validate()
 }
 
