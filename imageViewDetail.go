@@ -113,21 +113,21 @@ type ImageViewDetail struct {
 	// SecurityKeySize is the length in bits of the cryptographic algorithm key used to create the Digital Signature
 	// in ImageViewData.DigitalSignature.
 	// Values: 00001–99999
-	SecurityKeySize string `json:"securityKeySize"`
+	SecurityKeySize int `json:"securityKeySize"`
 	// ProtectedDataStart is a number that represents the offset in bytes from the first byte (counted as byte 1)
-	// of the image data in ImageViewData.Image Data (Field 19) to the first byte of the image data protected by the
+	// of the image data in ImageViewData.ImageData to the first byte of the image data protected by the
 	// digital signature.
 	// Values:
 	// 0000000: Digital Signature is applied to the entire image data
 	// 0000001–9999999: Valid offset values
-	ProtectedDataStart string `json:"protectedDataStart"`
+	ProtectedDataStart int `json:"protectedDataStart"`
 	// ProtectedDataLength is number of contiguous bytes of image data in the related ImageViewData.ImageData
 	// protected by the digital signature starting with the byte indicated by the value of the ProtectedDataStart in
 	// this ImageViewDetail. The ProtectedDataLength value shall not exceed the ImageViewData.ImageDataLength.
 	// Defined Values:
 	// 0000000: Digital Signature is applied to entire image data
 	// 0000001–9999999: 	Valid length values
-	ProtectedDataLength string `json:"protectedDataLength"`
+	ProtectedDataLength int `json:"protectedDataLength"`
 	// ImageRecreateIndicator is a code that indicates whether the sender has the ability to recreate the image view
 	// conveyed in the related ImageViewData.ImageData.
 	// Values:
@@ -205,11 +205,11 @@ func (ivDetail *ImageViewDetail) Parse(record string) {
 	// 36-37
 	ivDetail.DigitalSignatureMethod = ivDetail.parseStringField(record[35:37])
 	// 38-42
-	ivDetail.SecurityKeySize = ivDetail.parseStringField(record[37:42])
+	ivDetail.SecurityKeySize = ivDetail.parseNumField(record[37:42])
 	// 43-49
-	ivDetail.ProtectedDataStart = ivDetail.parseStringField(record[42:49])
+	ivDetail.ProtectedDataStart = ivDetail.parseNumField(record[42:49])
 	// 50-56
-	ivDetail.ProtectedDataLength = ivDetail.parseStringField(record[49:56])
+	ivDetail.ProtectedDataLength = ivDetail.parseNumField(record[49:56])
 	// 57-57
 	ivDetail.ImageRecreateIndicator = ivDetail.parseNumField(record[56:57])
 	// 58-65
@@ -398,17 +398,17 @@ func (ivDetail *ImageViewDetail) DigitalSignatureMethodField() string {
 
 // SecurityKeySizeField gets the SecurityKeySize field
 func (ivDetail *ImageViewDetail) SecurityKeySizeField() string {
-	return ivDetail.alphaField(ivDetail.SecurityKeySize, 5)
+	return ivDetail.numericField(ivDetail.SecurityKeySize, 5)
 }
 
 // ProtectedDataStartField gets the ProtectedDataStart field
 func (ivDetail *ImageViewDetail) ProtectedDataStartField() string {
-	return ivDetail.alphaField(ivDetail.ProtectedDataStart, 7)
+	return ivDetail.numericField(ivDetail.ProtectedDataStart, 7)
 }
 
 // ProtectedDataLengthField gets the ProtectedDataLength field
 func (ivDetail *ImageViewDetail) ProtectedDataLengthField() string {
-	return ivDetail.alphaField(ivDetail.ProtectedDataLength, 7)
+	return ivDetail.numericField(ivDetail.ProtectedDataLength, 7)
 }
 
 // ImageRecreateIndicatorField gets a string of the ImageRecreateIndicator field

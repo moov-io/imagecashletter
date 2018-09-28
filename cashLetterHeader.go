@@ -303,7 +303,7 @@ func (clh *CashLetterHeader) fieldInclusion() error {
 
 // CollectionTypeIndicatorField gets the CollectionTypeIndicator field
 func (clh *CashLetterHeader) CollectionTypeIndicatorField() string {
-	return clh.stringField(clh.CollectionTypeIndicator, 2)
+	return clh.alphaField(clh.CollectionTypeIndicator, 2)
 }
 
 // DestinationRoutingNumberField gets the DestinationRoutingNumber field

@@ -35,37 +35,37 @@ func testMockCheckDetailAddendumA(t testing.TB) {
 		t.Error("MockCheckDetailAddendumA does not validate and will break other tests: ", err)
 	}
 	if cdAddendumA.recordType != "26" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if cdAddendumA.RecordNumber != 1 {
-		t.Error("RecordNumber does not validate and will break other tests")
+		t.Error("RecordNumber does not validate")
 	}
 	if cdAddendumA.ReturnLocationRoutingNumber != "121042882" {
-		t.Error("ReturnLocationRoutingNumber does not validate and will break other tests")
+		t.Error("ReturnLocationRoutingNumber does not validate")
 	}
 	if cdAddendumA.BOFDItemSequenceNumber != "1              " {
-		t.Error("BOFDItemSequenceNumber does not validate and will break other tests")
+		t.Error("BOFDItemSequenceNumber does not validate")
 	}
 	if cdAddendumA.BOFDAccountNumber != "938383" {
-		t.Error("BOFDAccountNumber does not validate and will break other tests")
+		t.Error("BOFDAccountNumber does not validate")
 	}
 	if cdAddendumA.BOFDBranchCode != "01" {
-		t.Error("BOFDBranchCode does not validate and will break other tests")
+		t.Error("BOFDBranchCode does not validate")
 	}
 	if cdAddendumA.PayeeName != "Test Payee" {
-		t.Error("PayeeName does not validate and will break other tests")
+		t.Error("PayeeName does not validate")
 	}
 	if cdAddendumA.TruncationIndicator != "Y" {
-		t.Error("TruncationIndicator does not validate and will break other tests")
+		t.Error("TruncationIndicator does not validate")
 	}
 	if cdAddendumA.BOFDConversionIndicator != "1" {
-		t.Error("BOFDConversionIndicator does not validate and will break other tests")
+		t.Error("BOFDConversionIndicator does not validate")
 	}
 	if cdAddendumA.BOFDCorrectionIndicator != 0 {
-		t.Error("BOFDCorrectionIndicator does not validate and will break other tests")
+		t.Error("BOFDCorrectionIndicator does not validate")
 	}
 	if cdAddendumA.UserField != "" {
-		t.Error("UserField does not validate and will break other tests")
+		t.Error("UserField does not validate")
 	}
 }
 
@@ -90,8 +90,9 @@ func parseCheckDetailAddendumA(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
@@ -163,8 +164,9 @@ func testCDAddendumAString(t testing.TB) {
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
-	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
@@ -186,7 +188,7 @@ func TestCDAddendumAString(t *testing.T) {
 	testCDAddendumAString(t)
 }
 
-// BenchmarkCDAddendumAString benchmarks validating that a known parsed CheckDetail
+// BenchmarkCDAddendumAString benchmarks validating that a known parsed CheckDetailAddendumA
 // can return to a string of the same value
 func BenchmarkCDAddendumAString(b *testing.B) {
 	b.ReportAllocs()

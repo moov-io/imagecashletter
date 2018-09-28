@@ -37,40 +37,40 @@ func testMockFileHeader(t testing.TB) {
 		t.Error("mockFileHeader does not validate and will break other tests: ", err)
 	}
 	if fh.recordType != "01" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if fh.StandardLevel != "35" {
-		t.Error("StandardLevel does not validate and will break other tests")
+		t.Error("StandardLevel does not validate")
 	}
 	if fh.TestFileIndicator != "T" {
-		t.Error("TestFileIndicator does not validate and will break other tests")
+		t.Error("TestFileIndicator does not validate")
 	}
 	if fh.ResendIndicator != "N" {
-		t.Error("ResendIndicator does not validate and will break other tests")
+		t.Error("ResendIndicator does not validate")
 	}
 	if fh.ImmediateDestination != "231380104" {
-		t.Error("DestinationRoutingNumber does not validate and will break other tests")
+		t.Error("DestinationRoutingNumber does not validate")
 	}
 	if fh.ImmediateOrigin != "121042882" {
-		t.Error("ECEInstitutionRoutingNumber does not validate and will break other tests")
+		t.Error("ECEInstitutionRoutingNumber does not validate")
 	}
 	if fh.ImmediateDestinationName != "Citadel" {
-		t.Error("ImmediateDestinationName does not validate and will break other tests")
+		t.Error("ImmediateDestinationName does not validate")
 	}
 	if fh.ImmediateOriginName != "Wells Fargo" {
-		t.Error("ImmediateOriginName does not validate and will break other tests")
+		t.Error("ImmediateOriginName does not validate")
 	}
 	if fh.FileIDModifier != "" {
-		t.Error("FileIDModifier does not validate and will break other tests")
+		t.Error("FileIDModifier does not validate")
 	}
 	if fh.CountryCode != "US" {
-		t.Error("CountryCode does not validate and will break other tests")
+		t.Error("CountryCode does not validate")
 	}
 	if fh.UserField != "" {
-		t.Error("UserField does not validate and will break other tests")
+		t.Error("UserField does not validate")
 	}
 	if fh.CompanionDocumentIndicator != "" {
-		t.Error("CompanionDocumentIndicator does not validate and will break other tests")
+		t.Error("CompanionDocumentIndicator does not validate")
 	}
 }
 

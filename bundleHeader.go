@@ -205,7 +205,7 @@ func (bh *BundleHeader) fieldInclusion() error {
 
 // CollectionTypeIndicatorField gets the CollectionTypeIndicator field
 func (bh *BundleHeader) CollectionTypeIndicatorField() string {
-	return bh.stringField(bh.CollectionTypeIndicator, 2)
+	return bh.alphaField(bh.CollectionTypeIndicator, 2)
 }
 
 // DestinationRoutingNumberField gets the DestinationRoutingNumber field

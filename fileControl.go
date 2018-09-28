@@ -50,6 +50,7 @@ type FileControl struct {
 func NewFileControl() FileControl {
 	fc := FileControl{
 		recordType: "99",
+		reserved:   "               ",
 	}
 	return fc
 }
@@ -135,7 +136,7 @@ func (fc *FileControl) fieldInclusion() error {
 		return &FieldError{FieldName: "TotalItemCount", Value: fc.TotalItemCountField(), Msg: msgFieldInclusion}
 	}
 	if fc.FileTotalAmount == 0 {
-		return &FieldError{FieldName: "FileTotalAmount ", Value: fc.FileTotalAmountField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "FileTotalAmount", Value: fc.FileTotalAmountField(), Msg: msgFieldInclusion}
 	}
 	return nil
 }

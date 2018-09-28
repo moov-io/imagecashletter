@@ -8,7 +8,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"strconv"
 )
 
 // ParseError is returned for parsing reader errors.
@@ -63,10 +62,10 @@ func (r *Reader) addCurrentBundle(bundle *Bundle) {
 	r.currentCashLetter.currentBundle = bundle
 }
 
-// addCurrentReturnBundle creates the CurrentReturnBundle for the file being read. A successful
-// currentReturnBundle will be added to r.File once parsed.
-func (r *Reader) addCurrentReturnBundle(returnBundle *ReturnBundle) {
-	r.currentCashLetter.currentReturnBundle = returnBundle
+// addCurrentRoutingNumberSummary creates the CurrentRoutingNumberSummary for the file being read. A successful
+// currentRoutingNumberSummary will be added to r.File once parsed.
+func (r *Reader) addCurrentRoutingNumberSummary(rns *RoutingNumberSummary) {
+	r.currentCashLetter.currentRoutingNumberSummary = rns
 }
 
 // NewReader returns a new ACH Reader that reads from r.
@@ -85,14 +84,16 @@ func (r *Reader) Read() (File, error) {
 	for r.scanner.Scan() {
 		line := r.scanner.Text()
 		r.lineNum++
-		lineLength := len(line)
+
+		// ToDo:  Review CheckAddendumB
+		//lineLength := len(line)
 
 		// ToDo: Adjust below stump code
-		if lineLength < 80 {
-			msg := fmt.Sprintf(msgRecordLength, lineLength)
-			err := &FileError{FieldName: "RecordLength", Value: strconv.Itoa(lineLength), Msg: msg}
-			return r.File, r.error(err)
-		}
+		/*		if lineLength < 80 {
+				msg := fmt.Sprintf(msgRecordLength, lineLength)
+				err := &FileError{FieldName: "RecordLength", Value: strconv.Itoa(lineLength), Msg: msg}
+				return r.File, r.error(err)
+			}*/
 		r.line = line
 		if err := r.parseLine(); err != nil {
 			return r.File, err
@@ -177,7 +178,7 @@ func (r *Reader) parseLine() error {
 		if err := r.parseBundleControl(); err != nil {
 			return err
 		}
-		if r.currentCashLetter.currentBundle == nil && r.currentCashLetter.currentReturnBundle == nil {
+		if r.currentCashLetter.currentBundle == nil {
 			r.error(&FileError{Msg: msgFileBundleControl})
 		}
 		// Add Bundle or ReturnBundle to CashLetter
@@ -188,14 +189,13 @@ func (r *Reader) parseLine() error {
 			}
 			r.currentCashLetter.AddBundle(r.currentCashLetter.currentBundle)
 			r.currentCashLetter.currentBundle = new(Bundle)
-		} else {
-			if err := r.currentCashLetter.currentReturnBundle.Validate(); err != nil {
-				r.recordName = "ReturnBundles"
-				return r.error(err)
-			}
-			r.currentCashLetter.AddReturnBundle(r.currentCashLetter.currentReturnBundle)
-			r.currentCashLetter.currentReturnBundle = new(ReturnBundle)
 		}
+	case routingNumberSummaryPos:
+		if err := r.parseRoutingNumberSummary(); err != nil {
+			return err
+		}
+		r.currentCashLetter.AddRoutingNumberSummary(r.currentCashLetter.currentRoutingNumberSummary)
+		r.currentCashLetter.currentRoutingNumberSummary = new(RoutingNumberSummary)
 	case cashLetterControlPos:
 		if err := r.parseCashLetterControl(); err != nil {
 			return err
@@ -254,16 +254,23 @@ func (r *Reader) parseCashLetterHeader() error {
 // parseBundleHeader takes the input record string and parses the BundleHeader values
 func (r *Reader) parseBundleHeader() error {
 	r.recordName = "BundleHeader"
-	if r.currentCashLetter.currentBundle.BundleHeader == nil {
-		// BundleHeader outside of current Bundle
-		return r.error(&FileError{Msg: msgFileBundleOutside})
+	if r.currentCashLetter.currentBundle != nil {
+		// BundleHeader inside of current Bundle
+		if r.currentCashLetter.currentBundle.BundleHeader != nil {
+			return r.error(&FileError{Msg: msgFileBundleInside})
+		}
 	}
-	r.currentCashLetter.currentBundle.GetHeader().Parse(r.line)
-	// Ensure valid BundleControl
-	if err := r.currentCashLetter.currentBundle.GetHeader().Validate(); err != nil {
+	// Ensure we have a valid bundle header before building a bundle.
+	bh := NewBundleHeader()
+	bh.Parse(r.line)
+	if err := bh.Validate(); err != nil {
 		return r.error(err)
 	}
+	// Passing BundleHeader into NewBundle creates a Bundle
+	bundle := NewBundle(bh)
+	r.addCurrentBundle(bundle)
 	return nil
+
 }
 
 // parseCheckDetail takes the input record string and parses the CheckDetail values
@@ -364,8 +371,8 @@ func (r *Reader) parseReturnDetail() error {
 		return r.error(err)
 	}
 	// Add ReturnDetail
-	if r.currentCashLetter.currentReturnBundle.BundleHeader != nil {
-		r.currentCashLetter.currentReturnBundle.AddReturnDetail(rd)
+	if r.currentCashLetter.currentBundle.BundleHeader != nil {
+		r.currentCashLetter.currentBundle.AddReturnDetail(rd)
 	}
 	return nil
 }
@@ -373,11 +380,11 @@ func (r *Reader) parseReturnDetail() error {
 // parseReturnDetailAddendumA takes the input record string and parses the ReturnDetailAddendumA values
 func (r *Reader) parseReturnDetailAddendumA() error {
 	r.recordName = "ReturnDetailAddendumA"
-	if r.currentCashLetter.currentReturnBundle.GetReturns() == nil {
+	if r.currentCashLetter.currentBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
 	}
-	if len(r.currentCashLetter.currentReturnBundle.GetReturns()) == 0 {
+	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
 	}
@@ -386,21 +393,20 @@ func (r *Reader) parseReturnDetailAddendumA() error {
 	if err := rdAddendumA.Validate(); err != nil {
 		return err
 	}
-	// ToDo research Pointer for ReturnAddendum*, also see about use of currentReturnDetail
-	entryIndex := len(r.currentCashLetter.currentReturnBundle.GetReturns()) - 1
+	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 	//r.currentCashLetter.currentBundle.Returns[entryIndex].ReturnDetailAddendumA = rdAddendumA
-	r.currentCashLetter.currentReturnBundle.Returns[entryIndex].AddReturnDetailAddendumA(rdAddendumA)
+	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumA(rdAddendumA)
 	return nil
 }
 
 // parseReturnDetailAddendumB takes the input record string and parses the ReturnDetailAddendumB values
 func (r *Reader) parseReturnDetailAddendumB() error {
 	r.recordName = "ReturnDetailAddendumB"
-	if r.currentCashLetter.currentReturnBundle.GetReturns() == nil {
+	if r.currentCashLetter.currentBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
 	}
-	if len(r.currentCashLetter.currentReturnBundle.GetReturns()) == 0 {
+	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
 	}
@@ -409,8 +415,8 @@ func (r *Reader) parseReturnDetailAddendumB() error {
 	if err := rdAddendumB.Validate(); err != nil {
 		return err
 	}
-	entryIndex := len(r.currentCashLetter.currentReturnBundle.GetReturns()) - 1
-	r.currentCashLetter.currentReturnBundle.Returns[entryIndex].AddReturnDetailAddendumB(rdAddendumB)
+	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
+	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumB(rdAddendumB)
 	return nil
 }
 
@@ -418,11 +424,11 @@ func (r *Reader) parseReturnDetailAddendumB() error {
 func (r *Reader) parseReturnDetailAddendumC() error {
 	r.recordName = "ReturnDetailAddendumC"
 
-	if r.currentCashLetter.currentReturnBundle.GetReturns() == nil {
+	if r.currentCashLetter.currentBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
 	}
-	if len(r.currentCashLetter.currentReturnBundle.GetReturns()) == 0 {
+	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
 	}
@@ -431,8 +437,8 @@ func (r *Reader) parseReturnDetailAddendumC() error {
 	if err := rdAddendumC.Validate(); err != nil {
 		return err
 	}
-	entryIndex := len(r.currentCashLetter.currentReturnBundle.GetReturns()) - 1
-	r.currentCashLetter.currentReturnBundle.Returns[entryIndex].AddReturnDetailAddendumC(rdAddendumC)
+	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
+	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumC(rdAddendumC)
 	return nil
 }
 
@@ -440,11 +446,11 @@ func (r *Reader) parseReturnDetailAddendumC() error {
 func (r *Reader) parseReturnDetailAddendumD() error {
 	r.recordName = "ReturnDetailAddendumC"
 
-	if r.currentCashLetter.currentReturnBundle.GetReturns() == nil {
+	if r.currentCashLetter.currentBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "*AddendumD", Msg: msg})
 	}
-	if len(r.currentCashLetter.currentReturnBundle.GetReturns()) == 0 {
+	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "*AddendumD", Msg: msg})
 	}
@@ -453,173 +459,117 @@ func (r *Reader) parseReturnDetailAddendumD() error {
 	if err := rdAddendumD.Validate(); err != nil {
 		return err
 	}
-	entryIndex := len(r.currentCashLetter.currentReturnBundle.GetReturns()) - 1
-	r.currentCashLetter.currentReturnBundle.Returns[entryIndex].AddReturnDetailAddendumD(rdAddendumD)
+	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
+	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumD(rdAddendumD)
 	return nil
 }
 
 // parseImageViewDetail takes the input record string and parses the ImageViewDetail values
 func (r *Reader) parseImageViewDetail() error {
 	r.recordName = "ImageViewDetail"
-	if r.currentCashLetter.currentBundle != nil {
-		if err := r.checkImageViewDetail(); err != nil {
+	if err := r.ImageViewDetail(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// ImageViewDetail takes the input record string and parses ImageViewDetail for a check
+func (r *Reader) ImageViewDetail() error {
+	if r.currentCashLetter.currentBundle.GetChecks() != nil {
+		ivDetail := NewImageViewDetail()
+		ivDetail.Parse(r.line)
+		if err := ivDetail.Validate(); err != nil {
 			return err
 		}
+		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
+		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewDetail(ivDetail)
+
+	} else if r.currentCashLetter.currentBundle.GetReturns() != nil {
+		ivDetail := NewImageViewDetail()
+		ivDetail.Parse(r.line)
+		if err := ivDetail.Validate(); err != nil {
+			return err
+		}
+		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
+		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewDetail(ivDetail)
 	} else {
-		if err := r.returnImageViewDetail(); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// checkImageViewDetail takes the input record string and parses ImageViewDetail for a check
-func (r *Reader) checkImageViewDetail() error {
-	if r.currentCashLetter.currentBundle.GetChecks() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewDetail", Msg: msg})
+		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
 	}
-	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
-		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewDetail", Msg: msg})
-	}
-	ivDetail := NewImageViewDetail()
-	ivDetail.Parse(r.line)
-	if err := ivDetail.Validate(); err != nil {
-		return err
-	}
-	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
-	r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewDetail(ivDetail)
-	return nil
-}
 
-// returnImageViewDetail takes the input record string and parses ImageViewDetail for a return
-func (r *Reader) returnImageViewDetail() error {
-	if r.currentCashLetter.currentReturnBundle.GetReturns() == nil {
-		msg := fmt.Sprint(msgFileReturnBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewDetail", Msg: msg})
-	}
-	if len(r.currentCashLetter.currentReturnBundle.GetReturns()) == 0 {
-		msg := fmt.Sprint(msgFileReturnBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewDetail", Msg: msg})
-	}
-	ivDetail := NewImageViewDetail()
-	ivDetail.Parse(r.line)
-	if err := ivDetail.Validate(); err != nil {
-		return err
-	}
-	entryIndex := len(r.currentCashLetter.currentReturnBundle.GetReturns()) - 1
-	r.currentCashLetter.currentReturnBundle.Returns[entryIndex].AddImageViewDetail(ivDetail)
 	return nil
 }
 
 // parseImageViewData takes the input record string and parses the ImageViewData values
 func (r *Reader) parseImageViewData() error {
 	r.recordName = "ImageViewData"
-	if r.currentCashLetter.currentBundle != nil {
-		if err := r.checkImageViewData(); err != nil {
+	if err := r.ImageViewData(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// ImageViewData takes the input record string and parses ImageViewData for a check
+func (r *Reader) ImageViewData() error {
+	if r.currentCashLetter.currentBundle.GetChecks() != nil {
+		ivData := NewImageViewData()
+		ivData.Parse(r.line)
+		if err := ivData.Validate(); err != nil {
 			return err
 		}
+		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
+		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewData(ivData)
+
+	} else if r.currentCashLetter.currentBundle.GetReturns() != nil {
+		ivData := NewImageViewData()
+		ivData.Parse(r.line)
+		if err := ivData.Validate(); err != nil {
+			return err
+		}
+		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
+		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewData(ivData)
 	} else {
-		if err := r.returnImageViewData(); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// checkImageViewData takes the input record string and parses ImageViewData for a check
-func (r *Reader) checkImageViewData() error {
-	if r.currentCashLetter.currentBundle.GetChecks() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
 	}
-	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
-		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
-	}
-	ivData := NewImageViewData()
-	ivData.Parse(r.line)
-	if err := ivData.Validate(); err != nil {
-		return err
-	}
-	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
-	r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewData(ivData)
-	return nil
-}
 
-// returnImageViewData takes the input record string and parses ImageViewData for a return
-func (r *Reader) returnImageViewData() error {
-	if r.currentCashLetter.currentReturnBundle.GetReturns() == nil {
-		msg := fmt.Sprint(msgFileReturnBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
-	}
-	if len(r.currentCashLetter.currentReturnBundle.GetReturns()) == 0 {
-		msg := fmt.Sprint(msgFileReturnBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
-	}
-	ivData := NewImageViewData()
-	ivData.Parse(r.line)
-	if err := ivData.Validate(); err != nil {
-		return err
-	}
-	entryIndex := len(r.currentCashLetter.currentReturnBundle.GetReturns()) - 1
-	r.currentCashLetter.currentReturnBundle.Returns[entryIndex].AddImageViewData(ivData)
 	return nil
 }
 
 // parseImageViewAnalysis takes the input record string and parses ImageViewAnalysis values
 func (r *Reader) parseImageViewAnalysis() error {
 	r.recordName = "ImageViewAnalysis"
-	if r.currentCashLetter.currentBundle != nil {
-		if err := r.checkImageViewAnalysis(); err != nil {
+	if err := r.ImageViewAnalysis(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// ImageViewAnalysis takes the input record string and parses ImageViewAnalysis for a check
+func (r *Reader) ImageViewAnalysis() error {
+
+	if r.currentCashLetter.currentBundle.GetChecks() != nil {
+		ivAnalysis := NewImageViewAnalysis()
+		ivAnalysis.Parse(r.line)
+		if err := ivAnalysis.Validate(); err != nil {
 			return err
 		}
+		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
+		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewAnalysis(ivAnalysis)
+
+	} else if r.currentCashLetter.currentBundle.GetReturns() != nil {
+		ivAnalysis := NewImageViewAnalysis()
+		ivAnalysis.Parse(r.line)
+		if err := ivAnalysis.Validate(); err != nil {
+			return err
+		}
+		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
+		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewAnalysis(ivAnalysis)
 	} else {
-		if err := r.returnImageViewAnalysis(); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// checkImageViewAnalysis takes the input record string and parses ImageViewAnalysis for a check
-func (r *Reader) checkImageViewAnalysis() error {
-	if r.currentCashLetter.currentBundle.GetChecks() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewAnalysis", Msg: msg})
+		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
 	}
-	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
-		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewAnalysis", Msg: msg})
-	}
-	ivAnalysis := NewImageViewAnalysis()
-	ivAnalysis.Parse(r.line)
-	if err := ivAnalysis.Validate(); err != nil {
-		return err
-	}
-	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
-	r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewAnalysis(ivAnalysis)
-	return nil
-}
 
-// returnImageViewAnalysis takes the input record string and parses ImageViewAnalysis for a return
-func (r *Reader) returnImageViewAnalysis() error {
-	if r.currentCashLetter.currentReturnBundle.GetReturns() == nil {
-		msg := fmt.Sprint(msgFileReturnBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewAnalysis", Msg: msg})
-	}
-	if len(r.currentCashLetter.currentReturnBundle.GetReturns()) == 0 {
-		msg := fmt.Sprint(msgFileReturnBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewAnalysis", Msg: msg})
-	}
-	ivAnalysis := NewImageViewAnalysis()
-	ivAnalysis.Parse(r.line)
-	if err := ivAnalysis.Validate(); err != nil {
-		return err
-	}
-	entryIndex := len(r.currentCashLetter.currentReturnBundle.GetReturns()) - 1
-	r.currentCashLetter.currentReturnBundle.Returns[entryIndex].AddImageViewAnalysis(ivAnalysis)
 	return nil
 }
 
@@ -636,7 +586,21 @@ func (r *Reader) parseBundleControl() error {
 	if err := r.currentCashLetter.currentBundle.GetControl().Validate(); err != nil {
 		return r.error(err)
 	}
-	//r.currentCashLetter.AddBundle(r.currentCashLetter.currentBundle)
+	return nil
+}
+
+// parseRoutingNumberSummary takes the input record string and parses the RoutingNumberSummary values
+func (r *Reader) parseRoutingNumberSummary() error {
+	r.recordName = "RoutingNumberSummary"
+	if r.currentCashLetter.CashLetterHeader == nil {
+		// RoutingNumberSummary without a current CashLetter
+		return r.error(&FileError{Msg: msgFileRoutingNumberSummary})
+	}
+	r.currentCashLetter.currentRoutingNumberSummary.Parse(r.line)
+	// Ensure valid Routing NUmber Summary
+	if err := r.currentCashLetter.currentRoutingNumberSummary.Validate(); err != nil {
+		return r.error(err)
+	}
 	return nil
 }
 

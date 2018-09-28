@@ -33,28 +33,28 @@ func testMockBundleHeader(t testing.TB) {
 		t.Error("mockBundleHeader does not validate and will break other tests: ", err)
 	}
 	if bh.recordType != "20" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if bh.CollectionTypeIndicator != "01" {
-		t.Error("CollectionTypeIndicator does not validate and will break other tests")
+		t.Error("CollectionTypeIndicator does not validate")
 	}
 	if bh.DestinationRoutingNumber != "231380104" {
-		t.Error("DestinationRoutingNumber does not validate and will break other tests")
+		t.Error("DestinationRoutingNumber does not validate")
 	}
 	if bh.ECEInstitutionRoutingNumber != "121042882" {
-		t.Error("ECEInstitutionRoutingNumber does not validate and will break other tests")
+		t.Error("ECEInstitutionRoutingNumber does not validate")
 	}
 	if bh.BundleID != "9999" {
-		t.Error("BundleID does not validate and will break other tests")
+		t.Error("BundleID does not validate")
 	}
 	if bh.BundleSequenceNumber != "1" {
-		t.Error("SequenceNumber does not validate and will break other tests")
+		t.Error("SequenceNumber does not validate")
 	}
 	if bh.CycleNumber != "01" {
-		t.Error("CycleNumber does not validate and will break other tests")
+		t.Error("CycleNumber does not validate")
 	}
 	if bh.UserField != "" {
-		t.Error("UserField does not validate and will break other tests")
+		t.Error("UserField does not validate")
 	}
 }
 
@@ -80,7 +80,6 @@ func parseBundleHeader(t testing.TB) {
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
 	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
 
 	if err := r.parseBundleHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
@@ -110,7 +109,7 @@ func parseBundleHeader(t testing.TB) {
 		t.Errorf("BundleID Expected '9999      ' got:'%v'", record.BundleIDField())
 	}
 	if record.BundleSequenceNumberField() != "1   " {
-		t.Errorf("BundleSequenceNumber Expected '0001' got: '%v'", record.BundleSequenceNumberField())
+		t.Errorf("BundleSequenceNumber Expected '1   ' got: '%v'", record.BundleSequenceNumberField())
 	}
 	if record.CycleNumberField() != "01" {
 		t.Errorf("CycleNumber Expected '01' got:'%v'", record.CycleNumberField())
@@ -148,7 +147,6 @@ func testBHString(t testing.TB) {
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
 	r.currentCashLetter.AddBundle(NewBundle(bh))
-	r.addCurrentBundle(NewBundle(bh))
 	if err := r.parseBundleHeader(); err != nil {
 		t.Errorf("%T: %s", err, err)
 		log.Fatal(err)

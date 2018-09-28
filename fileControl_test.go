@@ -35,28 +35,28 @@ func testMockFileControl(t testing.TB) {
 		t.Error("mockFileControl does not validate and will break other tests: ", err)
 	}
 	if fc.recordType != "99" {
-		t.Error("recordType does not validate and will break other tests")
+		t.Error("recordType does not validate")
 	}
 	if fc.CashLetterCount != 1 {
-		t.Error("CashLetterCount does not validate and will break other tests")
+		t.Error("CashLetterCount does not validate")
 	}
 	if fc.TotalRecordCount != 7 {
-		t.Error("TotalRecordCount does not validate and will break other tests")
+		t.Error("TotalRecordCount does not validate")
 	}
 	if fc.TotalItemCount != 1 {
-		t.Error("TotalItemCount does not validate and will break other tests")
+		t.Error("TotalItemCount does not validate")
 	}
 	if fc.FileTotalAmount != 100000 {
-		t.Error("FileTotalAmount does not validate and will break other tests")
+		t.Error("FileTotalAmount does not validate")
 	}
 	if fc.ImmediateOriginContactName != "Contact Name" {
-		t.Error("ImmediateOriginContactName does not validate and will break other tests")
+		t.Error("ImmediateOriginContactName does not validate")
 	}
 	if fc.ImmediateOriginContactPhoneNumber != "5558675552" {
-		t.Error("ImmediateOriginContactPhoneNumber does not validate and will break other tests")
+		t.Error("ImmediateOriginContactPhoneNumber does not validate")
 	}
 	if fc.CreditTotalIndicator != 0 {
-		t.Error("CreditTotalIndicator does not validate and will break other tests")
+		t.Error("CreditTotalIndicator does not validate")
 	}
 }
 
