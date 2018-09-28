@@ -132,24 +132,25 @@ func (f *File) Create() error {
 				if err := b.build(); err != nil {
 					return err
 				}
+				fileTotalItemCount = fileTotalItemCount + 1
 				fileTotalItemCount = fileTotalItemCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
 				fileTotalItemCount = fileTotalItemCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
 				fileTotalAmount = fileTotalAmount + cd.ItemAmount
 			}
-
 			// Returns Items
 			for _, rd := range b.Returns {
 				if err := b.build(); err != nil {
 					return err
 				}
-				fileTotalItemCount = fileTotalItemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC)
+				fileTotalItemCount = fileTotalItemCount + 1
+				fileTotalItemCount = fileTotalItemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC) + len(rd.ReturnDetailAddendumD)
 				fileTotalItemCount = fileTotalItemCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
 				fileTotalAmount = fileTotalAmount + rd.ItemAmount
 			}
 		}
 	}
 
-	fileTotalRecordCount = cashLetterRecordCount + bundleRecordCount + fileTotalItemCount
+	fileTotalRecordCount = fileTotalRecordCount + cashLetterRecordCount + bundleRecordCount + fileTotalItemCount
 
 	// create FileControl from calculated values
 	fc := NewFileControl()

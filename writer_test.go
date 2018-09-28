@@ -13,6 +13,8 @@ import (
 // TestX9Write writes an x9 File
 func TestX9Write(t *testing.T) {
 	file := NewFile().SetHeader(mockFileHeader())
+
+	// Create CheckDetail
 	cd := mockCheckDetail()
 	cd.AddCheckDetailAddendumA(mockCheckDetailAddendumA())
 	cd.AddCheckDetailAddendumB(mockCheckDetailAddendumB())
@@ -23,6 +25,7 @@ func TestX9Write(t *testing.T) {
 	bundle := NewBundle(mockBundleHeader())
 	bundle.AddCheckDetail(cd)
 
+	// Create ReturnDetail
 	rd := mockReturnDetail()
 	rd.AddReturnDetailAddendumA(mockReturnDetailAddendumA())
 	rd.AddReturnDetailAddendumB(mockReturnDetailAddendumB())
@@ -31,16 +34,17 @@ func TestX9Write(t *testing.T) {
 	rd.AddImageViewDetail(mockImageViewDetail())
 	rd.AddImageViewData(mockImageViewData())
 	rd.AddImageViewAnalysis(mockImageViewAnalysis())
-
 	returnBundle := NewBundle(mockBundleHeader())
 	returnBundle.AddReturnDetail(rd)
 
+	// Create CashLetter
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.AddBundle(bundle)
 	cl.AddBundle(returnBundle)
 	cl.Create()
 	file.AddCashLetter(cl)
 
+	// Create file
 	if err := file.Create(); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
@@ -55,12 +59,12 @@ func TestX9Write(t *testing.T) {
 		t.Errorf("%T: %s", err, err)
 	}
 
-	/*	// We want to write the file to an io.Writer
-		w := NewWriter(os.Stdout)
-		if err := w.Write(file); err != nil {
-			log.Fatalf("Unexpected error: %s\n", err)
-		}
-		w.Flush()*/
+	/*		// We want to write the file to an io.Writer
+			w := NewWriter(os.Stdout)
+			if err := w.Write(file); err != nil {
+				log.Fatalf("Unexpected error: %s\n", err)
+			}
+			w.Flush()*/
 
 	r := NewReader(strings.NewReader(b.String()))
 	_, err := r.Read()

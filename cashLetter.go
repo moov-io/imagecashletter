@@ -27,7 +27,6 @@ type CashLetter struct {
 }
 
 // NewCashLetter takes a CashLetterHeader and returns a CashLetter
-// ToDo:  Follow up on returning a pointer when implementing tests and examples
 func NewCashLetter(clh *CashLetterHeader) CashLetter {
 	cl := CashLetter{}
 	cl.SetControl(NewCashLetterControl())
@@ -43,7 +42,7 @@ func (cl *CashLetter) Validate() error {
 
 // ToDo:  Add verify
 
-// build creates valid bundle by building sequence numbers and CashLetterControl. An error is returned if
+// build by building a valid CashLetter by building a CashLetterControl. An error is returned if
 // the CashLetter being built has invalid records.
 func (cl *CashLetter) build() error {
 
@@ -58,7 +57,7 @@ func (cl *CashLetter) build() error {
 	cashLetterTotalAmount := 0
 	cashLetterImagesCount := 0
 
-	// ToDo: Sequences
+	// ToDo: Sequences, research if a bundle should be part of the cash letter item count?
 
 	// Bundles
 	for _, b := range cl.Bundles {
@@ -73,7 +72,7 @@ func (cl *CashLetter) build() error {
 			if err := b.build(); err != nil {
 				return err
 			}
-
+			cashLetterItemsCount = cashLetterItemsCount + 1
 			cashLetterItemsCount = cashLetterItemsCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
 			cashLetterItemsCount = cashLetterItemsCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
 			cashLetterTotalAmount = cashLetterTotalAmount + cd.ItemAmount
@@ -86,8 +85,8 @@ func (cl *CashLetter) build() error {
 			if err := b.build(); err != nil {
 				return err
 			}
-
-			cashLetterItemsCount = cashLetterItemsCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC)
+			cashLetterItemsCount = cashLetterItemsCount + 1
+			cashLetterItemsCount = cashLetterItemsCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC) + len(rd.ReturnDetailAddendumD)
 			cashLetterItemsCount = cashLetterItemsCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
 			cashLetterTotalAmount = cashLetterTotalAmount + rd.ItemAmount
 			cashLetterImagesCount = cashLetterImagesCount + len(rd.ImageViewDetail)
@@ -97,7 +96,6 @@ func (cl *CashLetter) build() error {
 
 	// build a CashLetterControl record
 	clc := NewCashLetterControl()
-
 	clc.CashLetterBundleCount = cashLetterBundleCount
 	clc.CashLetterItemsCount = cashLetterItemsCount
 	clc.CashLetterTotalAmount = cashLetterTotalAmount

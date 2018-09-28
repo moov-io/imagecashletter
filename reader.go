@@ -84,6 +84,8 @@ func (r *Reader) Read() (File, error) {
 	for r.scanner.Scan() {
 		line := r.scanner.Text()
 		r.lineNum++
+
+		// ToDo:  Review CheckAddendumB
 		//lineLength := len(line)
 
 		// ToDo: Adjust below stump code

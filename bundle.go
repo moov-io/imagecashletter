@@ -57,7 +57,7 @@ func (b *Bundle) Validate() error {
 
 // ToDo: Add verify
 
-// build creates valid bundle by building sequence numbers and BundleControl. An error is returned if
+// build creates a valid Bundle by building  BundleControl. An error is returned if
 // the bundle being built has invalid records.
 func (b *Bundle) build() error {
 	// Requires a valid BundleHeader
@@ -104,7 +104,7 @@ func (b *Bundle) build() error {
 		}
 
 		itemCount = itemCount + 1
-		itemCount = itemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC)
+		itemCount = itemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC) + len(rd.ReturnDetailAddendumD)
 		itemCount = itemCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
 		bundleTotalAmount = bundleTotalAmount + rd.ItemAmount
 
@@ -123,14 +123,6 @@ func (b *Bundle) build() error {
 	bc.CreditTotalIndicator = 0
 	b.BundleControl = bc
 	return nil
-}
-
-// Create creates a Bundle of CheckDetail or ReturnDetail
-func (b *Bundle) Create() error {
-	if err := b.build(); err != nil {
-		return err
-	}
-	return b.Validate()
 }
 
 // SetHeader appends an BundleHeader to the Bundle
