@@ -18,8 +18,8 @@ var (
 	msgAlphanumeric          = "has non alphanumeric characters"
 	msgAlphanumericSpecial   = "has non alphanumeric or special characters"
 	//msgUpperAlpha             = "is not uppercase A-Z or 0-9"
-	msgNumeric                = "is not 0-9"
-	msgFieldInclusion         = "is a mandatory field and has a default value"
+	msgNumeric        = "is not 0-9"
+	msgFieldInclusion = "is a mandatory field and has a default value"
 	//msgValidFieldLength    = "is not length %d"
 	msgInvalid = "is invalid"
 )
