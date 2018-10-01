@@ -19,11 +19,9 @@ var (
 	msgAlphanumericSpecial   = "has non alphanumeric or special characters"
 	//msgUpperAlpha             = "is not uppercase A-Z or 0-9"
 	msgNumeric                = "is not 0-9"
-	msgImageViewAnalysisValid = "image view analysis property is invalid"
 	msgFieldInclusion         = "is a mandatory field and has a default value"
-	//msgFieldRequired       = "is a required field"
 	//msgValidFieldLength    = "is not length %d"
-	msgInvalid = "is an invalid %v"
+	msgInvalid = "is invalid"
 )
 
 // validator is common validation and formatting of golang types to x9 type strings
@@ -56,8 +54,7 @@ func (v *validator) isCreditTotalIndicator(code int) error {
 		1:
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "CreditTotalIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isDocumentationTypeIndicator ensures DocumentationTypeIndicator of a CashLetterHeader and CheckDetail is valid
@@ -97,8 +94,7 @@ func (v *validator) isDocumentationTypeIndicator(code string) error {
 		"Z":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "DocumentationTypeIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // ***File Header Validations***
@@ -115,8 +111,7 @@ func (v *validator) isStandardLevel(code string) error {
 		"35":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "StandardLevel")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isResendIndicator ensures ResendIndicator of a FileHeader is valid
@@ -129,8 +124,7 @@ func (v *validator) isResendIndicator(code string) error {
 		"N":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ResendIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isTestFileIndicator ensures TestFileIndicator of a FileHeader is valid
@@ -143,8 +137,7 @@ func (v *validator) isTestFileIndicator(code string) error {
 		"T":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "TestFileIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isCompanionDocumentIndicatorUS ensures CompanionDocumentIndicatorUS of a FileHeader is valid
@@ -158,8 +151,7 @@ func (v *validator) isCompanionDocumentIndicatorUS(code string) error {
 		// Other - as defined by clearing arrangements. - Not implemented
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "CompanionDocumentIndicatorUS")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isCompanionDocumentIndicatorCA ensures CompanionDocumentIndicatorCA of a FileHeader is valid
@@ -173,8 +165,7 @@ func (v *validator) isCompanionDocumentIndicatorCA(code string) error {
 		// Other - as defined by clearing arrangements. - Not implemented
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "CompanionDocumentIndicatorCA")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // ***Cash Letter Header Validations***
@@ -218,8 +209,7 @@ func (v *validator) isCollectionTypeIndicator(code string) error {
 		"99":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "CollectionTypeIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isCashLetterRecordTypeIndicator ensures CashLetterRecordTypeIndicator of a CashLetterHeader is valid
@@ -237,8 +227,7 @@ func (v *validator) isCashLetterRecordTypeIndicator(code string) error {
 		"F":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "CashLetterRecordTypeIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isReturnsIndicator ensures ReturnsIndicator of a CashLetterHeader is valid
@@ -256,8 +245,7 @@ func (v *validator) isReturnsIndicator(code string) error {
 		"J":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ReturnsIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // CheckDetail validations
@@ -300,8 +288,7 @@ func (v *validator) isReturnAcceptanceIndicator(code string) error {
 		"F":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ReturnAcceptanceIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isMICRValidIndicator ensures MICRValidIndicator of a CheckDetail is valid
@@ -318,8 +305,7 @@ func (v *validator) isMICRValidIndicator(code int) error {
 		4:
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "MICRValidIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isBOFDIndicator ensures BOFDIndicator of a CheckDetail is valid
@@ -334,8 +320,7 @@ func (v *validator) isBOFDIndicator(code string) error {
 		"U":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "BOFDIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isCorrectionIndicator ensures CorrectionIndicator of a CheckDetail is valid
@@ -354,8 +339,7 @@ func (v *validator) isCorrectionIndicator(code int) error {
 		4:
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "CorrectionIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isArchiveTypeIndicator ensures ArchiveTypeIndicator of a CheckDetail is valid
@@ -382,8 +366,7 @@ func (v *validator) isArchiveTypeIndicator(code string) error {
 		"I":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ArchiveTypeIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // CheckDetail Addendum validations
@@ -399,8 +382,7 @@ func (v *validator) isTruncationIndicator(code string) error {
 		"N":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "TruncationIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isConversionIndicator ensures BOFD and Endorsing Bank ConversionIndicator of a CheckDetailAddendumA and
@@ -428,8 +410,7 @@ func (v *validator) isConversionIndicator(code string) error {
 		"8":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ConversionIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isImageReferenceKeyIndicator ensures ImageReferenceKeyIndicator of a CheckDetailAddendumB is valid
@@ -445,8 +426,7 @@ func (v *validator) isImageReferenceKeyIndicator(code int) error {
 		1:
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ImageReferenceKeyIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isEndorsingBankIdentifier ensures EndorsingBankIdentifier of a CheckDetailAddendumC is valid
@@ -464,8 +444,7 @@ func (v *validator) isEndorsingBankIdentifier(code int) error {
 		3:
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "EndorsingBankIdentifier")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 //ImageView
@@ -484,8 +463,7 @@ func (v *validator) isImageIndicator(code int) error {
 		3:
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "msgImageIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isImageViewFormatIndicator ensures ImageViewFormatIndicator of a ImageViewDetail is valid
@@ -508,8 +486,7 @@ func (v *validator) isImageViewFormatIndicator(code string) error {
 		"23":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ImageViewFormatIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isImageViewCompressionAlgorithm ensures ImageViewCompressionAlgorithm of a ImageViewDetail is valid
@@ -532,8 +509,7 @@ func (v *validator) isImageViewCompressionAlgorithm(code string) error {
 		"23":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ImageViewCompressionAlgorithm")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isViewSideIndicator ensures ViewSideIndicator of a ImageViewDetail is valid
@@ -546,8 +522,7 @@ func (v *validator) isViewSideIndicator(code int) error {
 		1:
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ImageViewSideIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isViewDescriptor ensures ViewDescriptor of a ImageViewDetail is valid
@@ -586,8 +561,7 @@ func (v *validator) isViewDescriptor(code string) error {
 		"14":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ViewDescriptor")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isDigitalSignatureIndicator ensures DigitalSignatureIndicator of a ImageViewDetail is valid
@@ -600,8 +574,7 @@ func (v *validator) isDigitalSignatureIndicator(code int) error {
 		1:
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "DigitalSignatureIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isDigitalSignatureMethod ensures DigitalSignatureMethod of a ImageViewDetail is valid
@@ -622,8 +595,7 @@ func (v *validator) isDigitalSignatureMethod(code string) error {
 		"05":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "DigitalSignatureMethod")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isImageRecreateIndicator ensures ImageRecreateIndicator of a ImageViewDetail is valid
@@ -636,8 +608,7 @@ func (v *validator) isImageRecreateIndicator(code int) error {
 		1:
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ImageRecreateIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isOverrideIndicator ensures OverrideIndicator of a ImageViewDetail is valid
@@ -684,8 +655,7 @@ func (v *validator) isOverrideIndicator(code string) error {
 		"O":
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "OverrideIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isImageViewAnalysisValid ensures generic properties of imageViewAnalysis are valid
@@ -700,7 +670,7 @@ func (v *validator) isImageViewAnalysisValid(code int) error {
 		2:
 		return nil
 	}
-	return errors.New(msgImageViewAnalysisValid)
+	return errors.New(msgInvalid)
 }
 
 // Returns
@@ -715,8 +685,7 @@ func (v *validator) isReturnNotificationIndicator(code int) error {
 		2:
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "ReturnNotificationIndicator")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 // isTimesReturned ensures TimeReturned of ReturnDetail is valid
@@ -733,8 +702,7 @@ func (v *validator) isTimesReturned(code int) error {
 		3:
 		return nil
 	}
-	msg := fmt.Sprintf(msgInvalid, "TimesReturned")
-	return errors.New(msg)
+	return errors.New(msgInvalid)
 }
 
 /*// isUpperAlphanumeric checks if string only contains ASCII alphanumeric upper case characters
