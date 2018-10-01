@@ -195,7 +195,7 @@ func TestCreditTotalIndicator(t *testing.T) {
 	}
 }
 
-// TestFieldInclusionRecordType validates FieldInclusion
+// TestFCFieldInclusionRecordType validates FieldInclusion
 func TestFCFieldInclusionRecordType(t *testing.T) {
 	fc := mockFileControl()
 	fc.recordType = ""

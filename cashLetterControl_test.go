@@ -15,20 +15,17 @@ import (
 func mockCashLetterControl() *CashLetterControl {
 	clc := NewCashLetterControl()
 	clc.CashLetterBundleCount = 1
-	// CashLetterItemsCount - CheckDetail
-	// ToDo: CheckDetailAddendum* and ImageView*
-	clc.CashLetterItemsCount = 1
+	clc.CashLetterItemsCount = 7
 	clc.CashLetterTotalAmount = 100000 // 1000.00
-	// ToDo: ImageView*
-	clc.CashLetterImagesCount = 0
+	clc.CashLetterImagesCount = 1
 	clc.ECEInstitutionName = "Wells Fargo"
 	clc.SettlementDate = time.Now()
 	clc.CreditTotalIndicator = 0
 	return clc
 }
 
-// testMockCashLetterControl creates a CashLetterControl
-func testMockCashLetterControl(t testing.TB) {
+// TestMockCashLetterControl creates a CashLetterControl
+func TestMockCashLetterControl(t *testing.T) {
 	clc := mockCashLetterControl()
 	if err := clc.Validate(); err != nil {
 		t.Error("mockCashLetterControl does not validate and will break other tests: ", err)
@@ -39,13 +36,13 @@ func testMockCashLetterControl(t testing.TB) {
 	if clc.CashLetterBundleCount != 1 {
 		t.Error("CashLetterBundleCount does not validate")
 	}
-	if clc.CashLetterItemsCount != 1 {
+	if clc.CashLetterItemsCount != 7 {
 		t.Error("CashLetterItemsCount does not validate")
 	}
 	if clc.CashLetterTotalAmount != 100000 {
 		t.Error("CashLetterTotalAmount does not validate")
 	}
-	if clc.CashLetterImagesCount != 0 {
+	if clc.CashLetterImagesCount != 1 {
 		t.Error("CashLetterImagesCount does not validate")
 	}
 	if clc.ECEInstitutionName != "Wells Fargo" {
@@ -56,21 +53,8 @@ func testMockCashLetterControl(t testing.TB) {
 	}
 }
 
-// TestMockCashLetterControl tests creating a CashLetterControl
-func TestMockCashLetterControl(t *testing.T) {
-	testMockCashLetterControl(t)
-}
-
-// BenchmarkMockCashLetterControl benchmarks creating a CashLetterControl
-func BenchmarkMockCashLetterControl(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testMockCashLetterControl(b)
-	}
-}
-
-// testParseCashLetterControl parses a known CashLetterControl record string
-func testParseCashLetterControl(t testing.TB) {
+// TestParseCashLetterControl parses a known CashLetterControl record string
+func TestParseCashLetterControl(t *testing.T) {
 	var line = "900000010000000100000000100000000000000Wells Fargo       201809050              "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -112,19 +96,6 @@ func testParseCashLetterControl(t testing.TB) {
 	}
 }
 
-// TestParseCashLetterControl tests parsing a known CashLetterControl record string
-func TestParseCashLetterControl(t *testing.T) {
-	testParseCashLetterControl(t)
-}
-
-// BenchmarkParseCashLetterControl benchmarks parsing a known CashLetterControl record string
-func BenchmarkParseCashLetterControl(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testParseCashLetterControl(b)
-	}
-}
-
 // testCLCString validates that a known parsed CashLetterControl can be return to a string of the same value
 func testCLCString(t testing.TB) {
 	var line = "900000010000000100000000100000000000000Wells Fargo       201809050              "
@@ -153,5 +124,96 @@ func BenchmarkCLCString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testCLCString(b)
+	}
+}
+
+// TestCLCRecordType validation
+func TestCLCRecordType(t *testing.T) {
+	clc := mockCashLetterControl()
+	clc.recordType = "00"
+	if err := clc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestECEInstitutionName validation
+func TestECEInstitutionName(t *testing.T) {
+	clc := mockCashLetterControl()
+	clc.ECEInstitutionName = "®©"
+	if err := clc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ECEInstitutionName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCLCCreditTotalIndicator validation
+func TestCLCCreditTotalIndicator(t *testing.T) {
+	clc := mockCashLetterControl()
+	clc.CreditTotalIndicator = 9
+	if err := clc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CreditTotalIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCLCFieldInclusionRecordType validates FieldInclusion
+func TestCLCFieldInclusionRecordType(t *testing.T) {
+	clc := mockCashLetterControl()
+	clc.recordType = ""
+	if err := clc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFieldInclusionCashLetterItemsCount validates FieldInclusion
+func TestFieldInclusionCashLetterItemsCount(t *testing.T) {
+	clc := mockCashLetterControl()
+	clc.CashLetterItemsCount = 0
+	if err := clc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFieldInclusionCashLetterTotalAmount validates FieldInclusion
+func TestFieldInclusionCashLetterTotalAmount(t *testing.T) {
+	clc := mockCashLetterControl()
+	clc.CashLetterTotalAmount = 0
+	if err := clc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFieldInclusionSettlementDate validates FieldInclusion
+func TestFieldInclusionRecordTypeSettlementDate(t *testing.T) {
+	clc := mockCashLetterControl()
+	clc.SettlementDate = time.Time{}
+	if err := clc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }

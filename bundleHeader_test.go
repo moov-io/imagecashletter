@@ -1,4 +1,4 @@
-// Copyright 2018 The X9 Authors
+// Copyright 2018 The Moov Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
@@ -168,5 +168,161 @@ func BenchmarkBHString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testBHString(b)
+	}
+}
+
+// TestBHRecordType validation
+func TestBHRecordType(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.recordType = "00"
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestBHCollectionTypeIndicator validation
+func TestBHCollectionTypeIndicator(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.CollectionTypeIndicator = "87"
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CollectionTypeIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestBundleID validation
+func TestBundleID(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.BundleID = "--"
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BundleID" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCycleNumber validation
+func TestCycleNumber(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.CycleNumber = "--"
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CycleNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestBHUserField validation
+func TestBHUserFieldI(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.UserField = "®©"
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserField" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestBHFieldInclusionRecordType validates FieldInclusion
+func TestBHFieldInclusionRecordType(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.recordType = ""
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestBHFieldInclusionCollectionTypeIndicator validates FieldInclusion
+func TestBHFieldInclusionCollectionTypeIndicator(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.CollectionTypeIndicator = ""
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestBHFieldInclusionDestinationRoutingNumber validates FieldInclusion
+func TestBHFieldInclusionDestinationRoutingNumber(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.DestinationRoutingNumber = ""
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestBHFieldInclusionECEInstitutionRoutingNumber validates FieldInclusion
+func TestBHFieldInclusionECEInstitutionRoutingNumber(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.ECEInstitutionRoutingNumber = ""
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestBHFieldInclusionBundleBusinessDate validates FieldInclusion
+func TestBHFieldInclusionBundleBusinessDate(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.BundleBusinessDate = time.Time{}
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestBHFieldInclusionBundleCreationDate validates FieldInclusion
+func TestBHFieldInclusionBundleCreationDate(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.BundleCreationDate = time.Time{}
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestBHFieldInclusionBundleSequenceNumber validates FieldInclusion
+func TestBHFieldInclusionBundleSequenceNumber(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.BundleSequenceNumber = "    "
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }
