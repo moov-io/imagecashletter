@@ -25,6 +25,7 @@ x9 is under active development, and should not be used in Production.  Please st
 
 * Future Development
     * Increase Test Code Coverage to 95% +
+    * Add additional property validations as necessary based on testing
     * Add Routing Number Summary Tests
     * Add Credit Items Functionality
     * Add User Record Functionality

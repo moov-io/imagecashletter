@@ -13,7 +13,7 @@ import (
 
 // TestX9FileRead validates reading an x9 file
 func TestX9FileRead(t *testing.T) {
-	f, err := os.Open("./test/data/20180905A.x9")
+	f, err := os.Open("./test/testdata/20180905A.x9")
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
@@ -48,7 +48,7 @@ func TestX9FileRead(t *testing.T) {
 
 // TestX9File validates reading an x9 file
 func TestX9File(t *testing.T) {
-	f, err := os.Open("./test/data/20180905A.x9")
+	f, err := os.Open("./test/testdata/20180905A.x9")
 	if err != nil {
 		log.Panicf("Can not open local file: %s: \n", err)
 	}
