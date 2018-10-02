@@ -86,15 +86,14 @@ func (r *Reader) Read() (File, error) {
 		line := r.scanner.Text()
 		r.lineNum++
 
-
 		lineLength := len(line)
 
 		// ToDo: Adjust below stump code
-				if lineLength < 80 {
-				msg := fmt.Sprintf(msgRecordLength, lineLength)
-				err := &FileError{FieldName: "RecordLength", Value: strconv.Itoa(lineLength), Msg: msg}
-				return r.File, r.error(err)
-			}
+		if lineLength < 80 {
+			msg := fmt.Sprintf(msgRecordLength, lineLength)
+			err := &FileError{FieldName: "RecordLength", Value: strconv.Itoa(lineLength), Msg: msg}
+			return r.File, r.error(err)
+		}
 		r.line = line
 		if err := r.parseLine(); err != nil {
 			return r.File, err
