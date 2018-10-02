@@ -8,7 +8,7 @@ moov-io/x9
 
 X9’s Specifications for ICL (Image Cash ledger) to provide Check 21 services
 
-Package `github.com/moov-io/x9` implements a file reader and writer for parsing [x9](https://en.wikipedia.org/wiki/Check_21_Act) x9 file.
+Package `github.com/moov-io/x9` implements a file reader and writer for parsing [x9](https://en.wikipedia.org/wiki/Check_21_Act) files.
 
 Docs: [docs.moov.io](http://docs.moov.io/en/latest/) | [api docs](http://editor.swagger.io/?url=https://raw.githubusercontent.com/moov-io/x9/master/server/openapi.yaml)
 
