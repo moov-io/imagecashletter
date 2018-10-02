@@ -1,4 +1,4 @@
-// Copyright 2018 The x9 Authors
+// Copyright 2018 The Moov Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
@@ -46,7 +46,7 @@ const (
 var (
 	//msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
 	// specific messages
-	//msgRecordLength             = "Must be at least 80 characters and found %d"
+	msgRecordLength             = "Must be at least 80 characters and found %d"
 	msgFileCashLetterInside     = "Inside of current cash letter"
 	msgFileCashLetterControl    = "Cash letter control without a current cash letter"
 	msgFileRoutingNumberSummary = "Routing Number Summary without a current cash letter"

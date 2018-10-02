@@ -1,4 +1,4 @@
-// Copyright 2018 The x9 Authors
+// Copyright 2018 The Moov Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
@@ -8,6 +8,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"strconv"
 )
 
 // ParseError is returned for parsing reader errors.
@@ -85,15 +86,14 @@ func (r *Reader) Read() (File, error) {
 		line := r.scanner.Text()
 		r.lineNum++
 
-		// ToDo:  Review CheckAddendumB
-		//lineLength := len(line)
+		lineLength := len(line)
 
 		// ToDo: Adjust below stump code
-		/*		if lineLength < 80 {
-				msg := fmt.Sprintf(msgRecordLength, lineLength)
-				err := &FileError{FieldName: "RecordLength", Value: strconv.Itoa(lineLength), Msg: msg}
-				return r.File, r.error(err)
-			}*/
+		if lineLength < 80 {
+			msg := fmt.Sprintf(msgRecordLength, lineLength)
+			err := &FileError{FieldName: "RecordLength", Value: strconv.Itoa(lineLength), Msg: msg}
+			return r.File, r.error(err)
+		}
 		r.line = line
 		if err := r.parseLine(); err != nil {
 			return r.File, err

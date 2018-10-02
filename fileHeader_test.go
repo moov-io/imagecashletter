@@ -1,4 +1,4 @@
-// Copyright 2018 The X9 Authors
+// Copyright 2018 The Moov Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
@@ -182,5 +182,240 @@ func BenchmarkFHString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testFHString(b)
+	}
+}
+
+// TestFHRecordType validation
+func TestFHRecordType(t *testing.T) {
+	fh := mockFileHeader()
+	fh.recordType = "00"
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestStandardLevel validation
+func TestStandardLevel(t *testing.T) {
+	fh := mockFileHeader()
+	fh.StandardLevel = "01"
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "StandardLevel" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestTestFileIndicator validation
+func TestTestFileIndicator(t *testing.T) {
+	fh := mockFileHeader()
+	fh.TestFileIndicator = "S"
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "TestFileIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestResendIndicator validation
+func TestResendIndicator(t *testing.T) {
+	fh := mockFileHeader()
+	fh.ResendIndicator = "R"
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ResendIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestImmediateDestinationName validation
+func TestImmediateDestinationName(t *testing.T) {
+	fh := mockFileHeader()
+	fh.ImmediateDestinationName = "®©"
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImmediateDestinationName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestImmediateOriginName validation
+func TestImmediateOriginName(t *testing.T) {
+	fh := mockFileHeader()
+	fh.ImmediateOriginName = "®©"
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImmediateOriginName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFileIDModifier validation
+func TestFileIDModifier(t *testing.T) {
+	fh := mockFileHeader()
+	fh.FileIDModifier = "--"
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "FileIDModifier" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCountryCode validation
+func TestCountryCode(t *testing.T) {
+	fh := mockFileHeader()
+	fh.CompanionDocumentIndicator = "D"
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CompanionDocumentIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCACountryCode validation
+func TestCACountryCode(t *testing.T) {
+	fh := mockFileHeader()
+	fh.CountryCode = "CA"
+	fh.CompanionDocumentIndicator = "1"
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CompanionDocumentIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUserField validation
+func TestUserFieldI(t *testing.T) {
+	fh := mockFileHeader()
+	fh.UserField = "®©"
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserField" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFHFieldInclusionRecordType validates FieldInclusion
+func TestFHFieldInclusionRecordType(t *testing.T) {
+	fh := mockFileHeader()
+	fh.recordType = ""
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFHFieldInclusionStandardLevel validates FieldInclusion
+func TestFHFieldInclusionStandardLevel(t *testing.T) {
+	fh := mockFileHeader()
+	fh.StandardLevel = ""
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFHFieldInclusionTestFileIndicator validates FieldInclusion
+func TestFHFieldInclusionTestFileIndicator(t *testing.T) {
+	fh := mockFileHeader()
+	fh.TestFileIndicator = ""
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFHFieldInclusionResendIndicator validates FieldInclusion
+func TestFHFieldInclusionResendIndicator(t *testing.T) {
+	fh := mockFileHeader()
+	fh.ResendIndicator = ""
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFHFieldInclusionImmediateDestination validates FieldInclusion
+func TestFHFieldInclusionImmediateDestination(t *testing.T) {
+	fh := mockFileHeader()
+	fh.ImmediateDestination = ""
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFHFieldInclusionImmediateOrigin validates FieldInclusion
+func TestFHFieldInclusionImmediateOrigin(t *testing.T) {
+	fh := mockFileHeader()
+	fh.ImmediateOrigin = ""
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFHFieldInclusionCreationDate validates FieldInclusion
+func TestFHFieldInclusionCreationDate(t *testing.T) {
+	fh := mockFileHeader()
+	fh.FileCreationDate = time.Time{}
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFHFieldInclusionCreationTime validates FieldInclusion
+func TestFHFieldInclusionCreationTime(t *testing.T) {
+	fh := mockFileHeader()
+	fh.FileCreationTime = time.Time{}
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }

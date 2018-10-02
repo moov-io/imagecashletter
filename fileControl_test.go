@@ -1,4 +1,4 @@
-// Copyright 2018 The X9 Authors
+// Copyright 2018 The Moov Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
@@ -28,8 +28,8 @@ func mockFileControl() FileControl {
 	return fc
 }
 
-// testMockFileControl creates a FileControl
-func testMockFileControl(t testing.TB) {
+// TestMockFileControl creates a FileControl
+func TestMockFileControl(t *testing.T) {
 	fc := mockFileControl()
 	if err := fc.Validate(); err != nil {
 		t.Error("mockFileControl does not validate and will break other tests: ", err)
@@ -57,19 +57,6 @@ func testMockFileControl(t testing.TB) {
 	}
 	if fc.CreditTotalIndicator != 0 {
 		t.Error("CreditTotalIndicator does not validate")
-	}
-}
-
-// TestMockFileControl tests creating a FileControl
-func TestMockFileControl(t *testing.T) {
-	testMockFileControl(t)
-}
-
-// BenchmarkMockFileControl benchmarks creating an ICL FileControl
-func BenchmarkMockFileControl(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testMockFileControl(b)
 	}
 }
 
@@ -153,5 +140,122 @@ func BenchmarkFCString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testFCString(b)
+	}
+}
+
+// TestFCRecordType validation
+func TestFCRecordType(t *testing.T) {
+	fc := mockFileControl()
+	fc.recordType = "00"
+	if err := fc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestImmediateOriginContactName validation
+func TestImmediateOriginContactName(t *testing.T) {
+	fc := mockFileControl()
+	fc.ImmediateOriginContactName = "®©"
+	if err := fc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImmediateOriginContactName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestImmediateOriginContactPhoneNumber validation
+func TestImmediateOriginContactPhoneNumber(t *testing.T) {
+	fc := mockFileControl()
+	fc.ImmediateOriginContactPhoneNumber = "--"
+	if err := fc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImmediateOriginContactPhoneNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCreditTotalIndicator validation
+func TestCreditTotalIndicator(t *testing.T) {
+	fc := mockFileControl()
+	fc.CreditTotalIndicator = 9
+	if err := fc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CreditTotalIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFCFieldInclusionRecordType validates FieldInclusion
+func TestFCFieldInclusionRecordType(t *testing.T) {
+	fc := mockFileControl()
+	fc.recordType = ""
+	if err := fc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFieldInclusionCashLetterCount validates FieldInclusion
+func TestFieldInclusionCashLetterCount(t *testing.T) {
+	fc := mockFileControl()
+	fc.CashLetterCount = 0
+	if err := fc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CashLetterCount" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFieldInclusionTotalRecordCount validates FieldInclusion
+func TestFieldInclusionTotalRecordCount(t *testing.T) {
+	fc := mockFileControl()
+	fc.TotalRecordCount = 0
+	if err := fc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "TotalRecordCount" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFieldInclusionTotalItemCount validates FieldInclusion
+func TestFieldInclusionTotalItemCount(t *testing.T) {
+	fc := mockFileControl()
+	fc.TotalItemCount = 0
+	if err := fc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "TotalItemCount" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFieldInclusionFileTotalAmount validates FieldInclusion
+func TestFieldInclusionFileTotalAmount(t *testing.T) {
+	fc := mockFileControl()
+	fc.FileTotalAmount = 0
+	if err := fc.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "FileTotalAmount" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }

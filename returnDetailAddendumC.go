@@ -1,4 +1,4 @@
-// Copyright 2018 The x9 Authors
+// Copyright 2018 The Moov Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
@@ -37,7 +37,7 @@ type ReturnDetailAddendumC struct {
 	// 0000: ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
 	// 0001 - 9999: May include Value 0034, and ImageReferenceKey has no special significance to
 	// Image Reference Key (ImageReferenceKey is 1).
-	LengthImageReferenceKey int `json:"imageReferenceKeyLength"`
+	LengthImageReferenceKey string `json:"imageReferenceKeyLength"`
 	// ImageReferenceKey  is used to find the image of the item in the image data system.
 	ImageReferenceKey string `json:"imageReferenceKey"`
 	//Description describes the transaction
@@ -69,15 +69,15 @@ func (rdAddendumC *ReturnDetailAddendumC) Parse(record string) {
 	// 04-18
 	rdAddendumC.MicrofilmArchiveSequenceNumber = rdAddendumC.parseStringField(record[3:18])
 	// 19-22
-	rdAddendumC.LengthImageReferenceKey = rdAddendumC.parseNumField(record[18:22])
+	rdAddendumC.LengthImageReferenceKey = rdAddendumC.parseStringField(record[18:22])
 	// 23 (22+X)
-	rdAddendumC.ImageReferenceKey = rdAddendumC.parseStringField(record[22:rdAddendumC.LengthImageReferenceKey])
+	rdAddendumC.ImageReferenceKey = rdAddendumC.parseStringField(record[22:rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)])
 	// 23+X - 37+X
-	rdAddendumC.Description = rdAddendumC.parseStringField(record[22+rdAddendumC.LengthImageReferenceKey : 37+rdAddendumC.LengthImageReferenceKey])
+	rdAddendumC.Description = rdAddendumC.parseStringField(record[22+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey) : 37+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)])
 	// 38+X - 41+X
-	rdAddendumC.UserField = rdAddendumC.parseStringField(record[37+rdAddendumC.LengthImageReferenceKey : 41+rdAddendumC.LengthImageReferenceKey])
+	rdAddendumC.UserField = rdAddendumC.parseStringField(record[37+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey) : 41+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)])
 	// 42+X - 46+X
-	rdAddendumC.reserved = rdAddendumC.parseStringField(record[41+rdAddendumC.LengthImageReferenceKey : 46+rdAddendumC.LengthImageReferenceKey])
+	rdAddendumC.reserved = rdAddendumC.parseStringField(record[41+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey) : 46+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)])
 
 }
 
@@ -89,7 +89,7 @@ func (rdAddendumC *ReturnDetailAddendumC) String() string {
 	buf.WriteString(rdAddendumC.ImageReferenceKeyIndicatorField())
 	buf.WriteString(rdAddendumC.MicrofilmArchiveSequenceNumberField())
 	buf.WriteString(rdAddendumC.LengthImageReferenceKeyField())
-	buf.Grow(rdAddendumC.LengthImageReferenceKey)
+	buf.Grow(rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey))
 	buf.WriteString(rdAddendumC.ImageReferenceKeyField())
 	buf.WriteString(rdAddendumC.DescriptionField())
 	buf.WriteString(rdAddendumC.UserFieldField())
@@ -153,13 +153,13 @@ func (rdAddendumC *ReturnDetailAddendumC) MicrofilmArchiveSequenceNumberField() 
 
 // LengthImageReferenceKeyField gets the LengthImageReferenceKey field
 func (rdAddendumC *ReturnDetailAddendumC) LengthImageReferenceKeyField() string {
-	return rdAddendumC.numericField(rdAddendumC.LengthImageReferenceKey, 4)
+	return rdAddendumC.stringField(rdAddendumC.LengthImageReferenceKey, 4)
 }
 
 // ImageReferenceKeyField gets the ImageReferenceKey field
 func (rdAddendumC *ReturnDetailAddendumC) ImageReferenceKeyField() string {
 	// ToDo: Check if +1
-	return rdAddendumC.alphaField(rdAddendumC.ImageReferenceKey, uint(rdAddendumC.LengthImageReferenceKey))
+	return rdAddendumC.alphaField(rdAddendumC.ImageReferenceKey, uint(rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)))
 }
 
 // DescriptionField gets the Description field

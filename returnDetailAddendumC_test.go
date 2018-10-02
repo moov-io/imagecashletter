@@ -1,4 +1,4 @@
-// Copyright 2018 The x9 Authors
+// Copyright 2018 The Moov Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
@@ -15,7 +15,7 @@ func mockReturnDetailAddendumC() ReturnDetailAddendumC {
 	rdAddendumC := NewReturnDetailAddendumC()
 	rdAddendumC.ImageReferenceKeyIndicator = 1
 	rdAddendumC.MicrofilmArchiveSequenceNumber = "1A"
-	rdAddendumC.LengthImageReferenceKey = 0034
+	rdAddendumC.LengthImageReferenceKey = "0034"
 	rdAddendumC.ImageReferenceKey = "0"
 	rdAddendumC.Description = "RD Addendum C"
 	rdAddendumC.UserField = ""
@@ -37,7 +37,7 @@ func testMockReturnDetailAddendumC(t testing.TB) {
 	if rdAddendumC.MicrofilmArchiveSequenceNumber != "1A" {
 		t.Error("MicrofilmArchiveSequenceNumber does not validate")
 	}
-	if rdAddendumC.LengthImageReferenceKey != 0034 {
+	if rdAddendumC.LengthImageReferenceKey != "0034" {
 		t.Error("LengthImageReferenceKey does not validate")
 	}
 	if rdAddendumC.ImageReferenceKey != "0" {

@@ -1,4 +1,4 @@
-// Copyright 2018 The x9 Authors
+// Copyright 2018 The Moov Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
@@ -228,13 +228,7 @@ func (fh *FileHeader) fieldInclusion() error {
 	if fh.ImmediateDestination == "" {
 		return &FieldError{FieldName: "ImmediateDestination", Value: fh.ImmediateDestination, Msg: msgFieldInclusion}
 	}
-	if fh.ImmediateDestination == "000000000" {
-		return &FieldError{FieldName: "ImmediateDestination", Value: fh.ImmediateDestination, Msg: msgFieldInclusion}
-	}
 	if fh.ImmediateOrigin == "" {
-		return &FieldError{FieldName: "ImmediateOrigin", Value: fh.ImmediateOrigin, Msg: msgFieldInclusion}
-	}
-	if fh.ImmediateOrigin == "000000000" {
 		return &FieldError{FieldName: "ImmediateOrigin", Value: fh.ImmediateOrigin, Msg: msgFieldInclusion}
 	}
 	if fh.FileCreationDate.IsZero() {

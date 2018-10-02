@@ -1,4 +1,4 @@
-// Copyright 2018 The x9 Authors
+// Copyright 2018 The Moov Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
@@ -38,7 +38,7 @@ type CheckDetailAddendumB struct {
 	// 0000: ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
 	// 0001 - 9999: May include Value 0034, and ImageReferenceKey has no special significance to
 	// Image Reference Key (ImageReferenceKey is 1).
-	LengthImageReferenceKey int `json:"imageReferenceKeyLength"`
+	LengthImageReferenceKey string `json:"imageReferenceKeyLength"`
 	// ImageReferenceKey  is used to find the image of the item in the image data system.
 	ImageReferenceKey string `json:"imageReferenceKey"`
 	//Description describes the transaction
@@ -70,26 +70,26 @@ func (cdAddendumB *CheckDetailAddendumB) Parse(record string) {
 	// 04-18
 	cdAddendumB.MicrofilmArchiveSequenceNumber = cdAddendumB.parseStringField(record[3:18])
 	// 19-22
-	cdAddendumB.LengthImageReferenceKey = cdAddendumB.parseNumField(record[18:22])
+	cdAddendumB.LengthImageReferenceKey = cdAddendumB.parseStringField(record[18:22])
 	// 23 (22+X)
-	cdAddendumB.ImageReferenceKey = cdAddendumB.parseStringField(record[22:cdAddendumB.LengthImageReferenceKey])
+	cdAddendumB.ImageReferenceKey = cdAddendumB.parseStringField(record[22:cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey)])
 	// 23+X - 37+X
-	cdAddendumB.Description = cdAddendumB.parseStringField(record[22+cdAddendumB.LengthImageReferenceKey : 37+cdAddendumB.LengthImageReferenceKey])
+	cdAddendumB.Description = cdAddendumB.parseStringField(record[22+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey) : 37+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey)])
 	// 38+X - 41+X
-	cdAddendumB.UserField = cdAddendumB.parseStringField(record[37+cdAddendumB.LengthImageReferenceKey : 41+cdAddendumB.LengthImageReferenceKey])
+	cdAddendumB.UserField = cdAddendumB.parseStringField(record[37+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey) : 41+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey)])
 	// 42+X - 46+X
-	cdAddendumB.reserved = cdAddendumB.parseStringField(record[41+cdAddendumB.LengthImageReferenceKey : 46+cdAddendumB.LengthImageReferenceKey])
+	cdAddendumB.reserved = cdAddendumB.parseStringField(record[41+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey) : 46+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey)])
 }
 
 // String writes the CheckDetailAddendumB struct to a string.
 func (cdAddendumB *CheckDetailAddendumB) String() string {
 	var buf strings.Builder
-	buf.Grow(22)
+	buf.Grow(46)
 	buf.WriteString(cdAddendumB.recordType)
 	buf.WriteString(cdAddendumB.ImageReferenceKeyIndicatorField())
 	buf.WriteString(cdAddendumB.MicrofilmArchiveSequenceNumberField())
 	buf.WriteString(cdAddendumB.LengthImageReferenceKeyField())
-	buf.Grow(cdAddendumB.LengthImageReferenceKey)
+	buf.Grow(cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey))
 	buf.WriteString(cdAddendumB.ImageReferenceKeyField())
 	buf.WriteString(cdAddendumB.DescriptionField())
 	buf.WriteString(cdAddendumB.UserFieldField())
@@ -157,13 +157,12 @@ func (cdAddendumB *CheckDetailAddendumB) MicrofilmArchiveSequenceNumberField() s
 
 // LengthImageReferenceKeyField gets the LengthImageReferenceKey field
 func (cdAddendumB *CheckDetailAddendumB) LengthImageReferenceKeyField() string {
-	return cdAddendumB.numericField(cdAddendumB.LengthImageReferenceKey, 4)
+	return cdAddendumB.stringField(cdAddendumB.LengthImageReferenceKey, 4)
 }
 
 // ImageReferenceKeyField gets the ImageReferenceKey field
 func (cdAddendumB *CheckDetailAddendumB) ImageReferenceKeyField() string {
-	// ToDo: Check if +1
-	return cdAddendumB.alphaField(cdAddendumB.ImageReferenceKey, uint(cdAddendumB.LengthImageReferenceKey))
+	return cdAddendumB.alphaField(cdAddendumB.ImageReferenceKey, uint(cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey)))
 }
 
 // DescriptionField gets the Description field
