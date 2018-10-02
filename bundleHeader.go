@@ -162,7 +162,7 @@ func (bh *BundleHeader) Validate() error {
 		return &FieldError{FieldName: "BundleID", Value: bh.BundleID, Msg: err.Error()}
 	}
 	if err := bh.isAlphanumeric(bh.CycleNumber); err != nil {
-		return &FieldError{FieldName: "CycleNumber,", Value: bh.CycleNumber, Msg: err.Error()}
+		return &FieldError{FieldName: "CycleNumber", Value: bh.CycleNumber, Msg: err.Error()}
 	}
 	if err := bh.isAlphanumericSpecial(bh.UserField); err != nil {
 		return &FieldError{FieldName: "UserField", Value: bh.UserField, Msg: err.Error()}
