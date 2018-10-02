@@ -46,7 +46,7 @@ const (
 var (
 	//msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
 	// specific messages
-	//msgRecordLength             = "Must be at least 80 characters and found %d"
+	msgRecordLength             = "Must be at least 80 characters and found %d"
 	msgFileCashLetterInside     = "Inside of current cash letter"
 	msgFileCashLetterControl    = "Cash letter control without a current cash letter"
 	msgFileRoutingNumberSummary = "Routing Number Summary without a current cash letter"

@@ -24,7 +24,7 @@ func TestX9FileRead(t *testing.T) {
 	if err != nil {
 		if p, ok := err.(*ParseError); ok {
 			if e, ok := p.Err.(*BundleError); ok {
-				if e.FieldName != "" {
+				if e.FieldName != "entries" {
 					t.Errorf("%T: %s", e, e)
 				}
 			}

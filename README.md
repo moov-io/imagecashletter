@@ -14,13 +14,19 @@ Docs: [docs.moov.io](http://docs.moov.io/en/latest/) | [api docs](http://editor.
 
 x9 is under active development, and should not be used in Production.  Feeback is welcom  Please star the project if you are interested in its progress.
 
-* Library currently supports the reading and writing
+* The Library currently supports the reading and writing
 	* Cash Letters
 	* Bundles
 	* Check Detail
 	* Return Detail
 	* Image Views
 
+* Future Development
+    * Increase Test Code Coverage to 95% +
+    * Add Routing Number Summary Tests
+    * Add Credit Items Functionality
+    * Add User Record Functionality
+    * Benchmarking and Profiling Tests
 
 ## Project Roadmap
 * Please open an issue with a valid test file.
