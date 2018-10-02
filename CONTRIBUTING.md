@@ -69,7 +69,7 @@ Our Build pipeline utilizes [Travis-CI](https://travis-ci.org/moov-io/x9) to enf
 
 ## Benchmarks and Profiling 
 
-TO Be Done
+To Be Done
 
 **Write:**
 
@@ -119,8 +119,8 @@ Profiling
 
 ## Format Specification
 
-* [X9 File Formatting](ANSI+X9.100-187-2016.pdf)
-
+* [X9 File Formatting](https://www.frbservices.org/assets/financial-services/check/setup/frb-x937-standards-reference.pdf)
 
 ## Inspiration 
 
+* [USBANK](file:///C:/Users/Owner/Downloads/406481301.pdf)

@@ -12,7 +12,7 @@ Docs: [docs.moov.io](http://docs.moov.io/en/latest/) | [api docs](http://editor.
 
 ## Project Status
 
-x9 is under active development, and should not be used in Production.  Feeback is welcom  Please star the project if you are interested in its progress.
+x9 is under active development, and should not be used in Production.  Feeback is welcome and please star the project if you are interested in its progress.
 
 * The Library currently supports the reading and writing
 	* Cash Letters
