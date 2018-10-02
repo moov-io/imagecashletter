@@ -12,7 +12,7 @@ Docs: [docs.moov.io](http://docs.moov.io/en/latest/) | [api docs](http://editor.
 
 ## Project Status
 
-x9 is under active development.  Please star the project if you are interested in its progress.
+x9 is under active development, and should not be used in Production.  Feeback is welcom  Please star the project if you are interested in its progress.
 
 * Library currently supports the reading and writing
 	* Cash Letters
@@ -27,7 +27,7 @@ x9 is under active development.  Please star the project if you are interested i
 * Review the project issues for more detailed information
 
 ## Usage and tests
-The following is a high level of reading and writing an X9 file. 
+The following is a high level example of reading and writing an X9 file. 
 
 ### Read a file
 
