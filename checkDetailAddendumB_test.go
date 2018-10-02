@@ -10,13 +10,12 @@ import (
 	"testing"
 )
 
-// ToDo: Review Image key Code/Functionality - Variable length
 // mockCheckDetailAddendumB creates a CheckDetailAddendumB
 func mockCheckDetailAddendumB() CheckDetailAddendumB {
 	cdAddendumB := NewCheckDetailAddendumB()
 	cdAddendumB.ImageReferenceKeyIndicator = 1
 	cdAddendumB.MicrofilmArchiveSequenceNumber = "1A             "
-	cdAddendumB.LengthImageReferenceKey = 0034
+	cdAddendumB.LengthImageReferenceKey = "0034"
 	cdAddendumB.ImageReferenceKey = "0"
 	cdAddendumB.Description = "CD Addendum B"
 	cdAddendumB.UserField = ""
@@ -38,7 +37,7 @@ func testMockCheckDetailAddendumB(t testing.TB) {
 	if cdAddendumB.MicrofilmArchiveSequenceNumber != "1A             " {
 		t.Error("MicrofilmArchiveSequenceNumber does not validate")
 	}
-	if cdAddendumB.LengthImageReferenceKey != 0034 {
+	if cdAddendumB.LengthImageReferenceKey != "0034" {
 		t.Error("LengthImageReferenceKey does not validate")
 	}
 	if cdAddendumB.ImageReferenceKey != "0" {
@@ -151,13 +150,13 @@ func testCDAddendumBString(t testing.TB) {
 	}
 }
 
-// TestCDAddendumBString tests validating that a known parsed CheckDetailAddendumB can return to a string of the
+// TestCDAddendumB String tests validating that a known parsed CheckDetailAddendumB can return to a string of the
 // same value
 func TestCDAddendumBString(t *testing.T) {
 	testCDAddendumBString(t)
 }
 
-// BenchmarkCDAddendumBString benchmarks validating that a known parsed CheckDetailAddendumB
+// BenchmarkCDAddendumB String benchmarks validating that a known parsed CheckDetailAddendumB
 // can return to a string of the same value
 func BenchmarkCDAddendumBString(b *testing.B) {
 	b.ReportAllocs()

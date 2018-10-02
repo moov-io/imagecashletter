@@ -1,4 +1,4 @@
-// Copyright 2018 The Moov Authors
+// Copyright 2018 The ACH Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
@@ -59,12 +59,12 @@ func TestX9Write(t *testing.T) {
 		t.Errorf("%T: %s", err, err)
 	}
 
-	/*		// We want to write the file to an io.Writer
-			w := NewWriter(os.Stdout)
-			if err := w.Write(file); err != nil {
-				log.Fatalf("Unexpected error: %s\n", err)
-			}
-			w.Flush()*/
+	/*	// We want to write the file to an io.Writer
+		w := NewWriter(os.Stdout)
+		if err := w.Write(file); err != nil {
+			log.Fatalf("Unexpected error: %s\n", err)
+		}
+		w.Flush()*/
 
 	r := NewReader(strings.NewReader(b.String()))
 	_, err := r.Read()
