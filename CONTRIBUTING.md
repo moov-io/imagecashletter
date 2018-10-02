@@ -122,5 +122,3 @@ Profiling
 * [X9 File Formatting](https://www.frbservices.org/assets/financial-services/check/setup/frb-x937-standards-reference.pdf)
 
 ## Inspiration 
-
-* [USBANK](file:///C:/Users/Owner/Downloads/406481301.pdf)
