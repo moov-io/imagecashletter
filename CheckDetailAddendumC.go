@@ -6,6 +6,7 @@ package x9
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -276,4 +277,11 @@ func (cdAddendumC *CheckDetailAddendumC) EndorsingBankIdentifierField() string {
 // reservedField gets reserved - blank space
 func (cdAddendumC *CheckDetailAddendumC) reservedField() string {
 	return cdAddendumC.alphaField(cdAddendumC.reserved, 20)
+}
+
+// SetEndorsingBankItemSequenceNumber sets EndorsingBankItemSequenceNumber
+func (cdAddendumC *CheckDetailAddendumC) SetEndorsingBankItemSequenceNumber(seq int) string {
+	itemSequence := strconv.Itoa(seq)
+	cdAddendumC.EndorsingBankItemSequenceNumber = itemSequence
+	return cdAddendumC.EndorsingBankItemSequenceNumber
 }

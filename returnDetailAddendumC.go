@@ -32,7 +32,7 @@ type ReturnDetailAddendumC struct {
 	MicrofilmArchiveSequenceNumber string `json:"microfilmArchiveSequenceNumber"`
 	// ImageReferenceKeyLength is the number of characters in the ImageReferenceKey
 	// Values:
-	// ToDo: Verify defined value meaning see Annex H of the spec, add validator
+	// ToDo: Add validator
 	// 0034: ImageReferenceKey contains the ImageReferenceKey (ImageReferenceKeyIndicator is 0).
 	// 0000: ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
 	// 0001 - 9999: May include Value 0034, and ImageReferenceKey has no special significance to
@@ -158,7 +158,6 @@ func (rdAddendumC *ReturnDetailAddendumC) LengthImageReferenceKeyField() string 
 
 // ImageReferenceKeyField gets the ImageReferenceKey field
 func (rdAddendumC *ReturnDetailAddendumC) ImageReferenceKeyField() string {
-	// ToDo: Check if +1
 	return rdAddendumC.alphaField(rdAddendumC.ImageReferenceKey, uint(rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)))
 }
 

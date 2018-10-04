@@ -6,6 +6,7 @@ package x9
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -451,4 +452,11 @@ func (cd *CheckDetail) AddCheckDetailImageViewAnalysis(ivAnalysis ImageViewAnaly
 // GetCheckDetailImageViewAnalysis returns a slice of ImageViewAnalysis for the CheckDetail
 func (cd *CheckDetail) GetCheckDetailImageViewAnalysis() []ImageViewAnalysis {
 	return cd.ImageViewAnalysis
+}
+
+// SetEceInstitutionItemSequenceNumber sets EceInstitutionItemSequenceNumber
+func (cd *CheckDetail) SetEceInstitutionItemSequenceNumber(seq int) string {
+	itemSequence := strconv.Itoa(seq)
+	cd.EceInstitutionItemSequenceNumber = itemSequence
+	return cd.EceInstitutionItemSequenceNumber
 }

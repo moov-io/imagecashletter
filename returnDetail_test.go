@@ -19,7 +19,7 @@ func mockReturnDetail() *ReturnDetail {
 	rd.OnUs = "5558881"
 	rd.ItemAmount = 100000
 	rd.ReturnReason = "A"
-	rd.AddendumCount = 3
+	rd.AddendumCount = 4
 	rd.DocumentationTypeIndicator = "G"
 	rd.ForwardBundleDate = time.Now()
 	rd.EceInstitutionItemSequenceNumber = "1              "
@@ -54,7 +54,7 @@ func testMockReturnDetail(t testing.TB) {
 	if rd.ReturnReason != "A" {
 		t.Error("ReturnReason does not validate")
 	}
-	if rd.AddendumCount != 3 {
+	if rd.AddendumCount != 4 {
 		t.Error("AddendumCount does not validate")
 	}
 	if rd.DocumentationTypeIndicator != "G" {
@@ -92,7 +92,7 @@ func BenchmarkMockReturnDetail(b *testing.B) {
 
 // TestParseReturnDetail validates parsing a ReturnDetail
 func TestParseReturnDetail(t *testing.T) {
-	var line = "31031300012             55588810000100000A03G201809051               2B0        "
+	var line = "31031300012             55588810000100000A04G201809051               2B0        "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -126,8 +126,8 @@ func TestParseReturnDetail(t *testing.T) {
 	if record.ReturnReasonField() != "A" {
 		t.Errorf("ReturnReason Expected 'A' got: %v", record.ReturnReasonField())
 	}
-	if record.AddendumCountField() != "03" {
-		t.Errorf("AddendumCount Expected '03' got: %v", record.AddendumCountField())
+	if record.AddendumCountField() != "04" {
+		t.Errorf("AddendumCount Expected '04' got: %v", record.AddendumCountField())
 	}
 	if record.DocumentationTypeIndicatorField() != "G" {
 		t.Errorf("DocumentationTypeIndicator Expected 'G' got: %v", record.DocumentationTypeIndicatorField())
@@ -152,7 +152,7 @@ func TestParseReturnDetail(t *testing.T) {
 
 // testReturnDetailString validates that a known parsed ReturnDetail can return to a string of the same value
 func testReturnDetailString(t testing.TB) {
-	var line = "31031300012             55588810000100000A03G201809051               2B0        "
+	var line = "31031300012             55588810000100000A04G201809051               2B0        "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
