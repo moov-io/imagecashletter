@@ -16,12 +16,25 @@ type BundleError struct {
 }
 
 func (e *BundleError) Error() string {
-	return fmt.Sprintf("BatchNumber %s %s %s", e.BundleSequenceNumber, e.FieldName, e.Msg)
+	return fmt.Sprintf("BundleNumber %s %s %s", e.BundleSequenceNumber, e.FieldName, e.Msg)
 }
+
+// Addendum Counts
+const (
+	CheckDetailAddendumACount  = 9
+	CheckDetailAddendumBCount  = 1
+	CheckDetailAddendumCCount  = 99
+	ReturnDetailAddendumACount = 9
+	ReturnDetailAddendumBCount = 1
+	ReturnDetailAddendumCCount = 1
+	ReturnDetailAddendumDCount = 99
+)
 
 // Errors specific to parsing a Batch container
 var (
-	msgBundleEntries = "must have Check Detail or Return Detail to be built"
+	msgBundleEntries       = "must have Check Detail or Return Detail to be built"
+	msgBundleAddendum      = "%v found is greater than maximum of %v"
+	msgBundleAddendumCount = "%v does not match Addenda Records"
 )
 
 // Bundle contains forward items (checks)
@@ -46,12 +59,21 @@ func NewBundle(bh *BundleHeader) *Bundle {
 	return b
 }
 
-// Validate performs X9  validations and format rule checks and returns an error if not Validated
+// Validate performs X9 validations and format rule checks and returns an error if not Validated
 func (b *Bundle) Validate() error {
 	if (len(b.Checks) <= 0) && (len(b.Returns) <= 0) {
 		return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "entries", Msg: msgBundleEntries}
 	}
 
+	if len(b.Checks) > 0 {
+		if err := b.checkDetailAddendumCount(); err != nil {
+			return err
+		}
+	} else {
+		if err := b.returnDetailAddendumCount(); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -68,16 +90,14 @@ func (b *Bundle) build() error {
 		return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "entries", Msg: msgBundleEntries}
 	}
 
-	//
 	itemCount := 0
 	bundleTotalAmount := 0
 	micrValidTotalAmount := 0
 	bundleImagesCount := 0
 
-	// ToDo: Sequences
-
 	// Forward Items
 	for _, cd := range b.Checks {
+
 		// Validate CheckDetailAddendum* and ImageView*
 		if err := b.ValidateForwardItems(cd); err != nil {
 			return err
@@ -92,7 +112,6 @@ func (b *Bundle) build() error {
 		}
 
 		bundleImagesCount = bundleImagesCount + len(cd.ImageViewDetail)
-
 	}
 
 	// Return Items
@@ -102,14 +121,10 @@ func (b *Bundle) build() error {
 		if err := b.ValidateReturnItems(rd); err != nil {
 			return err
 		}
-
 		itemCount = itemCount + 1
 		itemCount = itemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC) + len(rd.ReturnDetailAddendumD)
 		itemCount = itemCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
 		bundleTotalAmount = bundleTotalAmount + rd.ItemAmount
-
-		// ToDo: micrValidTotalAmount for returns?
-
 		bundleImagesCount = bundleImagesCount + len(rd.ImageViewDetail)
 	}
 
@@ -119,7 +134,6 @@ func (b *Bundle) build() error {
 	bc.BundleTotalAmount = bundleTotalAmount
 	bc.MICRValidTotalAmount = micrValidTotalAmount
 	bc.BundleImagesCount = bundleImagesCount
-	// ToDo:  Add Credit Functionality?
 	bc.CreditTotalIndicator = 0
 	b.BundleControl = bc
 	return nil
@@ -237,6 +251,58 @@ func (b *Bundle) ValidateReturnItems(rd *ReturnDetail) error {
 	for _, ivAnalysis := range rd.ImageViewDetail {
 		if err := ivAnalysis.Validate(); err != nil {
 			return err
+		}
+	}
+	return nil
+}
+
+//checkDetailAddendumCount validates CheckDetail AddendumCount
+func (b *Bundle) checkDetailAddendumCount() error {
+	// Check Items
+	for _, cd := range b.Checks {
+		if cd.AddendumCount != len(cd.CheckDetailAddendumA)+len(cd.CheckDetailAddendumB)+len(cd.CheckDetailAddendumC) {
+			msg := fmt.Sprintf(msgBundleAddendumCount, cd.AddendumCount)
+			return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "AddendumCount", Msg: msg}
+		}
+		if len(cd.CheckDetailAddendumA) > CheckDetailAddendumACount {
+			msg := fmt.Sprintf(msgBundleAddendum, len(cd.CheckDetailAddendumA), CheckDetailAddendumACount)
+			return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "CheckDetailAddendumA", Msg: msg}
+		}
+		if len(cd.CheckDetailAddendumB) > CheckDetailAddendumBCount {
+			msg := fmt.Sprintf(msgBundleAddendum, len(cd.CheckDetailAddendumB), CheckDetailAddendumBCount)
+			return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "CheckDetailAddendumB", Msg: msg}
+		}
+		if len(cd.CheckDetailAddendumC) > CheckDetailAddendumCCount {
+			msg := fmt.Sprintf(msgBundleAddendum, len(cd.CheckDetailAddendumC), CheckDetailAddendumCCount)
+			return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "CheckDetailAddendumC", Msg: msg}
+		}
+
+	}
+	return nil
+}
+
+// returnDetailAddendumCount validates ReturnDetail AddendumCount
+func (b *Bundle) returnDetailAddendumCount() error {
+	for _, rd := range b.Returns {
+		if rd.AddendumCount != len(rd.ReturnDetailAddendumA)+len(rd.ReturnDetailAddendumB)+len(rd.ReturnDetailAddendumC)+len(rd.ReturnDetailAddendumD) {
+			msg := fmt.Sprintf(msgBundleAddendumCount, rd.AddendumCount)
+			return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "AddendumCount", Msg: msg}
+		}
+		if len(rd.ReturnDetailAddendumA) > ReturnDetailAddendumACount {
+			msg := fmt.Sprintf(msgBundleAddendum, len(rd.ReturnDetailAddendumA), ReturnDetailAddendumACount)
+			return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "ReturnDetailAddendumA", Msg: msg}
+		}
+		if len(rd.ReturnDetailAddendumB) > ReturnDetailAddendumBCount {
+			msg := fmt.Sprintf(msgBundleAddendum, len(rd.ReturnDetailAddendumB), ReturnDetailAddendumBCount)
+			return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "ReturnDetailAddendumB", Msg: msg}
+		}
+		if len(rd.ReturnDetailAddendumC) > ReturnDetailAddendumCCount {
+			msg := fmt.Sprintf(msgBundleAddendum, len(rd.ReturnDetailAddendumC), ReturnDetailAddendumCCount)
+			return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "ReturnDetailAddendumC", Msg: msg}
+		}
+		if len(rd.ReturnDetailAddendumD) > ReturnDetailAddendumDCount {
+			msg := fmt.Sprintf(msgBundleAddendum, len(rd.ReturnDetailAddendumD), ReturnDetailAddendumDCount)
+			return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "ReturnDetailAddendumD", Msg: msg}
 		}
 	}
 	return nil

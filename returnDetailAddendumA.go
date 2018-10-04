@@ -6,6 +6,7 @@ package x9
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -285,4 +286,11 @@ func (rdAddendumA *ReturnDetailAddendumA) UserFieldField() string {
 // reservedField gets reserved - blank space
 func (rdAddendumA *ReturnDetailAddendumA) reservedField() string {
 	return rdAddendumA.alphaField(rdAddendumA.reserved, 3)
+}
+
+// SetBOFDItemSequenceNumber sets BOFDItemSequenceNumber
+func (rdAddendumA *ReturnDetailAddendumA) SetBOFDItemSequenceNumber(seq int) string {
+	itemSequence := strconv.Itoa(seq)
+	rdAddendumA.BOFDItemSequenceNumber = itemSequence
+	return rdAddendumA.BOFDItemSequenceNumber
 }
