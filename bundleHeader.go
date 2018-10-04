@@ -6,6 +6,7 @@ package x9
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -256,4 +257,11 @@ func (bh *BundleHeader) UserFieldField() string {
 // reservedTwoField gets reservedTwo - blank space
 func (bh *BundleHeader) reservedTwoField() string {
 	return bh.alphaField(bh.reservedTwo, 12)
+}
+
+// SetBundleSequenceNumber sets BundleSequenceNumber
+func (bh *BundleHeader) SetBundleSequenceNumber(seq int) string {
+	bundleSequence := strconv.Itoa(seq)
+	bh.BundleSequenceNumber = bundleSequence
+	return bh.BundleSequenceNumber
 }
