@@ -229,14 +229,15 @@ func (cd *CheckDetail) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 25)
 		return &FieldError{FieldName: "recordType", Value: cd.recordType, Msg: msg}
 	}
-	// Z is valid for CashLetter DocumentationTypeIndicator only
-	if cd.DocumentationTypeIndicator == "Z" {
-		msg := fmt.Sprint(msgDocumentationTypeIndicator)
-		return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cd.DocumentationTypeIndicator, Msg: msg}
-	}
-	// Conditional, validator contains ""
-	if err := cd.isDocumentationTypeIndicator(cd.DocumentationTypeIndicator); err != nil {
-		return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cd.DocumentationTypeIndicator, Msg: err.Error()}
+	if cd.DocumentationTypeIndicator != "" {
+		// Z is valid for CashLetter DocumentationTypeIndicator only
+		if cd.DocumentationTypeIndicator == "Z" {
+			msg := fmt.Sprint(msgDocumentationTypeIndicator)
+			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cd.DocumentationTypeIndicator, Msg: msg}
+		}
+		if err := cd.isDocumentationTypeIndicator(cd.DocumentationTypeIndicator); err != nil {
+			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cd.DocumentationTypeIndicator, Msg: err.Error()}
+		}
 	}
 	// Conditional
 	if cd.ReturnAcceptanceIndicator != "" {

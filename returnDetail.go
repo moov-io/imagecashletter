@@ -204,7 +204,13 @@ func (rd *ReturnDetail) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 31)
 		return &FieldError{FieldName: "recordType", Value: rd.recordType, Msg: msg}
 	}
+
 	if rd.DocumentationTypeIndicator != "" {
+		// Z is valid for CashLetter DocumentationTypeIndicator only
+		if rd.DocumentationTypeIndicator == "Z" {
+			msg := fmt.Sprint(msgDocumentationTypeIndicator)
+			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: rd.DocumentationTypeIndicator, Msg: msg}
+		}
 		if err := rd.isDocumentationTypeIndicator(rd.DocumentationTypeIndicator); err != nil {
 			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: rd.DocumentationTypeIndicator, Msg: err.Error()}
 		}

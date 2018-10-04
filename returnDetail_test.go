@@ -30,8 +30,8 @@ func mockReturnDetail() *ReturnDetail {
 	return rd
 }
 
-// testMockReturnDetail creates a ReturnDetail
-func testMockReturnDetail(t testing.TB) {
+// TestMockReturnDetail creates a ReturnDetail
+func TestMockReturnDetail(t *testing.T) {
 	rd := mockReturnDetail()
 	if err := rd.Validate(); err != nil {
 		t.Error("mockReturnDetail does not validate and will break other tests: ", err)
@@ -74,19 +74,6 @@ func testMockReturnDetail(t testing.TB) {
 	}
 	if rd.TimesReturned != 0 {
 		t.Error("TimesReturned does not validate")
-	}
-}
-
-// TestMockReturnDetail tests creating a ReturnDetail
-func TestMockReturnDetail(t *testing.T) {
-	testMockReturnDetail(t)
-}
-
-// BenchmarkMockReturnDetail benchmarks creating a ReturnDetail
-func BenchmarkMockReturnDetail(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testMockReturnDetail(b)
 	}
 }
 
@@ -185,5 +172,148 @@ func BenchmarkReturnDetailString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testReturnDetailString(b)
+	}
+}
+
+// TestRDRecordType validation
+func TestRDRecordType(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.recordType = "00"
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDDocumentationTypeIndicator validation
+func TestRDDocumentationTypeIndicator(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.DocumentationTypeIndicator = "P"
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "DocumentationTypeIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDDocumentationTypeIndicatorZ validation
+func TestRDDocumentationTypeIndicatorZ(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.DocumentationTypeIndicator = "Z"
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "DocumentationTypeIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDReturnNotificationIndicator validation
+func TestRDReturnNotificationIndicator(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.ReturnNotificationIndicator = 0
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ReturnNotificationIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDArchiveTypeIndicator validation
+func TestRDArchiveTypeIndicator(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.ArchiveTypeIndicator = "W"
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ArchiveTypeIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDTimesReturned validation
+func TestRDTimesReturned(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.TimesReturned = 5
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "TimesReturned" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDFIRecordType validation
+func TestRDFIRecordType(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.recordType = ""
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDFIPayorBankRoutingNumber validation
+func TestRDFIPayorBankRoutingNumber(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.PayorBankRoutingNumber = ""
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayorBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDFIPayorBankCheckDigit validation
+func TestRDFIPayorBankCheckDigit(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.PayorBankCheckDigit = ""
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayorBankCheckDigit" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDFIReturnReason validation
+func TestRDFIReturnReason(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.ReturnReason = ""
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ReturnReason" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDFIEceInstitutionItemSequenceNumber validation
+func TestRDFIEceInstitutionItemSequenceNumber(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.EceInstitutionItemSequenceNumber = "               "
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EceInstitutionItemSequenceNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }
