@@ -57,6 +57,7 @@ var (
 	msgFileControl       = "None or more than one file control exists"
 	msgFileHeader        = "None or more than one file headers exists"
 	msgUnknownRecordType = "%s is an unknown record type"
+	msgFileCashLetterID  = "%s is not unique"
 )
 
 // FileError is an error describing issues validating a file
@@ -103,6 +104,7 @@ func (f *File) Create() error {
 		return &FileError{FieldName: "CashLetters", Value: strconv.Itoa(len(f.CashLetters)), Msg: "must have []*CashLetters to be built"}
 	}
 
+	// File Control Counts
 	fileCashLetterCount := len(f.CashLetters)
 	// add 2 for FileHeader/control and reset if build was called twice do to error
 	fileTotalRecordCount := 2
@@ -125,13 +127,12 @@ func (f *File) Create() error {
 			if err := b.Validate(); err != nil {
 				return err
 			}
+
 			bundleRecordCount = bundleRecordCount + 2
 
 			// Check Items
 			for _, cd := range b.Checks {
-				if err := b.build(); err != nil {
-					return err
-				}
+
 				fileTotalItemCount = fileTotalItemCount + 1
 				fileTotalItemCount = fileTotalItemCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
 				fileTotalItemCount = fileTotalItemCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
@@ -139,9 +140,7 @@ func (f *File) Create() error {
 			}
 			// Returns Items
 			for _, rd := range b.Returns {
-				if err := b.build(); err != nil {
-					return err
-				}
+
 				fileTotalItemCount = fileTotalItemCount + 1
 				fileTotalItemCount = fileTotalItemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC) + len(rd.ReturnDetailAddendumD)
 				fileTotalItemCount = fileTotalItemCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
@@ -168,6 +167,11 @@ func (f *File) Create() error {
 
 // Validate validates an ICL File
 func (f *File) Validate() error {
+
+	if err := f.CashLetterIDUnique(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -181,4 +185,17 @@ func (f *File) SetHeader(h FileHeader) *File {
 func (f *File) AddCashLetter(cashLetter CashLetter) []CashLetter {
 	f.CashLetters = append(f.CashLetters, cashLetter)
 	return f.CashLetters
+}
+
+// CashLetterIDUnique verifies multiple CashLetters in a file have a unique CashLetterID
+func (f *File) CashLetterIDUnique() error {
+	cashLetterID := ""
+	for _, cl := range f.CashLetters {
+		if cashLetterID == cl.CashLetterHeader.CashLetterID {
+			msg := fmt.Sprintf(msgFileCashLetterID, cashLetterID)
+			return &FileError{FieldName: "CashLetterID", Value: cl.CashLetterHeader.CashLetterID, Msg: msg}
+		}
+		cashLetterID = cl.CashLetterHeader.CashLetterID
+	}
+	return nil
 }

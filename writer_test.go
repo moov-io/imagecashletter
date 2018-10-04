@@ -25,6 +25,16 @@ func TestX9Write(t *testing.T) {
 	bundle := NewBundle(mockBundleHeader())
 	bundle.AddCheckDetail(cd)
 
+	// CheckDetail 2
+	cdTwo := mockCheckDetail()
+	cdTwo.AddCheckDetailAddendumA(mockCheckDetailAddendumA())
+	cdTwo.AddCheckDetailAddendumB(mockCheckDetailAddendumB())
+	cdTwo.AddCheckDetailAddendumC(mockCheckDetailAddendumC())
+	cdTwo.AddImageViewDetail(mockImageViewDetail())
+	cdTwo.AddImageViewData(mockImageViewData())
+	cdTwo.AddImageViewAnalysis(mockImageViewAnalysis())
+	bundle.AddCheckDetail(cdTwo)
+
 	// Create ReturnDetail
 	rd := mockReturnDetail()
 	rd.AddReturnDetailAddendumA(mockReturnDetailAddendumA())
@@ -35,7 +45,18 @@ func TestX9Write(t *testing.T) {
 	rd.AddImageViewData(mockImageViewData())
 	rd.AddImageViewAnalysis(mockImageViewAnalysis())
 	returnBundle := NewBundle(mockBundleHeader())
+	returnBundle.BundleHeader.BundleSequenceNumber = "2"
 	returnBundle.AddReturnDetail(rd)
+
+	rdTwo := mockReturnDetail()
+	rdTwo.AddReturnDetailAddendumA(mockReturnDetailAddendumA())
+	rdTwo.AddReturnDetailAddendumB(mockReturnDetailAddendumB())
+	rdTwo.AddReturnDetailAddendumC(mockReturnDetailAddendumC())
+	rdTwo.AddReturnDetailAddendumD(mockReturnDetailAddendumD())
+	rdTwo.AddImageViewDetail(mockImageViewDetail())
+	rdTwo.AddImageViewData(mockImageViewData())
+	rdTwo.AddImageViewAnalysis(mockImageViewAnalysis())
+	returnBundle.AddReturnDetail(rdTwo)
 
 	// Create CashLetter
 	cl := NewCashLetter(mockCashLetterHeader())
@@ -43,6 +64,13 @@ func TestX9Write(t *testing.T) {
 	cl.AddBundle(returnBundle)
 	cl.Create()
 	file.AddCashLetter(cl)
+
+	clTwo := NewCashLetter(mockCashLetterHeader())
+	clTwo.CashLetterHeader.CashLetterID = "A2"
+	clTwo.AddBundle(bundle)
+	clTwo.AddBundle(returnBundle)
+	clTwo.Create()
+	file.AddCashLetter(clTwo)
 
 	// Create file
 	if err := file.Create(); err != nil {
@@ -58,8 +86,8 @@ func TestX9Write(t *testing.T) {
 	if err := f.Write(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
-
-	/*	// We want to write the file to an io.Writer
+	/*
+		// We want to write the file to an io.Writer
 		w := NewWriter(os.Stdout)
 		if err := w.Write(file); err != nil {
 			log.Fatalf("Unexpected error: %s\n", err)

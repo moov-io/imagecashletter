@@ -40,38 +40,58 @@ func (cl *CashLetter) Validate() error {
 	return nil
 }
 
-// ToDo:  Add verify
+// ToDo:  Add verify?
 
 // build by building a valid CashLetter by building a CashLetterControl. An error is returned if
 // the CashLetter being built has invalid records.
 func (cl *CashLetter) build() error {
 
-	// Requires a valid BundleHeader
+	// Requires a valid CashLetterHeader
 	if err := cl.CashLetterHeader.Validate(); err != nil {
 		return err
 	}
 
-	// if len(cl.Bundles) == 0, it is an empty cash letter
+	// CashLetterControl Counts
 	cashLetterBundleCount := len(cl.Bundles)
 	cashLetterItemsCount := 0
 	cashLetterTotalAmount := 0
 	cashLetterImagesCount := 0
 
-	// ToDo: Sequences, research if a bundle should be part of the cash letter item count?
+	// Sequence Numbers
+	bundleSequenceNumber := 1
+	cdSequenceNumber := 1
+	rdSequenceNumber := 1
+	// Record Numbers
+	cdAddendumARecordNumber := 1
+	cdAddendumCRecordNumber := 1
+	rdAddendumARecordNumber := 1
+	rdAddendumDRecordNumber := 1
 
 	// Bundles
 	for _, b := range cl.Bundles {
-		// Validate Bundle
-		if err := b.Validate(); err != nil {
-			return err
-		}
+
+		// Set Bundle Sequence Numbers
+		b.BundleHeader.SetBundleSequenceNumber(bundleSequenceNumber)
 
 		// Check Items
 		for _, cd := range b.Checks {
 
-			if err := b.build(); err != nil {
-				return err
+			// Set CheckDetail Sequence Numbers
+			cd.SetEceInstitutionItemSequenceNumber(cdSequenceNumber)
+
+			// Set Addenda SequenceNumber and RecordNumber
+			for i := range cd.CheckDetailAddendumA {
+				cd.CheckDetailAddendumA[i].SetBOFDItemSequenceNumber(cdSequenceNumber)
+				cd.CheckDetailAddendumA[i].RecordNumber = cdAddendumARecordNumber
+				cdAddendumARecordNumber++
 			}
+			for x := range cd.CheckDetailAddendumC {
+				cd.CheckDetailAddendumC[x].SetEndorsingBankItemSequenceNumber(cdSequenceNumber)
+				cd.CheckDetailAddendumC[x].RecordNumber = cdAddendumARecordNumber
+				cdAddendumCRecordNumber++
+			}
+			cdSequenceNumber++
+
 			cashLetterItemsCount = cashLetterItemsCount + 1
 			cashLetterItemsCount = cashLetterItemsCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
 			cashLetterItemsCount = cashLetterItemsCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
@@ -82,6 +102,23 @@ func (cl *CashLetter) build() error {
 		// Returns Items
 		for _, rd := range b.Returns {
 
+			// Set ReturnDetail Sequence Numbers
+			rd.SetEceInstitutionItemSequenceNumber(rdSequenceNumber)
+
+			// Set Addenda SequenceNumber and RecordNumber
+			for i := range rd.ReturnDetailAddendumA {
+				rd.ReturnDetailAddendumA[i].SetBOFDItemSequenceNumber(rdSequenceNumber)
+				rd.ReturnDetailAddendumA[i].RecordNumber = rdAddendumARecordNumber
+				rdAddendumARecordNumber++
+			}
+
+			for x := range rd.ReturnDetailAddendumD {
+				rd.ReturnDetailAddendumD[x].SetEndorsingBankItemSequenceNumber(rdSequenceNumber)
+				rd.ReturnDetailAddendumA[x].RecordNumber = rdAddendumDRecordNumber
+				rdAddendumDRecordNumber++
+			}
+			rdSequenceNumber++
+
 			if err := b.build(); err != nil {
 				return err
 			}
@@ -91,7 +128,16 @@ func (cl *CashLetter) build() error {
 			cashLetterTotalAmount = cashLetterTotalAmount + rd.ItemAmount
 			cashLetterImagesCount = cashLetterImagesCount + len(rd.ImageViewDetail)
 		}
+		// Validate Bundle
+		if err := b.Validate(); err != nil {
+			return err
+		}
+		// Build Bundle
+		if err := b.build(); err != nil {
+			return err
+		}
 
+		bundleSequenceNumber++
 	}
 
 	// build a CashLetterControl record
