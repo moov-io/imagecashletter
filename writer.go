@@ -163,17 +163,17 @@ func (w *Writer) writeCheckDetailAddendum(cd *CheckDetail) error {
 
 // writeCheckImageView writes ImageViews (Detail, Data, Analysis) to a CheckDetail
 func (w *Writer) writeCheckImageView(cd *CheckDetail) error {
-	for _, ivDetail := range cd.GetCheckDetailImageViewDetail() {
+	for _, ivDetail := range cd.GetImageViewDetail() {
 		if _, err := w.w.WriteString(ivDetail.String() + "\n"); err != nil {
 			return err
 		}
 	}
-	for _, ivData := range cd.GetCheckDetailImageViewData() {
+	for _, ivData := range cd.GetImageViewData() {
 		if _, err := w.w.WriteString(ivData.String() + "\n"); err != nil {
 			return err
 		}
 	}
-	for _, ivAnalysis := range cd.GetCheckDetailImageViewAnalysis() {
+	for _, ivAnalysis := range cd.GetImageViewAnalysis() {
 		if _, err := w.w.WriteString(ivAnalysis.String() + "\n"); err != nil {
 			return err
 		}

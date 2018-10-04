@@ -58,6 +58,7 @@ var (
 	msgFileHeader        = "None or more than one file headers exists"
 	msgUnknownRecordType = "%s is an unknown record type"
 	msgFileCashLetterID  = "%s is not unique"
+	msgRecordType        = "received expecting %d"
 )
 
 // FileError is an error describing issues validating a file

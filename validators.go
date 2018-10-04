@@ -89,8 +89,9 @@ func (v *validator) isDocumentationTypeIndicator(code string) error {
 		"L",
 		// No image provided, Electronic Check provided separately
 		"M",
-		// Not Same Type–Documentation associated with each item in Cash Letter will be different. The Check Detail
-		// Record (Type 25) or Return Record (Type 31) has to be interrogated for further information.
+		// Not Same Type–Documentation associated with each item in Cash Letter will be different. The CheckDetail
+		// Record or ReturnRecord has to be interrogated for further information.
+		// Z is only valid for CashLetter
 		"Z":
 		return nil
 	}

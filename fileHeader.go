@@ -13,11 +13,6 @@ import (
 // ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 // ToDo: ASCII vs EBCDIC
 
-// Errors specific to a File Header Record
-var (
-	msgRecordType = "received expecting %d"
-)
-
 // FileHeader Record is mandatory
 type FileHeader struct {
 	// ID is a client defined string used as a reference to this record.

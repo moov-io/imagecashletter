@@ -14,6 +14,10 @@ import (
 
 // Errors specific to a CheckDetail Record
 
+var (
+	msgDocumentationTypeIndicator = "is Invalid"
+)
+
 // CheckDetail Record
 type CheckDetail struct {
 	// ID is a client defined string used as a reference to this record.
@@ -225,6 +229,11 @@ func (cd *CheckDetail) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 25)
 		return &FieldError{FieldName: "recordType", Value: cd.recordType, Msg: msg}
 	}
+	// Z is valid for CashLetter DocumentationTypeIndicator only
+	if cd.DocumentationTypeIndicator == "Z" {
+		msg := fmt.Sprint(msgDocumentationTypeIndicator)
+		return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cd.DocumentationTypeIndicator, Msg: msg}
+	}
 	// Conditional, validator contains ""
 	if err := cd.isDocumentationTypeIndicator(cd.DocumentationTypeIndicator); err != nil {
 		return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cd.DocumentationTypeIndicator, Msg: err.Error()}
@@ -418,39 +427,6 @@ func (cd *CheckDetail) AddImageViewAnalysis(ivAnalysis ImageViewAnalysis) []Imag
 
 // GetImageViewAnalysis returns a slice of ImageViewAnalysis for the CheckDetail
 func (cd *CheckDetail) GetImageViewAnalysis() []ImageViewAnalysis {
-	return cd.ImageViewAnalysis
-}
-
-// AddCheckDetailImageViewDetail appends an ImageViewDetail to the CheckDetail
-func (cd *CheckDetail) AddCheckDetailImageViewDetail(ivDetail ImageViewDetail) []ImageViewDetail {
-	cd.ImageViewDetail = append(cd.ImageViewDetail, ivDetail)
-	return cd.ImageViewDetail
-}
-
-// GetCheckDetailImageViewDetail returns a slice of ImageViewDetail for the CheckDetail
-func (cd *CheckDetail) GetCheckDetailImageViewDetail() []ImageViewDetail {
-	return cd.ImageViewDetail
-}
-
-// AddCheckDetailImageViewData appends an ImageViewData to the CheckDetail
-func (cd *CheckDetail) AddCheckDetailImageViewData(ivData ImageViewData) []ImageViewData {
-	cd.ImageViewData = append(cd.ImageViewData, ivData)
-	return cd.ImageViewData
-}
-
-// GetCheckDetailImageViewData returns a slice of ImageViewData for the CheckDetail
-func (cd *CheckDetail) GetCheckDetailImageViewData() []ImageViewData {
-	return cd.ImageViewData
-}
-
-// AddCheckDetailImageViewAnalysis appends an ImageViewAnalysis  to the CheckDetail
-func (cd *CheckDetail) AddCheckDetailImageViewAnalysis(ivAnalysis ImageViewAnalysis) []ImageViewAnalysis {
-	cd.ImageViewAnalysis = append(cd.ImageViewAnalysis, ivAnalysis)
-	return cd.ImageViewAnalysis
-}
-
-// GetCheckDetailImageViewAnalysis returns a slice of ImageViewAnalysis for the CheckDetail
-func (cd *CheckDetail) GetCheckDetailImageViewAnalysis() []ImageViewAnalysis {
 	return cd.ImageViewAnalysis
 }
 
