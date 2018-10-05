@@ -275,10 +275,36 @@ func TestBHFieldInclusionDestinationRoutingNumber(t *testing.T) {
 	}
 }
 
+// TestBHFieldInclusionDestinationRoutingNumberZero validates FieldInclusion
+func TestBHFieldInclusionDestinationRoutingNumberZero(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.DestinationRoutingNumber = "000000000"
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
 // TestBHFieldInclusionECEInstitutionRoutingNumber validates FieldInclusion
 func TestBHFieldInclusionECEInstitutionRoutingNumber(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.ECEInstitutionRoutingNumber = ""
+	if err := bh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestBHFieldInclusionECEInstitutionRoutingNumberZero validates FieldInclusion
+func TestBHFieldInclusionECEInstitutionRoutingNumberZero(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.ECEInstitutionRoutingNumber = "000000000"
 	if err := bh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.Msg != msgFieldInclusion {

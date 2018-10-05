@@ -169,3 +169,43 @@ func TestCashLetterHeaderDuplicate(t *testing.T) {
 		t.Errorf("%T: %s", err, err)
 	}
 }
+
+// TestBundleHeaderErr validates error flows back from the parser
+func TestBundleHeaderErr(t *testing.T) {
+	bh := mockBundleHeader()
+	bh.DestinationRoutingNumber = ""
+	r := NewReader(strings.NewReader(bh.String()))
+	_, err := r.Read()
+	if p, ok := err.(*ParseError); ok {
+		if e, ok := p.Err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", e, e)
+			}
+		}
+	} else {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
+// TestBundleHeaderDuplicate validates when two BundleHeader exists in a current Bundle
+func TestBundleHeaderDuplicate(t *testing.T) {
+	// create a new CashLetter header string
+	bh := mockBundleHeader()
+	r := NewReader(strings.NewReader(bh.String()))
+	// instantiate a CashLetter in the reader
+	clh := mockCashLetterHeader()
+	r.addCurrentCashLetter(NewCashLetter(clh))
+	bhTwo := mockBundleHeader()
+	r.addCurrentBundle(NewBundle(bhTwo))
+	// read should fail because it is parsing a second CashLetter Header and there can only be one.
+	_, err := r.Read()
+	if p, ok := err.(*ParseError); ok {
+		if e, ok := p.Err.(*FileError); ok {
+			if e.Msg != msgFileCashLetterInside {
+				t.Errorf("%T: %s", e, e)
+			}
+		}
+	} else {
+		t.Errorf("%T: %s", err, err)
+	}
+}
