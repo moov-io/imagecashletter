@@ -95,8 +95,8 @@ func TestMockImageViewData(t *testing.T) {
 	}
 }
 
-// TestIVDataString validates that a known parsed ImageViewData can return to a string of the same value
-func TestIVDataString(t *testing.T) {
+// testIVDataString validates that a known parsed ImageViewData can return to a string of the same value
+func testIVDataString(t testing.TB) {
 	//var line = "5212345678020140410  44000000                                                       0                00000    0005591"
 	var line = "5212104288220180915  1                                                              0                00000    0000001 "
 	r := NewReader(strings.NewReader(line))
@@ -121,5 +121,139 @@ func TestIVDataString(t *testing.T) {
 
 	if record.String() != line {
 		t.Errorf("Strings do not match")
+	}
+}
+
+// TestIVDataString tests validating that a known parsed ImageViewData an return to a string of the
+// same value
+func TestIVDataString(t *testing.T) {
+	testIVDataString(t)
+}
+
+// BenchmarkIVDataString benchmarks validating that a known parsed ImageViewData
+// can return to a string of the same value
+func BenchmarkIVDataString(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		testIVDataString(b)
+	}
+}
+
+// TestIVDataRecordType validation
+func TestIVDataRecordType(t *testing.T) {
+	ivData := mockImageViewData()
+	ivData.recordType = "00"
+	if err := ivData.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDataCycleNumber validation
+func TestIVDataCycleNumber(t *testing.T) {
+	ivData := mockImageViewData()
+	ivData.CycleNumber = "--"
+	if err := ivData.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CycleNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDataSecurityOriginatorName validation
+func TestIVSecurityOriginatorName(t *testing.T) {
+	ivData := mockImageViewData()
+	ivData.SecurityOriginatorName = "®©"
+	if err := ivData.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "SecurityOriginatorName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDataSecurityAuthenticatorName validation
+func TestIVSecurityAuthenticatorName(t *testing.T) {
+	ivData := mockImageViewData()
+	ivData.SecurityAuthenticatorName = "®©"
+	if err := ivData.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "SecurityAuthenticatorName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDataSecurityKeyName validation
+func TestIVSecurityKeyName(t *testing.T) {
+	ivData := mockImageViewData()
+	ivData.SecurityKeyName = "®©"
+	if err := ivData.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "SecurityKeyName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDataImageReferenceKey validation
+func TestIVImageReferenceKey(t *testing.T) {
+	ivData := mockImageViewData()
+	ivData.ImageReferenceKey = "®©"
+	if err := ivData.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageReferenceKey" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// Field Inclusion
+
+// TestIVDataFIRecordType validation
+func TestIVDataFIRecordType(t *testing.T) {
+	ivData := mockImageViewData()
+	ivData.recordType = ""
+	if err := ivData.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDataFIEceInstitutionRoutingNumber validation
+func TestIVDataFIEceInstitutionRoutingNumber(t *testing.T) {
+	ivData := mockImageViewData()
+	ivData.EceInstitutionRoutingNumber = ""
+	if err := ivData.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EceInstitutionRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDataFIBundleBusinessDate validation
+func TestIVDataFIBundleBusinessDate(t *testing.T) {
+	ivData := mockImageViewData()
+	ivData.BundleBusinessDate = time.Time{}
+	if err := ivData.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BundleBusinessDate" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }
