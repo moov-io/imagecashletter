@@ -253,6 +253,8 @@ func TestRDTimesReturned(t *testing.T) {
 	}
 }
 
+// Field Inclusion
+
 // TestRDFIRecordType validation
 func TestRDFIRecordType(t *testing.T) {
 	rd := mockReturnDetail()

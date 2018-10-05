@@ -22,8 +22,8 @@ func mockCheckDetailAddendumB() CheckDetailAddendumB {
 	return cdAddendumB
 }
 
-// testMockCheckDetailAddendumB creates a CheckDetailAddendumB
-func testMockCheckDetailAddendumB(t testing.TB) {
+// TestMockCheckDetailAddendumB creates a CheckDetailAddendumB
+func TestMockCheckDetailAddendumB(t *testing.T) {
 	cdAddendumB := mockCheckDetailAddendumB()
 	if err := cdAddendumB.Validate(); err != nil {
 		t.Error("MockCheckDetailAddendumB does not validate and will break other tests: ", err)
@@ -51,21 +51,8 @@ func testMockCheckDetailAddendumB(t testing.TB) {
 	}
 }
 
-// TestMockCheckDetailAddendumB tests creating a CheckDetailAddendumB
-func TestMockCheckDetailAddendumB(t *testing.T) {
-	testMockCheckDetailAddendumB(t)
-}
-
-// BenchmarkMockCheckDetailAddendumB benchmarks creating a CheckDetailAddendumB
-func BenchmarkMockCheckDetailAddendumB(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testMockCheckDetailAddendumB(b)
-	}
-}
-
-// parseCheckDetailAddendumB validates parsing a CheckDetailAddendumB
-func parseCheckDetailAddendumB(t testing.TB) {
+// TestParseCheckDetailAddendumB validates parsing a CheckDetailAddendumB
+func TestParseCheckDetailAddendumB(t *testing.T) {
 	var line = "2711A             00340                                 CD Addendum B           "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -112,19 +99,6 @@ func parseCheckDetailAddendumB(t testing.TB) {
 	}
 }
 
-// TestParseCheckDetailAddendumB tests validating parsing a CheckDetailAddendumB
-func TestParseCheckDetailAddendumB(t *testing.T) {
-	parseCheckDetailAddendumB(t)
-}
-
-// BenchmarkParseCheckDetailAddendumB benchmarks validating parsing a CheckDetailAddendumB
-func BenchmarkParseCheckDetailAddendumB(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		parseCheckDetailAddendumB(b)
-	}
-}
-
 // testCDAddendumBString validates that a known parsed CheckDetailAddendumB can return to a string of the same value
 func testCDAddendumBString(t testing.TB) {
 	var line = "2711A             00340                                 CD Addendum B           "
@@ -162,5 +136,98 @@ func BenchmarkCDAddendumBString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testCDAddendumBString(b)
+	}
+}
+
+// TestCDAddendumBRecordType validation
+func TestCDAddendumBRecordType(t *testing.T) {
+	cdAddendumB := mockCheckDetailAddendumB()
+	cdAddendumB.recordType = "00"
+	if err := cdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumBImageReferenceKeyIndicator validation
+func TestCDAddendumBImageReferenceKeyIndicator(t *testing.T) {
+	cdAddendumB := mockCheckDetailAddendumB()
+	cdAddendumB.ImageReferenceKeyIndicator = 5
+	if err := cdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageReferenceKeyIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumBImageReferenceKey validation
+func TestCDAddendumBImageReferenceKey(t *testing.T) {
+	cdAddendumB := mockCheckDetailAddendumB()
+	cdAddendumB.ImageReferenceKey = "®©"
+	if err := cdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageReferenceKey" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumBDescription validation
+func TestCDAddendumBDescription(t *testing.T) {
+	cdAddendumB := mockCheckDetailAddendumB()
+	cdAddendumB.Description = "®©"
+	if err := cdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "Description" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumBUserField validation
+func TestCDAddendumBUserField(t *testing.T) {
+	cdAddendumB := mockCheckDetailAddendumB()
+	cdAddendumB.UserField = "®©"
+	if err := cdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserField" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// Field Inclusion
+
+// TestCDAddendumBFIRecordType validation
+func TestCDAddendumBFIRecordType(t *testing.T) {
+	cdAddendumB := mockCheckDetailAddendumB()
+	cdAddendumB.recordType = ""
+	if err := cdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumBFIMicrofilmArchiveSequenceNumber validation
+func TestCDAddendumBFIMicrofilmArchiveSequenceNumber(t *testing.T) {
+	cdAddendumB := mockCheckDetailAddendumB()
+	cdAddendumB.MicrofilmArchiveSequenceNumber = "               "
+	if err := cdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "MicrofilmArchiveSequenceNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }
