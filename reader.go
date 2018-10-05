@@ -211,8 +211,8 @@ func (r *Reader) parseLine() error {
 			return err
 		}
 	default:
-		msg := fmt.Sprintf(msgUnknownRecordType, r.line[:1])
-		return r.error(&FileError{FieldName: "recordType", Value: r.line[:1], Msg: msg})
+		msg := fmt.Sprintf(msgUnknownRecordType, r.line[:2])
+		return r.error(&FileError{FieldName: "recordType", Value: r.line[:2], Msg: msg})
 	}
 	return nil
 }

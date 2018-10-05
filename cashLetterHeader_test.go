@@ -350,10 +350,36 @@ func TestFieldInclusionDestinationRoutingNumber(t *testing.T) {
 	}
 }
 
+// TestFieldInclusionDestinationRoutingZerovalidates FieldInclusion
+func TestFieldInclusionDestinationRoutingNumberZero(t *testing.T) {
+	clh := mockCashLetterHeader()
+	clh.DestinationRoutingNumber = "000000000"
+	if err := clh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
 // TestFieldInclusionECEInstitutionRoutingNumber validates FieldInclusion
 func TestFieldInclusionECEInstitutionRoutingNumber(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.ECEInstitutionRoutingNumber = ""
+	if err := clh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFieldInclusionECEInstitutionRoutingNumberZero validates FieldInclusion
+func TestFieldInclusionECEInstitutionRoutingNumberZero(t *testing.T) {
+	clh := mockCashLetterHeader()
+	clh.ECEInstitutionRoutingNumber = "000000000"
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.Msg != msgFieldInclusion {

@@ -282,6 +282,13 @@ func (clh *CashLetterHeader) fieldInclusion() error {
 		return &FieldError{FieldName: "ECEInstitutionRoutingNumber",
 			Value: clh.ECEInstitutionRoutingNumber, Msg: msgFieldInclusion}
 	}
+	if clh.DestinationRoutingNumber == "000000000" {
+		return &FieldError{FieldName: "DestinationRoutingNumber", Value: clh.DestinationRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if clh.ECEInstitutionRoutingNumber == "000000000" {
+		return &FieldError{FieldName: "ECEInstitutionRoutingNumber", Value: clh.ECEInstitutionRoutingNumber, Msg: msgFieldInclusion}
+	}
+
 	if clh.CashLetterBusinessDate.IsZero() {
 		return &FieldError{FieldName: "CashLetterBusinessDate",
 			Value: clh.CashLetterBusinessDate.String(), Msg: msgFieldInclusion}
