@@ -366,3 +366,25 @@ func TestCDAddendumAFITruncationIndicator(t *testing.T) {
 		}
 	}
 }
+
+// End FieldInclusion
+
+// TestAlphaFieldTrim validation
+func TestAlphaFieldTrim(t *testing.T) {
+	cdAddendumA := mockCheckDetailAddendumA()
+	cdAddendumA.PayeeName = "Payee Name James Steel"
+	if len(cdAddendumA.PayeeNameField()) > 15 {
+		t.Error("Payee field is greater than max")
+	}
+
+}
+
+// TestStringFieldTrim validation
+func TestStringFieldTrim(t *testing.T) {
+	cdAddendumA := mockCheckDetailAddendumA()
+	cdAddendumA.ReturnLocationRoutingNumber = "12345678912345"
+	if len(cdAddendumA.ReturnLocationRoutingNumberField()) > 15 {
+		t.Error("ReturnLocationRoutingNumber field is greater than max")
+	}
+
+}

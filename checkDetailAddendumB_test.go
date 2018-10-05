@@ -231,3 +231,15 @@ func TestCDAddendumBFIMicrofilmArchiveSequenceNumber(t *testing.T) {
 		}
 	}
 }
+
+// End FieldInclusion
+
+// TestNBSMFieldTrim validation
+func TestNBSMFieldTrim(t *testing.T) {
+	rdAddendumB := mockReturnDetailAddendumB()
+	rdAddendumB.AuxiliaryOnUs = "12345678901234567890"
+	if len(rdAddendumB.AuxiliaryOnUsField()) > 15 {
+		t.Error("AuxiliaryOnUs field is greater than max")
+	}
+
+}
