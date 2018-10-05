@@ -119,9 +119,6 @@ func (cl *CashLetter) build() error {
 			}
 			rdSequenceNumber++
 
-			if err := b.build(); err != nil {
-				return err
-			}
 			cashLetterItemsCount = cashLetterItemsCount + 1
 			cashLetterItemsCount = cashLetterItemsCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC) + len(rd.ReturnDetailAddendumD)
 			cashLetterItemsCount = cashLetterItemsCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)

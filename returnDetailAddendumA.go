@@ -203,13 +203,9 @@ func (rdAddendumA *ReturnDetailAddendumA) fieldInclusion() error {
 		return &FieldError{FieldName: "recordType", Value: rdAddendumA.recordType, Msg: msgFieldInclusion}
 	}
 	if rdAddendumA.RecordNumber == 0 {
-		return &FieldError{FieldName: "recordNumber", Value: rdAddendumA.RecordNumberField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "RecordNumber", Value: rdAddendumA.RecordNumberField(), Msg: msgFieldInclusion}
 	}
 	if rdAddendumA.ReturnLocationRoutingNumber == "" {
-		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
-			Value: rdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
-	}
-	if rdAddendumA.ReturnLocationRoutingNumber == "000000000" {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
 			Value: rdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
 	}

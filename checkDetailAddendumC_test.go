@@ -27,8 +27,8 @@ func mockCheckDetailAddendumC() CheckDetailAddendumC {
 	return cdAddendumC
 }
 
-// testMockCheckDetailAddendumC creates a CheckDetailAddendumC
-func testMockCheckDetailAddendumC(t testing.TB) {
+// TestMockCheckDetailAddendumC creates a CheckDetailAddendumC
+func TestMockCheckDetailAddendumC(t *testing.T) {
 	cdAddendumC := mockCheckDetailAddendumC()
 	if err := cdAddendumC.Validate(); err != nil {
 		t.Error("mockCheckDetailAddendumC does not validate and will break other tests: ", err)
@@ -65,21 +65,8 @@ func testMockCheckDetailAddendumC(t testing.TB) {
 	}
 }
 
-// TestMockCheckDetailAddendumC tests creating a CheckDetailAddendumC
-func TestMockCheckDetailAddendumC(t *testing.T) {
-	testMockCheckDetailAddendumC(t)
-}
-
-// BenchmarkMockCheckDetailAddendumC benchmarks creating a CheckDetailAddendumC
-func BenchmarkMockCheckDetailAddendumC(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testMockCheckDetailAddendumC(b)
-	}
-}
-
-// parseCheckDetailAddendumC validates parsing a CheckDetailAddendumC
-func parseCheckDetailAddendumC(t testing.TB) {
+// TestParseCheckDetailAddendumC validates parsing a CheckDetailAddendumC
+func TestParseCheckDetailAddendumC(t *testing.T) {
 	var line = "2801121042882201809051              Y10A                   0                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -137,19 +124,6 @@ func parseCheckDetailAddendumC(t testing.TB) {
 	}
 }
 
-// TestParseCheckDetailAddendumC tests validating parsing a CheckDetailAddendumC
-func TestParseCheckDetailAddendumC(t *testing.T) {
-	parseCheckDetailAddendumC(t)
-}
-
-// BenchmarkParseCheckDetailAddendumC benchmarks validating parsing a CheckDetailAddendumC
-func BenchmarkParseCheckDetailAddendumC(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		parseCheckDetailAddendumC(b)
-	}
-}
-
 // testCDAddendumCString validates that a known parsed CheckDetailAddendumC can return to a string of the same value
 func testCDAddendumCString(t testing.TB) {
 	var line = "2801121042882201809051              Y10A                   0                    "
@@ -187,5 +161,189 @@ func BenchmarkCDAddendumCString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testCDAddendumCString(b)
+	}
+}
+
+// TestCDAddendumCRecordType validation
+func TestCDAddendumCRecordType(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.recordType = "00"
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCEndorsingBankRoutingNumber validation
+func TestCDAddendumCEndorsingBankRoutingNumber(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.EndorsingBankRoutingNumber = "Z"
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCTruncationIndicator validation
+func TestCDAddendumCTruncationIndicator(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.TruncationIndicator = "A"
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "TruncationIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCEndorsingBankConversionIndicator validation
+func TestCDAddendumCPayeeName(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.EndorsingBankConversionIndicator = "10"
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankConversionIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCEndorsingBankCorrectionIndicator validation
+func TestCDAddendumCEndorsingBankCorrectionIndicator(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.EndorsingBankCorrectionIndicator = 6
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankCorrectionIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCBOFDReturnReason validation
+func TestCDAddendumCBOFDReturnReason(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.ReturnReason = "®©"
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ReturnReason" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCUserField validation
+func TestCDAddendumCUserField(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.UserField = "®©"
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserField" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCEndorsingBankIdentifier validation
+func TestCDAddendumCEndorsingBankIdentifier(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.EndorsingBankIdentifier = 10
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankIdentifier" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// FieldInclusion
+
+// TestCDAddendumCFIRecordType validation
+func TestCDAddendumCFIRecordType(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.recordType = ""
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCFIRecordNumber validation
+func TestCDAddendumCFIRecordNumber(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.RecordNumber = 0
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "RecordNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCFIEndorsingBankRoutingNumber validation
+func TestCDAddendumCFIEndorsingBankRoutingNumbe(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.EndorsingBankRoutingNumber = ""
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCFIBOFDEndorsementBusinessDate validation
+func TestCDAddendumCFIBOFDEndorsementBusinessDate(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.BOFDEndorsementBusinessDate = time.Time{}
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BOFDEndorsementBusinessDate" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCFIEndorsingBankItemSequenceNumber validation
+func TestCDAddendumCFIEndorsingBankItemSequenceNumber(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.EndorsingBankItemSequenceNumber = "               "
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankItemSequenceNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCFITruncationIndicator validation
+func TestCDAddendumCFITruncationIndicator(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.TruncationIndicator = ""
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "TruncationIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }

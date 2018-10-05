@@ -203,10 +203,6 @@ func (rdAddendumD *ReturnDetailAddendumD) fieldInclusion() error {
 		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
 			Value: rdAddendumD.EndorsingBankRoutingNumber, Msg: msgFieldInclusion}
 	}
-	if rdAddendumD.EndorsingBankRoutingNumber == "000000000" {
-		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
-			Value: rdAddendumD.EndorsingBankRoutingNumber, Msg: msgFieldInclusion}
-	}
 	if rdAddendumD.BOFDEndorsementBusinessDate.IsZero() {
 		return &FieldError{FieldName: "BOFDEndorsementBusinessDate",
 			Value: rdAddendumD.BOFDEndorsementBusinessDate.String(), Msg: msgFieldInclusion}

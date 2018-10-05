@@ -205,10 +205,6 @@ func (cdAddendumC *CheckDetailAddendumC) fieldInclusion() error {
 		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
 			Value: cdAddendumC.EndorsingBankRoutingNumber, Msg: msgFieldInclusion}
 	}
-	if cdAddendumC.EndorsingBankRoutingNumber == "000000000" {
-		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
-			Value: cdAddendumC.EndorsingBankRoutingNumber, Msg: msgFieldInclusion}
-	}
 	if cdAddendumC.BOFDEndorsementBusinessDate.IsZero() {
 		return &FieldError{FieldName: "BOFDEndorsementBusinessDate",
 			Value: cdAddendumC.BOFDEndorsementBusinessDate.String(), Msg: msgFieldInclusion}

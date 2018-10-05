@@ -22,8 +22,8 @@ func mockReturnDetailAddendumC() ReturnDetailAddendumC {
 	return rdAddendumC
 }
 
-// testMockReturnDetailAddendumCcreates a ReturnDetailAddendumC
-func testMockReturnDetailAddendumC(t testing.TB) {
+// TestMockReturnDetailAddendumCcreates a ReturnDetailAddendumC
+func TestMockReturnDetailAddendumC(t *testing.T) {
 	rdAddendumC := mockReturnDetailAddendumC()
 	if err := rdAddendumC.Validate(); err != nil {
 		t.Error("MockReturnDetailAddendumC does not validate and will break other tests: ", err)
@@ -51,21 +51,8 @@ func testMockReturnDetailAddendumC(t testing.TB) {
 	}
 }
 
-// TestMockReturnDetailAddendumC tests creating a ReturnDetailAddendumC
-func TestMockReturnDetailAddendumC(t *testing.T) {
-	testMockReturnDetailAddendumC(t)
-}
-
-// BenchmarkMockReturnDetailAddendumC benchmarks creating a ReturnDetailAddendumC
-func BenchmarkMockReturnDetailAddendumC(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testMockReturnDetailAddendumC(b)
-	}
-}
-
-// parseReturnDetailAddendumC validates parsing a ReturnDetailAddendumC
-func parseReturnDetailAddendumC(t testing.TB) {
+// TestParseReturnDetailAddendumC validates parsing a ReturnDetailAddendumC
+func TestParseReturnDetailAddendumC(t *testing.T) {
 	var line = "3411A             00340                                 RD Addendum C           "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -112,19 +99,6 @@ func parseReturnDetailAddendumC(t testing.TB) {
 	}
 }
 
-// TestParseReturnDetailAddendumC tests validating parsing a ReturnDetailAddendumC
-func TestParseReturnDetailAddendumC(t *testing.T) {
-	parseReturnDetailAddendumC(t)
-}
-
-// BenchmarkParseReturnDetailAddendumC benchmarks validating parsing a ReturnDetailAddendumC
-func BenchmarkParseReturnDetailAddendumC(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		parseReturnDetailAddendumC(b)
-	}
-}
-
 // testRDAddendumCString validates that a known parsed ReturnDetailAddendumC can return to a string of the same value
 func testRDAddendumCString(t testing.TB) {
 	var line = "3411A             00340                                 RD Addendum C           "
@@ -162,5 +136,98 @@ func BenchmarkRDAddendumCString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testRDAddendumCString(b)
+	}
+}
+
+// TestRDAddendumCRecordType validation
+func TestRDAddendumCRecordType(t *testing.T) {
+	rdAddendumC := mockReturnDetailAddendumC()
+	rdAddendumC.recordType = "00"
+	if err := rdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumCImageReferenceKeyIndicator validation
+func TestRDAddendumCImageReferenceKeyIndicator(t *testing.T) {
+	rdAddendumC := mockReturnDetailAddendumC()
+	rdAddendumC.ImageReferenceKeyIndicator = 5
+	if err := rdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageReferenceKeyIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumCImageReferenceKey validation
+func TestRDAddendumCImageReferenceKey(t *testing.T) {
+	rdAddendumC := mockReturnDetailAddendumC()
+	rdAddendumC.ImageReferenceKey = "®©"
+	if err := rdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageReferenceKey" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumCDescription validation
+func TestRDAddendumCDescription(t *testing.T) {
+	rdAddendumC := mockReturnDetailAddendumC()
+	rdAddendumC.Description = "®©"
+	if err := rdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "Description" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumCUserField validation
+func TestRDAddendumCUserField(t *testing.T) {
+	rdAddendumC := mockReturnDetailAddendumC()
+	rdAddendumC.UserField = "®©"
+	if err := rdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserField" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// Field Inclusion
+
+// TestRDAddendumCFIRecordType validation
+func TestRDAddendumCFIRecordType(t *testing.T) {
+	rdAddendumC := mockReturnDetailAddendumC()
+	rdAddendumC.recordType = ""
+	if err := rdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumCFIMicrofilmArchiveSequenceNumber validation
+func TestRDAddendumCFIMicrofilmArchiveSequenceNumber(t *testing.T) {
+	rdAddendumC := mockReturnDetailAddendumC()
+	rdAddendumC.MicrofilmArchiveSequenceNumber = "               "
+	if err := rdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "MicrofilmArchiveSequenceNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }
