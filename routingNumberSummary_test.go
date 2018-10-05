@@ -62,8 +62,8 @@ func TestParseRoutingNumberSummary(t *testing.T) {
 	}
 }
 
-// TestRoutingNumberSummaryString validates that a known parsed RoutingNumberSummary can return to a string of the same value
-func TestRoutingNumberSummaryString(t *testing.T) {
+// testRoutingNumberSummaryString validates that a known parsed RoutingNumberSummary can return to a string of the same value
+func testRoutingNumberSummaryString(t testing.TB) {
 	var line = "8523138010400000000100000000001                                                 "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -85,5 +85,74 @@ func TestRoutingNumberSummaryString(t *testing.T) {
 
 	if record.String() != line {
 		t.Errorf("Strings do not match")
+	}
+}
+
+// TestRoutingNumberSummaryString tests validating that a known parsed RoutingNumberSummary an return to a string of the
+// same value
+func TestRoutingNumberSummaryString(t *testing.T) {
+	testRoutingNumberSummaryString(t)
+}
+
+// BenchmarkRoutingNumberSummaryString benchmarks validating that a known parsed RoutingNumberSummary
+// can return to a string of the same value
+func BenchmarkRoutingNumberSummaryString(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		testRoutingNumberSummaryString(b)
+	}
+}
+
+// TestRoutingNumberSummaryRecordType validation
+func TestRoutingNumberSummaryRecordType(t *testing.T) {
+	rns := mockRoutingNumberSummary()
+	rns.recordType = "00"
+	if err := rns.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRoutingNumberSummaryUserField validation
+func TestRoutingNumberSummaryUserField(t *testing.T) {
+	rns := mockRoutingNumberSummary()
+	rns.UserField = "®©"
+	if err := rns.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserField" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// Field Inclusion
+
+// TestRoutingNumberSummaryFIRecordType validation
+func TestRoutingNumberSummaryFIRecordType(t *testing.T) {
+	rns := mockRoutingNumberSummary()
+	rns.recordType = ""
+	if err := rns.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRoutingNumberSummaryFICashLetterRoutingNumber validation
+func TestRoutingNumberSummaryFICashLetterRoutingNumber(t *testing.T) {
+	rns := mockRoutingNumberSummary()
+	rns.CashLetterRoutingNumber = ""
+	if err := rns.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CashLetterRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }
