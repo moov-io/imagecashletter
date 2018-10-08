@@ -312,6 +312,19 @@ func TestCDFIPayorBankRoutingNumber(t *testing.T) {
 	}
 }
 
+// TestCDFIPayorBankRoutingNumberZero validation
+func TestCDFIPayorBankRoutingNumberZero(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.PayorBankRoutingNumber = "00000000"
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayorBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
 // TestCDFIPayorBankCheckDigit validation
 func TestCDFIPayorBankCheckDigit(t *testing.T) {
 	cd := mockCheckDetail()

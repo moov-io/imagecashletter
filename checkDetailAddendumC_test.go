@@ -297,9 +297,22 @@ func TestCDAddendumCFIRecordNumber(t *testing.T) {
 }
 
 // TestCDAddendumCFIEndorsingBankRoutingNumber validation
-func TestCDAddendumCFIEndorsingBankRoutingNumbe(t *testing.T) {
+func TestCDAddendumCFIEndorsingBankRoutingNumber(t *testing.T) {
 	cdAddendumC := mockCheckDetailAddendumC()
 	cdAddendumC.EndorsingBankRoutingNumber = ""
+	if err := cdAddendumC.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDAddendumCFIEndorsingBankRoutingNumberZero validation
+func TestCDAddendumCFIEndorsingBankRoutingNumberZero(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.EndorsingBankRoutingNumber = "000000000"
 	if err := cdAddendumC.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "EndorsingBankRoutingNumber" {

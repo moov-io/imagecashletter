@@ -383,6 +383,19 @@ func TestIVDetailFIImageCreatorRoutingNumber(t *testing.T) {
 	}
 }
 
+// TestIVDetailFIImageCreatorRoutingNumberZero validation
+func TestIVDetailFIImageCreatorRoutingNumberZero(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ImageCreatorRoutingNumber = "000000000"
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageCreatorRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
 // TestIVDetailFIImageCreatorDate validation
 func TestIVDetailFIImageCreatorDate(t *testing.T) {
 	ivDetail := mockImageViewDetail()

@@ -130,7 +130,7 @@ func (cdAddendumB *CheckDetailAddendumB) fieldInclusion() error {
 	if cdAddendumB.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: cdAddendumB.recordType, Msg: msgFieldInclusion}
 	}
-	if cdAddendumB.MicrofilmArchiveSequenceNumber == "               " {
+	if cdAddendumB.MicrofilmArchiveSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "MicrofilmArchiveSequenceNumber",
 			Value: cdAddendumB.MicrofilmArchiveSequenceNumber, Msg: msgFieldInclusion}
 	}

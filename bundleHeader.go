@@ -185,7 +185,7 @@ func (bh *BundleHeader) fieldInclusion() error {
 		return &FieldError{FieldName: "DestinationRoutingNumber",
 			Value: bh.DestinationRoutingNumber, Msg: msgFieldInclusion}
 	}
-	if bh.DestinationRoutingNumber == "000000000" {
+	if bh.DestinationRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "DestinationRoutingNumber",
 			Value: bh.DestinationRoutingNumber, Msg: msgFieldInclusion}
 	}
@@ -193,7 +193,7 @@ func (bh *BundleHeader) fieldInclusion() error {
 		return &FieldError{FieldName: "ECEInstitutionRoutingNumber",
 			Value: bh.ECEInstitutionRoutingNumber, Msg: msgFieldInclusion}
 	}
-	if bh.ECEInstitutionRoutingNumber == "000000000" {
+	if bh.ECEInstitutionRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "ECEInstitutionRoutingNumber",
 			Value: bh.ECEInstitutionRoutingNumber, Msg: msgFieldInclusion}
 	}

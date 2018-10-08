@@ -281,6 +281,19 @@ func TestRDFIPayorBankRoutingNumber(t *testing.T) {
 	}
 }
 
+// TestRDFIPayorBankRoutingNumberZero validation
+func TestRDFIPayorBankRoutingNumberZero(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.PayorBankRoutingNumber = "00000000"
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayorBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
 // TestRDFIPayorBankCheckDigit validation
 func TestRDFIPayorBankCheckDigit(t *testing.T) {
 	rd := mockReturnDetail()

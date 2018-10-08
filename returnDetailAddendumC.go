@@ -129,6 +129,10 @@ func (rdAddendumC *ReturnDetailAddendumC) fieldInclusion() error {
 	if rdAddendumC.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: rdAddendumC.recordType, Msg: msgFieldInclusion}
 	}
+	if rdAddendumC.MicrofilmArchiveSequenceNumberField() == "               " {
+		return &FieldError{FieldName: "MicrofilmArchiveSequenceNumber",
+			Value: rdAddendumC.MicrofilmArchiveSequenceNumber, Msg: msgFieldInclusion}
+	}
 	return nil
 }
 

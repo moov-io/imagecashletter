@@ -102,7 +102,7 @@ func (rdAddendumB *ReturnDetailAddendumB) fieldInclusion() error {
 	if rdAddendumB.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: rdAddendumB.recordType, Msg: msgFieldInclusion}
 	}
-	if rdAddendumB.PayorBankSequenceNumber == "               " {
+	if rdAddendumB.PayorBankSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "PayorBankSequenceNumber",
 			Value: rdAddendumB.PayorBankSequenceNumber, Msg: msgFieldInclusion}
 	}

@@ -280,6 +280,10 @@ func (cd *CheckDetail) fieldInclusion() error {
 		return &FieldError{FieldName: "PayorBankRoutingNumber",
 			Value: cd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
 	}
+	if cd.PayorBankRoutingNumberField() == "00000000" {
+		return &FieldError{FieldName: "PayorBankRoutingNumber",
+			Value: cd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
+	}
 	if cd.PayorBankCheckDigit == "" {
 		return &FieldError{FieldName: "PayorBankCheckDigit", Value: cd.PayorBankCheckDigit, Msg: msgFieldInclusion}
 	}

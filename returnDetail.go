@@ -243,6 +243,10 @@ func (rd *ReturnDetail) fieldInclusion() error {
 		return &FieldError{FieldName: "PayorBankRoutingNumber",
 			Value: rd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
 	}
+	if rd.PayorBankRoutingNumberField() == "00000000" {
+		return &FieldError{FieldName: "PayorBankRoutingNumber",
+			Value: rd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
+	}
 	if rd.PayorBankCheckDigit == "" {
 		return &FieldError{FieldName: "PayorBankCheckDigit", Value: rd.PayorBankCheckDigit, Msg: msgFieldInclusion}
 	}

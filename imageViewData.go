@@ -261,10 +261,16 @@ func (ivData *ImageViewData) fieldInclusion() error {
 		return &FieldError{FieldName: "recordType", Value: ivData.recordType, Msg: msgFieldInclusion}
 	}
 	if ivData.EceInstitutionRoutingNumber == "" {
-		return &FieldError{FieldName: "EceInstitutionRoutingNumber", Value: ivData.EceInstitutionRoutingNumber, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "EceInstitutionRoutingNumber",
+			Value: ivData.EceInstitutionRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if ivData.EceInstitutionRoutingNumberField() == "000000000" {
+		return &FieldError{FieldName: "EceInstitutionRoutingNumber",
+			Value: ivData.EceInstitutionRoutingNumber, Msg: msgFieldInclusion}
 	}
 	if ivData.BundleBusinessDate.IsZero() {
-		return &FieldError{FieldName: "BundleBusinessDate", Value: ivData.BundleBusinessDate.String(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "BundleBusinessDate",
+			Value: ivData.BundleBusinessDate.String(), Msg: msgFieldInclusion}
 	}
 	return nil
 }

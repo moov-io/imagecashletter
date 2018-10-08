@@ -226,10 +226,10 @@ func (fh *FileHeader) fieldInclusion() error {
 	if fh.ImmediateOrigin == "" {
 		return &FieldError{FieldName: "ImmediateOrigin", Value: fh.ImmediateOrigin, Msg: msgFieldInclusion}
 	}
-	if fh.ImmediateOrigin == "000000000" {
+	if fh.ImmediateOriginField() == "000000000" {
 		return &FieldError{FieldName: "ImmediateOrigin", Value: fh.ImmediateOrigin, Msg: msgFieldInclusion}
 	}
-	if fh.ImmediateDestination == "000000000" {
+	if fh.ImmediateDestinationField() == "000000000" {
 		return &FieldError{FieldName: "ImmediateDestination", Value: fh.ImmediateDestination, Msg: msgFieldInclusion}
 	}
 	if fh.FileCreationDate.IsZero() {

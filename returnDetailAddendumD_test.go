@@ -309,6 +309,19 @@ func TestRDAddendumDFIReturnLocationRoutingNumber(t *testing.T) {
 	}
 }
 
+// TestRDAddendumDFIReturnLocationRoutingNumberZero validation
+func TestRDAddendumDFIReturnLocationRoutingNumberZero(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.EndorsingBankRoutingNumber = "000000000"
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
 // TestRDAddendumDFIBOFDEndorsementDate validation
 func TestRDAddendumDFIBOFDEndorsementDate(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()

@@ -328,6 +328,19 @@ func TestCDAddendumAFIReturnLocationRoutingNumber(t *testing.T) {
 	}
 }
 
+// TestCDAddendumAFIReturnLocationRoutingNumberZero validation
+func TestCDAddendumAFIReturnLocationRoutingNumberZero(t *testing.T) {
+	cdAddendumA := mockCheckDetailAddendumA()
+	cdAddendumA.ReturnLocationRoutingNumber = "000000000"
+	if err := cdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ReturnLocationRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
 // TestCDAddendumAFIBOFDEndorsementDate validation
 func TestCDAddendumAFIBOFDEndorsementDate(t *testing.T) {
 	cdAddendumA := mockCheckDetailAddendumA()
