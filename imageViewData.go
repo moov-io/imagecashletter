@@ -43,12 +43,10 @@ type ImageViewData struct {
 	// business day, and cycle number. Must contain a numeric value.
 	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
 	// SecurityOriginatorName is a unique name that creates the Digital Signature for data to be exchanged.
-	// ToDo: Validation
 	// Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
 	SecurityOriginatorName string `json:"securityOriginatorName"`
 	// SecurityAuthenticatorName is the unique name that performs authentication on received data.
-	// ToDo: Validation
 	// Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
 	SecurityAuthenticatorName string `json:"securityAuthenticatorName"`
@@ -56,7 +54,6 @@ type ImageViewData struct {
 	// to the recipient (authenticator) so the recipient can obtain the key needed to validate the signature. The name
 	// is typically used as an identifier related to the key pair used to sign the image. The name is mutually known to
 	// the security originator and the security authenticator and is unique to this relationship.
-	// ToDo: Validation
 	// Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
 	SecurityKeyName string `json:"securityKeyName"`
@@ -65,7 +62,6 @@ type ImageViewData struct {
 	// correct orientation. When clipping information is present, the nature of the Area of Interest defined by the
 	// clipping rectangle is determined by the value of the ImageViewDetail.ViewDescriptor. Primary front and rear
 	// views shall only have a Defined Value of 0.  Can be blank.
-	// ToDo: Add validator
 	// Values:
 	// 0: Clipping information is not present–full view present
 	// 1: Clipping origin is top left corner of image view
@@ -265,10 +261,16 @@ func (ivData *ImageViewData) fieldInclusion() error {
 		return &FieldError{FieldName: "recordType", Value: ivData.recordType, Msg: msgFieldInclusion}
 	}
 	if ivData.EceInstitutionRoutingNumber == "" {
-		return &FieldError{FieldName: "ImageCreatorRoutingNumber", Value: ivData.EceInstitutionRoutingNumber, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "EceInstitutionRoutingNumber",
+			Value: ivData.EceInstitutionRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if ivData.EceInstitutionRoutingNumberField() == "000000000" {
+		return &FieldError{FieldName: "EceInstitutionRoutingNumber",
+			Value: ivData.EceInstitutionRoutingNumber, Msg: msgFieldInclusion}
 	}
 	if ivData.BundleBusinessDate.IsZero() {
-		return &FieldError{FieldName: "ImageCreatorDate", Value: ivData.BundleBusinessDate.String(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "BundleBusinessDate",
+			Value: ivData.BundleBusinessDate.String(), Msg: msgFieldInclusion}
 	}
 	return nil
 }

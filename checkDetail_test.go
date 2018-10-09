@@ -29,8 +29,8 @@ func mockCheckDetail() *CheckDetail {
 	return cd
 }
 
-// testMockCheckDetail creates a CheckDetail
-func testMockCheckDetail(t testing.TB) {
+// TestMockCheckDetail creates a CheckDetail
+func TestMockCheckDetail(t *testing.T) {
 	cd := mockCheckDetail()
 	if err := cd.Validate(); err != nil {
 		t.Error("mockCheckDetail does not validate and will break other tests: ", err)
@@ -82,21 +82,8 @@ func testMockCheckDetail(t testing.TB) {
 	}
 }
 
-// TestMockCheckDetail tests creating a CheckDetail
-func TestMockCheckDetail(t *testing.T) {
-	testMockCheckDetail(t)
-}
-
-// BenchmarkMockCheckDetail benchmarks creating a CheckDetail
-func BenchmarkMockCheckDetail(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testMockCheckDetail(b)
-	}
-}
-
-// parseCheckDetail validates parsing a CheckDetail
-func parseCheckDetail(t testing.TB) {
+// TestParseCheckDetail validates parsing a CheckDetail
+func TestParseCheckDetail(t *testing.T) {
 	var line = "25      123456789 031300012             555888100001000001              GD1Y030B"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -160,19 +147,6 @@ func parseCheckDetail(t testing.TB) {
 	}
 }
 
-// TestParseCheckDetail test validates parsing a CheckDetail
-func TestParseCheckDetail(t *testing.T) {
-	parseCheckDetail(t)
-}
-
-// BenchmarkParseCheckDetail benchmark validates parsing a CheckDetail
-func BenchmarkParseCheckDetail(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		parseCheckDetail(b)
-	}
-}
-
 // testCDString validates that a known parsed CheckDetail can return to a string of the same value
 func testCDString(t testing.TB) {
 	var line = "25      123456789 031300012             555888100001000001              GD1Y030B"
@@ -205,5 +179,187 @@ func BenchmarkCDString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testCDString(b)
+	}
+}
+
+// TestCDRecordType validation
+func TestCDRecordType(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.recordType = "00"
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDDocumentationTypeIndicator validation
+func TestCDDocumentationTypeIndicator(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.DocumentationTypeIndicator = "P"
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "DocumentationTypeIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDDocumentationTypeIndicatorZ validation
+func TestCDDocumentationTypeIndicatorZ(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.DocumentationTypeIndicator = "Z"
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "DocumentationTypeIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDReturnAcceptanceIndicator validation
+func TestCDReturnAcceptanceIndicator(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.ReturnAcceptanceIndicator = "M"
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ReturnAcceptanceIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDMICRValidIndicator validation
+func TestCDMICRValidIndicator(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.MICRValidIndicator = 7
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "MICRValidIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDBOFDIndicator validation
+func TestCDBOFDIndicator(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.BOFDIndicator = "B"
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BOFDIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDCorrectionIndicator validation
+func TestCDCorrectionIndicator(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.CorrectionIndicator = 10
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CorrectionIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDArchiveTypeIndicator validation
+func TestCDArchiveTypeIndicator(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.ArchiveTypeIndicator = "W"
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ArchiveTypeIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDFIRecordType validation
+func TestCDFIRecordType(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.recordType = ""
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDFIPayorBankRoutingNumber validation
+func TestCDFIPayorBankRoutingNumber(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.PayorBankRoutingNumber = ""
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayorBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDFIPayorBankRoutingNumberZero validation
+func TestCDFIPayorBankRoutingNumberZero(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.PayorBankRoutingNumber = "00000000"
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayorBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDFIPayorBankCheckDigit validation
+func TestCDFIPayorBankCheckDigit(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.PayorBankCheckDigit = ""
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayorBankCheckDigit" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDFIEceInstitutionItemSequenceNumber validation
+func TestCDFIEceInstitutionItemSequenceNumber(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.EceInstitutionItemSequenceNumber = "               "
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EceInstitutionItemSequenceNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCDFIBOFDIndicator validation
+func TestCDFIBOFDIndicator(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.BOFDIndicator = ""
+	if err := cd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BOFDIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }

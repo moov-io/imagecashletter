@@ -90,14 +90,8 @@ func (rns *RoutingNumberSummary) fieldInclusion() error {
 	if rns.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: rns.recordType, Msg: msgFieldInclusion}
 	}
-	if rns.CashLetterRoutingNumber == "000000000" {
+	if rns.CashLetterRoutingNumber == "" {
 		return &FieldError{FieldName: "CashLetterRoutingNumber", Value: rns.CashLetterRoutingNumber, Msg: msgFieldInclusion}
-	}
-	if rns.RoutingNumberItemCount == 0 {
-		return &FieldError{FieldName: "RoutingNumberItemCount", Value: rns.RoutingNumberItemCountField(), Msg: msgFieldInclusion}
-	}
-	if rns.RoutingNumberTotalAmount == 0 {
-		return &FieldError{FieldName: "RoutingNumberTotalAmount", Value: rns.RoutingNumberTotalAmountField(), Msg: msgFieldInclusion}
 	}
 	return nil
 }

@@ -381,10 +381,36 @@ func TestFHFieldInclusionImmediateDestination(t *testing.T) {
 	}
 }
 
+// TestFHFieldInclusionImmediateDestinationZero validates FieldInclusion
+func TestFHFieldInclusionImmediateDestinationZero(t *testing.T) {
+	fh := mockFileHeader()
+	fh.ImmediateDestination = "000000000"
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
 // TestFHFieldInclusionImmediateOrigin validates FieldInclusion
 func TestFHFieldInclusionImmediateOrigin(t *testing.T) {
 	fh := mockFileHeader()
 	fh.ImmediateOrigin = ""
+	if err := fh.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.Msg != msgFieldInclusion {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestFHFieldInclusionImmediateOriginZero validates FieldInclusion
+func TestFHFieldInclusionImmediateOriginZero(t *testing.T) {
+	fh := mockFileHeader()
+	fh.ImmediateOrigin = "000000000"
 	if err := fh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.Msg != msgFieldInclusion {

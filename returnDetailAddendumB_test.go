@@ -22,8 +22,8 @@ func mockReturnDetailAddendumB() ReturnDetailAddendumB {
 	return rdAddendumB
 }
 
-// testMockReturnDetailAddendumB creates a ReturnDetailAddendumB
-func testMockReturnDetailAddendumB(t testing.TB) {
+// TestMockReturnDetailAddendumB creates a ReturnDetailAddendumB
+func TestMockReturnDetailAddendumB(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()
 	if err := rdAddendumB.Validate(); err != nil {
 		t.Error("MockReturnDetailAddendumB does not validate and will break other tests: ", err)
@@ -45,21 +45,8 @@ func testMockReturnDetailAddendumB(t testing.TB) {
 	}
 }
 
-// TestMockReturnDetailAddendumB tests creating a ReturnDetailAddendumB
-func TestMockReturnDetailAddendumB(t *testing.T) {
-	testMockReturnDetailAddendumB(t)
-}
-
-// BenchmarkMockReturnDetailAddendumB benchmarks creating a ReturnDetailAddendumB
-func BenchmarkMockReturnDetailAddendumB(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testMockReturnDetailAddendumB(b)
-	}
-}
-
-// parseReturnDetailAddendumB validates parsing a ReturnDetailAddendumB
-func parseReturnDetailAddendumB(t testing.TB) {
+// TestParseReturnDetailAddendumB validates parsing a ReturnDetailAddendumB
+func TestParseReturnDetailAddendumB(t *testing.T) {
 	var line = "33Payor Bank Name         1234567891              20180905Payor Account Name    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -92,19 +79,6 @@ func parseReturnDetailAddendumB(t testing.TB) {
 	}
 	if record.PayorAccountNameField() != "Payor Account Name    " {
 		t.Errorf("PayorAccountName Expected 'Payor Account Name    ' got: %v", record.PayorAccountNameField())
-	}
-}
-
-// TestParseReturnDetailAddendumB tests validating parsing a ReturnDetailAddendumB
-func TestParseReturnDetailAddendumB(t *testing.T) {
-	parseReturnDetailAddendumB(t)
-}
-
-// BenchmarkParseReturnDetailAddendumB benchmarks validatingparsing a ReturnDetailAddendumB
-func BenchmarkParseReturnDetailAddendumB(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		parseReturnDetailAddendumB(b)
 	}
 }
 
@@ -145,5 +119,85 @@ func BenchmarkRDAddendumBString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testRDAddendumBString(b)
+	}
+}
+
+// TestRDAddendumBRecordType validation
+func TestRDAddendumBRecordType(t *testing.T) {
+	rdAddendumB := mockReturnDetailAddendumB()
+	rdAddendumB.recordType = "00"
+	if err := rdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumBPayorBankName validation
+func TestRDAddendumBPayorBankName(t *testing.T) {
+	rdAddendumB := mockReturnDetailAddendumB()
+	rdAddendumB.PayorBankName = "®©"
+	if err := rdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayorBankName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumBPayorAccountName validation
+func TestRDAddendumBPayorAccountName(t *testing.T) {
+	rdAddendumB := mockReturnDetailAddendumB()
+	rdAddendumB.PayorAccountName = "®©"
+	if err := rdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayorAccountName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// Field Inclusion
+
+// TestRDAddendumBFIRecordType validation
+func TestRDAddendumBFIRecordType(t *testing.T) {
+	rdAddendumB := mockReturnDetailAddendumB()
+	rdAddendumB.recordType = ""
+	if err := rdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumBFIPayorBankSequenceNumber validation
+func TestRDAddendumBFIPayorBankSequenceNumber(t *testing.T) {
+	rdAddendumB := mockReturnDetailAddendumB()
+	rdAddendumB.PayorBankSequenceNumber = "               "
+	if err := rdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayorBankSequenceNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumBFIPayorBankBusinessDate validation
+func TestRDAddendumPayorBankBusinessDate(t *testing.T) {
+	rdAddendumB := mockReturnDetailAddendumB()
+	rdAddendumB.PayorBankBusinessDate = time.Time{}
+	if err := rdAddendumB.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayorBankBusinessDate" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }

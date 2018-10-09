@@ -13,11 +13,6 @@ import (
 // ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 // ToDo: ASCII vs EBCDIC
 
-// Errors specific to a File Header Record
-var (
-	msgRecordType = "received expecting %d"
-)
-
 // FileHeader Record is mandatory
 type FileHeader struct {
 	// ID is a client defined string used as a reference to this record.
@@ -230,6 +225,12 @@ func (fh *FileHeader) fieldInclusion() error {
 	}
 	if fh.ImmediateOrigin == "" {
 		return &FieldError{FieldName: "ImmediateOrigin", Value: fh.ImmediateOrigin, Msg: msgFieldInclusion}
+	}
+	if fh.ImmediateOriginField() == "000000000" {
+		return &FieldError{FieldName: "ImmediateOrigin", Value: fh.ImmediateOrigin, Msg: msgFieldInclusion}
+	}
+	if fh.ImmediateDestinationField() == "000000000" {
+		return &FieldError{FieldName: "ImmediateDestination", Value: fh.ImmediateDestination, Msg: msgFieldInclusion}
 	}
 	if fh.FileCreationDate.IsZero() {
 		return &FieldError{FieldName: "FileCreationDate", Value: fh.FileCreationDate.String(), Msg: msgFieldInclusion}

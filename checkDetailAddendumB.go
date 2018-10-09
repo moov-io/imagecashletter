@@ -130,17 +130,9 @@ func (cdAddendumB *CheckDetailAddendumB) fieldInclusion() error {
 	if cdAddendumB.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: cdAddendumB.recordType, Msg: msgFieldInclusion}
 	}
-	if cdAddendumB.ImageReferenceKeyIndicatorField() == "" {
-		return &FieldError{FieldName: "ImageReferenceKeyIndicator",
-			Value: cdAddendumB.ImageReferenceKeyIndicatorField(), Msg: msgFieldInclusion}
-	}
-	if cdAddendumB.MicrofilmArchiveSequenceNumber == "               " {
-		return &FieldError{FieldName: "BOFDItemSequenceNumber",
+	if cdAddendumB.MicrofilmArchiveSequenceNumberField() == "               " {
+		return &FieldError{FieldName: "MicrofilmArchiveSequenceNumber",
 			Value: cdAddendumB.MicrofilmArchiveSequenceNumber, Msg: msgFieldInclusion}
-	}
-	if cdAddendumB.LengthImageReferenceKeyField() == "" {
-		return &FieldError{FieldName: "LengthImageReferenceKey",
-			Value: cdAddendumB.LengthImageReferenceKeyField(), Msg: msgFieldInclusion}
 	}
 	return nil
 }

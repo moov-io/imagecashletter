@@ -328,17 +328,17 @@ func (ivDetail *ImageViewDetail) fieldInclusion() error {
 	if ivDetail.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: ivDetail.recordType, Msg: msgFieldInclusion}
 	}
-	if ivDetail.ImageIndicatorField() == "" {
-		return &FieldError{FieldName: "ImageIndicator", Value: ivDetail.ImageIndicatorField(), Msg: msgFieldInclusion}
-	}
 	if ivDetail.ImageCreatorRoutingNumber == "" {
-		return &FieldError{FieldName: "ImageCreatorRoutingNumber", Value: ivDetail.ImageCreatorRoutingNumber, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "ImageCreatorRoutingNumber",
+			Value: ivDetail.ImageCreatorRoutingNumber, Msg: msgFieldInclusion}
+	}
+	if ivDetail.ImageCreatorRoutingNumberField() == "000000000" {
+		return &FieldError{FieldName: "ImageCreatorRoutingNumber",
+			Value: ivDetail.ImageCreatorRoutingNumber, Msg: msgFieldInclusion}
 	}
 	if ivDetail.ImageCreatorDate.IsZero() {
-		return &FieldError{FieldName: "ImageCreatorDate", Value: ivDetail.ImageCreatorDate.String(), Msg: msgFieldInclusion}
-	}
-	if ivDetail.ViewSideIndicatorField() == "" {
-		return &FieldError{FieldName: "ViewSideIndicator", Value: ivDetail.ViewSideIndicatorField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "ImageCreatorDate",
+			Value: ivDetail.ImageCreatorDate.String(), Msg: msgFieldInclusion}
 	}
 	if ivDetail.ViewDescriptor == "" {
 		return &FieldError{FieldName: "ViewDescriptor", Value: ivDetail.ViewDescriptor, Msg: msgFieldInclusion}

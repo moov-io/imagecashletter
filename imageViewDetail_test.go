@@ -172,8 +172,8 @@ func TestParseIVDetail(t *testing.T) {
 	}
 }
 
-// TestIVDetailString validates that a known parsed ImageViewDetail can return to a string of the same value
-func TestIVDetailString(t *testing.T) {
+// testIVDetailString validates that a known parsed ImageViewDetail can return to a string of the same value
+func testIVDetailString(t testing.TB) {
 	var line = "501031300012201809050000000000000000000000000000000000000         0             "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -194,5 +194,230 @@ func TestIVDetailString(t *testing.T) {
 
 	if record.String() != line {
 		t.Errorf("Strings do not match")
+	}
+}
+
+// TestIVDetailString tests validating that a known parsed ImageViewDetail can return to a string of the
+// same value
+func TestIVDetailString(t *testing.T) {
+	testIVDetailString(t)
+}
+
+// BenchmarkIVDetailString benchmarks validating that a known parsed ImageViewDetail
+// can return to a string of the same value
+func BenchmarkIVDetailString(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		testIVDetailString(b)
+	}
+}
+
+// TestIVDetailRecordType validation
+func TestIVDetailRecordType(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.recordType = "00"
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailImageIndicator validation
+func TestIVDetailImageIndicator(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ImageIndicator = 9
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailImageViewFormatIndicator validation
+func TestIVDetailImageViewFormatIndicator(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ImageViewFormatIndicator = "30"
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageViewFormatIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailImageViewCompressionAlgorithm validation
+func TestIVDetailImageViewCompressionAlgorithm(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ImageViewCompressionAlgorithm = "30"
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageViewCompressionAlgorithm" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailViewSideIndicator validation
+func TestIVDetailViewSideIndicator(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ViewSideIndicator = 5
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ViewSideIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailViewDescriptor validation
+func TestIVDetailViewDescriptor(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ViewDescriptor = "20"
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ViewDescriptor" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailDigitalSignatureIndicator validation
+func TestIVDetailDigitalSignatureIndicator(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.DigitalSignatureIndicator = 5
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "DigitalSignatureIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailDigitalSignatureMethod validation
+func TestIVDetailDigitalSignatureMethod(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.DigitalSignatureMethod = "10"
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "DigitalSignatureMethod" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailImageRecreateIndicator validation
+func TestIVDetailImageRecreateIndicator(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ImageRecreateIndicator = 5
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageRecreateIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailOverrideIndicator validation
+func TestIVDetailOverrideIndicator(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.OverrideIndicator = "W"
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "OverrideIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailUserField validation
+func TestIVDetailUserField(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.UserField = "®©"
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserField" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// Field Inclusion
+
+// TestIVDetailFIRecordType validation
+func TestIVDetailFIRecordType(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.recordType = ""
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailFIImageCreatorRoutingNumber validation
+func TestIVDetailFIImageCreatorRoutingNumber(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ImageCreatorRoutingNumber = ""
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageCreatorRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailFIImageCreatorRoutingNumberZero validation
+func TestIVDetailFIImageCreatorRoutingNumberZero(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ImageCreatorRoutingNumber = "000000000"
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageCreatorRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailFIImageCreatorDate validation
+func TestIVDetailFIImageCreatorDate(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ImageCreatorDate = time.Time{}
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ImageCreatorDate" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestIVDetailFIViewDescriptor validation
+func TestIVDetailFIViewDescriptor(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ViewDescriptor = ""
+	if err := ivDetail.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ViewDescriptor" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }

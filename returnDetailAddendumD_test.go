@@ -27,8 +27,8 @@ func mockReturnDetailAddendumD() ReturnDetailAddendumD {
 	return rdAddendumD
 }
 
-// testMockReturnDetailAddendumD creates a ReturnDetailAddendumD
-func testMockReturnDetailAddendumD(t testing.TB) {
+// TestMockReturnDetailAddendumD creates a ReturnDetailAddendumD
+func TestMockReturnDetailAddendumD(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	if err := rdAddendumD.Validate(); err != nil {
 		t.Error("MockReturnDetailAddendumD does not validate and will break other tests: ", err)
@@ -65,21 +65,8 @@ func testMockReturnDetailAddendumD(t testing.TB) {
 	}
 }
 
-// TestMockReturnDetailAddendumD tests creating a ReturnDetailAddendumD
-func TestMockReturnDetailAddendumD(t *testing.T) {
-	testMockReturnDetailAddendumD(t)
-}
-
-// BenchmarkMockReturnDetailAddendumD benchmarks creating a ReturnDetailAddendumD
-func BenchmarkMockReturnDetailAddendumD(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testMockReturnDetailAddendumD(b)
-	}
-}
-
-// parseReturnDetailAddendumD validates parsing a ReturnDetailAddendumD
-func parseReturnDetailAddendumD(t testing.TB) {
+// TestParseReturnDetailAddendumD validates parsing a ReturnDetailAddendumD
+func TestParseReturnDetailAddendumD(t *testing.T) {
 	var line = "3501121042882201809051              Y10A                   0                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -137,19 +124,6 @@ func parseReturnDetailAddendumD(t testing.TB) {
 	}
 }
 
-// TestParseReturnDetailAddendumD tests validating parsing a ReturnDetailAddendumD
-func TestParseReturnDetailAddendumD(t *testing.T) {
-	parseReturnDetailAddendumD(t)
-}
-
-// BenchmarkParseReturnDetailAddendumD benchmarks validating parsing a ReturnDetailAddendumD
-func BenchmarkParseReturnDetailAddendumD(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		parseReturnDetailAddendumD(b)
-	}
-}
-
 // testRDAddendumDString validates that a known parsed ReturnDetailAddendumD can return to a string of the same value
 func testRDAddendumDString(t testing.TB) {
 	var line = "3501121042882201809051              Y10A                   0                    "
@@ -187,5 +161,202 @@ func BenchmarkRDAddendumDString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testRDAddendumDString(b)
+	}
+}
+
+// TestRDAddendumDRecordType validation
+func TestRDAddendumDRecordType(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.recordType = "00"
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDReturnLocationRoutingNumber validation
+func TestRDAddendumDReturnLocationRoutingNumber(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.EndorsingBankRoutingNumber = "X"
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDTruncationIndicator validation
+func TestRDAddendumDTruncationIndicator(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.TruncationIndicator = "A"
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "TruncationIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDBOFDConversionIndicator validation
+func TestRDAddendumDBOFDConversionIndicator(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.EndorsingBankConversionIndicator = "99"
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankConversionIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDBOFDCorrectionIndicator validation
+func TestRDAddendumDBOFDCorrectionIndicator(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.EndorsingBankCorrectionIndicator = 10
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankCorrectionIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDReturnReason validation
+func TestRDAddendumDReturnReason(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.ReturnReason = "--"
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ReturnReason" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDUserField validation
+func TestRDAddendumDUserField(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.UserField = "®©"
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserField" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDEndorsingBankIdentifier validation
+func TestRDAddendumDEndorsingBankIdentifier(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.EndorsingBankIdentifier = 9
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankIdentifier" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// Field Inclusion
+
+// TestRDAddendumDFIRecordType validation
+func TestRDAddendumDFIRecordType(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.recordType = ""
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDFIRecordNumber validation
+func TestRDAddendumDFIRecordNumber(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.RecordNumber = 0
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "RecordNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDFIReturnLocationRoutingNumber validation
+func TestRDAddendumDFIReturnLocationRoutingNumber(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.EndorsingBankRoutingNumber = ""
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDFIReturnLocationRoutingNumberZero validation
+func TestRDAddendumDFIReturnLocationRoutingNumberZero(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.EndorsingBankRoutingNumber = "000000000"
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDFIBOFDEndorsementDate validation
+func TestRDAddendumDFIBOFDEndorsementDate(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.BOFDEndorsementBusinessDate = time.Time{}
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BOFDEndorsementBusinessDate" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDFIBOFDItemSequenceNumber validation
+func TestRDAddendumDFIBOFDItemSequenceNumber(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.EndorsingBankItemSequenceNumber = "               "
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsingBankItemSequenceNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumDFITruncationIndicator validation
+func TestRDAddendumDFITruncationIndicator(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.TruncationIndicator = ""
+	if err := rdAddendumD.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "TruncationIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }

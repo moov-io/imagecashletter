@@ -28,8 +28,8 @@ func mockReturnDetailAddendumA() ReturnDetailAddendumA {
 	return rdAddendumA
 }
 
-// testMockReturnDetailAddendumA creates a ReturnDetailAddendumA
-func testMockReturnDetailAddendumA(t testing.TB) {
+// TestMockReturnDetailAddendumA creates a ReturnDetailAddendumA
+func TestMockReturnDetailAddendumA(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	if err := rdAddendumA.Validate(); err != nil {
 		t.Error("mockReturnDetailAddendumA does not validate and will break other tests: ", err)
@@ -69,21 +69,8 @@ func testMockReturnDetailAddendumA(t testing.TB) {
 	}
 }
 
-// TestMockReturnDetailAddendumA  tests creating a ReturnDetailAddendumA
-func TestMockReturnDetailAddendumA(t *testing.T) {
-	testMockReturnDetailAddendumA(t)
-}
-
-// BenchmarkMockReturnDetailAddendumA benchmarks creating a ReturnDetailAddendumA
-func BenchmarkMockReturnDetailAddendumA(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		testMockReturnDetailAddendumA(b)
-	}
-}
-
-// parseReturnDetailAddendumA validates parsing a ReturnDetailAddendumA
-func parseReturnDetailAddendumA(t testing.TB) {
+// TestParseReturnDetailAddendumA validates parsing a ReturnDetailAddendumA
+func TestParseReturnDetailAddendumA(t *testing.T) {
 	var line = "321121042882201809051              938383            01   Test Payee     Y10    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -143,19 +130,6 @@ func parseReturnDetailAddendumA(t testing.TB) {
 	}
 }
 
-// TestParseReturnDetailAddendumA tests validating parsing a ReturnDetailAddendumA
-func TestParseReturnDetailAddendumA(t *testing.T) {
-	parseReturnDetailAddendumA(t)
-}
-
-// BenchmarkParseReturnDetailAddendumA benchmarks validates parsing a ReturnDetailAddendumA
-func BenchmarkParseReturnDetailAddendumA(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		parseReturnDetailAddendumA(b)
-	}
-}
-
 // testRDAddendumAString validates that a known parsed ReturnDetailAddendumA can return to a string of the same value
 func testRDAddendumAString(t testing.TB) {
 	var line = "321121042882201809051              938383            01   Test Payee     Y10    "
@@ -194,5 +168,215 @@ func BenchmarkRDAddendumAString(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		testRDAddendumAString(b)
+	}
+}
+
+// TestRDAddendumARecordType validation
+func TestRDAddendumARecordType(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.recordType = "00"
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumAReturnLocationRoutingNumber validation
+func TestRDAddendumAReturnLocationRoutingNumber(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.ReturnLocationRoutingNumber = "X"
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ReturnLocationRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumABOFDAccountNumber validation
+func TestRDAddendumABOFDAccountNumber(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.BOFDAccountNumber = "®©"
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BOFDAccountNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumABOFDBranchCode validation
+func TestRDAddendumABOFDBOFDBranchCode(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.BOFDBranchCode = "®©"
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BOFDBranchCode" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumAPayeeName validation
+func TestRDAddendumAPayeeName(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.PayeeName = "®©"
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayeeName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumATruncationIndicator validation
+func TestRDAddendumATruncationIndicator(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.TruncationIndicator = "A"
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "TruncationIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumABOFDConversionIndicator validation
+func TestRDAddendumABOFDConversionIndicator(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.BOFDConversionIndicator = "99"
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BOFDConversionIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumABOFDCorrectionIndicator validation
+func TestRDAddendumABOFDCorrectionIndicator(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.BOFDCorrectionIndicator = 10
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BOFDCorrectionIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumAUserField validation
+func TestRDAddendumAUserField(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.UserField = "®©"
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserField" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// Field Inclusion
+
+// TestRDAddendumAFIRecordType validation
+func TestRDAddendumAFIRecordType(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.recordType = ""
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumAFIRecordNumber validation
+func TestRDAddendumAFIRecordNumber(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.RecordNumber = 0
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "RecordNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumAFIReturnLocationRoutingNumber validation
+func TestRDAddendumAFIReturnLocationRoutingNumber(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.ReturnLocationRoutingNumber = ""
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ReturnLocationRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumAFIReturnLocationRoutingNumberZero validation
+func TestRDAddendumAFIReturnLocationRoutingNumberZero(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.ReturnLocationRoutingNumber = "000000000"
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ReturnLocationRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumAFIBOFDEndorsementDate validation
+func TestRDAddendumAFIBOFDEndorsementDate(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.BOFDEndorsementDate = time.Time{}
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BOFDEndorsementDate" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumAFIBOFDItemSequenceNumber validation
+func TestRDAddendumAFIBOFDItemSequenceNumber(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.BOFDItemSequenceNumber = "               "
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BOFDItemSequenceNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestRDAddendumAFITruncationIndicator validation
+func TestRDAddendumAFITruncationIndicator(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.TruncationIndicator = ""
+	if err := rdAddendumA.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "TruncationIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
 	}
 }

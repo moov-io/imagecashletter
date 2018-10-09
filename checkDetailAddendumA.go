@@ -162,10 +162,6 @@ func (cdAddendumA *CheckDetailAddendumA) Validate() error {
 		return &FieldError{FieldName: "BOFDAccountNumber",
 			Value: cdAddendumA.BOFDAccountNumber, Msg: err.Error()}
 	}
-	if err := cdAddendumA.isAlphanumericSpecial(cdAddendumA.BOFDAccountNumber); err != nil {
-		return &FieldError{FieldName: "BOFDAccountNumber",
-			Value: cdAddendumA.BOFDAccountNumber, Msg: err.Error()}
-	}
 	if err := cdAddendumA.isAlphanumericSpecial(cdAddendumA.BOFDBranchCode); err != nil {
 		return &FieldError{FieldName: "BOFDBranchCode",
 			Value: cdAddendumA.BOFDBranchCode, Msg: err.Error()}
@@ -206,13 +202,13 @@ func (cdAddendumA *CheckDetailAddendumA) fieldInclusion() error {
 		return &FieldError{FieldName: "recordType", Value: cdAddendumA.recordType, Msg: msgFieldInclusion}
 	}
 	if cdAddendumA.RecordNumber == 0 {
-		return &FieldError{FieldName: "recordNumber", Value: cdAddendumA.RecordNumberField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "RecordNumber", Value: cdAddendumA.RecordNumberField(), Msg: msgFieldInclusion}
 	}
 	if cdAddendumA.ReturnLocationRoutingNumber == "" {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
 			Value: cdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
 	}
-	if cdAddendumA.ReturnLocationRoutingNumber == "000000000" {
+	if cdAddendumA.ReturnLocationRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
 			Value: cdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
 	}

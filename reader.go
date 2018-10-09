@@ -211,8 +211,8 @@ func (r *Reader) parseLine() error {
 			return err
 		}
 	default:
-		msg := fmt.Sprintf(msgUnknownRecordType, r.line[:1])
-		return r.error(&FileError{FieldName: "recordType", Value: r.line[:1], Msg: msg})
+		msg := fmt.Sprintf(msgUnknownRecordType, r.line[:2])
+		return r.error(&FileError{FieldName: "recordType", Value: r.line[:2], Msg: msg})
 	}
 	return nil
 }
@@ -276,7 +276,7 @@ func (r *Reader) parseBundleHeader() error {
 // parseCheckDetail takes the input record string and parses the CheckDetail values
 func (r *Reader) parseCheckDetail() error {
 	r.recordName = "CheckDetail"
-	if r.currentCashLetter.currentBundle.BundleHeader == nil {
+	if r.currentCashLetter.currentBundle == nil {
 		return r.error(&FileError{Msg: msgFileBundleOutside})
 	}
 	cd := new(CheckDetail)
@@ -297,18 +297,13 @@ func (r *Reader) parseCheckDetailAddendumA() error {
 	r.recordName = "CheckDetailAddendumA"
 	if r.currentCashLetter.currentBundle.GetChecks() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
-	}
-	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
-		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
+		return r.error(&FileError{FieldName: "CheckDetailAddendumA", Msg: msg})
 	}
 	cdAddendumA := NewCheckDetailAddendumA()
 	cdAddendumA.Parse(r.line)
 	if err := cdAddendumA.Validate(); err != nil {
-		return err
+		return r.error(err)
 	}
-	// ToDo: research Pointer for CheckAddendum*, also see about use of currentCheckDetail
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 	//r.currentCashLetter.currentBundle.Checks[entryIndex].CheckDetailAddendumA = cdAddendumA
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumA(cdAddendumA)
@@ -320,16 +315,12 @@ func (r *Reader) parseCheckDetailAddendumB() error {
 	r.recordName = "CheckDetailAddendumB"
 	if r.currentCashLetter.currentBundle.GetChecks() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
-	}
-	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
-		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
+		return r.error(&FileError{FieldName: "CheckDetailAddendumB", Msg: msg})
 	}
 	cdAddendumB := NewCheckDetailAddendumB()
 	cdAddendumB.Parse(r.line)
 	if err := cdAddendumB.Validate(); err != nil {
-		return err
+		return r.error(err)
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumB(cdAddendumB)
@@ -339,19 +330,14 @@ func (r *Reader) parseCheckDetailAddendumB() error {
 // parseCheckDetailAddendumC takes the input record string and parses the CheckDetailAddendumC values
 func (r *Reader) parseCheckDetailAddendumC() error {
 	r.recordName = "CheckDetailAddendumC"
-
 	if r.currentCashLetter.currentBundle.GetChecks() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
-	}
-	if len(r.currentCashLetter.currentBundle.GetChecks()) == 0 {
-		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
+		return r.error(&FileError{FieldName: "CheckDetailAddendumC", Msg: msg})
 	}
 	cdAddendumC := NewCheckDetailAddendumC()
 	cdAddendumC.Parse(r.line)
 	if err := cdAddendumC.Validate(); err != nil {
-		return err
+		return r.error(err)
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumC(cdAddendumC)
@@ -361,16 +347,14 @@ func (r *Reader) parseCheckDetailAddendumC() error {
 // parseReturnDetail takes the input record string and parses the ReturnDetail values
 func (r *Reader) parseReturnDetail() error {
 	r.recordName = "ReturnDetail"
-	if r.currentCashLetter.currentBundle.BundleHeader == nil {
+	if r.currentCashLetter.currentBundle == nil {
 		return r.error(&FileError{Msg: msgFileBundleOutside})
 	}
 	rd := new(ReturnDetail)
 	rd.Parse(r.line)
-	// Ensure valid ReturnDetail
 	if err := rd.Validate(); err != nil {
 		return r.error(err)
 	}
-	// Add ReturnDetail
 	if r.currentCashLetter.currentBundle.BundleHeader != nil {
 		r.currentCashLetter.currentBundle.AddReturnDetail(rd)
 	}
@@ -382,16 +366,12 @@ func (r *Reader) parseReturnDetailAddendumA() error {
 	r.recordName = "ReturnDetailAddendumA"
 	if r.currentCashLetter.currentBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
-	}
-	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
-		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumA", Msg: msg})
+		return r.error(&FileError{FieldName: "ReturnDetailAddendumA", Msg: msg})
 	}
 	rdAddendumA := NewReturnDetailAddendumA()
 	rdAddendumA.Parse(r.line)
 	if err := rdAddendumA.Validate(); err != nil {
-		return err
+		return r.error(err)
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 	//r.currentCashLetter.currentBundle.Returns[entryIndex].ReturnDetailAddendumA = rdAddendumA
@@ -404,16 +384,12 @@ func (r *Reader) parseReturnDetailAddendumB() error {
 	r.recordName = "ReturnDetailAddendumB"
 	if r.currentCashLetter.currentBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
-	}
-	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
-		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumB", Msg: msg})
+		return r.error(&FileError{FieldName: "ReturnDetailAddendumB", Msg: msg})
 	}
 	rdAddendumB := NewReturnDetailAddendumB()
 	rdAddendumB.Parse(r.line)
 	if err := rdAddendumB.Validate(); err != nil {
-		return err
+		return r.error(err)
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumB(rdAddendumB)
@@ -423,19 +399,14 @@ func (r *Reader) parseReturnDetailAddendumB() error {
 // parseReturnDetailAddendumC takes the input record string and parses the ReturnDetailAddendumC values
 func (r *Reader) parseReturnDetailAddendumC() error {
 	r.recordName = "ReturnDetailAddendumC"
-
 	if r.currentCashLetter.currentBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
-	}
-	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
-		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "AddendumC", Msg: msg})
+		return r.error(&FileError{FieldName: "ReturnDetailAddendumC", Msg: msg})
 	}
 	rdAddendumC := NewReturnDetailAddendumC()
 	rdAddendumC.Parse(r.line)
 	if err := rdAddendumC.Validate(); err != nil {
-		return err
+		return r.error(err)
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumC(rdAddendumC)
@@ -444,20 +415,16 @@ func (r *Reader) parseReturnDetailAddendumC() error {
 
 // parseReturnDetail*AddendumD takes the input record string and parses the ReturnDetail*AddendumD values
 func (r *Reader) parseReturnDetailAddendumD() error {
-	r.recordName = "ReturnDetailAddendumC"
+	r.recordName = "ReturnDetailAddendumD"
 
 	if r.currentCashLetter.currentBundle.GetReturns() == nil {
 		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "*AddendumD", Msg: msg})
-	}
-	if len(r.currentCashLetter.currentBundle.GetReturns()) == 0 {
-		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "*AddendumD", Msg: msg})
+		return r.error(&FileError{FieldName: "ReturnDetailAddendumD", Msg: msg})
 	}
 	rdAddendumD := NewReturnDetailAddendumD()
 	rdAddendumD.Parse(r.line)
 	if err := rdAddendumD.Validate(); err != nil {
-		return err
+		return r.error(err)
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumD(rdAddendumD)
@@ -479,7 +446,7 @@ func (r *Reader) ImageViewDetail() error {
 		ivDetail := NewImageViewDetail()
 		ivDetail.Parse(r.line)
 		if err := ivDetail.Validate(); err != nil {
-			return err
+			return r.error(err)
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewDetail(ivDetail)
@@ -488,13 +455,13 @@ func (r *Reader) ImageViewDetail() error {
 		ivDetail := NewImageViewDetail()
 		ivDetail.Parse(r.line)
 		if err := ivDetail.Validate(); err != nil {
-			return err
+			return r.error(err)
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewDetail(ivDetail)
 	} else {
 		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
+		return r.error(&FileError{FieldName: "ImageViewDetail", Msg: msg})
 	}
 
 	return nil
@@ -515,7 +482,7 @@ func (r *Reader) ImageViewData() error {
 		ivData := NewImageViewData()
 		ivData.Parse(r.line)
 		if err := ivData.Validate(); err != nil {
-			return err
+			return r.error(err)
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewData(ivData)
@@ -524,7 +491,7 @@ func (r *Reader) ImageViewData() error {
 		ivData := NewImageViewData()
 		ivData.Parse(r.line)
 		if err := ivData.Validate(); err != nil {
-			return err
+			return r.error(err)
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewData(ivData)
@@ -547,12 +514,11 @@ func (r *Reader) parseImageViewAnalysis() error {
 
 // ImageViewAnalysis takes the input record string and parses ImageViewAnalysis for a check
 func (r *Reader) ImageViewAnalysis() error {
-
 	if r.currentCashLetter.currentBundle.GetChecks() != nil {
 		ivAnalysis := NewImageViewAnalysis()
 		ivAnalysis.Parse(r.line)
 		if err := ivAnalysis.Validate(); err != nil {
-			return err
+			return r.error(err)
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewAnalysis(ivAnalysis)
@@ -561,13 +527,13 @@ func (r *Reader) ImageViewAnalysis() error {
 		ivAnalysis := NewImageViewAnalysis()
 		ivAnalysis.Parse(r.line)
 		if err := ivAnalysis.Validate(); err != nil {
-			return err
+			return r.error(err)
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewAnalysis(ivAnalysis)
 	} else {
 		msg := fmt.Sprint(msgFileBundleOutside)
-		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
+		return r.error(&FileError{FieldName: "ImageViewAnalysis", Msg: msg})
 	}
 
 	return nil
@@ -578,11 +544,9 @@ func (r *Reader) parseBundleControl() error {
 	r.recordName = "BundleControl"
 
 	if r.currentCashLetter.currentBundle.BundleControl == nil {
-		// BundleControl without a current Bundle
 		return r.error(&FileError{Msg: msgFileBundleControl})
 	}
 	r.currentCashLetter.currentBundle.GetControl().Parse(r.line)
-	// Ensure valid BundleControl
 	if err := r.currentCashLetter.currentBundle.GetControl().Validate(); err != nil {
 		return r.error(err)
 	}
@@ -593,11 +557,9 @@ func (r *Reader) parseBundleControl() error {
 func (r *Reader) parseRoutingNumberSummary() error {
 	r.recordName = "RoutingNumberSummary"
 	if r.currentCashLetter.CashLetterHeader == nil {
-		// RoutingNumberSummary without a current CashLetter
 		return r.error(&FileError{Msg: msgFileRoutingNumberSummary})
 	}
 	r.currentCashLetter.currentRoutingNumberSummary.Parse(r.line)
-	// Ensure valid Routing NUmber Summary
 	if err := r.currentCashLetter.currentRoutingNumberSummary.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -616,7 +578,6 @@ func (r *Reader) parseCashLetterControl() error {
 	if err := r.currentCashLetter.GetControl().Validate(); err != nil {
 		return r.error(err)
 	}
-	//r.File.AddCashLetter(r.currentCashLetter)
 	return nil
 }
 
