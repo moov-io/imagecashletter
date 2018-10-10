@@ -215,7 +215,7 @@ func (ci *CreditItem) fieldInclusion() error {
 		return &FieldError{FieldName: "PostingBankRoutingNumber",
 			Value: ci.PostingBankRoutingNumber, Msg: msgFieldInclusion}
 	}
-	if ci.PostingBankRoutingNumberField() == "00000000" {
+	if ci.PostingBankRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "PostingBankRoutingNumber",
 			Value: ci.PostingBankRoutingNumber, Msg: msgFieldInclusion}
 	}

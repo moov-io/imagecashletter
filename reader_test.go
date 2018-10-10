@@ -14,7 +14,7 @@ import (
 
 // TestX9FileRead validates reading an x9 file
 func TestX9FileRead(t *testing.T) {
-	f, err := os.Open("./test/testdata/20180905A.x9")
+	f, err := os.Open("./test/testdata/BNK20180905121042882-A.x9")
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
@@ -965,5 +965,22 @@ func TestIVAnalysisBundleError(t *testing.T) {
 		}
 	} else {
 		t.Errorf("%T: %s", err, err)
+	}
+}
+
+// TestX9CreditItemFile validates reading an x9 file with a CreditItem
+func TestX9CreditItemFile(t *testing.T) {
+	f, err := os.Open("./test/testdata/BNK20181010121042882-A.x9")
+	if err != nil {
+		log.Panicf("Can not open local file: %s: \n", err)
+	}
+	r := NewReader(f)
+	x9File, err := r.Read()
+	if err != nil {
+		fmt.Printf("Issue reading file: %+v \n", err)
+	}
+	// ensure we have a validated file structure
+	if x9File.Validate(); err != nil {
+		fmt.Printf("Could not validate entire read file: %v", err)
 	}
 }

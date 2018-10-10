@@ -366,8 +366,6 @@ func (cd *CheckDetail) ArchiveTypeIndicatorField() string {
 	return cd.alphaField(cd.ArchiveTypeIndicator, 1)
 }
 
-// ToDo:  Potentially use Addendumer?
-
 // AddCheckDetailAddendumA appends an AddendumA to the CheckDetail
 func (cd *CheckDetail) AddCheckDetailAddendumA(cdAddendaA CheckDetailAddendumA) []CheckDetailAddendumA {
 	cd.CheckDetailAddendumA = append(cd.CheckDetailAddendumA, cdAddendaA)

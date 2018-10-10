@@ -147,3 +147,148 @@ func BenchmarkCIString(b *testing.B) {
 		testCIString(b)
 	}
 }
+
+// TestCIRecordType validation
+func TestCIRecordType(t *testing.T) {
+	ci := mockCreditItem()
+	ci.recordType = "00"
+	if err := ci.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCIDocumentationTypeIndicator validation
+func TestCIDocumentationTypeIndicator(t *testing.T) {
+	ci := mockCreditItem()
+	ci.DocumentationTypeIndicator = "P"
+	if err := ci.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "DocumentationTypeIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCIDocumentationTypeIndicatorZ validation
+func TestCIDocumentationTypeIndicatorZ(t *testing.T) {
+	ci := mockCreditItem()
+	ci.DocumentationTypeIndicator = "Z"
+	if err := ci.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "DocumentationTypeIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCIDocumentationTypeIndicatorM validation
+func TestCIDocumentationTypeIndicatorM(t *testing.T) {
+	ci := mockCreditItem()
+	ci.DocumentationTypeIndicator = "M"
+	if err := ci.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "DocumentationTypeIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCIAccountTypeCode validation
+func TestCIAccountTypeCode(t *testing.T) {
+	ci := mockCreditItem()
+	ci.AccountTypeCode = "Z"
+	if err := ci.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "AccountTypeCode" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCISourceWorkCode validation
+func TestCISourceWorkCode(t *testing.T) {
+	ci := mockCreditItem()
+	ci.SourceWorkCode = "99"
+	if err := ci.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "SourceWorkCode" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCIUserField validation
+func TestCIUserField(t *testing.T) {
+	ci := mockCreditItem()
+	ci.UserField = "®©"
+	if err := ci.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserField" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// Field Inclusion
+
+// TestCIFIRecordType validation
+func TestCIFIRecordType(t *testing.T) {
+	ci := mockCreditItem()
+	ci.recordType = ""
+	if err := ci.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCIFIPostingBankRoutingNumber validation
+func TestCIFIPostingBankRoutingNumber(t *testing.T) {
+	ci := mockCreditItem()
+	ci.PostingBankRoutingNumber = ""
+	if err := ci.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PostingBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCIFIPostingBankRoutingNumberZero validation
+func TestCIFIPostingBankRoutingNumberZero(t *testing.T) {
+	ci := mockCreditItem()
+	ci.PostingBankRoutingNumber = "000000000"
+	if err := ci.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PostingBankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestCIFICreditItemSequenceNumber validation
+func TestCIFICreditItemSequenceNumber(t *testing.T) {
+	ci := mockCreditItem()
+	ci.CreditItemSequenceNumber = ""
+	if err := ci.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CreditItemSequenceNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
