@@ -174,6 +174,10 @@ func (r *Reader) parseLine() error {
 		if err := r.parseReturnDetailAddendumD(); err != nil {
 			return err
 		}
+	case creditItemPos:
+		if err := r.parseCreditItem(); err != nil {
+			return err
+		}
 	case bundleControlPos:
 		if err := r.parseBundleControl(); err != nil {
 			return err
@@ -536,6 +540,22 @@ func (r *Reader) ImageViewAnalysis() error {
 		return r.error(&FileError{FieldName: "ImageViewAnalysis", Msg: msg})
 	}
 
+	return nil
+}
+
+// parseCreditItem takes the input record string and parses the CreditItem values
+func (r *Reader) parseCreditItem() error {
+	// Current implementation has the credit letter outside the bundle but within the cash letter
+	r.recordName = "CreditItem"
+	if r.currentCashLetter.CashLetterHeader == nil {
+		return r.error(&FileError{Msg: msgFileCreditItem})
+	}
+	ci := new(CreditItem)
+	ci.Parse(r.line)
+	if err := ci.Validate(); err != nil {
+		return r.error(err)
+	}
+	r.currentCashLetter.AddCreditItem(ci)
 	return nil
 }
 

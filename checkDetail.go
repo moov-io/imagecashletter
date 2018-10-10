@@ -51,9 +51,6 @@ type CheckDetail struct {
 	// EceInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
 	// Field must contain a numeric value. It cannot be all blanks.
 	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
-	// ToDo: CashLetterHeader.CashLetterDocumentation = "Z", CheckDetail.DocumentationTypeIndicator cannot be Z.
-	// ToDo: CheckDetail.DocumentationTypeIndicator is defined CashLetterHeader.CashLetterDocumentation = "Z" should
-	// ToDo: Z, and this value supersedes.
 	// DocumentationTypeIndicator identifies a code that indicates the type of documentation that supports the check
 	// record.
 	// This field is superseded by the Cash Letter Documentation Type Indicator in the Cash Letter Header
@@ -65,15 +62,17 @@ type CheckDetail struct {
 	//
 	// Values:
 	// A: No image provided, paper provided separately
-	// B: No image provided, paper provided separately, image upon request ‘C’	Image provided separately, no paper
-	// provided
-	// D: Image provided separately, no paper provided, image upon request ‘E’	Image and paper provided separately
+	// B: No image provided, paper provided separately, image upon request
+	// C:	Image provided separately, no paper provided
+	// D: Image provided separately, no paper provided, image upon request
+	// E:	Image and paper provided separately
 	// F: Image and paper provided separately, image upon request
 	// G: Image included, no paper provided
-	// H: Image included, no paper provided, image upon request ‘I’	Image included, paper provided separately
-	// J: Image included, paper provided separately, image upon request ‘K’	No image provided, no paper provided
-	// L: No image provided, no paper provided, image upon request ‘M’	No image provided, Electronic Check provided
-	// separately
+	// H: Image included, no paper provided, image upon request
+	// I:	Image included, paper provided separately
+	// J: Image included, paper provided separately, image upon request
+	// K:	No image provided, no paper provided
+	// L: No image provided, no paper provided, image upon request
 	// M: No image provided, Electronic Check provided separately
 	DocumentationTypeIndicator string `json:"documentationTypeIndicator"`
 	// ReturnAcceptanceIndicator is a code that indicates whether the institution that creates the CheckDetail
@@ -287,7 +286,7 @@ func (cd *CheckDetail) fieldInclusion() error {
 	if cd.PayorBankCheckDigit == "" {
 		return &FieldError{FieldName: "PayorBankCheckDigit", Value: cd.PayorBankCheckDigit, Msg: msgFieldInclusion}
 	}
-	if cd.EceInstitutionItemSequenceNumber == "               " {
+	if cd.EceInstitutionItemSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber",
 			Value: cd.EceInstitutionItemSequenceNumber, Msg: msgFieldInclusion}
 	}

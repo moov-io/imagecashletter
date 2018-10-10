@@ -706,6 +706,65 @@ func (v *validator) isTimesReturned(code int) error {
 	return errors.New(msgInvalid)
 }
 
+// isAccountTypeCode ensures AccountTypeCode of CheckItem is valid
+func (v *validator) isAccountTypeCode(code string) error {
+	switch code {
+	case
+		// Unknown
+		"0",
+		// DDA account
+		"1",
+		// General Ledger account
+		"2",
+		// Savings account
+		"3",
+		// Money Market account
+		"4",
+		//Other account
+		"5",
+		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J":
+		return nil
+	}
+	return errors.New(msgInvalid)
+}
+
+// isSourceWorkCode ensures SourceWorkCode of CheckItem is valid
+func (v *validator) isSourceWorkCode(code string) error {
+	switch code {
+	case
+		// Unknown
+		"00",
+		//Internal–ATM
+		"01",
+		// Internal–Branch
+		"02",
+		// Internal–Other
+		"03",
+		// External–Bank to Bank (Correspondent)
+		"04",
+		// External–Business to Bank (Customer)
+		"05",
+		// External–Business to Bank Remote Capture
+		"06",
+		// External–Processor to Bank
+		"07",
+		//External–Bank to Processor
+		"08",
+		// Lockbox
+		"09",
+		// International–Internal
+		"10",
+		//International–External
+		"11",
+		// User Defined
+		"21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+		"31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+		"41", "42", "43", "44", "45", "46", "47", "48", "49", "50":
+		return nil
+	}
+	return errors.New(msgInvalid)
+}
+
 /*// isUpperAlphanumeric checks if string only contains ASCII alphanumeric upper case characters
 func (v *validator) isUpperAlphanumeric(s string) error {
 	if upperAlphanumericRegex.MatchString(s) {

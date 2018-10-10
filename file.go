@@ -35,6 +35,7 @@ const (
 	imageViewDetailPos   = "50"
 	imageViewDataPos     = "52"
 	imageViewAnalysisPos = "54"
+	creditItemPos        = "62"
 	bundleControlPos     = "70"
 	//no longer supported by the standard - boxSummaryPos           = "75"
 	routingNumberSummaryPos = "85"
@@ -59,6 +60,7 @@ var (
 	msgUnknownRecordType = "%s is an unknown record type"
 	msgFileCashLetterID  = "%s is not unique"
 	msgRecordType        = "received expecting %d"
+	msgFileCreditItem    = "Credit item outside of cash letter"
 )
 
 // FileError is an error describing issues validating a file

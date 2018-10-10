@@ -211,7 +211,7 @@ func (rdAddendumD *ReturnDetailAddendumD) fieldInclusion() error {
 		return &FieldError{FieldName: "BOFDEndorsementBusinessDate",
 			Value: rdAddendumD.BOFDEndorsementBusinessDate.String(), Msg: msgFieldInclusion}
 	}
-	if rdAddendumD.EndorsingBankItemSequenceNumber == "               " {
+	if rdAddendumD.EndorsingBankItemSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "EndorsingBankItemSequenceNumber",
 			Value: rdAddendumD.EndorsingBankItemSequenceNumber, Msg: msgFieldInclusion}
 	}
