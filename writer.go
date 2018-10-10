@@ -14,8 +14,6 @@ import (
 // As returned by NewWriter, a Writer writes x9file structs into
 // x9 formatted files.
 
-// ToDo;  Review/Test the looping/writing of Bundles, ReturnBundles, CheckDetail, ReturnDetail, Addendum, and ImageView
-
 // Writer struct
 type Writer struct {
 	w       *bufio.Writer
@@ -65,14 +63,22 @@ func (w *Writer) writeCashLetter(file *File) error {
 			return err
 		}
 		w.lineNum++
+		for _, ci := range cl.GetCreditItems() {
+			if _, err := w.w.WriteString(ci.String() + "\n"); err != nil {
+				return err
+			}
+			w.lineNum++
+		}
 		if err := w.writeBundle(cl); err != nil {
 			return err
 		}
 		w.lineNum++
-		if err := w.writeRoutingNumberSummary(cl); err != nil {
-			return err
+		for _, rns := range cl.GetRoutingNumberSummary() {
+			if _, err := w.w.WriteString(rns.String() + "\n"); err != nil {
+				return err
+			}
+			w.lineNum++
 		}
-		w.lineNum++
 		if _, err := w.w.WriteString(cl.GetControl().String() + "\n"); err != nil {
 			return err
 		}
@@ -99,7 +105,6 @@ func (w *Writer) writeBundle(cl CashLetter) error {
 				return err
 			}
 		}
-
 		if _, err := w.w.WriteString(b.GetControl().String() + "\n"); err != nil {
 			return err
 		}

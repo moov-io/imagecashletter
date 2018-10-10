@@ -213,7 +213,7 @@ func (cdAddendumC *CheckDetailAddendumC) fieldInclusion() error {
 		return &FieldError{FieldName: "BOFDEndorsementBusinessDate",
 			Value: cdAddendumC.BOFDEndorsementBusinessDate.String(), Msg: msgFieldInclusion}
 	}
-	if cdAddendumC.EndorsingBankItemSequenceNumber == "               " {
+	if cdAddendumC.EndorsingBankItemSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "EndorsingBankItemSequenceNumber",
 			Value: cdAddendumC.EndorsingBankItemSequenceNumber, Msg: msgFieldInclusion}
 	}

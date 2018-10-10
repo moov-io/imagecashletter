@@ -56,15 +56,17 @@ type ReturnDetail struct {
 	//
 	// Values:
 	// A: No image provided, paper provided separately
-	// B: No image provided, paper provided separately, image upon request ‘C’	Image provided separately, no paper
-	// provided
-	// D: Image provided separately, no paper provided, image upon request ‘E’	Image and paper provided separately
+	// B: No image provided, paper provided separately, image upon request
+	// C:	Image provided separately, no paper provided
+	// D: Image provided separately, no paper provided, image upon request
+	// E:	Image and paper provided separately
 	// F: Image and paper provided separately, image upon request
 	// G: Image included, no paper provided
-	// H: Image included, no paper provided, image upon request ‘I’	Image included, paper provided separately
-	// J: Image included, paper provided separately, image upon request ‘K’	No image provided, no paper provided
-	// L: No image provided, no paper provided, image upon request ‘M’	No image provided, Electronic Check provided
-	// separately
+	// H: Image included, no paper provided, image upon request
+	// I:	Image included, paper provided separately
+	// J: Image included, paper provided separately, image upon request
+	// K:	No image provided, no paper provided
+	// L: No image provided, no paper provided, image upon request
 	// M: No image provided, Electronic Check provided separately
 	DocumentationTypeIndicator string `json:"documentationTypeIndicator"`
 	// ForwardBundleDate represents for electronic check exchange items, the year, month, and day that designates the
@@ -204,7 +206,6 @@ func (rd *ReturnDetail) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 31)
 		return &FieldError{FieldName: "recordType", Value: rd.recordType, Msg: msg}
 	}
-
 	if rd.DocumentationTypeIndicator != "" {
 		// Z is valid for CashLetter DocumentationTypeIndicator only
 		if rd.DocumentationTypeIndicator == "Z" {
@@ -253,7 +254,7 @@ func (rd *ReturnDetail) fieldInclusion() error {
 	if rd.ReturnReason == "" {
 		return &FieldError{FieldName: "ReturnReason", Value: rd.ReturnReason, Msg: msgFieldInclusion}
 	}
-	if rd.EceInstitutionItemSequenceNumber == "               " {
+	if rd.EceInstitutionItemSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber", Value: rd.EceInstitutionItemSequenceNumber, Msg: msgFieldInclusion}
 	}
 	return nil

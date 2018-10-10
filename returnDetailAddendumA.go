@@ -213,7 +213,7 @@ func (rdAddendumA *ReturnDetailAddendumA) fieldInclusion() error {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
 			Value: rdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
 	}
-	if rdAddendumA.BOFDItemSequenceNumber == "               " {
+	if rdAddendumA.BOFDItemSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "BOFDItemSequenceNumber",
 			Value: rdAddendumA.BOFDItemSequenceNumber, Msg: msgFieldInclusion}
 	}

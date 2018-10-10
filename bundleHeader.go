@@ -205,7 +205,7 @@ func (bh *BundleHeader) fieldInclusion() error {
 		return &FieldError{FieldName: "BundleCreationDate",
 			Value: bh.BundleCreationDate.String(), Msg: msgFieldInclusion}
 	}
-	if bh.BundleSequenceNumber == "    " {
+	if bh.BundleSequenceNumberField() == "    " {
 		return &FieldError{FieldName: "BundleSequenceNumber",
 			Value: bh.BundleSequenceNumber, Msg: msgFieldInclusion}
 	}

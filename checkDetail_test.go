@@ -286,6 +286,8 @@ func TestCDArchiveTypeIndicator(t *testing.T) {
 	}
 }
 
+// Field Inclusion
+
 // TestCDFIRecordType validation
 func TestCDFIRecordType(t *testing.T) {
 	cd := mockCheckDetail()

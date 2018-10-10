@@ -12,14 +12,12 @@ type CashLetter struct {
 	CashLetterHeader *CashLetterHeader `json:"cashLetterHeader,omitempty"`
 	// Bundles is an array of Bundle
 	Bundles []*Bundle `json:"bundles,omitempty"`
-	// ReturnBundles is an array of ReturnBundle
-	//ReturnBundles []*ReturnBundle `json:"returnBundle,omitempty"`
-	// RoutingNumberSummary is an X9 RoutingNumberSummary
+	// CreditItems is an array of CreditItem
+	CreditItems []*CreditItem `json:"creditItem,omitempty"`
+	// RoutingNumberSummary is an array of RoutingNumberSummary
 	RoutingNumberSummary []*RoutingNumberSummary `json:"routingNumberSummary,omitempty"`
 	// currentBundle is the currentBundle being parsed
 	currentBundle *Bundle
-	// currentReturnBundle is the current ReturnBundle being parsed
-	//currentReturnBundle *ReturnBundle
 	// RoutingNumberSummary is an X9 RoutingNumberSummary
 	currentRoutingNumberSummary *RoutingNumberSummary
 	// CashLetterControl is a Cash Letter Control Record
@@ -183,7 +181,7 @@ func (cl *CashLetter) AddBundle(bundle *Bundle) []*Bundle {
 	return cl.Bundles
 }
 
-// GetBundles returns a slice of Bundles for the CashLetter
+// GetBundles returns a slice of Bundle for the CashLetter
 func (cl *CashLetter) GetBundles() []*Bundle {
 	return cl.Bundles
 }
@@ -197,4 +195,15 @@ func (cl *CashLetter) AddRoutingNumberSummary(rns *RoutingNumberSummary) []*Rout
 // GetRoutingNumberSummary returns a slice of RoutingNumberSummary for the CashLetter
 func (cl *CashLetter) GetRoutingNumberSummary() []*RoutingNumberSummary {
 	return cl.RoutingNumberSummary
+}
+
+// AddCreditItem appends a CreditItem to the CashLetter
+func (cl *CashLetter) AddCreditItem(ci *CreditItem) []*CreditItem {
+	cl.CreditItems = append(cl.CreditItems, ci)
+	return cl.CreditItems
+}
+
+// GetCreditItems returns a slice of CreditItem for the CashLetter
+func (cl *CashLetter) GetCreditItems() []*CreditItem {
+	return cl.CreditItems
 }
