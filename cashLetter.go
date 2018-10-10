@@ -199,7 +199,7 @@ func (cl *CashLetter) GetRoutingNumberSummary() []*RoutingNumberSummary {
 
 // AddCreditItem appends a CreditItem to the CashLetter
 func (cl *CashLetter) AddCreditItem(ci *CreditItem) []*CreditItem {
-	cl.CreditItems= append(cl.CreditItems, ci)
+	cl.CreditItems = append(cl.CreditItems, ci)
 	return cl.CreditItems
 }
 
