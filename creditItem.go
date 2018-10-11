@@ -126,7 +126,7 @@ func (ci *CreditItem) Parse(record string) {
 	// Character position 1-2, Always "62"
 	ci.recordType = "62"
 	// 03-17
-	ci.AuxiliaryOnUs = ci.parseStringField(record[02:17])
+	ci.AuxiliaryOnUs = ci.parseStringField(record[2:17])
 	// 18-18
 	ci.ExternalProcessingCode = ci.parseStringField(record[17:18])
 	// 19-27

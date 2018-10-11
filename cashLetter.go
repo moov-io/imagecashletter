@@ -101,7 +101,13 @@ func (cl *CashLetter) build() error {
 	cdAddendumCRecordNumber := 1
 	rdAddendumARecordNumber := 1
 	rdAddendumDRecordNumber := 1
+	//creditIndicator
+	creditIndicator := 0
 
+	if len(cl.GetCreditItems()) > 0 {
+		cashLetterItemsCount = cashLetterItemsCount + len(cl.GetCreditItems())
+		creditIndicator = 1
+	}
 	// Bundles
 	for _, b := range cl.Bundles {
 
@@ -178,8 +184,8 @@ func (cl *CashLetter) build() error {
 	clc.CashLetterItemsCount = cashLetterItemsCount
 	clc.CashLetterTotalAmount = cashLetterTotalAmount
 	clc.CashLetterImagesCount = cashLetterImagesCount
-	clc.ECEInstitutionName = ""
-	clc.CreditTotalIndicator = 0
+	clc.ECEInstitutionName = cl.GetHeader().ECEInstitutionRoutingNumber
+	clc.CreditTotalIndicator = creditIndicator
 	cl.CashLetterControl = clc
 	return nil
 }
