@@ -765,6 +765,29 @@ func (v *validator) isSourceWorkCode(code string) error {
 	return errors.New(msgInvalid)
 }
 
+// isEndorsementIndicator ensures EndorsementIndicator of UserPayeeEndorsement is valid
+func (v *validator) isEndorsementIndicator(code int) error {
+	switch code {
+	case
+		// Endorsed in Blank–Instrument becomes payable to bearer
+		0,
+		// For Deposit Only
+		1,
+		// For Collection Only
+		2,
+		// Anomalous Endorsement–Endorsement made by person who is not holder of instrument
+		3,
+		// Restrictive Endorsement–Limiting to a particular person or situation
+		4,
+		// Guaranteed Endorsement–Deposit to the account of within named payee absence of endorsement guaranteed by
+		// the bank whose Routing Number appears in BankRoutingNumber
+		5,
+		// Other
+		9:
+	}
+	return errors.New(msgInvalid)
+}
+
 /*// isUpperAlphanumeric checks if string only contains ASCII alphanumeric upper case characters
 func (v *validator) isUpperAlphanumeric(s string) error {
 	if upperAlphanumericRegex.MatchString(s) {
