@@ -84,7 +84,7 @@ type CashLetterHeader struct {
 	// hh '00' through '23'
 	// mm '00' through '59'
 	CashLetterCreationTime time.Time `json:"cashLetterCreationTime"`
-	// CashLetterRecordTypeIndicator is a code that indicates the presence of records or the type of records contained
+	// RecordTypeIndicator is a code that indicates the presence of records or the type of records contained
 	// in the cash letter.   If an image is associated with any CheckDetail or Return, the cash letter must have a
 	// CashLetter.RecordTypeIndicator of I or F.
 	// Values:
@@ -98,8 +98,8 @@ type CashLetterHeader struct {
 	// with CollectionTypeIndicator values of 01, 02 or 03. ItemsCount and TotalAmount of the CashLetterControl with
 	// a RecordTypeIndicator value of F must equal the corresponding fields in a CashLetter with a RecordTypeIndicator
 	// value of E.
-	CashLetterRecordTypeIndicator string `json:"cashLetterRecordTypeIndicator"`
-	// CashLetterDocumentationTypeIndicator is a code that indicates the type of documentation that supports
+	RecordTypeIndicator string `json:"recordTypeIndicator"`
+	// DocumentationTypeIndicator is a code that indicates the type of documentation that supports
 	// all check records in the cash letter
 	// Values:
 	// A: No image provided, paper provided separately
@@ -117,7 +117,7 @@ type CashLetterHeader struct {
 	// M: No image provided, Electronic Check provided separately
 	// Z: Not Same Type–Documentation associated with each item in Cash Letter will be different. The Check Detail
 	// Record (Type 25) or Return Record (Type 31) has to be interrogated for further information.
-	CashLetterDocumentationTypeIndicator string `json:"cashLetterDocumentationTypeIndicator"`
+	DocumentationTypeIndicator string `json:"DocumentationTypeIndicator"`
 	// CashLetterID uniquely identifies the cash letter. It is assigned by the institution that creates the cash
 	// letter and must be unique within a Cash Letter Business Date.
 	CashLetterID string `json:"cashLetterID"`
@@ -171,9 +171,9 @@ func (clh *CashLetterHeader) Parse(record string) {
 	// 39-42
 	clh.CashLetterCreationTime = clh.parseSimpleTime(record[38:42])
 	// 43-43
-	clh.CashLetterRecordTypeIndicator = clh.parseStringField(record[42:43])
+	clh.RecordTypeIndicator = clh.parseStringField(record[42:43])
 	// 44-44
-	clh.CashLetterDocumentationTypeIndicator = clh.parseStringField(record[43:44])
+	clh.DocumentationTypeIndicator = clh.parseStringField(record[43:44])
 	// 45-52
 	clh.CashLetterID = clh.parseStringField(record[44:52])
 	// 53-66
@@ -201,8 +201,8 @@ func (clh *CashLetterHeader) String() string {
 	buf.WriteString(clh.CashLetterBusinessDateField())
 	buf.WriteString(clh.CashLetterCreationDateField())
 	buf.WriteString(clh.CashLetterCreationTimeField())
-	buf.WriteString(clh.CashLetterRecordTypeIndicatorField())
-	buf.WriteString(clh.CashLetterDocumentationTypeIndicatorField())
+	buf.WriteString(clh.RecordTypeIndicatorField())
+	buf.WriteString(clh.DocumentationTypeIndicatorField())
 	buf.WriteString(clh.CashLetterIDField())
 	buf.WriteString(clh.OriginatorContactNameField())
 	buf.WriteString(clh.OriginatorContactPhoneNumberField())
@@ -229,14 +229,14 @@ func (clh *CashLetterHeader) Validate() error {
 			Value: clh.CollectionTypeIndicator, Msg: err.Error()}
 	}
 	// Mandatory
-	if err := clh.isCashLetterRecordTypeIndicator(clh.CashLetterRecordTypeIndicator); err != nil {
-		return &FieldError{FieldName: "CashLetterRecordTypeIndicator",
-			Value: clh.CashLetterRecordTypeIndicator, Msg: err.Error()}
+	if err := clh.isRecordTypeIndicator(clh.RecordTypeIndicator); err != nil {
+		return &FieldError{FieldName: "RecordTypeIndicator",
+			Value: clh.RecordTypeIndicator, Msg: err.Error()}
 	}
 	// Conditional validator contains ""
-	if err := clh.isDocumentationTypeIndicator(clh.CashLetterDocumentationTypeIndicator); err != nil {
-		return &FieldError{FieldName: "CashLetterDocumentationTypeIndicator",
-			Value: clh.CashLetterDocumentationTypeIndicator, Msg: err.Error()}
+	if err := clh.isDocumentationTypeIndicator(clh.DocumentationTypeIndicator); err != nil {
+		return &FieldError{FieldName: "DocumentationTypeIndicator",
+			Value: clh.DocumentationTypeIndicator, Msg: err.Error()}
 	}
 	if err := clh.isAlphanumeric(clh.CashLetterID); err != nil {
 		return &FieldError{FieldName: "CashLetterID", Value: clh.CashLetterID, Msg: err.Error()}
@@ -270,9 +270,9 @@ func (clh *CashLetterHeader) fieldInclusion() error {
 		return &FieldError{FieldName: "CollectionTypeIndicator",
 			Value: clh.CollectionTypeIndicator, Msg: msgFieldInclusion}
 	}
-	if clh.CashLetterRecordTypeIndicator == "" {
-		return &FieldError{FieldName: "CashLetterRecordTypeIndicator",
-			Value: clh.CashLetterRecordTypeIndicator, Msg: msgFieldInclusion}
+	if clh.RecordTypeIndicator == "" {
+		return &FieldError{FieldName: "RecordTypeIndicator",
+			Value: clh.RecordTypeIndicator, Msg: msgFieldInclusion}
 	}
 	if clh.DestinationRoutingNumber == "" {
 		return &FieldError{FieldName: "DestinationRoutingNumber",
@@ -338,14 +338,14 @@ func (clh *CashLetterHeader) CashLetterCreationTimeField() string {
 	return clh.formatSimpleTime(clh.CashLetterCreationTime)
 }
 
-// CashLetterRecordTypeIndicatorField gets the CashLetterRecordTypeIndicator field
-func (clh *CashLetterHeader) CashLetterRecordTypeIndicatorField() string {
-	return clh.alphaField(clh.CashLetterRecordTypeIndicator, 1)
+// RecordTypeIndicatorField gets the RecordTypeIndicator field
+func (clh *CashLetterHeader) RecordTypeIndicatorField() string {
+	return clh.alphaField(clh.RecordTypeIndicator, 1)
 }
 
-// CashLetterDocumentationTypeIndicatorField gets the CashLetterDocumentationTypeIndicator field
-func (clh *CashLetterHeader) CashLetterDocumentationTypeIndicatorField() string {
-	return clh.alphaField(clh.CashLetterDocumentationTypeIndicator, 1)
+// DocumentationTypeIndicatorField gets the DocumentationTypeIndicator field
+func (clh *CashLetterHeader) DocumentationTypeIndicatorField() string {
+	return clh.alphaField(clh.DocumentationTypeIndicator, 1)
 }
 
 // CashLetterIDField gets the CashLetterID field

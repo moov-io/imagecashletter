@@ -20,8 +20,8 @@ func mockCashLetterHeader() *CashLetterHeader {
 	clh.CashLetterBusinessDate = time.Now()
 	clh.CashLetterCreationDate = time.Now()
 	clh.CashLetterCreationTime = time.Now()
-	clh.CashLetterRecordTypeIndicator = "I"
-	clh.CashLetterDocumentationTypeIndicator = "G"
+	clh.RecordTypeIndicator = "I"
+	clh.DocumentationTypeIndicator = "G"
 	clh.CashLetterID = "A1"
 	clh.OriginatorContactName = "Contact Name"
 	clh.OriginatorContactPhoneNumber = "5558675552"
@@ -49,10 +49,10 @@ func TestMockCashLetterHeader(t *testing.T) {
 	if clh.ECEInstitutionRoutingNumber != "121042882" {
 		t.Error("ECEInstitutionRoutingNumber does not validate")
 	}
-	if clh.CashLetterRecordTypeIndicator != "I" {
+	if clh.RecordTypeIndicator != "I" {
 		t.Error("RecordTypeIndicator does not validate")
 	}
-	if clh.CashLetterDocumentationTypeIndicator != "G" {
+	if clh.DocumentationTypeIndicator != "G" {
 		t.Error("DocumentationTypeIndicator does not validate")
 	}
 	if clh.CashLetterID != "A1" {
@@ -110,11 +110,11 @@ func TestParseCashLetterHeader(t *testing.T) {
 	if record.CashLetterCreationTimeField() != "1523" {
 		t.Errorf("CashLetterCreationTime Expected '1523' got:'%v'", record.CashLetterCreationTimeField())
 	}
-	if record.CashLetterRecordTypeIndicatorField() != "I" {
-		t.Errorf("CashLetterRecordTypeIndicator Expected 'I' got: %v", record.CashLetterRecordTypeIndicatorField())
+	if record.RecordTypeIndicatorField() != "I" {
+		t.Errorf("RecordTypeIndicator Expected 'I' got: %v", record.RecordTypeIndicatorField())
 	}
-	if record.CashLetterDocumentationTypeIndicatorField() != "G" {
-		t.Errorf("CashLetterDocumentationTypeIndicator Expected 'G' got:'%v'", record.CashLetterDocumentationTypeIndicatorField())
+	if record.DocumentationTypeIndicatorField() != "G" {
+		t.Errorf("DocumentationTypeIndicator Expected 'G' got:'%v'", record.DocumentationTypeIndicatorField())
 	}
 	if record.CashLetterIDField() != "A1      " {
 		t.Errorf("CashLetterID Expected 'A1      ' got:'%v'", record.CashLetterIDField())
@@ -194,26 +194,26 @@ func TestCHCollectionTypeIndicator(t *testing.T) {
 	}
 }
 
-// TestCashLetterRecordTypeIndicator validation
-func TestCashLetterRecordTypeIndicator(t *testing.T) {
+// TestRecordTypeIndicator validation
+func TestRecordTypeIndicator(t *testing.T) {
 	clh := mockCashLetterHeader()
-	clh.CashLetterRecordTypeIndicator = "W"
+	clh.RecordTypeIndicator = "W"
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CashLetterRecordTypeIndicator" {
+			if e.FieldName != "RecordTypeIndicator" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
 	}
 }
 
-// TestCashLetterDocumentationTypeIndicator validation
-func TestCashLetterDocumentationTypeIndicator(t *testing.T) {
+// TestDocumentationTypeIndicator validation
+func TestDocumentationTypeIndicator(t *testing.T) {
 	clh := mockCashLetterHeader()
-	clh.CashLetterDocumentationTypeIndicator = "WAZ"
+	clh.DocumentationTypeIndicator = "WAZ"
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CashLetterDocumentationTypeIndicator" {
+			if e.FieldName != "DocumentationTypeIndicator" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -324,10 +324,10 @@ func TestFieldInclusionCollectionTypeIndicator(t *testing.T) {
 	}
 }
 
-// TestFieldInclusionCashLetterRecordTypeIndicator validates FieldInclusion
-func TestFieldInclusionCashLetterRecordTypeIndicator(t *testing.T) {
+// TestFieldInclusionRecordTypeIndicator validates FieldInclusion
+func TestFieldInclusionRecordTypeIndicator(t *testing.T) {
 	clh := mockCashLetterHeader()
-	clh.CashLetterRecordTypeIndicator = ""
+	clh.RecordTypeIndicator = ""
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.Msg != msgFieldInclusion {

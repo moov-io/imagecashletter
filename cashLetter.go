@@ -4,6 +4,25 @@
 
 package x9
 
+import "fmt"
+
+// CashLetterError is an Error that describes CashLetter validation issues
+type CashLetterError struct {
+	CashLetterID string
+	FieldName    string
+	Msg          string
+}
+
+func (e *CashLetterError) Error() string {
+	return fmt.Sprintf("CashLetterNumber %s %s %s", e.CashLetterID, e.FieldName, e.Msg)
+}
+
+// Errors specific to parsing a CashLetter
+var (
+	msgCashLetterBundleEntries = "%v cannot have bundle entries"
+	msgCashLetterRoutingNumber = "%v cannot have a Routing Number Summary"
+)
+
 // CashLetter contains CashLetterHeader, CashLetterControl and Bundle records.
 type CashLetter struct {
 	// ID is a client defined string used as a reference to this record.
@@ -34,13 +53,31 @@ func NewCashLetter(clh *CashLetterHeader) CashLetter {
 
 // Validate performs X9 validations and format rule checks and returns an error if not Validated
 func (cl *CashLetter) Validate() error {
-	// ToDo:  If CashLetterRecordTypeIndicator is "N", There should be no bundle, it is an empty cash letter
+	if cl.CashLetterHeader.RecordTypeIndicator == "N" {
+		if cl.GetBundles() != nil {
+			msg := fmt.Sprintf(msgCashLetterBundleEntries, cl.CashLetterHeader.RecordTypeIndicator)
+			return &CashLetterError{CashLetterID: cl.CashLetterHeader.CashLetterID,
+				FieldName: "RecordTypeIndicator", Msg: msg}
+		}
+	}
+	switch cl.CashLetterHeader.CollectionTypeIndicator {
+	case
+		"00", "01", "02":
+	default:
+		if cl.GetRoutingNumberSummary() != nil {
+			msg := fmt.Sprintf(msgCashLetterRoutingNumber, cl.CashLetterHeader.CollectionTypeIndicator)
+			return &CashLetterError{CashLetterID: cl.CashLetterHeader.CashLetterID,
+				FieldName: "CollectionTypeIndicator", Msg: msg}
+		}
+	}
+
+	// ToDo: Future Consideration - Should the library validate Routing Number Summary Data with Cash letter Data
+	// ToDo: or the caller?   My initial thought is the caller, so this can be as light as possible.
+
 	return nil
 }
 
-// ToDo:  Add verify?
-
-// build by building a valid CashLetter by building a CashLetterControl. An error is returned if
+// build a valid CashLetter by building a CashLetterControl. An error is returned if
 // the CashLetter being built has invalid records.
 func (cl *CashLetter) build() error {
 
