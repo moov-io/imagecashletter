@@ -30,7 +30,7 @@ const (
 	ReturnDetailAddendumDCount = 99
 )
 
-// Errors specific to parsing a Batch container
+// Errors specific to parsing a Bundle
 var (
 	msgBundleEntries       = "must have Check Detail or Return Detail to be built"
 	msgBundleAddendum      = "%v found is greater than maximum of %v"

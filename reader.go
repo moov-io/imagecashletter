@@ -579,8 +579,10 @@ func (r *Reader) parseRoutingNumberSummary() error {
 	if r.currentCashLetter.CashLetterHeader == nil {
 		return r.error(&FileError{Msg: msgFileRoutingNumberSummary})
 	}
-	r.currentCashLetter.currentRoutingNumberSummary.Parse(r.line)
-	if err := r.currentCashLetter.currentRoutingNumberSummary.Validate(); err != nil {
+
+	rns := NewRoutingNumberSummary()
+	rns.Parse(r.line)
+	if err := rns.Validate(); err != nil {
 		return r.error(err)
 	}
 	return nil

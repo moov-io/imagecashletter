@@ -113,17 +113,6 @@ func (w *Writer) writeBundle(cl CashLetter) error {
 	return nil
 }
 
-// writeRoutingNumberSummary writes a RoutingNumberSummary to a CashLetter
-func (w *Writer) writeRoutingNumberSummary(cl CashLetter) error {
-	for _, rns := range cl.GetRoutingNumberSummary() {
-		if _, err := w.w.WriteString(rns.String() + "\n"); err != nil {
-			return err
-		}
-		w.lineNum++
-	}
-	return nil
-}
-
 // writeCheckDetail writes a CheckDetail to a Bundle
 func (w *Writer) writeCheckDetail(b *Bundle) error {
 	for _, cd := range b.GetChecks() {

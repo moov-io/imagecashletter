@@ -213,8 +213,8 @@ func (v *validator) isCollectionTypeIndicator(code string) error {
 	return errors.New(msgInvalid)
 }
 
-// isCashLetterRecordTypeIndicator ensures CashLetterRecordTypeIndicator of a CashLetterHeader is valid
-func (v *validator) isCashLetterRecordTypeIndicator(code string) error {
+// isRecordTypeIndicator ensures CashLetterRecordTypeIndicator of a CashLetterHeader is valid
+func (v *validator) isRecordTypeIndicator(code string) error {
 	switch code {
 	case
 		// No electronic check records or image records (Type 2x’s, 3x’s, 5x’s); e.g., an empty cash letter.
