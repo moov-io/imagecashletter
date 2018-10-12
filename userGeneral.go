@@ -18,8 +18,38 @@ type UserGeneral struct {
 	// RecordType defines the type of record.
 	recordType string
 	// OwnerIdentifierIndicator indicates the type of number represented in OwnerIdentifier
-	OwnerIdentifierIndicator string `json:"ownerIdentifierIndicator"`
+	// Values:
+	// 0: Not Used
+	// 1: Routing Number
+	// 2: DUNS Number
+	// 3: Federal Tax Identification Number
+	// 4: X9 Assignment
+	// 5: Other
+	OwnerIdentifierIndicator int `json:"ownerIdentifierIndicator"`
 	// OwnerIdentifier is a number used by the organization that controls the definition and formatting of this record.
+	// Format: Routing Number formats:
+	// Applicable when OwnerIdentifierIndicator has Defined Value = 1:
+	// TTTTAAAAC where:
+	// TTTT: Federal Reserve Prefix
+	// AAAA: ABA Institution Identifier
+	// C: Check digit
+	//
+	// DUNS Number format:
+	// Applicable when OwnerIdentifierIndicator has Defined Value = 2:
+	// XXXXXXXXX where "X" is a numeric value
+	//
+	// Federal Tax Identification Number format:
+	// Applicable when OwnerIdentifierIndicator has Defined Value = 3:
+	// XXXXXXXXX where "X" is a numeric value.  The "dash" in the Federal Tax Identification Number
+	// (XX-XXXXXXX) is dropped.
+	//
+	// X9 Assignment
+	// Applicable when OwnerIdentifierIndicator has Defined Value = 4: Indicates a Predefined Used Record
+	// as defined by X9 within this standard.
+	//
+	// Other:
+	// Applicable when OwnerIdentifierIndicator has Defined Value = 5:
+	// Any combination of Alphanumeric special characters agreed to by the exchange partners.
 	OwnerIdentifier string `json:"ownerIdentifier"`
 	// OwnerIdentifierModifier is a modifier which uniquely identifies the owner within the owning organization.
 	OwnerIdentifierModifier string `json:"ownerIdentifierModifier"`
@@ -55,7 +85,7 @@ func (ug *UserGeneral) Parse(record string) {
 	// Character position 1-2, Always "68"
 	ug.recordType = "68"
 	// 03-03
-	ug.OwnerIdentifierIndicator = ug.parseStringField(record[2:3])
+	ug.OwnerIdentifierIndicator = ug.parseNumField(record[2:3])
 	// 04-12
 	ug.OwnerIdentifier = ug.parseStringField(record[3:12])
 	// 13-32
@@ -100,9 +130,9 @@ func (ug *UserGeneral) Validate() error {
 		msg := fmt.Sprint(msgInvalid)
 		return &FieldError{FieldName: "UserRecordFormatType", Value: ug.UserRecordFormatType, Msg: msg}
 	}
-	if err := ug.isAlphanumeric(ug.OwnerIdentifierIndicator); err != nil {
+	if err := ug.isOwnerIdentifierIndicator(ug.OwnerIdentifierIndicator); err != nil {
 		return &FieldError{FieldName: "OwnerIdentifierIndicator",
-			Value: ug.OwnerIdentifierIndicator, Msg: err.Error()}
+			Value: ug.OwnerIdentifierIndicatorField(), Msg: err.Error()}
 	}
 	if ug.OwnerIdentifier != "" {
 		if err := ug.isAlphanumericSpecial(ug.OwnerIdentifier); err != nil {
@@ -137,10 +167,6 @@ func (ug *UserGeneral) fieldInclusion() error {
 	if ug.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: ug.recordType, Msg: msgFieldInclusion}
 	}
-	if ug.OwnerIdentifierIndicator == "" {
-		return &FieldError{FieldName: "OwnerIdentifierIndicator",
-			Value: ug.OwnerIdentifierIndicator, Msg: msgFieldInclusion}
-	}
 	if ug.UserRecordFormatType == "" {
 		return &FieldError{FieldName: "UserRecordFormatType",
 			Value: ug.UserRecordFormatType, Msg: msgFieldInclusion}
@@ -162,7 +188,7 @@ func (ug *UserGeneral) fieldInclusion() error {
 
 // OwnerIdentifierIndicatorField gets the OwnerIdentifierIndicator field
 func (ug *UserGeneral) OwnerIdentifierIndicatorField() string {
-	return ug.alphaField(ug.OwnerIdentifierIndicator, 1)
+	return ug.numericField(ug.OwnerIdentifierIndicator, 1)
 }
 
 // OwnerIdentifierField gets the OwnerIdentifier field

@@ -765,6 +765,26 @@ func (v *validator) isSourceWorkCode(code string) error {
 	return errors.New(msgInvalid)
 }
 
+// isOwnerIdentifierIndicator ensures OwnerIdentifierIndicator of User* is valid
+func (v *validator) isOwnerIdentifierIndicator(code int) error {
+	switch code {
+	case
+		// Not Used
+		0,
+		// Routing Number
+		1,
+		// DUNS Number
+		2,
+		// Federal Tax Identification Number
+		3,
+		// X9 Assignment
+		4,
+		//Other
+		5:
+	}
+	return errors.New(msgInvalid)
+}
+
 // isEndorsementIndicator ensures EndorsementIndicator of UserPayeeEndorsement is valid
 func (v *validator) isEndorsementIndicator(code int) error {
 	switch code {

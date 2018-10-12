@@ -17,7 +17,7 @@ type UserPayeeEndorsement struct {
 	// RecordType defines the type of record.
 	recordType string
 	// OwnerIdentifierIndicator indicates the type of number represented in OwnerIdentifier
-	OwnerIdentifierIndicator string `json:"ownerIdentifierIndicator"`
+	OwnerIdentifierIndicator int `json:"ownerIdentifierIndicator"`
 	// OwnerIdentifier is a number used by the organization that controls the definition and formatting of this record.
 	OwnerIdentifier string `json:"ownerIdentifier"`
 	// OwnerIdentifierModifier is a modifier which uniquely identifies the owner within the owning organization.
@@ -113,7 +113,7 @@ func (upe *UserPayeeEndorsement) Parse(record string) {
 	// Character position 1-2, Always "68"
 	upe.recordType = "68"
 	// 03-03
-	upe.OwnerIdentifierIndicator = upe.parseStringField(record[2:3])
+	upe.OwnerIdentifierIndicator = upe.parseNumField(record[2:3])
 	// 04-12
 	upe.OwnerIdentifier = upe.parseStringField(record[3:12])
 	// 13-32
@@ -207,6 +207,10 @@ func (upe *UserPayeeEndorsement) Validate() error {
 			return &FieldError{FieldName: "OwnerIdentifier", Value: upe.OwnerIdentifier, Msg: err.Error()}
 		}
 	}
+	if err := upe.isOwnerIdentifierIndicator(upe.OwnerIdentifierIndicator); err != nil {
+		return &FieldError{FieldName: "OwnerIdentifierIndicator",
+			Value: upe.OwnerIdentifierIndicatorField(), Msg: err.Error()}
+	}
 	if upe.OwnerIdentifierModifier != "" {
 		if err := upe.isAlphanumericSpecial(upe.OwnerIdentifierModifier); err != nil {
 			return &FieldError{FieldName: "OwnerIdentifierModifier", Value: upe.OwnerIdentifierModifier, Msg: err.Error()}
@@ -295,10 +299,6 @@ func (upe *UserPayeeEndorsement) fieldInclusion() error {
 	if upe.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: upe.recordType, Msg: msgFieldInclusion}
 	}
-	if upe.OwnerIdentifierIndicator == "" {
-		return &FieldError{FieldName: "OwnerIdentifierIndicator",
-			Value: upe.OwnerIdentifierIndicator, Msg: msgFieldInclusion}
-	}
 	if upe.UserRecordFormatType == "" {
 		return &FieldError{FieldName: "UserRecordFormatType",
 			Value: upe.UserRecordFormatType, Msg: msgFieldInclusion}
@@ -322,7 +322,7 @@ func (upe *UserPayeeEndorsement) fieldInclusion() error {
 
 // OwnerIdentifierIndicatorField gets the OwnerIdentifierIndicator field
 func (upe *UserPayeeEndorsement) OwnerIdentifierIndicatorField() string {
-	return upe.alphaField(upe.OwnerIdentifierIndicator, 1)
+	return upe.numericField(upe.OwnerIdentifierIndicator, 1)
 }
 
 // OwnerIdentifierField gets the OwnerIdentifier field
