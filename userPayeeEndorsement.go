@@ -307,6 +307,9 @@ func (upe *UserPayeeEndorsement) Validate() error {
 		}
 	default:
 	}
+	if upe.LengthUserData != "0000290" {
+		return &FieldError{FieldName: "LengthUserData", Value: upe.LengthUserData, Msg: msgInvalid}
+	}
 	return nil
 }
 
@@ -327,12 +330,6 @@ func (upe *UserPayeeEndorsement) fieldInclusion() error {
 	if upe.LengthUserData == "" {
 		return &FieldError{FieldName: "LengthUserData",
 			Value: upe.LengthUserData, Msg: msgFieldInclusion}
-	}
-	if upe.EndorsementDate.IsZero() {
-		return &FieldError{FieldName: "EndorsementDate", Value: upe.EndorsementDate.String(), Msg: msgFieldInclusion}
-	}
-	if upe.Time.IsZero() {
-		return &FieldError{FieldName: "Time", Value: upe.Time.String(), Msg: msgFieldInclusion}
 	}
 	return nil
 }
