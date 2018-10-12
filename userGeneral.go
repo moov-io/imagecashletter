@@ -11,6 +11,12 @@ import (
 
 // Errors specific to a UserGeneral Record
 
+// The User General Format Record is conditional, and contains a user controlled number of fields.  The record is only
+// used based on clearing arrangements.  The Record can occur anywhere in the file based on those clearing arrangements.
+// Any totaling of dollar amounts would also be determined by clearing arrangements.  The current implementation of
+// the User General Format Record is for the Concrete Type Only.  For reader and writer implementation, please adjust
+// based on specific clearing arrangements, or contact MOOV for your particular implementation.
+
 // UserGeneral Record
 type UserGeneral struct {
 	// ID is a client defined string used as a reference to this record.
@@ -134,11 +140,6 @@ func (ug *UserGeneral) Validate() error {
 		return &FieldError{FieldName: "OwnerIdentifierIndicator",
 			Value: ug.OwnerIdentifierIndicatorField(), Msg: err.Error()}
 	}
-	if ug.OwnerIdentifier != "" {
-		if err := ug.isAlphanumericSpecial(ug.OwnerIdentifier); err != nil {
-			return &FieldError{FieldName: "OwnerIdentifier", Value: ug.OwnerIdentifier, Msg: err.Error()}
-		}
-	}
 	if ug.OwnerIdentifierModifier != "" {
 		if err := ug.isAlphanumericSpecial(ug.OwnerIdentifierModifier); err != nil {
 			return &FieldError{FieldName: "OwnerIdentifierModifier",
@@ -158,6 +159,22 @@ func (ug *UserGeneral) Validate() error {
 	if err := ug.isAlphanumericSpecial(ug.UserData); err != nil {
 		return &FieldError{FieldName: "UserData", Value: ug.UserData, Msg: err.Error()}
 	}
+	switch ug.OwnerIdentifierIndicator {
+	case 0:
+		if ug.OwnerIdentifier != "" {
+			return &FieldError{FieldName: "OwnerIdentifier", Value: ug.OwnerIdentifier, Msg: msgInvalid}
+		}
+	case 1, 2, 3:
+		if err := ug.isNumeric(ug.OwnerIdentifier); err != nil {
+			return &FieldError{FieldName: "OwnerIdentifier", Value: ug.OwnerIdentifier, Msg: err.Error()}
+		}
+	case 4:
+		if err := ug.isAlphanumericSpecial(ug.OwnerIdentifier); err != nil {
+			return &FieldError{FieldName: "OwnerIdentifier", Value: ug.OwnerIdentifier, Msg: err.Error()}
+		}
+	default:
+	}
+
 	return nil
 }
 

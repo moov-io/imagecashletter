@@ -12,7 +12,8 @@ import (
 // Errors specific to a CreditItem Record
 
 // Current Implementation: CreditItem(s) Precede CheckDetail(s) - CreditItem(s) outside the leading Bundle
-// and Within the First Cash Letter
+// and Within the First Cash Letter.  Please adjust reader and writer for your specific clearing arrangement
+// implementation or contact MOOV for your particular implementation.
 //
 // FileHeader
 // CashLetterHeader Record

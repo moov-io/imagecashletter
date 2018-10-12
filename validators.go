@@ -781,6 +781,7 @@ func (v *validator) isOwnerIdentifierIndicator(code int) error {
 		4,
 		//Other
 		5:
+		return nil
 	}
 	return errors.New(msgInvalid)
 }
@@ -804,6 +805,7 @@ func (v *validator) isEndorsementIndicator(code int) error {
 		5,
 		// Other
 		9:
+		return nil
 	}
 	return errors.New(msgInvalid)
 }

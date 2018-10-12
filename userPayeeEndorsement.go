@@ -10,6 +10,13 @@ import (
 	"time"
 )
 
+// The User Payee Endorsement Format Record is conditional, and contains a user controlled number of fields.  The
+// record is used based on clearing arrangements.  The Record can occur anywhere in the file based on those clearing
+// arrangements, HOWEVER it is typically recommended that it appear in the checkDetail or ReturnDetail.
+// The current implementation of the User Payee Endorsement Format Record is for the Concrete Type Only.
+// For reader and writer implementation, please adjust based on specific clearing arrangements, or contact MOOV for
+// your particular implementation.
+
 // UserPayeeEndorsement Record
 type UserPayeeEndorsement struct {
 	// ID is a client defined string used as a reference to this record.
@@ -202,11 +209,6 @@ func (upe *UserPayeeEndorsement) Validate() error {
 		msg := fmt.Sprint(msgInvalid)
 		return &FieldError{FieldName: "UserRecordFormatType", Value: upe.UserRecordFormatType, Msg: msg}
 	}
-	if upe.OwnerIdentifier != "" {
-		if err := upe.isAlphanumericSpecial(upe.OwnerIdentifier); err != nil {
-			return &FieldError{FieldName: "OwnerIdentifier", Value: upe.OwnerIdentifier, Msg: err.Error()}
-		}
-	}
 	if err := upe.isOwnerIdentifierIndicator(upe.OwnerIdentifierIndicator); err != nil {
 		return &FieldError{FieldName: "OwnerIdentifierIndicator",
 			Value: upe.OwnerIdentifierIndicatorField(), Msg: err.Error()}
@@ -289,6 +291,21 @@ func (upe *UserPayeeEndorsement) Validate() error {
 		if err := upe.isAlphanumericSpecial(upe.UserField); err != nil {
 			return &FieldError{FieldName: "UserField", Value: upe.UserField, Msg: err.Error()}
 		}
+	}
+	switch upe.OwnerIdentifierIndicator {
+	case 0:
+		if upe.OwnerIdentifier != "" {
+			return &FieldError{FieldName: "OwnerIdentifier", Value: upe.OwnerIdentifier, Msg: msgInvalid}
+		}
+	case 1, 2, 3:
+		if err := upe.isNumeric(upe.OwnerIdentifier); err != nil {
+			return &FieldError{FieldName: "OwnerIdentifier", Value: upe.OwnerIdentifier, Msg: err.Error()}
+		}
+	case 4:
+		if err := upe.isAlphanumericSpecial(upe.OwnerIdentifier); err != nil {
+			return &FieldError{FieldName: "OwnerIdentifier", Value: upe.OwnerIdentifier, Msg: err.Error()}
+		}
+	default:
 	}
 	return nil
 }
