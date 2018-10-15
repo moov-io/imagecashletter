@@ -5,7 +5,6 @@
 package x9
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 )
@@ -57,12 +56,14 @@ func TestMockUserGeneral(t *testing.T) {
 
 // TestUGString validation
 func TestUGString(t *testing.T) {
+	line := "683230918276ZZ1                 0001  0000038This is a payment for your information"
 	ug := mockUserGeneral()
 	if err := ug.Validate(); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
-
-	fmt.Printf("User General: %v \n", ug.String())
+	if ug.String() != line {
+		t.Errorf("Strings do not match")
+	}
 }
 
 // TestUGParse validation
