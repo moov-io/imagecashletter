@@ -5,6 +5,8 @@
 package x9
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 	"time"
 )
@@ -107,5 +109,393 @@ func TestMockUserPayeeEndorsement(t *testing.T) {
 	if upe.UserField != "" {
 		t.Error("UserField does not validate")
 	}
+}
 
+// TestUPEString validation
+func TestUPEString(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	if err := upe.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	fmt.Printf("User Payee Endorsement: %v \n", upe.String())
+}
+
+// TestUPEParse validation
+func TestUPEParse(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	if err := upe.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	line := upe.String()
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	upe.Parse(r.line)
+}
+
+// TestUPERecordType validation
+func TestUPERecordType(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.recordType = "00"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEUserRecordFormatType validation
+func TestUPEUserRecordFormatType(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.UserRecordFormatType = "001"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserRecordFormatType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEOwnerIdentifierIndicator validation
+func TestUPEOwnerIdentifierIndicator(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.OwnerIdentifierIndicator = 9
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "OwnerIdentifierIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEOwnerIdentifierModifier validation
+func TestUPEOwnerIdentifierModifier(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.OwnerIdentifierModifier = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "OwnerIdentifierModifier" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEUserRecordFormatTypeChar validation
+func TestUPEUserRecordFormatTypeChar(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.UserRecordFormatType = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserRecordFormatType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEFormatTypeVersionLevel validation
+func TestUPEFormatTypeVersionLevel(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.FormatTypeVersionLevel = "W"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "FormatTypeVersionLevel" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPELengthUserData validation
+func TestUPELengthUserData(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.LengthUserData = "W"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "LengthUserData" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEOwnerIdentifierIndicatorZero validation
+func TestUPEOwnerIdentifierIndicatorZero(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.OwnerIdentifierIndicator = 0
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "OwnerIdentifier" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEOwnerIdentifierIndicator123 validation
+func TestUPEOwnerIdentifierIndicator123(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.OwnerIdentifierIndicator = 1
+	upe.OwnerIdentifier = "W"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "OwnerIdentifier" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEOwnerIdentifierIndicatorFour validation
+func TestUPEOwnerIdentifierIndicatorFour(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.OwnerIdentifierIndicator = 4
+	upe.OwnerIdentifier = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "OwnerIdentifier" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEPayeeName validation
+func TestUPEPayeeName(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.PayeeName = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "PayeeName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEBankRoutingNumber validation
+func TestUPEBankRoutingNumber(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.BankRoutingNumber = "W"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BankRoutingNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEBankAccountNumber validation
+func TestUPEBankAccountNumber(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.BankAccountNumber = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "BankAccountNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPECustomerIdentifier validation
+func TestUPECustomerIdentifier(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.CustomerIdentifier = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CustomerIdentifier" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPECustomerContactInformation validation
+func TestUPECustomerContactInformation(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.CustomerContactInformation = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "CustomerContactInformation" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEStoreMerchantProcessingSiteNumber validation
+func TestUPEStoreMerchantProcessingSiteNumber(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.StoreMerchantProcessingSiteNumber = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "StoreMerchantProcessingSiteNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEInternalControlSequenceNumber validation
+func TestUPEInternalControlSequenceNumber(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.InternalControlSequenceNumber = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "InternalControlSequenceNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEOperatorName validation
+func TestUPEOperatorName(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.OperatorName = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "OperatorName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEOperatorNumber validation
+func TestUPEOperatorNumber(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.OperatorNumber = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "OperatorNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEManagerName validation
+func TestUPEManagerName(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.ManagerName = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ManagerName" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEManagerNumber validation
+func TestUPEManagerNumber(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.ManagerNumber = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ManagerNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEEquipmentNumber validation
+func TestUPEEquipmentNumber(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.EquipmentNumber = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EquipmentNumber" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEEndorsementIndicator validation
+func TestUPEEndorsementIndicator(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.EndorsementIndicator = 7
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "EndorsementIndicator" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEUserField validation
+func TestUPEUserField(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.UserField = "®©"
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserField" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// Field Inclusion
+
+// TestUPEFIRecordType validation
+func TestUPEFIRecordType(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.recordType = ""
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "recordType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEFIUserRecordFormatType validation
+func TestUPEFIUserRecordFormatType(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.UserRecordFormatType = ""
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "UserRecordFormatType" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEFIFormatTypeVersionLevel validation
+func TestUPEFIFormatTypeVersionLevel(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.FormatTypeVersionLevel = ""
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "FormatTypeVersionLevel" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
+// TestUPEFILengthUserData validation
+func TestUPEFILengthUserData(t *testing.T) {
+	upe := mockUserPayeeEndorsement()
+	upe.LengthUserData = ""
+	if err := upe.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "LengthUserData" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
 }

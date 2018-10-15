@@ -103,7 +103,7 @@ func (ug *UserGeneral) Parse(record string) {
 	// 39-45
 	ug.LengthUserData = ug.parseStringField(record[38:45])
 	// 46-45+(lud)
-	ug.UserData = ug.parseStringField(record[45:ug.parseNumField(ug.LengthUserData)])
+	ug.UserData = ug.parseStringField(record[45 : 45+ug.parseNumField(ug.LengthUserData)])
 }
 
 // String writes the UserGeneral struct to a variable length string.
