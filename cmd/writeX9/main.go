@@ -276,12 +276,12 @@ func write(path string) {
 		fmt.Println(err.Error())
 	}
 
-	// We want to write the file to an io.Writer
+/*	// We want to write the file to an io.Writer
 	w := x9.NewWriter(os.Stdout)
 	if err := w.Write(file); err != nil {
 		log.Fatalf("Unexpected error: %s\n", err)
 	}
-	w.Flush()
+	w.Flush()*/
 
 	fmt.Printf("Wrote %s\n", path)
 
