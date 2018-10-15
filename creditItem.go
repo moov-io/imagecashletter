@@ -12,7 +12,8 @@ import (
 // Errors specific to a CreditItem Record
 
 // Current Implementation: CreditItem(s) Precede CheckDetail(s) - CreditItem(s) outside the leading Bundle
-// and Within the First Cash Letter
+// and Within the First Cash Letter.  Please adjust reader and writer for your specific clearing arrangement
+// implementation or contact MOOV for your particular implementation.
 //
 // FileHeader
 // CashLetterHeader Record
@@ -126,7 +127,7 @@ func (ci *CreditItem) Parse(record string) {
 	// Character position 1-2, Always "62"
 	ci.recordType = "62"
 	// 03-17
-	ci.AuxiliaryOnUs = ci.parseStringField(record[02:17])
+	ci.AuxiliaryOnUs = ci.parseStringField(record[2:17])
 	// 18-18
 	ci.ExternalProcessingCode = ci.parseStringField(record[17:18])
 	// 19-27

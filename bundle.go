@@ -77,8 +77,6 @@ func (b *Bundle) Validate() error {
 	return nil
 }
 
-// ToDo: Add verify
-
 // build creates a valid Bundle by building  BundleControl. An error is returned if
 // the bundle being built has invalid records.
 func (b *Bundle) build() error {
@@ -94,6 +92,8 @@ func (b *Bundle) build() error {
 	bundleTotalAmount := 0
 	micrValidTotalAmount := 0
 	bundleImagesCount := 0
+	// The current Implementation doe snot support CreditItems as part of a bundle so BundleControl.CreditIndicator = 0
+	creditIndicator := 0
 
 	// Forward Items
 	for _, cd := range b.Checks {
@@ -134,7 +134,7 @@ func (b *Bundle) build() error {
 	bc.BundleTotalAmount = bundleTotalAmount
 	bc.MICRValidTotalAmount = micrValidTotalAmount
 	bc.BundleImagesCount = bundleImagesCount
-	bc.CreditTotalIndicator = 0
+	bc.CreditTotalIndicator = creditIndicator
 	b.BundleControl = bc
 	return nil
 }

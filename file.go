@@ -115,6 +115,7 @@ func (f *File) Create() error {
 	fileTotalAmount := 0
 	cashLetterRecordCount := 0
 	bundleRecordCount := 0
+	creditIndicator := 0
 
 	// CashLetters
 	for _, cl := range f.CashLetters {
@@ -123,6 +124,13 @@ func (f *File) Create() error {
 			return err
 		}
 		cashLetterRecordCount = cashLetterRecordCount + 2
+
+		fileTotalItemCount = fileTotalItemCount + len(cl.GetCreditItems())
+
+		if len(cl.GetCreditItems()) > 0 {
+			fileTotalItemCount = fileTotalItemCount + len(cl.GetCreditItems())
+			creditIndicator = 1
+		}
 
 		// Bundles
 		for _, b := range cl.Bundles {
@@ -163,7 +171,7 @@ func (f *File) Create() error {
 	// May need to pass in a FC for these values
 	fc.ImmediateOriginContactName = ""
 	fc.ImmediateOriginContactPhoneNumber = ""
-	fc.CreditTotalIndicator = 0
+	fc.CreditTotalIndicator = creditIndicator
 	f.Control = fc
 	return nil
 }
