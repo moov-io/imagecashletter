@@ -94,13 +94,6 @@ func (cl *CashLetter) build() error {
 
 	// Sequence Numbers
 	bundleSequenceNumber := 1
-	cdSequenceNumber := 1
-	rdSequenceNumber := 1
-	// Record Numbers
-	cdAddendumARecordNumber := 1
-	cdAddendumCRecordNumber := 1
-	rdAddendumARecordNumber := 1
-	rdAddendumDRecordNumber := 1
 	//creditIndicator
 	creditIndicator := 0
 
@@ -117,6 +110,12 @@ func (cl *CashLetter) build() error {
 		// Check Items
 		for _, cd := range b.Checks {
 
+			// Sequence  Number
+			cdSequenceNumber := 1
+			// Record Numbers
+			cdAddendumARecordNumber := 1
+			cdAddendumCRecordNumber := 1
+
 			// Set CheckDetail Sequence Numbers
 			cd.SetEceInstitutionItemSequenceNumber(cdSequenceNumber)
 
@@ -125,11 +124,17 @@ func (cl *CashLetter) build() error {
 				cd.CheckDetailAddendumA[i].SetBOFDItemSequenceNumber(cdSequenceNumber)
 				cd.CheckDetailAddendumA[i].RecordNumber = cdAddendumARecordNumber
 				cdAddendumARecordNumber++
+				if cdAddendumARecordNumber > 9 {
+					cdAddendumARecordNumber = 1
+				}
 			}
 			for x := range cd.CheckDetailAddendumC {
 				cd.CheckDetailAddendumC[x].SetEndorsingBankItemSequenceNumber(cdSequenceNumber)
 				cd.CheckDetailAddendumC[x].RecordNumber = cdAddendumARecordNumber
 				cdAddendumCRecordNumber++
+				if cdAddendumCRecordNumber > 99 {
+					cdAddendumCRecordNumber = 1
+				}
 			}
 			cdSequenceNumber++
 
@@ -143,6 +148,12 @@ func (cl *CashLetter) build() error {
 		// Returns Items
 		for _, rd := range b.Returns {
 
+			// Sequence  Number
+			rdSequenceNumber := 1
+			// Record Numbers
+			rdAddendumARecordNumber := 1
+			rdAddendumDRecordNumber := 1
+
 			// Set ReturnDetail Sequence Numbers
 			rd.SetEceInstitutionItemSequenceNumber(rdSequenceNumber)
 
@@ -151,12 +162,18 @@ func (cl *CashLetter) build() error {
 				rd.ReturnDetailAddendumA[i].SetBOFDItemSequenceNumber(rdSequenceNumber)
 				rd.ReturnDetailAddendumA[i].RecordNumber = rdAddendumARecordNumber
 				rdAddendumARecordNumber++
+				if rdAddendumARecordNumber > 9 {
+					rdAddendumARecordNumber = 1
+				}
 			}
 
 			for x := range rd.ReturnDetailAddendumD {
 				rd.ReturnDetailAddendumD[x].SetEndorsingBankItemSequenceNumber(rdSequenceNumber)
 				rd.ReturnDetailAddendumA[x].RecordNumber = rdAddendumDRecordNumber
 				rdAddendumDRecordNumber++
+				if rdAddendumDRecordNumber > 99 {
+					rdAddendumDRecordNumber = 1
+				}
 			}
 			rdSequenceNumber++
 
