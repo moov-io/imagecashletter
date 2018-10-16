@@ -134,7 +134,7 @@ func (upe *UserPayeeEndorsement) Parse(record string) {
 	// 46-95
 	upe.PayeeName = upe.parseStringField(record[45:95])
 	// 96–103
-	upe.EndorsementDate = upe.parseYYYYMMDDDate(record[96:103])
+	upe.EndorsementDate = upe.parseYYYYMMDDDate(record[95:103])
 	// 104–112
 	upe.BankRoutingNumber = upe.parseStringField(record[103:112])
 	// 113–132
