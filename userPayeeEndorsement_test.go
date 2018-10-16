@@ -112,13 +112,15 @@ func TestMockUserPayeeEndorsement(t *testing.T) {
 
 // TestUPEString validation
 func TestUPEString(t *testing.T) {
-	upe := mockUserPayeeEndorsement()
-	if err := upe.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	upe.String()
+	line := "683230918276ZZ1                 0011  0000290Payee Name                                        20181015121042882123456888           A234A               Home                                              12345678ZB17262ZB                2222ZJK                           12345ZBK                           123451234567890123451          "
+	upe := NewUserPayeeEndorsement()
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	upe.Parse(r.line)
 
-	//fmt.Printf("User Payee Endorsement: %v \n", upe.String())
+	if upe.String() != line {
+		t.Errorf("Strings do not match")
+	}
 }
 
 // TestUPEParse validation

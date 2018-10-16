@@ -57,10 +57,11 @@ func TestMockUserGeneral(t *testing.T) {
 // TestUGString validation
 func TestUGString(t *testing.T) {
 	line := "683230918276ZZ1                 0001  0000038This is a payment for your information"
-	ug := mockUserGeneral()
-	if err := ug.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	ug := NewUserGeneral()
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	ug.Parse(r.line)
+
 	if ug.String() != line {
 		t.Errorf("Strings do not match")
 	}
