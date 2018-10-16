@@ -76,6 +76,11 @@ func TestMockImageViewAnalysis(t *testing.T) {
 	if ivAnalysis.ExceedsMaximumImageSize != 2 {
 		t.Error("ExceedsMaximumImageSize does not validate")
 	}
+
+	_ = additionalIVAnalysisFields(ivAnalysis, t)
+}
+
+func additionalIVAnalysisFields(ivAnalysis ImageViewAnalysis, t *testing.T) string {
 	if ivAnalysis.ImageEnabledPOD != 1 {
 		t.Error("ImageEnabledPOD does not validate")
 	}
@@ -118,6 +123,7 @@ func TestMockImageViewAnalysis(t *testing.T) {
 	if ivAnalysis.TransitEndorsementUsability != 2 {
 		t.Error("TransitEndorsementUsability does not validate")
 	}
+	return ""
 }
 
 // testIVAnalysisString validates that a known parsed ImageViewAnalysis can return to a string of the same value

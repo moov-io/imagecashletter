@@ -43,7 +43,7 @@ func mockUserPayeeEndorsement() *UserPayeeEndorsement {
 func TestMockUserPayeeEndorsement(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	if err := upe.Validate(); err != nil {
-		t.Error("mockUserGeneral does not validate and will break other tests: ", err)
+		t.Error("mockUserPayeeEndorsement does not validate and will break other tests: ", err)
 	}
 	if upe.recordType != "68" {
 		t.Error("recordType does not validate")
@@ -66,6 +66,11 @@ func TestMockUserPayeeEndorsement(t *testing.T) {
 	if upe.LengthUserData != "0000290" {
 		t.Error("LengthUserData does not validate")
 	}
+
+	_ = additionalUPEFields(upe, t)
+}
+
+func additionalUPEFields(upe *UserPayeeEndorsement, t *testing.T) string {
 	if upe.PayeeName != "Payee Name" {
 		t.Error("PayeeName does not validate")
 	}
@@ -108,6 +113,7 @@ func TestMockUserPayeeEndorsement(t *testing.T) {
 	if upe.UserField != "" {
 		t.Error("UserField does not validate")
 	}
+	return ""
 }
 
 // TestUPEString validation
