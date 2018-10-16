@@ -5,7 +5,6 @@
 package x9
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 	"time"
@@ -117,7 +116,9 @@ func TestUPEString(t *testing.T) {
 	if err := upe.Validate(); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
-	fmt.Printf("User Payee Endorsement: %v \n", upe.String())
+	upe.String()
+
+	//fmt.Printf("User Payee Endorsement: %v \n", upe.String())
 }
 
 // TestUPEParse validation
@@ -129,7 +130,13 @@ func TestUPEParse(t *testing.T) {
 	line := upe.String()
 	r := NewReader(strings.NewReader(line))
 	r.line = line
+
 	upe.Parse(r.line)
+
+	if err := upe.Validate(); err == nil {
+	} else {
+		t.Errorf("%T: %s", err, err)
+	}
 }
 
 // TestUPERecordType validation

@@ -76,6 +76,11 @@ func TestUGParse(t *testing.T) {
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	ug.Parse(r.line)
+
+	if err := ug.Validate(); err == nil {
+	} else {
+		t.Errorf("%T: %s", err, err)
+	}
 }
 
 // TestUGRecordType validation
