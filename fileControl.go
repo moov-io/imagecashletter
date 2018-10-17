@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // FileControl Record
 type FileControl struct {
 	// ID is a client defined string used as a reference to this record.
@@ -24,7 +22,6 @@ type FileControl struct {
 	// TotalItemCount identifies the total number of Items sent within the file.
 	TotalItemCount int `json:"totalItemCount"`
 	// FileTotalAmount identifies the total Item amount of the complete file.
-	// ToDo: int64 by default on 64bit - string for 32 bit?
 	FileTotalAmount int `json:"fileTotalAmount"`
 	// ImmediateOriginContactName identifies contact at the institution that creates the ECE file.
 	ImmediateOriginContactName string `json:"immediateOriginContactName"`

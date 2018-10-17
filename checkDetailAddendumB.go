@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a CheckDetailAddendumB Record
 
 // CheckDetailAddendumB Record

@@ -94,7 +94,6 @@ func TestMockImageViewDetail(t *testing.T) {
 	if ivDetail.reservedTwo != "" {
 		t.Error("reservedTwo does not validate")
 	}
-
 }
 
 // TestParseIVDetail validates parsing an ImageViewDetail

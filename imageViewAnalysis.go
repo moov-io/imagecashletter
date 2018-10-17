@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a ImageViewAnalysis Record
 
 // ImageViewAnalysis Record
@@ -336,172 +334,123 @@ func (ivAnalysis *ImageViewAnalysis) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 54)
 		return &FieldError{FieldName: "recordType", Value: ivAnalysis.recordType, Msg: msg}
 	}
-	// Mandatory
-	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.GlobalImageQuality); err != nil {
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.GlobalImageQualityField()); err != nil {
 		return &FieldError{FieldName: "GlobalImageQuality",
 			Value: ivAnalysis.GlobalImageQualityField(), Msg: err.Error()}
 	}
-	// Mandatory
-	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.GlobalImageUsability); err != nil {
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.GlobalImageUsabilityField()); err != nil {
 		return &FieldError{FieldName: "GlobalImageUsability",
 			Value: ivAnalysis.GlobalImageUsabilityField(), Msg: err.Error()}
 	}
-	// Mandatory
-	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ImagingBankSpecificTest); err != nil {
+
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ImagingBankSpecificTestField()); err != nil {
 		return &FieldError{FieldName: "ImagingBankSpecificTest",
 			Value: ivAnalysis.ImagingBankSpecificTestField(), Msg: err.Error()}
 	}
-	// Conditional
-	if ivAnalysis.PartialImageField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PartialImage); err != nil {
-			return &FieldError{FieldName: "PartialImage",
-				Value: ivAnalysis.PartialImageField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.ExcessiveImageSkewField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ExcessiveImageSkew); err != nil {
-			return &FieldError{FieldName: "ExcessiveImageSkew",
-				Value: ivAnalysis.ExcessiveImageSkewField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.PiggybackImageField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PiggybackImage); err != nil {
-			return &FieldError{FieldName: "PiggybackImage",
-				Value: ivAnalysis.PiggybackImageField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.TooLightOrTooDarkField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.TooLightOrTooDark); err != nil {
-			return &FieldError{FieldName: "TooLightOrTooDark",
-				Value: ivAnalysis.TooLightOrTooDarkField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.StreaksAndOrBandsField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.StreaksAndOrBands); err != nil {
-			return &FieldError{FieldName: "StreaksAndOrBands",
-				Value: ivAnalysis.StreaksAndOrBandsField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.BelowMinimumImageSizeField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.BelowMinimumImageSize); err != nil {
-			return &FieldError{FieldName: "BelowMinimumImageSize",
-				Value: ivAnalysis.BelowMinimumImageSizeField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.ExceedsMaximumImageSizeField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ExceedsMaximumImageSize); err != nil {
-			return &FieldError{FieldName: "ExceedsMaximumImageSize",
-				Value: ivAnalysis.ExceedsMaximumImageSizeField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.ImageEnabledPODField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ImageEnabledPOD); err != nil {
-			return &FieldError{FieldName: "ImageEnabledPOD",
-				Value: ivAnalysis.ImageEnabledPODField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.SourceDocumentBadField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.SourceDocumentBad); err != nil {
-			return &FieldError{FieldName: "SourceDocumentBad",
-				Value: ivAnalysis.SourceDocumentBadField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.DateUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.DateUsability); err != nil {
-			return &FieldError{FieldName: "DateUsability",
-				Value: ivAnalysis.DateUsabilityField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.PayeeUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayeeUsability); err != nil {
-			return &FieldError{FieldName: "PayeeUsability",
-				Value: ivAnalysis.PayeeUsabilityField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.ConvenienceAmountUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ConvenienceAmountUsability); err != nil {
-			return &FieldError{FieldName: "ConvenienceAmountUsability",
-				Value: ivAnalysis.ConvenienceAmountUsabilityField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.AmountInWordsUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.AmountInWordsUsability); err != nil {
-			return &FieldError{FieldName: "AmountInWordsUsability",
-				Value: ivAnalysis.AmountInWordsUsabilityField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.SignatureUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.SignatureUsability); err != nil {
-			return &FieldError{FieldName: "SignatureUsability",
-				Value: ivAnalysis.SignatureUsabilityField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.PayorNameAddressUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayorNameAddressUsability); err != nil {
-			return &FieldError{FieldName: "PayorNameAddressUsability",
-				Value: ivAnalysis.PayorNameAddressUsabilityField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.MICRLineUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.MICRLineUsability); err != nil {
-			return &FieldError{FieldName: "MICRLineUsability",
-				Value: ivAnalysis.MICRLineUsabilityField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.MemoLineUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.MemoLineUsability); err != nil {
-			return &FieldError{FieldName: "MemoLineUsability",
-				Value: ivAnalysis.MemoLineUsabilityField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.PayorBankNameAddressUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayorBankNameAddressUsability); err != nil {
-			return &FieldError{FieldName: "PayorBankNameAddressUsability",
-				Value: ivAnalysis.PayorBankNameAddressUsabilityField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.PayeeEndorsementUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayeeEndorsementUsability); err != nil {
-			return &FieldError{FieldName: "PayeeEndorsementUsability",
-				Value: ivAnalysis.PayeeEndorsementUsabilityField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.BOFDEndorsementUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.BOFDEndorsementUsability); err != nil {
-			return &FieldError{FieldName: "BOFDEndorsementUsability",
-				Value: ivAnalysis.BOFDEndorsementUsabilityField(), Msg: err.Error()}
-		}
-	}
-	// Conditional
-	if ivAnalysis.TransitEndorsementUsabilityField() != "" {
-		if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.TransitEndorsementUsability); err != nil {
-			return &FieldError{FieldName: "TransitEndorsementUsability",
-				Value: ivAnalysis.TransitEndorsementUsabilityField(), Msg: err.Error()}
-		}
+	if err := ivAnalysis.validateConditionalFields(); err != nil {
+		return err
 	}
 	if err := ivAnalysis.isAlphanumericSpecial(ivAnalysis.UserField); err != nil {
 		return &FieldError{FieldName: "UserField", Value: ivAnalysis.UserField, Msg: err.Error()}
 	}
+	return nil
+}
 
+// validateConditionalFields makes calls to validate Image View Analysis conditional fields
+func (ivAnalysis *ImageViewAnalysis) validateConditionalFields() error {
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PartialImageField()); err != nil {
+		return &FieldError{FieldName: "PartialImage",
+			Value: ivAnalysis.PartialImageField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ExcessiveImageSkewField()); err != nil {
+		return &FieldError{FieldName: "ExcessiveImageSkew",
+			Value: ivAnalysis.ExcessiveImageSkewField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PiggybackImageField()); err != nil {
+		return &FieldError{FieldName: "PiggybackImage",
+			Value: ivAnalysis.PiggybackImageField(), Msg: err.Error()}
+
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.TooLightOrTooDarkField()); err != nil {
+		return &FieldError{FieldName: "TooLightOrTooDark",
+			Value: ivAnalysis.TooLightOrTooDarkField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.StreaksAndOrBandsField()); err != nil {
+		return &FieldError{FieldName: "StreaksAndOrBands",
+			Value: ivAnalysis.StreaksAndOrBandsField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.BelowMinimumImageSizeField()); err != nil {
+		return &FieldError{FieldName: "BelowMinimumImageSize",
+			Value: ivAnalysis.BelowMinimumImageSizeField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ExceedsMaximumImageSizeField()); err != nil {
+		return &FieldError{FieldName: "ExceedsMaximumImageSize",
+			Value: ivAnalysis.ExceedsMaximumImageSizeField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ImageEnabledPODField()); err != nil {
+		return &FieldError{FieldName: "ImageEnabledPOD",
+			Value: ivAnalysis.ImageEnabledPODField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.SourceDocumentBadField()); err != nil {
+		return &FieldError{FieldName: "SourceDocumentBad",
+			Value: ivAnalysis.SourceDocumentBadField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.validateUsabilityFields(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// validateUsabilityFields makes calls to validate Image View Analysis usability fields
+func (ivAnalysis *ImageViewAnalysis) validateUsabilityFields() error {
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.DateUsabilityField()); err != nil {
+		return &FieldError{FieldName: "DateUsability",
+			Value: ivAnalysis.DateUsabilityField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayeeUsabilityField()); err != nil {
+		return &FieldError{FieldName: "PayeeUsability",
+			Value: ivAnalysis.PayeeUsabilityField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.ConvenienceAmountUsabilityField()); err != nil {
+		return &FieldError{FieldName: "ConvenienceAmountUsability",
+			Value: ivAnalysis.ConvenienceAmountUsabilityField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.AmountInWordsUsabilityField()); err != nil {
+		return &FieldError{FieldName: "AmountInWordsUsability",
+			Value: ivAnalysis.AmountInWordsUsabilityField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.SignatureUsabilityField()); err != nil {
+		return &FieldError{FieldName: "SignatureUsability",
+			Value: ivAnalysis.SignatureUsabilityField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayorNameAddressUsabilityField()); err != nil {
+		return &FieldError{FieldName: "PayorNameAddressUsability",
+			Value: ivAnalysis.PayorNameAddressUsabilityField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.MICRLineUsabilityField()); err != nil {
+		return &FieldError{FieldName: "MICRLineUsability",
+			Value: ivAnalysis.MICRLineUsabilityField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.MemoLineUsabilityField()); err != nil {
+		return &FieldError{FieldName: "MemoLineUsability",
+			Value: ivAnalysis.MemoLineUsabilityField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayorBankNameAddressUsabilityField()); err != nil {
+		return &FieldError{FieldName: "PayorBankNameAddressUsability",
+			Value: ivAnalysis.PayorBankNameAddressUsabilityField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.PayeeEndorsementUsabilityField()); err != nil {
+		return &FieldError{FieldName: "PayeeEndorsementUsability",
+			Value: ivAnalysis.PayeeEndorsementUsabilityField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.BOFDEndorsementUsabilityField()); err != nil {
+		return &FieldError{FieldName: "BOFDEndorsementUsability",
+			Value: ivAnalysis.BOFDEndorsementUsabilityField(), Msg: err.Error()}
+	}
+	if err := ivAnalysis.isImageViewAnalysisValid(ivAnalysis.TransitEndorsementUsabilityField()); err != nil {
+		return &FieldError{FieldName: "TransitEndorsementUsability",
+			Value: ivAnalysis.TransitEndorsementUsabilityField(), Msg: err.Error()}
+	}
 	return nil
 }
 
@@ -511,7 +460,6 @@ func (ivAnalysis *ImageViewAnalysis) fieldInclusion() error {
 	if ivAnalysis.recordType == "" {
 		return &FieldError{FieldName: "recordType", Value: ivAnalysis.recordType, Msg: msgFieldInclusion}
 	}
-
 	return nil
 }
 

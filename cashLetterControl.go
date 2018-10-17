@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a CashLetterControl Record
 
 //CashLetterControl Record
@@ -24,7 +22,6 @@ type CashLetterControl struct {
 	CashLetterBundleCount int `json:"cashLetterBundleCount"`
 	// CashLetterItemsCount identifies the total number of items within the cash letter.
 	CashLetterItemsCount int `json:"cashLetterItemsCount"`
-	// ToDo: int64 by default on 64bit - string for 32 bit?
 	// CashLetterTotalAmount identifies the total dollar value of all item amounts within the cash letter.
 	CashLetterTotalAmount int `json:"cashLetterTotalAmount"`
 	// CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter.

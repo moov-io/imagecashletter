@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a BundleControl Record
 
 // BundleControl Record
@@ -21,10 +19,8 @@ type BundleControl struct {
 	recordType string
 	// BundleItemsCount identifies the total number of items within the bundle.
 	BundleItemsCount int `json:"bundleitemsCount"`
-	// ToDo: int64 by default on 64bit - string for 32 bit?
 	// BundleTotalAmount identifies the total amount of item amounts within the bundle.
 	BundleTotalAmount int `json:"bundleTotalAmount"`
-	// ToDo: int64 by default on 64bit - string for 32 bit?
 	// MICRValidTotalAmount identifies the total amount of all CheckDetail Records within the bundle which
 	// contains 1 in the MICRValidIndicator .
 	MICRValidTotalAmount int `json:"micrValidTotalAmount"`
