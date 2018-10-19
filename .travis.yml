@@ -10,7 +10,7 @@ before_install:
 - go get github.com/mattn/goveralls
 - go get -u github.com/client9/misspell/cmd/misspell
 - go get -u golang.org/x/lint/golint
-# gocyclo hasn't hasn't updated master in years, we may want to consider not using it
+# fzipp/gocyclo hasn't updated master in years, we may want to consider not using it
 - go get github.com/fzipp/gocyclo
 before_script:
 - GOFILES=$(find . -type f -name '*.go' | grep -v vendor)
