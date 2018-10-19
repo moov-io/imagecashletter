@@ -660,15 +660,16 @@ func (v *validator) isOverrideIndicator(code string) error {
 }
 
 // isImageViewAnalysisValid ensures generic properties of imageViewAnalysis are valid
-func (v *validator) isImageViewAnalysisValid(code int) error {
+func (v *validator) isImageViewAnalysisValid(code string) error {
 	switch code {
 	case
+		"",
 		// Refer to ImageViewAnalysis property
-		0,
+		"0",
 		// Refer to ImageViewAnalysis property
-		1,
+		"1",
 		// Refer to ImageViewAnalysis property
-		2:
+		"2":
 		return nil
 	}
 	return errors.New(msgInvalid)

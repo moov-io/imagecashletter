@@ -209,29 +209,8 @@ func (upe *UserPayeeEndorsement) Validate() error {
 		msg := fmt.Sprint(msgInvalid)
 		return &FieldError{FieldName: "UserRecordFormatType", Value: upe.UserRecordFormatType, Msg: msg}
 	}
-	if err := upe.isOwnerIdentifierIndicator(upe.OwnerIdentifierIndicator); err != nil {
-		return &FieldError{FieldName: "OwnerIdentifierIndicator",
-			Value: upe.OwnerIdentifierIndicatorField(), Msg: err.Error()}
-	}
-	if upe.OwnerIdentifierModifier != "" {
-		if err := upe.isAlphanumericSpecial(upe.OwnerIdentifierModifier); err != nil {
-			return &FieldError{FieldName: "OwnerIdentifierModifier", Value: upe.OwnerIdentifierModifier, Msg: err.Error()}
-		}
-	}
-	if upe.PayeeName != "" {
-		if err := upe.isAlphanumericSpecial(upe.PayeeName); err != nil {
-			return &FieldError{FieldName: "PayeeName", Value: upe.PayeeName, Msg: err.Error()}
-		}
-	}
-	if upe.BankRoutingNumber != "" {
-		if err := upe.isNumeric(upe.BankRoutingNumber); err != nil {
-			return &FieldError{FieldName: "BankRoutingNumber", Value: upe.BankRoutingNumber, Msg: err.Error()}
-		}
-	}
-	if upe.BankAccountNumber != "" {
-		if err := upe.isAlphanumericSpecial(upe.BankAccountNumber); err != nil {
-			return &FieldError{FieldName: "BankAccountNumber", Value: upe.BankAccountNumber, Msg: err.Error()}
-		}
+	if err := upe.validateOwnerFields(); err != nil {
+		return err
 	}
 	if upe.CustomerIdentifier != "" {
 		if err := upe.isAlphanumericSpecial(upe.CustomerIdentifier); err != nil {
@@ -254,6 +233,42 @@ func (upe *UserPayeeEndorsement) Validate() error {
 		if err := upe.isAlphanumericSpecial(upe.InternalControlSequenceNumber); err != nil {
 			return &FieldError{FieldName: "InternalControlSequenceNumber",
 				Value: upe.InternalControlSequenceNumber, Msg: err.Error()}
+		}
+	}
+	if upe.EndorsementIndicatorField() != "" {
+		if err := upe.isEndorsementIndicator(upe.EndorsementIndicator); err != nil {
+			return &FieldError{FieldName: "EndorsementIndicator",
+				Value: upe.EndorsementIndicatorField(), Msg: err.Error()}
+		}
+	}
+
+	if upe.UserField != "" {
+		if err := upe.isAlphanumericSpecial(upe.UserField); err != nil {
+			return &FieldError{FieldName: "UserField", Value: upe.UserField, Msg: err.Error()}
+		}
+	}
+
+	if err := upe.validateNameNumberFields(); err != nil {
+		return err
+	}
+	return nil
+
+}
+
+func (upe *UserPayeeEndorsement) validateNameNumberFields() error {
+	if upe.PayeeName != "" {
+		if err := upe.isAlphanumericSpecial(upe.PayeeName); err != nil {
+			return &FieldError{FieldName: "PayeeName", Value: upe.PayeeName, Msg: err.Error()}
+		}
+	}
+	if upe.BankRoutingNumber != "" {
+		if err := upe.isNumeric(upe.BankRoutingNumber); err != nil {
+			return &FieldError{FieldName: "BankRoutingNumber", Value: upe.BankRoutingNumber, Msg: err.Error()}
+		}
+	}
+	if upe.BankAccountNumber != "" {
+		if err := upe.isAlphanumericSpecial(upe.BankAccountNumber); err != nil {
+			return &FieldError{FieldName: "BankAccountNumber", Value: upe.BankAccountNumber, Msg: err.Error()}
 		}
 	}
 	if upe.OperatorName != "" {
@@ -281,17 +296,22 @@ func (upe *UserPayeeEndorsement) Validate() error {
 			return &FieldError{FieldName: "EquipmentNumber", Value: upe.EquipmentNumber, Msg: err.Error()}
 		}
 	}
-	if upe.EndorsementIndicatorField() != "" {
-		if err := upe.isEndorsementIndicator(upe.EndorsementIndicator); err != nil {
-			return &FieldError{FieldName: "EndorsementIndicator",
-				Value: upe.EndorsementIndicatorField(), Msg: err.Error()}
+
+	return nil
+}
+
+func (upe *UserPayeeEndorsement) validateOwnerFields() error {
+
+	if err := upe.isOwnerIdentifierIndicator(upe.OwnerIdentifierIndicator); err != nil {
+		return &FieldError{FieldName: "OwnerIdentifierIndicator",
+			Value: upe.OwnerIdentifierIndicatorField(), Msg: err.Error()}
+	}
+	if upe.OwnerIdentifierModifier != "" {
+		if err := upe.isAlphanumericSpecial(upe.OwnerIdentifierModifier); err != nil {
+			return &FieldError{FieldName: "OwnerIdentifierModifier", Value: upe.OwnerIdentifierModifier, Msg: err.Error()}
 		}
 	}
-	if upe.UserField != "" {
-		if err := upe.isAlphanumericSpecial(upe.UserField); err != nil {
-			return &FieldError{FieldName: "UserField", Value: upe.UserField, Msg: err.Error()}
-		}
-	}
+
 	switch upe.OwnerIdentifierIndicator {
 	case 0:
 		if upe.OwnerIdentifier != "" {
