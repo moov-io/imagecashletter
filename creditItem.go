@@ -210,19 +210,24 @@ func (ci *CreditItem) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (ci *CreditItem) fieldInclusion() error {
 	if ci.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: ci.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: ci.recordType,
+			Msg:   msgFieldInclusion + ", did you use CreditItem()?"}
 	}
 	if ci.PostingBankRoutingNumber == "" {
 		return &FieldError{FieldName: "PostingBankRoutingNumber",
-			Value: ci.PostingBankRoutingNumber, Msg: msgFieldInclusion}
+			Value: ci.PostingBankRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use CreditItem()?"}
 	}
 	if ci.PostingBankRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "PostingBankRoutingNumber",
-			Value: ci.PostingBankRoutingNumber, Msg: msgFieldInclusion}
+			Value: ci.PostingBankRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use CreditItem()?"}
 	}
 	if ci.CreditItemSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "CreditItemSequenceNumber",
-			Value: ci.CreditItemSequenceNumber, Msg: msgFieldInclusion}
+			Value: ci.CreditItemSequenceNumber,
+			Msg:   msgFieldInclusion + ", did you use CreditItem()?"}
 	}
 	return nil
 }

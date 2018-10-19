@@ -200,30 +200,39 @@ func (rdAddendumA *ReturnDetailAddendumA) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (rdAddendumA *ReturnDetailAddendumA) fieldInclusion() error {
 	if rdAddendumA.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: rdAddendumA.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: rdAddendumA.recordType,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
 	}
 	if rdAddendumA.RecordNumber == 0 {
-		return &FieldError{FieldName: "RecordNumber", Value: rdAddendumA.RecordNumberField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "RecordNumber",
+			Value: rdAddendumA.RecordNumberField(),
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
 	}
 	if rdAddendumA.ReturnLocationRoutingNumber == "" {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
-			Value: rdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
+			Value: rdAddendumA.ReturnLocationRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
 	}
 	if rdAddendumA.ReturnLocationRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
-			Value: rdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
+			Value: rdAddendumA.ReturnLocationRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
 	}
 	if rdAddendumA.BOFDItemSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "BOFDItemSequenceNumber",
-			Value: rdAddendumA.BOFDItemSequenceNumber, Msg: msgFieldInclusion}
+			Value: rdAddendumA.BOFDItemSequenceNumber,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
 	}
 	if rdAddendumA.BOFDEndorsementDate.IsZero() {
 		return &FieldError{FieldName: "BOFDEndorsementDate",
-			Value: rdAddendumA.BOFDEndorsementDate.String(), Msg: msgFieldInclusion}
+			Value: rdAddendumA.BOFDEndorsementDate.String(),
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
 	}
 	if rdAddendumA.TruncationIndicator == "" {
 		return &FieldError{FieldName: "TruncationIndicator",
-			Value: rdAddendumA.TruncationIndicator, Msg: msgFieldInclusion}
+			Value: rdAddendumA.TruncationIndicator,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
 	}
 	return nil
 }

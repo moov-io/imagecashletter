@@ -322,7 +322,7 @@ func TestFHFieldInclusionRecordType(t *testing.T) {
 	fh.recordType = ""
 	if err := fh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "recordType" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -335,7 +335,7 @@ func TestFHFieldInclusionStandardLevel(t *testing.T) {
 	fh.StandardLevel = ""
 	if err := fh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "StandardLevel" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -348,7 +348,7 @@ func TestFHFieldInclusionTestFileIndicator(t *testing.T) {
 	fh.TestFileIndicator = ""
 	if err := fh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "TestFileIndicator" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -361,7 +361,7 @@ func TestFHFieldInclusionResendIndicator(t *testing.T) {
 	fh.ResendIndicator = ""
 	if err := fh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "ResendIndicator" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -374,7 +374,7 @@ func TestFHFieldInclusionImmediateDestination(t *testing.T) {
 	fh.ImmediateDestination = ""
 	if err := fh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "ImmediateDestination" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -387,7 +387,7 @@ func TestFHFieldInclusionImmediateDestinationZero(t *testing.T) {
 	fh.ImmediateDestination = "000000000"
 	if err := fh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "ImmediateDestination" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -400,7 +400,7 @@ func TestFHFieldInclusionImmediateOrigin(t *testing.T) {
 	fh.ImmediateOrigin = ""
 	if err := fh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "ImmediateOrigin" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -413,7 +413,7 @@ func TestFHFieldInclusionImmediateOriginZero(t *testing.T) {
 	fh.ImmediateOrigin = "000000000"
 	if err := fh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "ImmediateOrigin" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -426,7 +426,7 @@ func TestFHFieldInclusionCreationDate(t *testing.T) {
 	fh.FileCreationDate = time.Time{}
 	if err := fh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "FileCreationDate" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -439,7 +439,7 @@ func TestFHFieldInclusionCreationTime(t *testing.T) {
 	fh.FileCreationTime = time.Time{}
 	if err := fh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "FileCreationTime" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}

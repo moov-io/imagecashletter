@@ -127,11 +127,14 @@ func (rdAddendumC *ReturnDetailAddendumC) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (rdAddendumC *ReturnDetailAddendumC) fieldInclusion() error {
 	if rdAddendumC.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: rdAddendumC.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: rdAddendumC.recordType,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumC()?"}
 	}
 	if rdAddendumC.MicrofilmArchiveSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "MicrofilmArchiveSequenceNumber",
-			Value: rdAddendumC.MicrofilmArchiveSequenceNumber, Msg: msgFieldInclusion}
+			Value: rdAddendumC.MicrofilmArchiveSequenceNumber,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumC()?"}
 	}
 	return nil
 }

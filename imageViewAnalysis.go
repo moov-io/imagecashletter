@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a ImageViewAnalysis Record
 
 // ImageViewAnalysis Record
@@ -509,9 +507,10 @@ func (ivAnalysis *ImageViewAnalysis) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (ivAnalysis *ImageViewAnalysis) fieldInclusion() error {
 	if ivAnalysis.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: ivAnalysis.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: ivAnalysis.recordType,
+			Msg:   msgFieldInclusion + ", did you use ImageViewAnalysis()?"}
 	}
-
 	return nil
 }
 

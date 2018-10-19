@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // FileControl Record
 type FileControl struct {
 	// ID is a client defined string used as a reference to this record.
@@ -24,7 +22,6 @@ type FileControl struct {
 	// TotalItemCount identifies the total number of Items sent within the file.
 	TotalItemCount int `json:"totalItemCount"`
 	// FileTotalAmount identifies the total Item amount of the complete file.
-	// ToDo: int64 by default on 64bit - string for 32 bit?
 	FileTotalAmount int `json:"fileTotalAmount"`
 	// ImmediateOriginContactName identifies contact at the institution that creates the ECE file.
 	ImmediateOriginContactName string `json:"immediateOriginContactName"`
@@ -124,19 +121,29 @@ func (fc *FileControl) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (fc *FileControl) fieldInclusion() error {
 	if fc.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: fc.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: fc.recordType,
+			Msg:   msgFieldInclusion + ", did you use FileControl()?"}
 	}
 	if fc.CashLetterCount == 0 {
-		return &FieldError{FieldName: "CashLetterCount", Value: fc.CashLetterCountField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "CashLetterCount",
+			Value: fc.CashLetterCountField(),
+			Msg:   msgFieldInclusion + ", did you use FileControl()?"}
 	}
 	if fc.TotalRecordCount == 0 {
-		return &FieldError{FieldName: "TotalRecordCount", Value: fc.TotalRecordCountField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "TotalRecordCount",
+			Value: fc.TotalRecordCountField(),
+			Msg:   msgFieldInclusion + ", did you use FileControl()?"}
 	}
 	if fc.TotalItemCount == 0 {
-		return &FieldError{FieldName: "TotalItemCount", Value: fc.TotalItemCountField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "TotalItemCount",
+			Value: fc.TotalItemCountField(),
+			Msg:   msgFieldInclusion + ", did you use FileControl()?"}
 	}
 	if fc.FileTotalAmount == 0 {
-		return &FieldError{FieldName: "FileTotalAmount", Value: fc.FileTotalAmountField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "FileTotalAmount",
+			Value: fc.FileTotalAmountField(),
+			Msg:   msgFieldInclusion + ", did you use FileControl()?"}
 	}
 	return nil
 }

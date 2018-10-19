@@ -173,7 +173,7 @@ func TestBCFieldInclusionRecordType(t *testing.T) {
 	bc.recordType = ""
 	if err := bc.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "recordType" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -186,7 +186,7 @@ func TestFieldInclusionBundleItemsCount(t *testing.T) {
 	bc.BundleItemsCount = 0
 	if err := bc.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "BundleItemsCount" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -199,7 +199,7 @@ func TestFieldInclusionBundleTotalAmount(t *testing.T) {
 	bc.BundleTotalAmount = 0
 	if err := bc.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "BundleTotalAmount" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}

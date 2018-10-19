@@ -100,15 +100,19 @@ func (rdAddendumB *ReturnDetailAddendumB) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (rdAddendumB *ReturnDetailAddendumB) fieldInclusion() error {
 	if rdAddendumB.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: rdAddendumB.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: rdAddendumB.recordType,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
 	}
 	if rdAddendumB.PayorBankSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "PayorBankSequenceNumber",
-			Value: rdAddendumB.PayorBankSequenceNumber, Msg: msgFieldInclusion}
+			Value: rdAddendumB.PayorBankSequenceNumber,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
 	}
 	if rdAddendumB.PayorBankBusinessDate.IsZero() {
 		return &FieldError{FieldName: "PayorBankBusinessDate",
-			Value: rdAddendumB.PayorBankBusinessDate.String(), Msg: msgFieldInclusion}
+			Value: rdAddendumB.PayorBankBusinessDate.String(),
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
 	}
 	return nil
 }

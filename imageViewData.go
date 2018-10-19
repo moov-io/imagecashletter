@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a ImageViewData Record
 
 // ImageViewData Record
@@ -258,19 +256,24 @@ func (ivData *ImageViewData) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (ivData *ImageViewData) fieldInclusion() error {
 	if ivData.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: ivData.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: ivData.recordType,
+			Msg:   msgFieldInclusion + ", did you use ImageViewData()?"}
 	}
 	if ivData.EceInstitutionRoutingNumber == "" {
 		return &FieldError{FieldName: "EceInstitutionRoutingNumber",
-			Value: ivData.EceInstitutionRoutingNumber, Msg: msgFieldInclusion}
+			Value: ivData.EceInstitutionRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use ImageViewData()?"}
 	}
 	if ivData.EceInstitutionRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "EceInstitutionRoutingNumber",
-			Value: ivData.EceInstitutionRoutingNumber, Msg: msgFieldInclusion}
+			Value: ivData.EceInstitutionRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use ImageViewData()?"}
 	}
 	if ivData.BundleBusinessDate.IsZero() {
 		return &FieldError{FieldName: "BundleBusinessDate",
-			Value: ivData.BundleBusinessDate.String(), Msg: msgFieldInclusion}
+			Value: ivData.BundleBusinessDate.String(),
+			Msg:   msgFieldInclusion + ", did you use ImageViewData()?"}
 	}
 	return nil
 }

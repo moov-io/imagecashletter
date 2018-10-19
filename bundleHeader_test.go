@@ -242,7 +242,7 @@ func TestBHFieldInclusionRecordType(t *testing.T) {
 	bh.recordType = ""
 	if err := bh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "recordType" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -255,7 +255,7 @@ func TestBHFieldInclusionCollectionTypeIndicator(t *testing.T) {
 	bh.CollectionTypeIndicator = ""
 	if err := bh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "CollectionTypeIndicator" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -268,7 +268,7 @@ func TestBHFieldInclusionDestinationRoutingNumber(t *testing.T) {
 	bh.DestinationRoutingNumber = ""
 	if err := bh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "DestinationRoutingNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -281,7 +281,7 @@ func TestBHFieldInclusionDestinationRoutingNumberZero(t *testing.T) {
 	bh.DestinationRoutingNumber = "000000000"
 	if err := bh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "DestinationRoutingNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -294,7 +294,7 @@ func TestBHFieldInclusionECEInstitutionRoutingNumber(t *testing.T) {
 	bh.ECEInstitutionRoutingNumber = ""
 	if err := bh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "ECEInstitutionRoutingNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -307,7 +307,7 @@ func TestBHFieldInclusionECEInstitutionRoutingNumberZero(t *testing.T) {
 	bh.ECEInstitutionRoutingNumber = "000000000"
 	if err := bh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "ECEInstitutionRoutingNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -320,7 +320,7 @@ func TestBHFieldInclusionBundleBusinessDate(t *testing.T) {
 	bh.BundleBusinessDate = time.Time{}
 	if err := bh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "BundleBusinessDate" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -333,7 +333,7 @@ func TestBHFieldInclusionBundleCreationDate(t *testing.T) {
 	bh.BundleCreationDate = time.Time{}
 	if err := bh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "BundleCreationDate" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -346,7 +346,7 @@ func TestBHFieldInclusionBundleSequenceNumber(t *testing.T) {
 	bh.BundleSequenceNumber = "    "
 	if err := bh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "BundleSequenceNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}

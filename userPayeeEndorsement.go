@@ -317,19 +317,24 @@ func (upe *UserPayeeEndorsement) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (upe *UserPayeeEndorsement) fieldInclusion() error {
 	if upe.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: upe.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: upe.recordType,
+			Msg:   msgFieldInclusion + ", did you use UserPayeeEndorsement()?"}
 	}
 	if upe.UserRecordFormatType == "" {
 		return &FieldError{FieldName: "UserRecordFormatType",
-			Value: upe.UserRecordFormatType, Msg: msgFieldInclusion}
+			Value: upe.UserRecordFormatType,
+			Msg:   msgFieldInclusion + ", did you use UserPayeeEndorsement()?"}
 	}
 	if upe.FormatTypeVersionLevel == "" {
 		return &FieldError{FieldName: "FormatTypeVersionLevel",
-			Value: upe.FormatTypeVersionLevel, Msg: msgFieldInclusion}
+			Value: upe.FormatTypeVersionLevel,
+			Msg:   msgFieldInclusion + ", did you use UserPayeeEndorsement()?"}
 	}
 	if upe.LengthUserData == "" {
 		return &FieldError{FieldName: "LengthUserData",
-			Value: upe.LengthUserData, Msg: msgFieldInclusion}
+			Value: upe.LengthUserData,
+			Msg:   msgFieldInclusion + ", did you use UserPayeeEndorsement()?"}
 	}
 	return nil
 }

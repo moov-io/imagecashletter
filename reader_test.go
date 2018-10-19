@@ -107,7 +107,7 @@ func TestFileFileHeaderErr(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -141,7 +141,7 @@ func TestCashLetterHeaderErr(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -178,7 +178,7 @@ func TestBundleHeaderErr(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -224,7 +224,7 @@ func TestCheckDetailError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -328,7 +328,7 @@ func TestCheckDetailAddendumAError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -356,7 +356,7 @@ func TestCheckDetailAddendumBError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -386,7 +386,7 @@ func TestCheckDetailAddendumCError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -409,7 +409,7 @@ func TestReturnDetailError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -543,7 +543,7 @@ func TestReturnDetailAddendumAError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -571,7 +571,7 @@ func TestReturnDetailAddendumBError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -601,7 +601,7 @@ func TestReturnDetailAddendumCError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -633,7 +633,7 @@ func TestReturnDetailAddendumDError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -705,7 +705,7 @@ func TestCheckDetailIVDetailError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -737,7 +737,7 @@ func TestCheckDetailIVDataError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -801,7 +801,7 @@ func TestReturnDetailIVDetailError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}
@@ -832,7 +832,7 @@ func TestReturnDetailIVDataError(t *testing.T) {
 	_, err := r.Read()
 	if p, ok := err.(*ParseError); ok {
 		if e, ok := p.Err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if !strings.Contains(e.Msg, msgFieldInclusion) {
 				t.Errorf("%T: %s", e, e)
 			}
 		}

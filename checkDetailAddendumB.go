@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a CheckDetailAddendumB Record
 
 // CheckDetailAddendumB Record
@@ -33,7 +31,6 @@ type CheckDetailAddendumB struct {
 	MicrofilmArchiveSequenceNumber string `json:"microfilmArchiveSequenceNumber"`
 	// ImageReferenceKeyLength is the number of characters in the ImageReferenceKey
 	// Values:
-	// ToDo: Verify defined value meaning see Annex H of the spec, add validator
 	// 0034: ImageReferenceKey contains the ImageReferenceKey (ImageReferenceKeyIndicator is 0).
 	// 0000: ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
 	// 0001 - 9999: May include Value 0034, and ImageReferenceKey has no special significance to
@@ -128,11 +125,14 @@ func (cdAddendumB *CheckDetailAddendumB) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (cdAddendumB *CheckDetailAddendumB) fieldInclusion() error {
 	if cdAddendumB.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: cdAddendumB.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: cdAddendumB.recordType,
+			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumB()?"}
 	}
 	if cdAddendumB.MicrofilmArchiveSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "MicrofilmArchiveSequenceNumber",
-			Value: cdAddendumB.MicrofilmArchiveSequenceNumber, Msg: msgFieldInclusion}
+			Value: cdAddendumB.MicrofilmArchiveSequenceNumber,
+			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumB()?"}
 	}
 	return nil
 }

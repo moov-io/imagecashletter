@@ -14,12 +14,7 @@ import (
 func mockFileControl() FileControl {
 	fc := NewFileControl()
 	fc.CashLetterCount = 1
-	// TotalRecordCount - FileHeader, CashLetterHeader, BundleHeader, CheckDetail, CashLetterControl, BundleControl,
-	// FileControl
-	// ToDo: CheckDetailAddendum* and ImageView*
 	fc.TotalRecordCount = 7
-	// TotalItemCount - CheckDetail
-	// ToDo: CheckDetailAddendum* and ImageView*
 	fc.TotalItemCount = 1
 	fc.FileTotalAmount = 100000 //1000.00
 	fc.ImmediateOriginContactName = "Contact Name"
@@ -201,7 +196,7 @@ func TestFCFieldInclusionRecordType(t *testing.T) {
 	fc.recordType = ""
 	if err := fc.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "recordType" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}

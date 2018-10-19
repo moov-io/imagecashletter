@@ -88,10 +88,14 @@ func (rns *RoutingNumberSummary) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (rns *RoutingNumberSummary) fieldInclusion() error {
 	if rns.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: rns.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: rns.recordType,
+			Msg:   msgFieldInclusion + ", did you use RoutingNumberSummary()?"}
 	}
 	if rns.CashLetterRoutingNumber == "" {
-		return &FieldError{FieldName: "CashLetterRoutingNumber", Value: rns.CashLetterRoutingNumber, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "CashLetterRoutingNumber",
+			Value: rns.CashLetterRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use RoutingNumberSummary()?"}
 	}
 	return nil
 }

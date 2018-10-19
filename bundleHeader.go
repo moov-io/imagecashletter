@@ -175,15 +175,19 @@ func (bh *BundleHeader) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (bh *BundleHeader) fieldInclusion() error {
 	if bh.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: bh.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: bh.recordType,
+			Msg:   msgFieldInclusion + ", did you use BundleHeader()?"}
 	}
 	if bh.CollectionTypeIndicator == "" {
 		return &FieldError{FieldName: "CollectionTypeIndicator",
-			Value: bh.CollectionTypeIndicator, Msg: msgFieldInclusion}
+			Value: bh.CollectionTypeIndicator,
+			Msg:   msgFieldInclusion + ", did you use BundleHeader()?"}
 	}
 	if bh.DestinationRoutingNumber == "" {
 		return &FieldError{FieldName: "DestinationRoutingNumber",
-			Value: bh.DestinationRoutingNumber, Msg: msgFieldInclusion}
+			Value: bh.DestinationRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use BundleHeader()?"}
 	}
 	if bh.DestinationRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "DestinationRoutingNumber",
@@ -191,23 +195,28 @@ func (bh *BundleHeader) fieldInclusion() error {
 	}
 	if bh.ECEInstitutionRoutingNumber == "" {
 		return &FieldError{FieldName: "ECEInstitutionRoutingNumber",
-			Value: bh.ECEInstitutionRoutingNumber, Msg: msgFieldInclusion}
+			Value: bh.ECEInstitutionRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use BundleHeader()?"}
 	}
 	if bh.ECEInstitutionRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "ECEInstitutionRoutingNumber",
-			Value: bh.ECEInstitutionRoutingNumber, Msg: msgFieldInclusion}
+			Value: bh.ECEInstitutionRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use BundleHeader()?"}
 	}
 	if bh.BundleBusinessDate.IsZero() {
 		return &FieldError{FieldName: "BundleBusinessDate",
-			Value: bh.BundleBusinessDate.String(), Msg: msgFieldInclusion}
+			Value: bh.BundleBusinessDate.String(),
+			Msg:   msgFieldInclusion + ", did you use BundleHeader()?"}
 	}
 	if bh.BundleCreationDate.IsZero() {
 		return &FieldError{FieldName: "BundleCreationDate",
-			Value: bh.BundleCreationDate.String(), Msg: msgFieldInclusion}
+			Value: bh.BundleCreationDate.String(),
+			Msg:   msgFieldInclusion + ", did you use BundleHeader()?"}
 	}
 	if bh.BundleSequenceNumberField() == "    " {
 		return &FieldError{FieldName: "BundleSequenceNumber",
-			Value: bh.BundleSequenceNumber, Msg: msgFieldInclusion}
+			Value: bh.BundleSequenceNumber,
+			Msg:   msgFieldInclusion + ", did you use BundleHeader()?"}
 	}
 	return nil
 }
