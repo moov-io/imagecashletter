@@ -7,9 +7,8 @@ package x9
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
-
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 
 // Errors specific to a BundleControl Record
 
@@ -21,10 +20,8 @@ type BundleControl struct {
 	recordType string
 	// BundleItemsCount identifies the total number of items within the bundle.
 	BundleItemsCount int `json:"bundleitemsCount"`
-	// ToDo: int64 by default on 64bit - string for 32 bit?
 	// BundleTotalAmount identifies the total amount of item amounts within the bundle.
 	BundleTotalAmount int `json:"bundleTotalAmount"`
-	// ToDo: int64 by default on 64bit - string for 32 bit?
 	// MICRValidTotalAmount identifies the total amount of all CheckDetail Records within the bundle which
 	// contains 1 in the MICRValidIndicator .
 	MICRValidTotalAmount int `json:"micrValidTotalAmount"`
@@ -58,6 +55,9 @@ func NewBundleControl() *BundleControl {
 
 // Parse takes the input record string and parses the BundleControl values
 func (bc *BundleControl) Parse(record string) {
+	if utf8.RuneCountInString(record) != 80 {
+		return
+	}
 	// Character position 1-2, Always "70"
 	bc.recordType = "70"
 	// 03-06
@@ -117,13 +117,19 @@ func (bc *BundleControl) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (bc *BundleControl) fieldInclusion() error {
 	if bc.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: bc.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: bc.recordType,
+			Msg:   msgFieldInclusion + ", did you use BundleControl()?"}
 	}
 	if bc.BundleItemsCount == 0 {
-		return &FieldError{FieldName: "BundleItemsCount", Value: bc.BundleItemsCountField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "BundleItemsCount",
+			Value: bc.BundleItemsCountField(),
+			Msg:   msgFieldInclusion + ", did you use BundleControl()?"}
 	}
 	if bc.BundleTotalAmount == 0 {
-		return &FieldError{FieldName: "BundleTotalAmount", Value: bc.BundleTotalAmountField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "BundleTotalAmount",
+			Value: bc.BundleTotalAmountField(),
+			Msg:   msgFieldInclusion + ", did you use BundleControl()?"}
 	}
 	return nil
 }

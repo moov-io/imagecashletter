@@ -194,30 +194,39 @@ func (rdAddendumD *ReturnDetailAddendumD) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (rdAddendumD *ReturnDetailAddendumD) fieldInclusion() error {
 	if rdAddendumD.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: rdAddendumD.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: rdAddendumD.recordType,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumD()?"}
 	}
 	if rdAddendumD.RecordNumber == 0 {
-		return &FieldError{FieldName: "RecordNumber", Value: rdAddendumD.RecordNumberField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "RecordNumber",
+			Value: rdAddendumD.RecordNumberField(),
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumD()?"}
 	}
 	if rdAddendumD.EndorsingBankRoutingNumber == "" {
 		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
-			Value: rdAddendumD.EndorsingBankRoutingNumber, Msg: msgFieldInclusion}
+			Value: rdAddendumD.EndorsingBankRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumD()?"}
 	}
 	if rdAddendumD.EndorsingBankRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
-			Value: rdAddendumD.EndorsingBankRoutingNumber, Msg: msgFieldInclusion}
+			Value: rdAddendumD.EndorsingBankRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumD()?"}
 	}
 	if rdAddendumD.BOFDEndorsementBusinessDate.IsZero() {
 		return &FieldError{FieldName: "BOFDEndorsementBusinessDate",
-			Value: rdAddendumD.BOFDEndorsementBusinessDate.String(), Msg: msgFieldInclusion}
+			Value: rdAddendumD.BOFDEndorsementBusinessDate.String(),
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumD()?"}
 	}
 	if rdAddendumD.EndorsingBankItemSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "EndorsingBankItemSequenceNumber",
-			Value: rdAddendumD.EndorsingBankItemSequenceNumber, Msg: msgFieldInclusion}
+			Value: rdAddendumD.EndorsingBankItemSequenceNumber,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumD()?"}
 	}
 	if rdAddendumD.TruncationIndicator == "" {
 		return &FieldError{FieldName: "TruncationIndicator",
-			Value: rdAddendumD.TruncationIndicator, Msg: msgFieldInclusion}
+			Value: rdAddendumD.TruncationIndicator,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumD()?"}
 	}
 	return nil
 }

@@ -11,8 +11,6 @@ import (
 	"time"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a CheckDetailAddendumA Record
 
 // CheckDetailAddendumA Record
@@ -199,30 +197,39 @@ func (cdAddendumA *CheckDetailAddendumA) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (cdAddendumA *CheckDetailAddendumA) fieldInclusion() error {
 	if cdAddendumA.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: cdAddendumA.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: cdAddendumA.recordType,
+			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
 	}
 	if cdAddendumA.RecordNumber == 0 {
-		return &FieldError{FieldName: "RecordNumber", Value: cdAddendumA.RecordNumberField(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "RecordNumber",
+			Value: cdAddendumA.RecordNumberField(),
+			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
 	}
 	if cdAddendumA.ReturnLocationRoutingNumber == "" {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
-			Value: cdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
+			Value: cdAddendumA.ReturnLocationRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
 	}
 	if cdAddendumA.ReturnLocationRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "ReturnLocationRoutingNumber",
-			Value: cdAddendumA.ReturnLocationRoutingNumber, Msg: msgFieldInclusion}
+			Value: cdAddendumA.ReturnLocationRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
 	}
 	if cdAddendumA.BOFDEndorsementDate.IsZero() {
 		return &FieldError{FieldName: "BOFDEndorsementDate",
-			Value: cdAddendumA.BOFDEndorsementDate.String(), Msg: msgFieldInclusion}
+			Value: cdAddendumA.BOFDEndorsementDate.String(),
+			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
 	}
 	if cdAddendumA.BOFDItemSequenceNumber == "               " {
 		return &FieldError{FieldName: "BOFDItemSequenceNumber",
-			Value: cdAddendumA.BOFDItemSequenceNumber, Msg: msgFieldInclusion}
+			Value: cdAddendumA.BOFDItemSequenceNumber,
+			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
 	}
 	if cdAddendumA.TruncationIndicator == "" {
 		return &FieldError{FieldName: "TruncationIndicator",
-			Value: cdAddendumA.TruncationIndicator, Msg: msgFieldInclusion}
+			Value: cdAddendumA.TruncationIndicator,
+			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
 	}
 	return nil
 }

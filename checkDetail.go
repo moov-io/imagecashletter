@@ -10,8 +10,6 @@ import (
 	"strings"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a CheckDetail Record
 
 var (
@@ -273,25 +271,34 @@ func (cd *CheckDetail) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (cd *CheckDetail) fieldInclusion() error {
 	if cd.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: cd.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: cd.recordType,
+			Msg:   msgFieldInclusion + ", did you use CheckDetail()?"}
 	}
 	if cd.PayorBankRoutingNumber == "" {
 		return &FieldError{FieldName: "PayorBankRoutingNumber",
-			Value: cd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
+			Value: cd.PayorBankRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use CheckDetail()?"}
 	}
 	if cd.PayorBankRoutingNumberField() == "00000000" {
 		return &FieldError{FieldName: "PayorBankRoutingNumber",
-			Value: cd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
+			Value: cd.PayorBankRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use CheckDetail()?"}
 	}
 	if cd.PayorBankCheckDigit == "" {
-		return &FieldError{FieldName: "PayorBankCheckDigit", Value: cd.PayorBankCheckDigit, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "PayorBankCheckDigit",
+			Value: cd.PayorBankCheckDigit,
+			Msg:   msgFieldInclusion + ", did you use CheckDetail()?"}
 	}
 	if cd.EceInstitutionItemSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber",
-			Value: cd.EceInstitutionItemSequenceNumber, Msg: msgFieldInclusion}
+			Value: cd.EceInstitutionItemSequenceNumber,
+			Msg:   msgFieldInclusion + ", did you use CheckDetail()?"}
 	}
 	if cd.BOFDIndicator == "" {
-		return &FieldError{FieldName: "BOFDIndicator", Value: cd.BOFDIndicator, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "BOFDIndicator",
+			Value: cd.BOFDIndicator,
+			Msg:   msgFieldInclusion + ", did you use CheckDetail()?"}
 	}
 	return nil
 }

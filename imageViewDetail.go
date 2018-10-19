@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a ImageViewDetail Record
 
 // ImageViewDetail Record
@@ -326,22 +324,29 @@ func (ivDetail *ImageViewDetail) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (ivDetail *ImageViewDetail) fieldInclusion() error {
 	if ivDetail.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: ivDetail.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: ivDetail.recordType,
+			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
 	}
 	if ivDetail.ImageCreatorRoutingNumber == "" {
 		return &FieldError{FieldName: "ImageCreatorRoutingNumber",
-			Value: ivDetail.ImageCreatorRoutingNumber, Msg: msgFieldInclusion}
+			Value: ivDetail.ImageCreatorRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
 	}
 	if ivDetail.ImageCreatorRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "ImageCreatorRoutingNumber",
-			Value: ivDetail.ImageCreatorRoutingNumber, Msg: msgFieldInclusion}
+			Value: ivDetail.ImageCreatorRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
 	}
 	if ivDetail.ImageCreatorDate.IsZero() {
 		return &FieldError{FieldName: "ImageCreatorDate",
-			Value: ivDetail.ImageCreatorDate.String(), Msg: msgFieldInclusion}
+			Value: ivDetail.ImageCreatorDate.String(),
+			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
 	}
 	if ivDetail.ViewDescriptor == "" {
-		return &FieldError{FieldName: "ViewDescriptor", Value: ivDetail.ViewDescriptor, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "ViewDescriptor",
+			Value: ivDetail.ViewDescriptor,
+			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
 	}
 	return nil
 }

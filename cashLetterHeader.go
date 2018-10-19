@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a CashLetterHeader Record
 
 // CashLetterHeader Record is mandatory.
@@ -264,45 +262,59 @@ func (clh *CashLetterHeader) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (clh *CashLetterHeader) fieldInclusion() error {
 	if clh.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: clh.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: clh.recordType,
+			Msg:   msgFieldInclusion + ", did you use CashLetterHeader()?"}
 	}
 	if clh.CollectionTypeIndicator == "" {
 		return &FieldError{FieldName: "CollectionTypeIndicator",
-			Value: clh.CollectionTypeIndicator, Msg: msgFieldInclusion}
+			Value: clh.CollectionTypeIndicator,
+			Msg:   msgFieldInclusion + ", did you use CashLetterHeader()?"}
 	}
 	if clh.RecordTypeIndicator == "" {
 		return &FieldError{FieldName: "RecordTypeIndicator",
-			Value: clh.RecordTypeIndicator, Msg: msgFieldInclusion}
+			Value: clh.RecordTypeIndicator,
+			Msg:   msgFieldInclusion + ", did you use CashLetterHeader()?"}
 	}
 	if clh.DestinationRoutingNumber == "" {
 		return &FieldError{FieldName: "DestinationRoutingNumber",
-			Value: clh.DestinationRoutingNumber, Msg: msgFieldInclusion}
+			Value: clh.DestinationRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use CashLetterHeader()?"}
 	}
 	if clh.ECEInstitutionRoutingNumber == "" {
 		return &FieldError{FieldName: "ECEInstitutionRoutingNumber",
-			Value: clh.ECEInstitutionRoutingNumber, Msg: msgFieldInclusion}
+			Value: clh.ECEInstitutionRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use CashLetterHeader()?"}
 	}
 	if clh.DestinationRoutingNumberField() == "000000000" {
-		return &FieldError{FieldName: "DestinationRoutingNumber", Value: clh.DestinationRoutingNumber, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "DestinationRoutingNumber",
+			Value: clh.DestinationRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use CashLetterHeader()?"}
 	}
 	if clh.ECEInstitutionRoutingNumberField() == "000000000" {
-		return &FieldError{FieldName: "ECEInstitutionRoutingNumber", Value: clh.ECEInstitutionRoutingNumber, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "ECEInstitutionRoutingNumber",
+			Value: clh.ECEInstitutionRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use CashLetterHeader()?"}
 	}
-
 	if clh.CashLetterBusinessDate.IsZero() {
 		return &FieldError{FieldName: "CashLetterBusinessDate",
-			Value: clh.CashLetterBusinessDate.String(), Msg: msgFieldInclusion}
+			Value: clh.CashLetterBusinessDate.String(),
+			Msg:   msgFieldInclusion + ", did you use CashLetterHeader()?"}
 	}
 	if clh.CashLetterCreationDate.IsZero() {
 		return &FieldError{FieldName: "CashLetterCreationDate",
-			Value: clh.CashLetterCreationDate.String(), Msg: msgFieldInclusion}
+			Value: clh.CashLetterCreationDate.String(),
+			Msg:   msgFieldInclusion + ", did you use CashLetterHeader()?"}
 	}
 	if clh.CashLetterCreationTime.IsZero() {
 		return &FieldError{FieldName: "CashLetterCreationTime",
-			Value: clh.CashLetterCreationTime.String(), Msg: msgFieldInclusion}
+			Value: clh.CashLetterCreationTime.String(),
+			Msg:   msgFieldInclusion + ", did you use CashLetterHeader()?"}
 	}
 	if clh.CashLetterID == "" {
-		return &FieldError{FieldName: "CashLetterID", Value: clh.CashLetterID, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "CashLetterID",
+			Value: clh.CashLetterID,
+			Msg:   msgFieldInclusion + ", did you use CashLetterHeader()?"}
 	}
 	// clh.ReturnsIndicator can be ""
 	return nil

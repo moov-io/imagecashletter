@@ -172,7 +172,7 @@ func TestCLCFieldInclusionRecordType(t *testing.T) {
 	clc.recordType = ""
 	if err := clc.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "recordType" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -185,7 +185,7 @@ func TestFieldInclusionCashLetterItemsCount(t *testing.T) {
 	clc.CashLetterItemsCount = 0
 	if err := clc.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "CashLetterItemsCount" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -198,7 +198,7 @@ func TestFieldInclusionCashLetterTotalAmount(t *testing.T) {
 	clc.CashLetterTotalAmount = 0
 	if err := clc.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "CashLetterTotalAmount" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -211,7 +211,7 @@ func TestFieldInclusionRecordTypeSettlementDate(t *testing.T) {
 	clc.SettlementDate = time.Time{}
 	if err := clc.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "SettlementDate" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}

@@ -238,24 +238,34 @@ func (rd *ReturnDetail) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (rd *ReturnDetail) fieldInclusion() error {
 	if rd.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: rd.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: rd.recordType,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetail()?"}
 	}
 	if rd.PayorBankRoutingNumber == "" {
 		return &FieldError{FieldName: "PayorBankRoutingNumber",
-			Value: rd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
+			Value: rd.PayorBankRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetail()?"}
 	}
 	if rd.PayorBankRoutingNumberField() == "00000000" {
 		return &FieldError{FieldName: "PayorBankRoutingNumber",
-			Value: rd.PayorBankRoutingNumber, Msg: msgFieldInclusion}
+			Value: rd.PayorBankRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetail()?"}
 	}
 	if rd.PayorBankCheckDigit == "" {
-		return &FieldError{FieldName: "PayorBankCheckDigit", Value: rd.PayorBankCheckDigit, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "PayorBankCheckDigit",
+			Value: rd.PayorBankCheckDigit,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetail()?"}
 	}
 	if rd.ReturnReason == "" {
-		return &FieldError{FieldName: "ReturnReason", Value: rd.ReturnReason, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "ReturnReason",
+			Value: rd.ReturnReason,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetail()?"}
 	}
 	if rd.EceInstitutionItemSequenceNumberField() == "               " {
-		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber", Value: rd.EceInstitutionItemSequenceNumber, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber",
+			Value: rd.EceInstitutionItemSequenceNumber,
+			Msg:   msgFieldInclusion + ", did you use ReturnDetail()?"}
 	}
 	return nil
 }

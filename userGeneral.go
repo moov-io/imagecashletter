@@ -174,7 +174,6 @@ func (ug *UserGeneral) Validate() error {
 		}
 	default:
 	}
-
 	return nil
 }
 
@@ -182,23 +181,29 @@ func (ug *UserGeneral) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (ug *UserGeneral) fieldInclusion() error {
 	if ug.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: ug.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: ug.recordType,
+			Msg:   msgFieldInclusion + ", did you use UserGeneral()?"}
 	}
 	if ug.UserRecordFormatType == "" {
 		return &FieldError{FieldName: "UserRecordFormatType",
-			Value: ug.UserRecordFormatType, Msg: msgFieldInclusion}
+			Value: ug.UserRecordFormatType,
+			Msg:   msgFieldInclusion + ", did you use UserGeneral()?"}
 	}
 	if ug.FormatTypeVersionLevel == "" {
 		return &FieldError{FieldName: "FormatTypeVersionLevel",
-			Value: ug.FormatTypeVersionLevel, Msg: msgFieldInclusion}
+			Value: ug.FormatTypeVersionLevel,
+			Msg:   msgFieldInclusion + ", did you use UserGeneral()?"}
 	}
 	if ug.LengthUserData == "" {
 		return &FieldError{FieldName: "LengthUserData",
-			Value: ug.LengthUserData, Msg: msgFieldInclusion}
+			Value: ug.LengthUserData,
+			Msg:   msgFieldInclusion + ", did you use UserGeneral()?"}
 	}
 	if ug.UserData == "" {
 		return &FieldError{FieldName: "UserData",
-			Value: ug.UserData, Msg: msgFieldInclusion}
+			Value: ug.UserData,
+			Msg:   msgFieldInclusion + ", did you use UserGeneral()?"}
 	}
 	return nil
 }

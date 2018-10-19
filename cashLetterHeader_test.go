@@ -304,7 +304,7 @@ func TestCLHFieldInclusionRecordType(t *testing.T) {
 	clh.recordType = ""
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "recordType" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -317,7 +317,7 @@ func TestFieldInclusionCollectionTypeIndicator(t *testing.T) {
 	clh.CollectionTypeIndicator = ""
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "CollectionTypeIndicator" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -330,7 +330,7 @@ func TestFieldInclusionRecordTypeIndicator(t *testing.T) {
 	clh.RecordTypeIndicator = ""
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "RecordTypeIndicator" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -343,7 +343,7 @@ func TestFieldInclusionDestinationRoutingNumber(t *testing.T) {
 	clh.DestinationRoutingNumber = ""
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "DestinationRoutingNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -356,7 +356,7 @@ func TestFieldInclusionDestinationRoutingNumberZero(t *testing.T) {
 	clh.DestinationRoutingNumber = "000000000"
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "DestinationRoutingNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -369,7 +369,7 @@ func TestFieldInclusionECEInstitutionRoutingNumber(t *testing.T) {
 	clh.ECEInstitutionRoutingNumber = ""
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "ECEInstitutionRoutingNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -382,7 +382,7 @@ func TestFieldInclusionECEInstitutionRoutingNumberZero(t *testing.T) {
 	clh.ECEInstitutionRoutingNumber = "000000000"
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "ECEInstitutionRoutingNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -395,7 +395,7 @@ func TestFieldInclusionCashLetterBusinessDate(t *testing.T) {
 	clh.CashLetterBusinessDate = time.Time{}
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "CashLetterBusinessDate" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -408,7 +408,7 @@ func TestFieldInclusionCashLetterCreationDate(t *testing.T) {
 	clh.CashLetterCreationDate = time.Time{}
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "CashLetterCreationDate" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -421,7 +421,7 @@ func TestFieldInclusionCashLetterCreationTime(t *testing.T) {
 	clh.CashLetterCreationTime = time.Time{}
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "CashLetterCreationTime" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}
@@ -434,7 +434,7 @@ func TestFieldInclusionCashLetterID(t *testing.T) {
 	clh.CashLetterID = ""
 	if err := clh.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.Msg != msgFieldInclusion {
+			if e.FieldName != "CashLetterID" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}

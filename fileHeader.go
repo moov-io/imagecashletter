@@ -10,9 +10,6 @@ import (
 	"time"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-// ToDo: ASCII vs EBCDIC
-
 // FileHeader Record is mandatory
 type FileHeader struct {
 	// ID is a client defined string used as a reference to this record.
@@ -209,34 +206,54 @@ func (fh *FileHeader) Validate() error {
 // invalid the Electronic Exchange will be returned.
 func (fh *FileHeader) fieldInclusion() error {
 	if fh.recordType == "" {
-		return &FieldError{FieldName: "recordType", Value: fh.recordType, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "recordType",
+			Value: fh.recordType,
+			Msg:   msgFieldInclusion + ", did you use FileHeader()?"}
 	}
 	if fh.StandardLevel == "" {
-		return &FieldError{FieldName: "StandardLevel", Value: fh.StandardLevel, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "StandardLevel",
+			Value: fh.StandardLevel,
+			Msg:   msgFieldInclusion + ", did you use FileHeader()?"}
 	}
 	if fh.TestFileIndicator == "" {
-		return &FieldError{FieldName: "TestFileIndicator", Value: fh.TestFileIndicator, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "TestFileIndicator",
+			Value: fh.TestFileIndicator,
+			Msg:   msgFieldInclusion + ", did you use FileHeader()?"}
 	}
 	if fh.ResendIndicator == "" {
-		return &FieldError{FieldName: "ResendIndicator", Value: fh.ResendIndicator, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "ResendIndicator",
+			Value: fh.ResendIndicator,
+			Msg:   msgFieldInclusion + ", did you use FileHeader()?"}
 	}
 	if fh.ImmediateDestination == "" {
-		return &FieldError{FieldName: "ImmediateDestination", Value: fh.ImmediateDestination, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "ImmediateDestination",
+			Value: fh.ImmediateDestination,
+			Msg:   msgFieldInclusion + ", did you use FileHeader()?"}
 	}
 	if fh.ImmediateOrigin == "" {
-		return &FieldError{FieldName: "ImmediateOrigin", Value: fh.ImmediateOrigin, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "ImmediateOrigin",
+			Value: fh.ImmediateOrigin,
+			Msg:   msgFieldInclusion + ", did you use FileHeader()?"}
 	}
 	if fh.ImmediateOriginField() == "000000000" {
-		return &FieldError{FieldName: "ImmediateOrigin", Value: fh.ImmediateOrigin, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "ImmediateOrigin",
+			Value: fh.ImmediateOrigin,
+			Msg:   msgFieldInclusion + ", did you use FileHeader()?"}
 	}
 	if fh.ImmediateDestinationField() == "000000000" {
-		return &FieldError{FieldName: "ImmediateDestination", Value: fh.ImmediateDestination, Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "ImmediateDestination",
+			Value: fh.ImmediateDestination,
+			Msg:   msgFieldInclusion + ", did you use FileHeader()?"}
 	}
 	if fh.FileCreationDate.IsZero() {
-		return &FieldError{FieldName: "FileCreationDate", Value: fh.FileCreationDate.String(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "FileCreationDate",
+			Value: fh.FileCreationDate.String(),
+			Msg:   msgFieldInclusion + ", did you use FileHeader()?"}
 	}
 	if fh.FileCreationTime.IsZero() {
-		return &FieldError{FieldName: "FileCreationTime", Value: fh.FileCreationTime.String(), Msg: msgFieldInclusion}
+		return &FieldError{FieldName: "FileCreationTime",
+			Value: fh.FileCreationTime.String(),
+			Msg:   msgFieldInclusion + ", did you use FileHeader()?"}
 	}
 	return nil
 
