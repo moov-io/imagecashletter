@@ -2,7 +2,7 @@ moov-io/x9
 ===
 [![GoDoc](https://godoc.org/github.com/moov-io/x9?status.svg)](https://godoc.org/github.com/moov-io/x9)
 [![Build Status](https://travis-ci.com/moov-io/x9.svg?branch=master)](https://travis-ci.com/moov-io/x9)
-[![Coverage Status](https://coveralls.io/repos/github/moov-io/x9/badge.svg?branch=master)](https://coveralls.io/github/moov-io/x9?branch=master)
+[![Coverage Status](https://codecov.io/gh/moov-io/x9/branch/master/graph/badge.svg)](https://codecov.io/gh/moov-io/x9)
 [![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/x9)](https://goreportcard.com/report/github.com/moov-io/x9)
 [![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/x9/master/LICENSE)
 
@@ -164,4 +164,3 @@ Note: This project uses Go Modules, which requires Go 1.11 or higher, but we shi
 ## License
 
 Apache License 2.0 See [LICENSE](LICENSE) for details.
-
