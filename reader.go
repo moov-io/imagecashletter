@@ -154,7 +154,7 @@ func (r *Reader) parseLine() error {
 		if err := r.parseImageViewAnalysis(); err != nil {
 			return err
 		}
-	case returnPos:
+	case returnDetailPos:
 		if err := r.parseReturnDetail(); err != nil {
 			return err
 		}

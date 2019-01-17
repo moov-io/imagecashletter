@@ -69,6 +69,11 @@ func TestMockUserPayeeEndorsement(t *testing.T) {
 	if upe.PayeeName != "Payee Name" {
 		t.Error("PayeeName does not validate")
 	}
+
+	_ = additionalUPEFields(upe, t)
+}
+
+func additionalUPEFields(upe *UserPayeeEndorsement, t *testing.T) string {
 	if upe.BankRoutingNumber != "121042882" {
 		t.Error("BankRoutingNumber does not validate")
 	}
@@ -108,6 +113,7 @@ func TestMockUserPayeeEndorsement(t *testing.T) {
 	if upe.UserField != "" {
 		t.Error("UserField does not validate")
 	}
+	return ""
 }
 
 // TestUPEString validation

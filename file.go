@@ -25,7 +25,7 @@ const (
 	checkDetailAddendumAPos = "26"
 	checkDetailAddendumBPos = "27"
 	checkDetailAddendumCPos = "28"
-	returnPos               = "31"
+	returnDetailPos         = "31"
 	returnAddendumAPos      = "32"
 	returnAddendumBPos      = "33"
 	returnAddendumCPos      = "34"
