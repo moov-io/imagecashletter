@@ -61,10 +61,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CashLetter'
-        bundles:
-          type: array
-          items:
-            $ref: '#/components/schemas/Bundle'
+#        bundles:
+#          type: array
+#          items:
+#            $ref: '#/components/schemas/Bundle'
         fileControl:
           $ref: '#/components/schemas/FileControl'
       required:
@@ -81,10 +81,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CashLetter'
-        bundles:
-          type: array
-          items:
-            $ref: '#/components/schemas/Bundle'
+#        bundles:
+#          type: array
+#          items:
+#            $ref: '#/components/schemas/Bundle'
         fileControl:
           $ref: '#/components/schemas/FileControl'
     FileHeader:
@@ -268,18 +268,18 @@ components:
         # Current Implementation: CreditItem(s) Precede CheckDetail(s) - CreditItem(s) outside the leading Bundle
         # and Within the First Cash Letter.  Please adjust reader and writer, and openAPI for your specific clearing arrangement
         # implementation or contact MOOV for your particular implementation.
-        creditItems:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreditItem'
-        bundles:
-          type: array
-          items:
-            $ref: '#/components/schemas/Bundle'
-        routingNumberSummary:
-          type: array
-          items:
-            $ref: '#/components/schemas/RoutingNumberSummary'
+#        creditItems:
+#          type: array
+#          items:
+#            $ref: '#/components/schemas/CreditItem'
+#        bundles:
+#          type: array
+#          items:
+#            $ref: '#/components/schemas/Bundle'
+#        routingNumberSummary:
+#          type: array
+#          items:
+#            $ref: '#/components/schemas/RoutingNumberSummary'
         cashLetterControl:
           $ref: '#/components/schemas/CashLetterControl'
     CashLetterHeader:
@@ -302,7 +302,7 @@ components:
             - 20
             - 99
           description: |
-            A code that identifies the type of cash letter.
+            CollectionTypeIndicator is a code that identifies the type of cash letter.
 
             * `00` - Preliminary Forward Information
             * `01` - Forward Presentment
@@ -318,27 +318,27 @@ components:
         destinationRoutingNumber:
           type: string
           maxLength: 9
-          description: The routing and transit number of the institution that receives and processes the cash letter or the bundle.
+          description: DestinationRoutingNumber is the routing and transit number of the institution that receives and processes the cash letter or the bundle.
           example: '999282654'
         eceInstitutionRoutingNumber:
           type: string
           maxLength: 9
-          description: The routing and transit number of the institution that creates the Cash Letter Header record
+          description: ECEInstitutionRoutingNumber is the routing and transit number of the institution that creates the Cash Letter Header record
           example : '217876527'
         cashLetterBusinessDate:
           type: string
           maxLength: 8
-          description: The business date of the cash letter. (Format YYYYMMDD, where - YYYY year, MM month, DD day)
+          description: cashLetterBusinessDate is the business date of the cash letter. (Format YYYYMMDD, where - YYYY year, MM month, DD day)
           example: '20190522'
         cashLetterCreationDate:
           type: string
           maxLength: 8
-          description: The date that the cash letter is created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
+          description: cashLetterCreationDate is the date that the cash letter is created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
           example: '20190522'
         cashLetterCreationTime:
           type: string
           maxLength: 4
-          description: The time that the cash letter is created. (Format - hhmm, where - hh hour, mm minute)
+          description: CashLetterCreationTime is the time that the cash letter is created. (Format - hhmm, where - hh hour, mm minute)
           example: '1310'
         recordTypeIndicator:
           type: string
@@ -349,7 +349,7 @@ components:
             - I
             - F
           description: |
-            A code that indicates the presence of records or the type of records contained in the cash letter.
+            RecordTypeIndicator is a code that indicates the presence of records or the type of records contained in the cash letter.
             If an image is associated with any CheckDetail or Return, the cash letter must have a
             RecordTypeIndicator of I or F.
 
@@ -378,7 +378,7 @@ components:
             - M
             - Z
           description: |
-            A code that indicates the type of documentation that supports all check records in the cash letter.
+            DocumentationTypeIndicator is a code that indicates the type of documentation that supports all check records in the cash letter.
 
             * `A` - No image provided, paper provided separately
             * `B` - No image provided, paper provided separately, image upon request
@@ -399,23 +399,23 @@ components:
         cashLetterID:
           type: string
           maxLength: 8
-          description: Uniquely identifies the cash letter. It is assigned by the institution that creates the cash
+          description: CashLetterID uniquely identifies the cash letter. It is assigned by the institution that creates the cash
             letter and must be unique within a Cash Letter Business Date.
           example: '1'
         originatorContactName:
           type: string
           maxLength: 14
-          description: The name of contact at the institution that creates the cash letter.
+          description: OriginatorContactName is the name of contact at the institution that creates the cash letter.
           example: "John Smith"
         originatorContactPhoneNumber:
           type: string
           maxLength: 10
-          description: The phone number of the contact at the institution that creates the cash letter.
+          description: OriginatorContactPhoneNumber is the phone number of the contact at the institution that creates the cash letter.
           example: '5685551212'
         fedWorkType:
           type: string
           maxLength: 1
-          description: Any valid codes specified by the Federal Reserve Bank
+          description: fedWorkType is any valid codes specified by the Federal Reserve Bank
           example: 'V'
         returnsIndicator:
           type: string
@@ -426,7 +426,7 @@ components:
             - R
             - J
           description: |
-            Identifies type of returns
+            ReturnsIndicator ddentifies type of returns
 
             * ` ` - Original Message
             * `E` - Administrative - items being returned that are handled by the bank and usually do not directly
@@ -436,11 +436,15 @@ components:
         userField:
           type: string
           maxLength: 1
-          description: A field used at the discretion of users of the standard
+          description: UserField is a field used at the discretion of users of the standard
           example: 'V'
     CashLetterControl:
       properties:
         id:
-          description: CashLetter ID
           type: string
+          description: CashLetter ID
           example: d1e26288
+        cashLetterBundleCount:
+          type: int
+          description: CashLetterBundleCount identifies the total number of bundles within the cash letter.
+          example: 1
