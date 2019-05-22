@@ -21,44 +21,44 @@ type CashLetterHeader struct {
 	recordType string
 	// CollectionTypeIndicator is a code that identifies the type of cash letter.
 	// Values:
-	// 00: Preliminary Forward Information–Used when information may change and the
+	// 00: Preliminary Forward Information – Used when information may change and the
 	// information is treated as not final.
-	// 01: Forward Presentment–For the collection and settlement of checks (demand
+	// 01: Forward Presentment – For the collection and settlement of checks (demand
 	// instruments). Data are treated as final.
-	// 02: Forward Presentment–Same-Day Settlement–For the collection and settlement of
+	// 02: Forward Presentment – Same-Day Settlement –F or the collection and settlement of
 	// checks (demand instruments) presented under the Federal Reserve’s same day
 	// settlement amendments to Regulation CC (12CFR Part 229). Data are treated as
 	// final.
-	// 03: Return–For the return of check(s). Transaction carries value. Data are
+	// 03: Return – For the return of check(s). Transaction carries value. Data are
 	// treated as final.
-	// 04: Return Notification–For the notification of return of check(s). Transaction
+	// 04: Return Notification – For the notification of return of check(s). Transaction
 	// carries no value. The Return Notification Indicator (Field 12) in the Return Record
 	// (Type 31) has to be interrogated to determine whether a notice is a preliminary or final
 	// notification.
-	// 05: Preliminary Return Notification–For the notification of return of check(s). Transaction
+	// 05: Preliminary Return Notification – For the notification of return of check(s). Transaction
 	// carries no value. Used to indicate that an item may be returned. This field supersedes
 	// the Return Notification Indicator (Field 12) in the Return Record (Type 31).
-	// 06: Final Return Notification–For the notification of return of check(s). Transaction
+	// 06: Final Return Notification – For the notification of return of check(s). Transaction
 	// carries no value. Used to indicate that an item will be returned. This field
 	// supersedes the Return Notification Indicator (Field 12) in the Return Record (Type 31).
-	// 20: No Detail–There are no detail records contained within the bundle or cash letter.
+	// 20: No Detail – There are no detail records contained within the bundle or cash letter.
 	// Defined Value of the Cash Letter Record Type Indicator (Field 8) shall be set to ‘N’.
 	// 99: Bundles not the same collection type. Use of the value is only allowed by clearing
 	// arrangement.
 	CollectionTypeIndicator string `json:"collectionTypeIndicator"`
 	// DestinationRoutingNumber contains the routing and transit number of the institution that
 	// receives and processes the cash letter or the bundle.  Format: TTTTAAAAC, where:
-	//  TTTT Federal Reserve Prefix
-	//  AAAA ABA Institution Identifier
-	//  C Check Digit
-	//	For a number that identifies a non-financial institution: NNNNNNNNN
+	// TTTT Federal Reserve Prefix
+	// AAAA ABA Institution Identifier
+	// C Check Digit
+	// For a number that identifies a non-financial institution: NNNNNNNNN
 	DestinationRoutingNumber string `json:"destinationRoutingNumber"`
 	// ECEInstitutionRoutingNumber contains the routing and transit number of the institution that
-	// that creates the Cash Letter Header Record.  Format: TTTTAAAAC, where:
-	//  TTTT Federal Reserve Prefix
-	//  AAAA ABA Institution Identifier
-	//  C Check Digit
-	//	For a number that identifies a non-financial institution: NNNNNNNNN
+	// creates the Cash Letter Header Record.  Format: TTTTAAAAC, where:
+	// TTTT Federal Reserve Prefix
+	// AAAA ABA Institution Identifier
+	// C Check Digit
+	// For a number that identifies a non-financial institution: NNNNNNNNN
 	ECEInstitutionRoutingNumber string `json:"eceInstitutionRoutingNumber"`
 	// CashLetterBusinessDate is the business date of the cash letter.
 	// Format: YYYYMMDD, where: YYYY year, MM month, DD day
@@ -126,7 +126,7 @@ type CashLetterHeader struct {
 	OriginatorContactPhoneNumber string `json:"originatorContactPhoneNumber"`
 	// FedWorkType is any valid codes specified by the Federal Reserve Bank.
 	FedWorkType string `json:"fedWorkType"`
-	// ReturnsIndicator identifies type pf returns.
+	// ReturnsIndicator identifies type of returns.
 	// Values:
 	// "": Blank for Forward Presentment
 	// E: Administrative - items being returned that are handled by the bank and usually do not directly

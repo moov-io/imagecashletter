@@ -1,191 +1,189 @@
 openapi: 3.0.2
 info:
-  description: Moov X9 () implements an HTTP API for creating, parsing and validating X9 (Check21) files.
-  version: v1
-  title: X9 API
   contact:
     url: https://github.com/moov-io/x9
+  description: Moov X9 () implements an HTTP API for creating, parsing and validating X9 (Check21) files.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: X9 API
+  version: v1
 servers:
-  - url: http://localhost:8083
-    description: Local development
-
+- description: Local development
+  url: http://localhost:8083
 tags:
-  - name: Files
-    description: |
-      File contains X9 Cash Letters and Bundles.
+- description: |
+    File contains X9 Cash Letters and Bundles.
+  name: Files
 paths:
   /ping:
     get:
-      tags:
-        - Files
-      summary: Ping the Wire service to check if running
       operationId: ping
       responses:
-        '200':
+        200:
           description: Service is running properly
+      summary: Ping the Wire service to check if running
+      tags:
+      - Files
   /files:
     get:
-      tags:
-        - Files
-      summary: Gets a list of Files
       operationId: getFiles
-      security:
-        - bearerAuth: []
-        - cookieAuth: []
       parameters:
-        - name: X-Request-Id
-          in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
-          example: rs4f9915
-          schema:
-            type: string
+      - description: Optional Request ID allows application developer to trace requests through the systems logs
+        example: rs4f9915
+        explode: false
+        in: header
+        name: X-Request-Id
+        required: false
+        schema:
+          type: string
+        style: simple
       responses:
-        '200':
+        200:
           description: A list of File objects
-
-
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      summary: Gets a list of Files
+      tags:
+      - Files
 components:
   schemas:
     CreateFile:
       properties:
         id:
-          type: string
           description: File ID
           example: 3f2d23ee214
+          type: string
         fileHeader:
           $ref: '#/components/schemas/FileHeader'
         cashLetters:
-          type: array
           items:
             $ref: '#/components/schemas/CashLetter'
-        bundles:
           type: array
+        bundles:
           items:
             $ref: '#/components/schemas/Bundle'
+          type: array
         fileControl:
           $ref: '#/components/schemas/FileControl'
       required:
-        - fileHeader
+      - fileHeader
     File:
       properties:
         id:
-          type: string
           description: File ID
           example: 3f2d23ee214
+          type: string
         fileHeader:
           $ref: '#/components/schemas/FileHeader'
         cashLetters:
-          type: array
           items:
             $ref: '#/components/schemas/CashLetter'
-        bundles:
           type: array
+        bundles:
           items:
             $ref: '#/components/schemas/Bundle'
+          type: array
         fileControl:
           $ref: '#/components/schemas/FileControl'
     FileHeader:
       properties:
         id:
           description: CashHeader ID
-          type: string
           example: d1e26288
-        standardLevel:
           type: string
-          maxLength: 2
-          enum:
-            - 03
-            - 30
-            - 35
+        standardLevel:
           description: |
             Identifies the standard level of the file.
 
             * `03` - DSTU X9.37 - 2003
             * `30` - X9.100-187-2008
             * `35` - X9.100-187-2013 and 2016
-          example: '35'
-        testFileIndicator:
-          type: string
-          maxLength: 1
           enum:
-            - T
-            - P
+          - "3"
+          - "30"
+          - "35"
+          example: "35"
+          maxLength: 2
+          type: string
+        testFileIndicator:
           description: |
             Identifies whether the file is a test or production file.
 
             * `T` - Test File
             * `P` - Production File
-          example: 'P'
-        immediateDestination:
+          enum:
+          - T
+          - P
+          example: P
+          maxLength: 1
           type: string
-          maxLength: 9
+        immediateDestination:
           description: |
             The routing and transit number of the Federal Reserve Bank (FRB)
             or receiver to which the file is being sent.
-          example: '231380102'
-        immediateOrigin:
-          type: string
+          example: "231380102"
           maxLength: 9
+          type: string
+        immediateOrigin:
           description: |
             The routing and transit number of the Federal Reserve Bank (FRB)
             or originator from which the file is being sent.
-          example: '201982859'
-        fileCreationDate:
+          example: "201982859"
+          maxLength: 9
           type: string
-          maxLength: 8
+        fileCreationDate:
           description: |
             The date that the immediate origin institution creates the file.
             (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: '20190201'
-        fileCreationTime:
+          example: "20190201"
+          maxLength: 8
           type: string
-          maxLength: 4
+        fileCreationTime:
           description: |
             The time the immediate origin institution creates the file.
             (Format - hhmm, where - hh hour, mm minute)
-          example: '1310'
+          example: "1310"
+          maxLength: 4
+          type: string
         resendIndicator:
-          type: string
-          maxLength: 1
           description: Indicates whether the file has been previously transmitted. (Y - Yes, N - No)
-          example: 'Y'
-        immediateDestinationName:
-          type: string
-          maxLength: 18
-          description: Identifies the short name of the institution that receives the file.
-          example: 'ABC Bank'
-        immediateOriginName:
-          type: string
-          maxLength: 18
-          description: Identifies the short name of the institution that sends the file.
-          example: 'Bank One'
-        fileIDModifier:
-          type: string
+          example: Y
           maxLength: 1
+          type: string
+        immediateDestinationName:
+          description: Identifies the short name of the institution that receives the file.
+          example: ABC Bank
+          maxLength: 18
+          type: string
+        immediateOriginName:
+          description: Identifies the short name of the institution that sends the file.
+          example: Bank One
+          maxLength: 18
+          type: string
+        fileIDModifier:
           description: |
             A code that permits multiple files, created on the same date, same time and between the
             same institutions, to be distinguished one from another. If all of the following fields in a previous file are
             equal to the same fields in this file: FileHeader ImmediateDestination, ImmediateOrigin, FileCreationDate, and
             FileCreationTime, it must be defined.
-          example: 'A'
-        countryCode:
+          example: A
+          maxLength: 1
           type: string
-          maxLength: 2
+        countryCode:
           description: |
             A 2-character code as approved by the International Organization for Standardization (ISO) used
             to identify the country in which the payer bank is located.
-          example: 'US'
+          example: US
+          maxLength: 2
+          type: string
         userField:
-          type: string
-          maxLength: 4
           description: Identifies a field used at the discretion of users of the standard.
-          example: 'ZZZZ'
-        companionDocumentIndicator:
+          example: ZZZZ
+          maxLength: 4
           type: string
-          maxLength: 1
+        companionDocumentIndicator:
           description: |
             Identifies a field used to indicate the Companion Document being used.
             Shall be present only under clearing arrangements. Companion Document usage and values
@@ -194,113 +192,104 @@ components:
             0–9 Reserved for United States use
             A–J Reserved for Canadian use
             Other - as defined by clearing arrangements.
-          example: '1'
+          example: "1"
+          maxLength: 1
+          type: string
       required:
-        - standardLevel
-        - testFileIndicator
-        - resendIndicator
-        - immediateDestination
-        - immediateOrigin
-        - fileCreationDate
-        - fileCreationTime
+      - fileCreationDate
+      - fileCreationTime
+      - immediateDestination
+      - immediateOrigin
+      - resendIndicator
+      - standardLevel
+      - testFileIndicator
     FileControl:
       properties:
         id:
-          type: string
           description: FileControl ID
           example: d1e26288
+          type: string
         cashLetterCount:
-          type: integer
           description: Identifies the total number of cash letters within the file.
           example: 1
-        totalRecordCount:
+          format: int32
           type: integer
+        totalRecordCount:
           description: Identifies the total number of records of all types sent in the file, including the FileControl.
           example: 1
-        totalItemCount:
+          format: int32
           type: integer
+        totalItemCount:
           description: Identifies the total number of Items sent within the file.
           example: 5
-        fileTotalAmount :
+          format: int32
           type: integer
+        fileTotalAmount:
           description: Identifies the total Item amount of the complete file.
           example: 100
+          format: int32
+          type: integer
         immediateOriginContactName:
-          type: string
-          maxLength: 14
           description: Identifies contact at the institution that creates the file.
-          example: 'John Smith'
+          example: John Smith
+          maxLength: 14
+          type: string
         immediateOriginContactPhoneNumber:
-          type: string
-          maxLength: 10
           description: Identifies the phone number of the contact at the institution that creates the file.
-          example: '555-555-1212'
-        creditTotalIndicator:
+          example: 555-555-1212
+          maxLength: 10
           type: string
-          maxLength: 1
-          enum:
-            -
-            - 0
-            - 1
+        creditTotalIndicator:
           description: |
             Is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount.
             TotalRecordCount includes all records of all types regardless of the value of this field.
             * ` ` - No Credit Items
             * `0` - Credit Items are not included in totals
             * `1` - Credit Items are included in totals
+          enum:
+          - null
+          - "0"
+          - "1"
+          maxLength: 1
+          type: string
       required:
-        - cashLetterCount
-        - totalRecordCount
-        - totalItemCount
-        - fileTotalAmount
+      - cashLetterCount
+      - fileTotalAmount
+      - totalItemCount
+      - totalRecordCount
     RawFile:
-      type: string
       description: Plaintext X9 file
-      example: "0135T231380104121042882201809051523NCitadel           Wells Fargo        US     "
+      example: '0135T231380104121042882201809051523NCitadel           Wells Fargo        US     '
+      type: string
     Files:
-      type: array
       items:
         $ref: '#/components/schemas/File'
+      type: array
     CashLetter:
       properties:
         cashLetterHeader:
           $ref: '#/components/schemas/CashLetterHeader'
-        # Current Implementation: CreditItem(s) Precede CheckDetail(s) - CreditItem(s) outside the leading Bundle
-        # and Within the First Cash Letter.  Please adjust reader and writer, and openAPI for your specific clearing arrangement
-        # implementation or contact MOOV for your particular implementation.
         creditItems:
-          type: array
           items:
             $ref: '#/components/schemas/CreditItem'
-        bundles:
           type: array
+        bundles:
           items:
             $ref: '#/components/schemas/Bundle'
-        routingNumberSummary:
           type: array
+        routingNumberSummary:
           items:
             $ref: '#/components/schemas/RoutingNumberSummary'
+          type: array
         cashLetterControl:
           $ref: '#/components/schemas/CashLetterControl'
     CashLetterHeader:
       properties:
         id:
           description: CashHeader ID
-          type: string
           example: d1e26288
-        collectionTypeIndicator:
           type: string
-          maxLength: 2
-          enum:
-            - 00
-            - 01
-            - 02
-            - 03
-            - 04
-            - 05
-            - 06
-            - 20
-            - 99
+        collectionTypeIndicator:
           description: |
             A code that identifies the type of cash letter.
 
@@ -313,41 +302,45 @@ components:
             * `06` - Final Return Notification
             * `20` - No Detail
             * `99` - Bundles not the same collection type. Use of the value is only allowed by clearing arrangement.
-          example:
-            '00'
-        destinationRoutingNumber:
-          type: string
-          maxLength: 9
-          description: The routing and transit number of the institution that receives and processes the cash letter or the bundle.
-          example: '999282654'
-        eceInstitutionRoutingNumber:
-          type: string
-          maxLength: 9
-          description: The routing and transit number of the institution that creates the Cash Letter Header record
-          example : '217876527'
-        cashLetterBusinessDate:
-          type: string
-          maxLength: 8
-          description: The business date of the cash letter. (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: '20190522'
-        cashLetterCreationDate:
-          type: string
-          maxLength: 8
-          description: The date that the cash letter is created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: '20190522'
-        cashLetterCreationTime:
-          type: string
-          maxLength: 4
-          description: The time that the cash letter is created. (Format - hhmm, where - hh hour, mm minute)
-          example: '1310'
-        recordTypeIndicator:
-          type: string
-          maxLength: 1
           enum:
-            - N
-            - E
-            - I
-            - F
+          - "0"
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "5"
+          - "6"
+          - "20"
+          - "99"
+          example: "00"
+          maxLength: 2
+          type: string
+        destinationRoutingNumber:
+          description: The routing and transit number of the institution that receives and processes the cash letter or the bundle.
+          example: "999282654"
+          maxLength: 9
+          type: string
+        eceInstitutionRoutingNumber:
+          description: The routing and transit number of the institution that creates the Cash Letter Header record
+          example: "217876527"
+          maxLength: 9
+          type: string
+        cashLetterBusinessDate:
+          description: The business date of the cash letter. (Format YYYYMMDD, where - YYYY year, MM month, DD day)
+          example: "20190522"
+          maxLength: 8
+          type: string
+        cashLetterCreationDate:
+          description: The date that the cash letter is created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
+          example: "20190522"
+          maxLength: 8
+          type: string
+        cashLetterCreationTime:
+          description: The time that the cash letter is created. (Format - hhmm, where - hh hour, mm minute)
+          example: "1310"
+          maxLength: 4
+          type: string
+        recordTypeIndicator:
           description: |
             A code that indicates the presence of records or the type of records contained in the cash letter.
             If an image is associated with any CheckDetail or Return, the cash letter must have a
@@ -358,25 +351,15 @@ components:
             * `I` - Cash letter contains electronic check records (Type 2x’s, 3x’s) and image records (Type 5x’s).
             * `F` - Cash letter contains electronic check records (Type 2x’s and 3x’s) and image records (Type 5x’s)
             that correspond to a previously sent cash letter (i.e., E file).
-          example: 'N'
-        documentationTypeIndicator:
-          type: string
-          maxLength: 1
           enum:
-            - A
-            - B
-            - C
-            - D
-            - E
-            - F
-            - G
-            - H
-            - I
-            - J
-            - K
-            - L
-            - M
-            - Z
+          - N
+          - E
+          - I
+          - F
+          example: N
+          maxLength: 1
+          type: string
+        documentationTypeIndicator:
           description: |
             A code that indicates the type of documentation that supports all check records in the cash letter.
 
@@ -395,36 +378,45 @@ components:
             * `M` - No image provided, Electronic Check provided separately
             * `Z` - Not Same Type–Documentation associated with each item in Cash Letter will be different.
             The Check Detail
-          example: 'A'
-        cashLetterID:
-          type: string
-          maxLength: 8
-          description: Uniquely identifies the cash letter. It is assigned by the institution that creates the cash
-            letter and must be unique within a Cash Letter Business Date.
-          example: '1'
-        originatorContactName:
-          type: string
-          maxLength: 14
-          description: The name of contact at the institution that creates the cash letter.
-          example: "John Smith"
-        originatorContactPhoneNumber:
-          type: string
-          maxLength: 10
-          description: The phone number of the contact at the institution that creates the cash letter.
-          example: '5685551212'
-        fedWorkType:
-          type: string
-          maxLength: 1
-          description: Any valid codes specified by the Federal Reserve Bank
-          example: 'V'
-        returnsIndicator:
-          type: string
-          maxLength: 1
           enum:
-            -
-            - E
-            - R
-            - J
+          - A
+          - B
+          - C
+          - D
+          - E
+          - F
+          - G
+          - H
+          - I
+          - J
+          - K
+          - L
+          - M
+          - Z
+          example: A
+          maxLength: 1
+          type: string
+        cashLetterID:
+          description: Uniquely identifies the cash letter. It is assigned by the institution that creates the cash letter and must be unique within a Cash Letter Business Date.
+          example: "1"
+          maxLength: 8
+          type: string
+        originatorContactName:
+          description: The name of contact at the institution that creates the cash letter.
+          example: John Smith
+          maxLength: 14
+          type: string
+        originatorContactPhoneNumber:
+          description: The phone number of the contact at the institution that creates the cash letter.
+          example: "5685551212"
+          maxLength: 10
+          type: string
+        fedWorkType:
+          description: Any valid codes specified by the Federal Reserve Bank
+          example: V
+          maxLength: 1
+          type: string
+        returnsIndicator:
           description: |
             Identifies type of returns
 
@@ -433,14 +425,21 @@ components:
             affect the customer or its account.
             * `R` - Customer–items being returned that directly affect a customer’s account.
             * `J` - Reject Return
-        userField:
-          type: string
+          enum:
+          - null
+          - E
+          - R
+          - J
           maxLength: 1
+          type: string
+        userField:
           description: A field used at the discretion of users of the standard
-          example: 'V'
+          example: V
+          maxLength: 1
+          type: string
     CashLetterControl:
       properties:
         id:
           description: CashLetter ID
-          type: string
           example: d1e26288
+          type: string

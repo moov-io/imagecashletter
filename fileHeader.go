@@ -35,7 +35,7 @@ type FileHeader struct {
 	//  For a number that identifies a non-financial institution: NNNNNNNNN
 	ImmediateDestination string `json:"immediateDestination"`
 	// ImmediateOrigin contains the routing and transit number of the Federal Reserve Bank
-	// (FRB) or receiver from which the file is being sent.  Format: TTTTAAAAC, where:
+	// (FRB) or originator from which the file is being sent.  Format: TTTTAAAAC, where:
 	// TTTT Federal Reserve Prefix
 	// AAAA ABA Institution Identifier
 	// C Check Digit

@@ -125,6 +125,9 @@ func (fc *FileControl) fieldInclusion() error {
 			Value: fc.recordType,
 			Msg:   msgFieldInclusion + ", did you use FileControl()?"}
 	}
+
+	// ToDo:  Should we allow these values to be 0?
+
 	if fc.CashLetterCount == 0 {
 		return &FieldError{FieldName: "CashLetterCount",
 			Value: fc.CashLetterCountField(),
