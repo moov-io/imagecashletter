@@ -1,0 +1,167 @@
+openapi: 3.0.2
+info:
+  description: Moov X9 () implements an HTTP API for creating, parsing and validating Check21 X9 files.
+  version: v1
+  title: X9 API
+  contact:
+    url: https://github.com/moov-io/x9
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:8083
+    description: Local development
+
+tags:
+  - name: Files
+    description: |
+      File contains X9 Cash Letters and Bundles.
+paths:
+  /ping:
+    get:
+      tags:
+        - Files
+      summary: Ping the Wire service to check if running
+      operationId: ping
+      responses:
+        '200':
+          description: Service is running properly
+  /files:
+    get:
+      tags:
+        - Files
+      summary: Gets a list of Files
+      operationId: getFiles
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of File objects
+
+
+components:
+  schemas:
+    CreateFile:
+      properties:
+        id:
+          type: string
+          description: File ID
+          example: 3f2d23ee214
+        fileHeader:
+          $ref: '#/components/schemas/FileHeader'
+        cashLetters:
+          type: array
+          items:
+            $ref: '#/components/schemas/CashLetter'
+        bundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bundle'
+        fileControl:
+          $ref: '#/components/schemas/FileControl'
+      required:
+        - fileHeader
+    File:
+      properties:
+        id:
+          type: string
+          description: File ID
+          example: 3f2d23ee214
+        fileHeader:
+          $ref: '#/components/schemas/FileHeader'
+        cashLetters:
+          type: array
+          items:
+            $ref: '#/components/schemas/CashLetter'
+        bundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bundle'
+        fileControl:
+          $ref: '#/components/schemas/FileControl'
+    FileHeader:
+      properties:
+        standardLevel:
+          type: string
+          enum:
+            - 03
+            - 30
+            - 35
+          description: |
+            Identifies the standard level of the file.
+
+            * `03` - DSTU X9.37 - 2003
+            * `30` - X9.100-187-2008
+            * `35` - X9.100-187-2013 and 2016
+          example: "35"
+        testFileIndicator:
+          type: string
+          enum:
+            - T
+            - P
+          description: |
+            Identifies whether the file is a test or production file.
+
+            * `T` - Test File
+            * `P` - Production File
+          example: "P"
+      required:
+        - standardLevel
+        - testFileIndicator
+    FileControl:
+      properties:
+        id:
+          description: Moov API File ID
+          type: string
+          example: d1e26288
+        cashLetterCount:
+          description: Identifies the total number of cash letters within the file.
+          type: integer
+          example: 1
+        totalRecordCount:
+          description: Identifies the total number of records of all types sent in the file, including the FileControl.
+          type: integer
+          example: 1
+        totalItemCount:
+          description: Identifies the total number of Items sent within the file.
+          type: integer
+          example: 5
+        fileTotalAmount :
+          description: Identifies the total Item amount of the complete file.
+          type: integer
+          example: 100
+        immediateOriginContactName:
+          description: Identifies contact at the institution that creates the file.
+          type: string
+          example: "John Smith"
+        immediateOriginContactPhoneNumber:
+          description: Identifies the phone number of the contact at the institution that creates the file.
+          type: string
+          example: "555-555-1212"
+        creditTotalIndicator:
+          type: string
+          enum:
+            - 0
+            - 1
+          description: |
+            Is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount.
+            TotalRecordCount includes all records of all types regardless of the value of this field.
+
+            * `0` - Credit Items are not included in totals
+            * `1` - Credit Items are included in totals
+    RawFile:
+      type: string
+      description: Plaintext X9 file
+      example: "0135T231380104121042882201809051523NCitadel           Wells Fargo        US     "
+    Files:
+      type: array
+      items:
+        $ref: '#/components/schemas/File'

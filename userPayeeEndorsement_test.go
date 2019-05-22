@@ -73,6 +73,8 @@ func TestMockUserPayeeEndorsement(t *testing.T) {
 	_ = additionalUPEFields(upe, t)
 }
 
+// ToDo: Consider making a Helper function
+
 func additionalUPEFields(upe *UserPayeeEndorsement, t *testing.T) string {
 	if upe.BankRoutingNumber != "121042882" {
 		t.Error("BankRoutingNumber does not validate")

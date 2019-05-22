@@ -76,7 +76,7 @@ func NewReader(r io.Reader) *Reader {
 	}
 }
 
-// Read reads each line of the X9file and defines which parser to use based
+// Read reads each line of the X9 file and defines which parser to use based
 // on the first character of each line. It also enforces X9 formatting rules and returns
 // the appropriate error if issues are found.  It supports EBCDIC and ASCII
 func (r *Reader) Read() (File, error) {

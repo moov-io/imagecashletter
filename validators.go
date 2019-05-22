@@ -14,7 +14,7 @@ var (
 	//upperAlphanumericRegex    = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
 	alphanumericRegex        = regexp.MustCompile(`[^ a-zA-Z0-9]`)
 	alphanumericRegexSpecial = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
-	numericRegex             = regexp.MustCompile(`[^ 0-9]`)
+	numericRegex             = regexp.MustCompile(`[^0-9]`)
 	msgAlphanumeric          = "has non alphanumeric characters"
 	msgAlphanumericSpecial   = "has non alphanumeric or special characters"
 	//msgUpperAlpha             = "is not uppercase A-Z or 0-9"

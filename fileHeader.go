@@ -26,7 +26,7 @@ type FileHeader struct {
 	// Values:
 	// T: Test File
 	// P: Production File
-	TestFileIndicator string `json:"testIndicator"`
+	TestFileIndicator string `json:"testFileIndicator"`
 	// ImmediateDestination contains the routing and transit number of the Federal Reserve Bank
 	// (FRB) or receiver to which the file is being sent.  Format: TTTTAAAAC, where:
 	//  TTTT Federal Reserve Prefix
