@@ -14,6 +14,5 @@ type File struct {
 	Id string `json:"id,omitempty"`
 	FileHeader FileHeader `json:"fileHeader,omitempty"`
 	CashLetters []CashLetter `json:"cashLetters,omitempty"`
-	Bundles []Bundle `json:"bundles,omitempty"`
 	FileControl FileControl `json:"fileControl,omitempty"`
 }

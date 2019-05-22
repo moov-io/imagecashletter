@@ -12,4 +12,6 @@ package openapi
 type CashLetterControl struct {
 	// CashLetter ID
 	Id string `json:"id,omitempty"`
+	// CashLetterBundleCount identifies the total number of bundles within the cash letter.
+	CashLetterBundleCount int `json:"cashLetterBundleCount,omitempty"`
 }
