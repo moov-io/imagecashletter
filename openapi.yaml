@@ -90,7 +90,7 @@ components:
     FileHeader:
       properties:
         id:
-          description: CashHeader ID
+          description: FileHeader ID
           type: string
           example: d1e26288
         standardLevel:
@@ -101,7 +101,7 @@ components:
             - 30
             - 35
           description: |
-            Identifies the standard level of the file.
+            StandardLevel identifies the standard level of the file.
 
             * `03` - DSTU X9.37 - 2003
             * `30` - X9.100-187-2008
@@ -114,7 +114,7 @@ components:
             - T
             - P
           description: |
-            Identifies whether the file is a test or production file.
+            TestFileIndicator dentifies whether the file is a test or production file.
 
             * `T` - Test File
             * `P` - Production File
@@ -123,50 +123,50 @@ components:
           type: string
           maxLength: 9
           description: |
-            The routing and transit number of the Federal Reserve Bank (FRB)
+            ImmediateDestination is the routing and transit number of the Federal Reserve Bank (FRB)
             or receiver to which the file is being sent.
           example: '231380102'
         immediateOrigin:
           type: string
           maxLength: 9
           description: |
-            The routing and transit number of the Federal Reserve Bank (FRB)
+            ImmediateOrigin is the routing and transit number of the Federal Reserve Bank (FRB)
             or originator from which the file is being sent.
           example: '201982859'
         fileCreationDate:
           type: string
           maxLength: 8
           description: |
-            The date that the immediate origin institution creates the file.
+            FileCreationDate is the date that the immediate origin institution creates the file.
             (Format YYYYMMDD, where - YYYY year, MM month, DD day)
           example: '20190201'
         fileCreationTime:
           type: string
           maxLength: 4
           description: |
-            The time the immediate origin institution creates the file.
+            FileCreationTime is the time the immediate origin institution creates the file.
             (Format - hhmm, where - hh hour, mm minute)
           example: '1310'
         resendIndicator:
           type: string
           maxLength: 1
-          description: Indicates whether the file has been previously transmitted. (Y - Yes, N - No)
+          description: ResendIndicator Indicates whether the file has been previously transmitted. (Y - Yes, N - No)
           example: 'Y'
         immediateDestinationName:
           type: string
           maxLength: 18
-          description: Identifies the short name of the institution that receives the file.
+          description: ImmediateDestinationName Identifies the short name of the institution that receives the file.
           example: 'ABC Bank'
         immediateOriginName:
           type: string
           maxLength: 18
-          description: Identifies the short name of the institution that sends the file.
+          description: immediateOriginName identifies the short name of the institution that sends the file.
           example: 'Bank One'
         fileIDModifier:
           type: string
           maxLength: 1
           description: |
-            A code that permits multiple files, created on the same date, same time and between the
+            FileIDModifier is a code that permits multiple files, created on the same date, same time and between the
             same institutions, to be distinguished one from another. If all of the following fields in a previous file are
             equal to the same fields in this file: FileHeader ImmediateDestination, ImmediateOrigin, FileCreationDate, and
             FileCreationTime, it must be defined.
@@ -175,19 +175,19 @@ components:
           type: string
           maxLength: 2
           description: |
-            A 2-character code as approved by the International Organization for Standardization (ISO) used
+            CountryCode is a 2-character code as approved by the International Organization for Standardization (ISO) used
             to identify the country in which the payer bank is located.
           example: 'US'
         userField:
           type: string
           maxLength: 4
-          description: Identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users of the standard.
           example: 'ZZZZ'
         companionDocumentIndicator:
           type: string
           maxLength: 1
           description: |
-            Identifies a field used to indicate the Companion Document being used.
+            CompanionDocumentIndicator identifies a field used to indicate the Companion Document being used.
             Shall be present only under clearing arrangements. Companion Document usage and values
             defined by clearing arrangements.
             Values:
@@ -211,29 +211,29 @@ components:
           example: d1e26288
         cashLetterCount:
           type: integer
-          description: Identifies the total number of cash letters within the file.
+          description: CashLetterCount identifies the total number of cash letters within the file.
           example: 1
         totalRecordCount:
           type: integer
-          description: Identifies the total number of records of all types sent in the file, including the FileControl.
+          description: TotalRecordCount identifies the total number of records of all types sent in the file, including the FileControl.
           example: 1
         totalItemCount:
           type: integer
-          description: Identifies the total number of Items sent within the file.
+          description: totalItemCount identifies the total number of Items sent within the file.
           example: 5
-        fileTotalAmount :
+        fileTotalAmount:
           type: integer
-          description: Identifies the total Item amount of the complete file.
+          description: FileTotalAmount identifies the total Item amount of the complete file.
           example: 100
         immediateOriginContactName:
           type: string
           maxLength: 14
-          description: Identifies contact at the institution that creates the file.
+          description: immediateOriginContactName identifies contact at the institution that creates the file.
           example: 'John Smith'
         immediateOriginContactPhoneNumber:
           type: string
           maxLength: 10
-          description: Identifies the phone number of the contact at the institution that creates the file.
+          description: ImmediateOriginContactPhoneNumber identifies the phone number of the contact at the institution that creates the file.
           example: '555-555-1212'
         creditTotalIndicator:
           type: string
@@ -243,11 +243,12 @@ components:
             - 0
             - 1
           description: |
-            Is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount.
+            CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount.
             TotalRecordCount includes all records of all types regardless of the value of this field.
             * ` ` - No Credit Items
             * `0` - Credit Items are not included in totals
             * `1` - Credit Items are included in totals
+          example: 1
       required:
         - cashLetterCount
         - totalRecordCount
@@ -268,24 +269,24 @@ components:
         # Current Implementation: CreditItem(s) Precede CheckDetail(s) - CreditItem(s) outside the leading Bundle
         # and Within the First Cash Letter.  Please adjust reader and writer, and openAPI for your specific clearing arrangement
         # implementation or contact MOOV for your particular implementation.
-#        creditItems:
-#          type: array
-#          items:
-#            $ref: '#/components/schemas/CreditItem'
-#        bundles:
-#          type: array
-#          items:
-#            $ref: '#/components/schemas/Bundle'
-#        routingNumberSummary:
-#          type: array
-#          items:
-#            $ref: '#/components/schemas/RoutingNumberSummary'
+        creditItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreditItem'
+        bundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bundle'
+        routingNumberSummary:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoutingNumberSummary'
         cashLetterControl:
           $ref: '#/components/schemas/CashLetterControl'
     CashLetterHeader:
       properties:
         id:
-          description: CashHeader ID
+          description: CashLetterHeader ID
           type: string
           example: d1e26288
         collectionTypeIndicator:
@@ -442,9 +443,114 @@ components:
       properties:
         id:
           type: string
-          description: CashLetter ID
+          description: CashLetterControl ID
           example: d1e26288
         cashLetterBundleCount:
           type: int
           description: CashLetterBundleCount identifies the total number of bundles within the cash letter.
           example: 1
+        cashLetterItemsCount:
+          type: int
+          description: CashLetterItemsCount identifies the total number of items within the cash letter.
+          example: 1
+        cashLetterTotalAmount:
+          type: int
+          description: CashLetterTotalAmount identifies the total dollar value of all item amounts within the cash letter.
+          example: 100
+        cashLetterImagesCount:
+          type: int
+          description: CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter.
+          example: 1
+        eceInstitutionName:
+          type: string
+          maxLength: 18
+          description: ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl.
+          example: "Citadel"
+        settlementDate:
+          type: string
+          maxLength: 8
+          description: |
+            SettlementDate identifies the date that the institution that creates the cash letter expects settlement.
+            (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
+          example: "20190522"
+        creditTotalIndicator:
+          maxLength: 1
+          enum:
+            -
+            - 0
+            - 1
+          description: |
+            CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals.
+            If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of
+            all types regardless of the value of this field.
+            * ` ` - No Credit Items
+            * `0` - Credit Items are not included in totals
+            * `1` - Credit Items are included in totals
+          example: 1
+      required:
+        - cashLetterItemsCount
+        - cashLetterTotalAmount
+        - settlementDate
+    Bundle:
+      properties:
+        bundleHeader:
+          $ref: '#/components/schemas/BundleHeader'
+        checks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Checks'
+        returns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Returns'
+        bundleControl:
+          $ref: '#/components/schemas/BundleControl'
+    BundleHeader:
+      properties:
+        id:
+          type: string
+          description: BundleHeader ID
+          example: d1e26288
+    BundleControl:
+      properties:
+        id:
+          type: string
+          description: BundleControl ID
+          example: d1e26288
+    Checks:
+      properties:
+        checkDetail:
+          $ref: '#/components/schemas/CheckDetail'
+    Returns:
+      properties:
+        returnDetail:
+          $ref: '#/components/schemas/ReturnDetail'
+    CheckDetail:
+      properties:
+        id:
+          type: string
+          description: CheckDetail ID
+          example: d1e26288
+    ReturnDetail:
+      properties:
+        id:
+          type: string
+          description: CheckDetail ID
+          example: d1e26288
+    CreditItem:
+      properties:
+        id:
+          type: string
+          description: CreditItem ID
+          example: d1e26288
+        auxiliaryOnUs:
+          type: string
+          maxLength: 15
+          description: AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+          example: "123456789"
+    RoutingNumberSummary:
+      properties:
+        id:
+          type: string
+          description: RoutingNumberSummary ID
+          example: d1e26288

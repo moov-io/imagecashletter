@@ -10,8 +10,20 @@
 package openapi
 
 type CashLetterControl struct {
-	// CashLetter ID
+	// CashLetterControl ID
 	Id string `json:"id,omitempty"`
 	// CashLetterBundleCount identifies the total number of bundles within the cash letter.
 	CashLetterBundleCount int `json:"cashLetterBundleCount,omitempty"`
+	// CashLetterItemsCount identifies the total number of items within the cash letter.
+	CashLetterItemsCount int `json:"cashLetterItemsCount"`
+	// CashLetterTotalAmount identifies the total dollar value of all item amounts within the cash letter.
+	CashLetterTotalAmount int `json:"cashLetterTotalAmount"`
+	// CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter.
+	CashLetterImagesCount int `json:"cashLetterImagesCount,omitempty"`
+	// ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl.
+	EceInstitutionName string `json:"eceInstitutionName,omitempty"`
+	// SettlementDate identifies the date that the institution that creates the cash letter expects settlement. (Format - YYYYMMDD, where - YYYY year, MM month, DD day) 
+	SettlementDate string `json:"settlementDate"`
+	// CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of all types regardless of the value of this field. * ` ` - No Credit Items * `0` - Credit Items are not included in totals * `1` - Credit Items are included in totals 
+	CreditTotalIndicator string `json:"creditTotalIndicator,omitempty"`
 }

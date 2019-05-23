@@ -37,13 +37,22 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [Bundle](docs/Bundle.md)
+ - [BundleControl](docs/BundleControl.md)
+ - [BundleHeader](docs/BundleHeader.md)
  - [CashLetter](docs/CashLetter.md)
  - [CashLetterControl](docs/CashLetterControl.md)
  - [CashLetterHeader](docs/CashLetterHeader.md)
+ - [CheckDetail](docs/CheckDetail.md)
+ - [Checks](docs/Checks.md)
  - [CreateFile](docs/CreateFile.md)
+ - [CreditItem](docs/CreditItem.md)
  - [File](docs/File.md)
  - [FileControl](docs/FileControl.md)
  - [FileHeader](docs/FileHeader.md)
+ - [ReturnDetail](docs/ReturnDetail.md)
+ - [Returns](docs/Returns.md)
+ - [RoutingNumberSummary](docs/RoutingNumberSummary.md)
 
 
 ## Documentation For Authorization

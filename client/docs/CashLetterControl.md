@@ -3,8 +3,14 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | CashLetter ID | [optional] 
+**Id** | **string** | CashLetterControl ID | [optional] 
 **CashLetterBundleCount** | **int** | CashLetterBundleCount identifies the total number of bundles within the cash letter. | [optional] 
+**CashLetterItemsCount** | **int** | CashLetterItemsCount identifies the total number of items within the cash letter. | 
+**CashLetterTotalAmount** | **int** | CashLetterTotalAmount identifies the total dollar value of all item amounts within the cash letter. | 
+**CashLetterImagesCount** | **int** | CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter. | [optional] 
+**EceInstitutionName** | **string** | ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl. | [optional] 
+**SettlementDate** | **string** | SettlementDate identifies the date that the institution that creates the cash letter expects settlement. (Format - YYYYMMDD, where - YYYY year, MM month, DD day)  | 
+**CreditTotalIndicator** | **string** | CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of all types regardless of the value of this field. * &#x60; &#x60; - No Credit Items * &#x60;0&#x60; - Credit Items are not included in totals * &#x60;1&#x60; - Credit Items are included in totals  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

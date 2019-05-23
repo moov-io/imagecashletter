@@ -12,18 +12,18 @@ package openapi
 type FileControl struct {
 	// FileControl ID
 	Id string `json:"id,omitempty"`
-	// Identifies the total number of cash letters within the file.
+	// CashLetterCount identifies the total number of cash letters within the file.
 	CashLetterCount int32 `json:"cashLetterCount"`
-	// Identifies the total number of records of all types sent in the file, including the FileControl.
+	// TotalRecordCount identifies the total number of records of all types sent in the file, including the FileControl.
 	TotalRecordCount int32 `json:"totalRecordCount"`
-	// Identifies the total number of Items sent within the file.
+	// totalItemCount identifies the total number of Items sent within the file.
 	TotalItemCount int32 `json:"totalItemCount"`
-	// Identifies the total Item amount of the complete file.
+	// FileTotalAmount identifies the total Item amount of the complete file.
 	FileTotalAmount int32 `json:"fileTotalAmount"`
-	// Identifies contact at the institution that creates the file.
+	// immediateOriginContactName identifies contact at the institution that creates the file.
 	ImmediateOriginContactName string `json:"immediateOriginContactName,omitempty"`
-	// Identifies the phone number of the contact at the institution that creates the file.
+	// ImmediateOriginContactPhoneNumber identifies the phone number of the contact at the institution that creates the file.
 	ImmediateOriginContactPhoneNumber string `json:"immediateOriginContactPhoneNumber,omitempty"`
-	// Is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of all types regardless of the value of this field. * ` ` - No Credit Items * `0` - Credit Items are not included in totals * `1` - Credit Items are included in totals 
+	// CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of all types regardless of the value of this field. * ` ` - No Credit Items * `0` - Credit Items are not included in totals * `1` - Credit Items are included in totals 
 	CreditTotalIndicator string `json:"creditTotalIndicator,omitempty"`
 }

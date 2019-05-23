@@ -94,7 +94,7 @@ func (cl *CashLetter) build() error {
 
 	// Sequence Numbers
 	bundleSequenceNumber := 1
-	//creditIndicator
+	// creditIndicator
 	creditIndicator := 0
 
 	if len(cl.GetCreditItems()) > 0 {

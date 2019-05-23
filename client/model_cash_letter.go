@@ -11,5 +11,8 @@ package openapi
 
 type CashLetter struct {
 	CashLetterHeader CashLetterHeader `json:"cashLetterHeader,omitempty"`
+	CreditItems []CreditItem `json:"creditItems,omitempty"`
+	Bundles []Bundle `json:"bundles,omitempty"`
+	RoutingNumberSummary []RoutingNumberSummary `json:"routingNumberSummary,omitempty"`
 	CashLetterControl CashLetterControl `json:"cashLetterControl,omitempty"`
 }
