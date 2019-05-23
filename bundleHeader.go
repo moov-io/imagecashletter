@@ -56,6 +56,7 @@ type BundleHeader struct {
 	//	For a number that identifies a non-financial institution: NNNNNNNNN
 	ECEInstitutionRoutingNumber string `json:"eceInstitutionRoutingNumber"`
 	// BundleBusinessDate is the business date of the bundle.
+	// Format: YYYYMMDD, where: YYYY year, MM month, DD day
 	// Values:
 	// YYYY 1993 through 9999
 	// MM 01 through 12

@@ -23,15 +23,15 @@ type BundleControl struct {
 	// BundleTotalAmount identifies the total amount of item amounts within the bundle.
 	BundleTotalAmount int `json:"bundleTotalAmount"`
 	// MICRValidTotalAmount identifies the total amount of all CheckDetail Records within the bundle which
-	// contains 1 in the MICRValidIndicator .
+	// contains 1 in the MICRValidIndicator.
 	MICRValidTotalAmount int `json:"micrValidTotalAmount"`
 	// BundleImagesCount identifies the total number of Image ViewDetail Records  within the bundle.
 	BundleImagesCount int `json:"bundleImagesCount"`
 	// UserField is used at the discretion of users of the standard.
 	UserField string `json:"userField"`
 	// CreditTotalIndicator identifies a code that indicates whether Credits Items are included in the totals.
-	// If so they will be included in Items CashLetterItemsCount, CashLetterTotalAmount and
-	// CashLetterImagesCount.
+	// If so they  they will be included in this record’s: Items Within Bundle Count (Field 2),
+	// Bundle Total Amount (Field 3) and, Images Within Bundle Count
 	// Values:
 	// 	0: Credit Items are not included in totals
 	//  1: Credit Items are included in totals

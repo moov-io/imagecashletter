@@ -13,13 +13,13 @@ type CashLetterControl struct {
 	// CashLetterControl ID
 	Id string `json:"id,omitempty"`
 	// CashLetterBundleCount identifies the total number of bundles within the cash letter.
-	CashLetterBundleCount int `json:"cashLetterBundleCount,omitempty"`
+	CashLetterBundleCount int32 `json:"cashLetterBundleCount,omitempty"`
 	// CashLetterItemsCount identifies the total number of items within the cash letter.
-	CashLetterItemsCount int `json:"cashLetterItemsCount"`
+	CashLetterItemsCount int32 `json:"cashLetterItemsCount"`
 	// CashLetterTotalAmount identifies the total dollar value of all item amounts within the cash letter.
-	CashLetterTotalAmount int `json:"cashLetterTotalAmount"`
+	CashLetterTotalAmount int32 `json:"cashLetterTotalAmount"`
 	// CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter.
-	CashLetterImagesCount int `json:"cashLetterImagesCount,omitempty"`
+	CashLetterImagesCount int32 `json:"cashLetterImagesCount,omitempty"`
 	// ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl.
 	EceInstitutionName string `json:"eceInstitutionName,omitempty"`
 	// SettlementDate identifies the date that the institution that creates the cash letter expects settlement. (Format - YYYYMMDD, where - YYYY year, MM month, DD day) 

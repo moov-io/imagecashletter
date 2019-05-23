@@ -439,19 +439,23 @@ components:
         cashLetterBundleCount:
           description: CashLetterBundleCount identifies the total number of bundles within the cash letter.
           example: 1
-          type: int
+          format: int32
+          type: integer
         cashLetterItemsCount:
           description: CashLetterItemsCount identifies the total number of items within the cash letter.
           example: 1
-          type: int
+          format: int32
+          type: integer
         cashLetterTotalAmount:
           description: CashLetterTotalAmount identifies the total dollar value of all item amounts within the cash letter.
           example: 100
-          type: int
+          format: int32
+          type: integer
         cashLetterImagesCount:
           description: CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter.
           example: 1
-          type: int
+          format: int32
+          type: integer
         eceInstitutionName:
           description: ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl.
           example: Citadel
@@ -503,12 +507,119 @@ components:
           description: BundleHeader ID
           example: d1e26288
           type: string
+        collectionTypeIndicator:
+          description: |
+            A code that identifies the type of bundle. It is the same value as the CollectionTypeIndicator
+            in the CashLetterHeader within which the bundle is contained, unless the CollectionTypeIndicator
+            in the CashLetterHeader is 99.
+
+            * `00` - Preliminary Forward Information
+            * `01` - Forward Presentment
+            * `02` - Forward Presentment - Same-Day Settlement
+            * `03` - Return
+            * `04` - Return Notification
+            * `05` - Preliminary Return Notification
+            * `06` - Final Return Notification
+          enum:
+          - "0"
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "5"
+          - "6"
+          example: "00"
+          maxLength: 2
+          type: string
+        destinationRoutingNumber:
+          description: DestinationRoutingNumber contains the routing and transit number of the institution that receives and processes the cash letter or the bundle.
+          example: "231987654"
+          maxLength: 9
+          type: string
+        eceInstitutionRoutingNumber:
+          description: ECEInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the bundle header.
+          example: "233431587"
+          maxLength: 9
+          type: string
+        bundleBusinessDate:
+          description: BundleBusinessDate is the business date of the bundle. Format - YYYYMMDD, where - YYYY year, MM month, DD day.
+          example: "20160622"
+          maxLength: 8
+          type: string
+        bundleCreationDate:
+          description: BundleCreationDate is the date that the bundle is created. Format - YYYYMMDD, where - YYYY year, MM month, DD day.
+          example: "20160622"
+          maxLength: 8
+          type: string
+        bundleID:
+          description: BundleID is number that identifies the bundle, assigned by the institution that creates the bundle.
+          example: "9999"
+          maxLength: 10
+          type: string
+        bundleSequenceNumber:
+          description: BundleSequenceNumber is a number assigned by the institution that creates the bundle. Usually denotes the relative position of the bundle within the cash letter.
+          example: "1"
+          maxLength: 4
+          type: string
+        cycleNumber:
+          description: CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which the bundle is created.
+          example: "01"
+          maxLength: 2
+          type: string
+        userField:
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: B1234
+          maxLength: 5
+          type: string
     BundleControl:
       properties:
         id:
           description: BundleControl ID
           example: d1e26288
           type: string
+        bundleItemsCount:
+          description: BundleItemsCount identifies the total number of items within the bundle.
+          example: 1
+          format: int32
+          type: integer
+        bundleTotalAmount:
+          description: BundleTotalAmount identifies the total amount of item amounts within the bundle.
+          example: 100
+          format: int32
+          type: integer
+        micrValidTotalAmount:
+          description: MICRValidTotalAmount identifies the total amount of all CheckDetail Records within the bundle which contains 1 in the MICRValidIndicator.
+          example: 100
+          format: int32
+          type: integer
+        bundleImagesCount:
+          description: BundleImagesCount identifies the total number of Image ViewDetail Records  within the bundle.
+          example: 1
+          format: int32
+          type: integer
+        userField:
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: B12345678
+          maxLength: 20
+          type: string
+        creditTotalIndicator:
+          description: |
+            CreditTotalIndicator is a code that indicates whether Credits Items are included in the totals.
+            If so they  they will be included in this record’s: Items Within Bundle Count, Bundle Total Amount and,
+            Images Within Bundle Count
+            * ` ` - No Credit Items
+            * `0` - Credit Items are not included in totals
+            * `1` - Credit Items are included in totals
+          enum:
+          - null
+          - 0
+          - 1
+          example: 1
+          maxLength: 1
+          type: string
+      required:
+      - bundleItemsCount
+      - bundleTotalAmount
     Checks:
       properties:
         checkDetail:
@@ -539,6 +650,123 @@ components:
           description: AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
           example: "123456789"
           maxLength: 15
+          type: string
+        externalProcessingCode:
+          description: ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.
+          example: G
+          maxLength: 1
+          type: string
+        postingBankRoutingNumber:
+          description: PostingBankRoutingNumber is a routing number assigned by the posting bank to identify this credit.
+          example: "231986436"
+          maxLength: 9
+          type: string
+        onUs:
+          description: OnUs identifies data specified by the payor bank. On-Us data usually consists of the payor’s account number, a serial number or transaction code, or both.
+          example: "5558881"
+          maxLength: 20
+          type: string
+        itemAmount:
+          description: Amount identifies the amount of the check.  All amounts fields have two implied decimal points. e.g., 100000 is $1,000.00
+          example: 100000
+          format: int32
+          type: integer
+        creditItemSequenceNumber:
+          description: CreditItemSequenceNumber identifies a number assigned by the institution that creates the CreditItem.
+          example: "1"
+          type: string
+        documentationTypeIndicator:
+          description: |
+            DocumentationTypeIndicator is a code used to indicate the type of documentation that supports this record.
+            Shall be present when Cash Letter Documentation Type Indicator in the Cash Letter Header Record is Defined
+            Value of ‘Z’.
+
+            * `A` - No image provided, paper provided separately
+            * `B` - No image provided, paper provided separately, image upon request
+            * `C` - Image provided separately, no paper provided
+            * `D` - Image provided separately, no paper provided, image upon request
+            * `E` - Image and paper provided separately
+            * `F` - Image and paper provided separately, image upon request
+            * `G` - Image included, no paper provided
+            * `H` - Image included, no paper provided, image upon request
+            * `I` - Image included, paper provided separately
+            * `J` - Image included, paper provided separately, image upon request
+            * `K` - No image provided, no paper provided
+            * `L` - No image provided, no paper provided, image upon request
+          enum:
+          - A
+          - B
+          - C
+          - D
+          - E
+          - F
+          - G
+          - H
+          - I
+          - J
+          - K
+          - L
+          example: A
+          maxLength: 1
+          type: string
+        acccountTypeCode:
+          description: |
+            AccountTypeCode is a code that indicates the type of account to which this CreditItem is associated.
+
+            * `0` - Unknown
+            * `1` - DDA account
+            * `2` - General Ledger account
+            * `3` - Savings account
+            * `4` - Money Market account
+            * `5` - Other Account
+          enum:
+          - "0"
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "5"
+          - null
+          example: "1"
+          maxLength: 1
+          type: string
+        sourceWorkCode:
+          description: |
+            AccountTypeCode is a code that indicates the type of account to which this CreditItem is associated.
+
+            * `00` - Unknown
+            * `01` - Internal–ATM
+            * `02` - Internal–Branch
+            * `03` - Internal–Other
+            * `04` - External–Bank to Bank (Correspondent)
+            * `05` - External–Business to Bank (Customer)
+            * `06` - External–Business to Bank Remote Capture
+            * `07` - External–Processor to Bank
+            * `08` - External–Bank to Processor
+            * `09` - Lockbox
+            * `10` - International–Internal
+            * `11` - International–External
+            * `21–50` - User Defined
+          enum:
+          - "0"
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "5"
+          - "6"
+          - "7"
+          - "8.0"
+          - "9.0"
+          - "10"
+          - "11"
+          example: "01"
+          maxLength: 2
+          type: string
+        userField:
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: B12345678
+          maxLength: 16
           type: string
     RoutingNumberSummary:
       properties:

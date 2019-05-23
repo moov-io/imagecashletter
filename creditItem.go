@@ -55,14 +55,9 @@ type CreditItem struct {
 	// Amount identifies the amount of the check.  All amounts fields have two implied decimal points.
 	// e.g., 100000 is $1,000.00
 	ItemAmount int `json:"itemAmount"`
-	// CreditItemSequenceNumber identifies a number assigned by the institution that creates the CreditItem
+	// CreditItemSequenceNumber identifies a number assigned by the institution that creates the CreditItem.
 	CreditItemSequenceNumber string `json:"creditItemSequenceNumber"`
-	// DocumentationTypeIndicator identifies a code that indicates the type of documentation that supports the check
-	// record.
-	// This field is superseded by the Cash Letter Documentation Type Indicator in the Cash Letter Header
-	// Record (Type 10) for all Defined Values except ‘Z’ Not Same Type. In the case of Defined Value of ‘Z’, the
-	// Documentation Type Indicator in this record takes precedent.
-	//
+	// A code used to indicate the type of documentation that supports this record.
 	// Shall be present when Cash Letter Documentation Type Indicator (Field 9) in the Cash Letter Header Record
 	// (Type 10) is Defined Value of ‘Z’.
 	//
