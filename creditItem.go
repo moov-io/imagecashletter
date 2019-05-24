@@ -39,7 +39,8 @@ type CreditItem struct {
 	ID string `json:"id"`
 	// RecordType defines the type of record.
 	recordType string
-	// AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+	// AuxiliaryOnUs identifies a code used at the discretion of the creating bank. The handling of
+	// dashes and spaces shall be determined between the exchange partners.
 	AuxiliaryOnUs string `json:"auxiliaryOnUs"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited
 	// Standards Committee X9. Also known as Position 44.
@@ -217,6 +218,11 @@ func (ci *CreditItem) fieldInclusion() error {
 	if ci.PostingBankRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "PostingBankRoutingNumber",
 			Value: ci.PostingBankRoutingNumber,
+			Msg:   msgFieldInclusion + ", did you use CreditItem()?"}
+	}
+	if ci.CreditItemSequenceNumber == "" {
+		return &FieldError{FieldName: "CreditItemSequenceNumber",
+			Value: ci.CreditItemSequenceNumber,
 			Msg:   msgFieldInclusion + ", did you use CreditItem()?"}
 	}
 	if ci.CreditItemSequenceNumberField() == "               " {

@@ -15,11 +15,14 @@ type RoutingNumberSummary struct {
 	ID string `json:"id"`
 	// RecordType defines the type of record.
 	recordType string
-	// CashLetterRoutingNumber
+	// CashLetterRoutingNumber is number that identifies a given payor bank within a cash letter containing one or
+	// more payor banks.
 	CashLetterRoutingNumber string `json:"cashLetterRoutingNumber"`
-	// RoutingNumberTotalAmount
+	// RoutingNumberTotalAmount is the total amount for all Check Detail Records (Type 25) associated with the Payor
+	// bank routing number designated in the Routing Number within Cash Letter (Field 2).
 	RoutingNumberTotalAmount int `json:"routingNumberTotalAmount"`
-	// RoutingNumberItemCount
+	// RoutingNumberItemCount is the the total number of all Check Detail Records (Type 25) associated with the payor
+	// bank routing number designated in the Routing Number within Cash Letter (Field 2).
 	RoutingNumberItemCount int `json:"routingNumberItemCount"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`

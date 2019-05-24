@@ -12,8 +12,8 @@ import (
 // mockCreditItem creates a CreditItem
 func mockCreditItem() *CreditItem {
 	ci := NewCreditItem()
-	ci.AuxiliaryOnUs = "123456789"
-	ci.ExternalProcessingCode = ""
+	ci.AuxiliaryOnUs = "*********"
+	ci.ExternalProcessingCode = "1"
 	ci.PostingBankRoutingNumber = "031300012"
 	ci.OnUs = "5558881"
 	ci.ItemAmount = 100000 // 1000.00
@@ -34,10 +34,10 @@ func TestMockCreditItem(t *testing.T) {
 	if ci.recordType != "62" {
 		t.Error("recordType does not validate")
 	}
-	if ci.AuxiliaryOnUs != "123456789" {
+	if ci.AuxiliaryOnUs != "*********" {
 		t.Error("AuxiliaryOnUs does not validate")
 	}
-	if ci.ExternalProcessingCode != "" {
+	if ci.ExternalProcessingCode != "1" {
 		t.Error("ExternalProcessingCode does not validate")
 	}
 	if ci.PostingBankRoutingNumber != "031300012" {
@@ -68,7 +68,7 @@ func TestMockCreditItem(t *testing.T) {
 
 // TestParseCreditItem validates parsing a CreditItem
 func TestParseCreditItem(t *testing.T) {
-	var line = "62      123456789 031300012             5558881000000001000001              G101                    "
+	var line = "62      *********1031300012             5558881000000001000001              G101                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -83,11 +83,11 @@ func TestParseCreditItem(t *testing.T) {
 	if record.recordType != "62" {
 		t.Errorf("RecordType Expected '62' got: %v", record.recordType)
 	}
-	if record.AuxiliaryOnUs != "123456789" {
-		t.Errorf("AuxiliaryOnUs Expected '123456789' got: %v", record.AuxiliaryOnUs)
+	if record.AuxiliaryOnUs != "*********" {
+		t.Errorf("AuxiliaryOnUs Expected '*********' got: %v", record.AuxiliaryOnUs)
 	}
-	if record.ExternalProcessingCode != "" {
-		t.Errorf("ExternalProcessingCode Expected '' got: %v", record.ExternalProcessingCode)
+	if record.ExternalProcessingCode != "1" {
+		t.Errorf("ExternalProcessingCode Expected '1' got: %v", record.ExternalProcessingCode)
 	}
 	if record.PostingBankRoutingNumber != "031300012" {
 		t.Errorf("PostingBankRoutingNumber Expected '031300012' got: %v", record.PostingBankRoutingNumber)
@@ -117,7 +117,7 @@ func TestParseCreditItem(t *testing.T) {
 
 // testCIString validates parsing a CreditItem
 func testCIString(t testing.TB) {
-	var line = "62      123456789 031300012             5558881000000001000001              G101                    "
+	var line = "62      *********1031300012             5558881000000001000001              G101                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()

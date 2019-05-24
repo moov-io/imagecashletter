@@ -12,8 +12,8 @@ import (
 // mockCheckDetail creates a CheckDetail
 func mockCheckDetail() *CheckDetail {
 	cd := NewCheckDetail()
-	cd.AuxiliaryOnUs = "123456789"
-	cd.ExternalProcessingCode = ""
+	cd.AuxiliaryOnUs = "*********"
+	cd.ExternalProcessingCode = "1"
 	cd.PayorBankRoutingNumber = "03130001"
 	cd.PayorBankCheckDigit = "2"
 	cd.OnUs = "5558881"
@@ -38,10 +38,10 @@ func TestMockCheckDetail(t *testing.T) {
 	if cd.recordType != "25" {
 		t.Error("recordType does not validate")
 	}
-	if cd.AuxiliaryOnUs != "123456789" {
+	if cd.AuxiliaryOnUs != "*********" {
 		t.Error("AuxiliaryOnUs does not validate")
 	}
-	if cd.ExternalProcessingCode != "" {
+	if cd.ExternalProcessingCode != "1" {
 		t.Error("ExternalProcessingCode does not validate")
 	}
 	if cd.PayorBankRoutingNumber != "03130001" {
@@ -84,7 +84,7 @@ func TestMockCheckDetail(t *testing.T) {
 
 // TestParseCheckDetail validates parsing a CheckDetail
 func TestParseCheckDetail(t *testing.T) {
-	var line = "25      123456789 031300012             555888100001000001              GD1Y030B"
+	var line = "25      *********1031300012             555888100001000001              GD1Y030B"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -102,11 +102,11 @@ func TestParseCheckDetail(t *testing.T) {
 	if record.recordType != "25" {
 		t.Errorf("RecordType Expected '25' got: %v", record.recordType)
 	}
-	if record.AuxiliaryOnUsField() != "      123456789" {
-		t.Errorf("AuxiliaryOnUs Expected '      123456789' got: %v", record.AuxiliaryOnUsField())
+	if record.AuxiliaryOnUsField() != "      *********" {
+		t.Errorf("AuxiliaryOnUs Expected '      *********' got: %v", record.AuxiliaryOnUsField())
 	}
-	if record.ExternalProcessingCodeField() != " " {
-		t.Errorf("ExternalProcessingCodeField ' ' got: %v", record.ExternalProcessingCodeField())
+	if record.ExternalProcessingCodeField() != "1" {
+		t.Errorf("ExternalProcessingCodeField '1' got: %v", record.ExternalProcessingCodeField())
 	}
 	if record.PayorBankRoutingNumberField() != "03130001" {
 		t.Errorf("PayorBankRoutingNumber Expected '03130001' got: %v", record.PayorBankRoutingNumberField())

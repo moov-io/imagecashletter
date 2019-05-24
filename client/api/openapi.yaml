@@ -768,9 +768,34 @@ components:
           example: B12345678
           maxLength: 16
           type: string
+      required:
+      - CreditItemSequenceNumbe
+      - PostingBankRoutingNumber
     RoutingNumberSummary:
       properties:
         id:
           description: RoutingNumberSummary ID
           example: d1e26288
           type: string
+        cashLetterRoutingNumber:
+          description: CashLetterRoutingNumber is a number that identifies a given payor bank within a cash letter containing one or more payor banks.
+          example: "231380104"
+          maxLength: 9
+          type: string
+        routingNumberTotalAmount:
+          description: RoutingNumberTotalAmount is the total amount for all Check Detail Records associated with the Payor bank routing number designated in the Routing Number within Cash Letter.
+          example: 10000
+          format: int32
+          type: integer
+        routingNumberItemCount:
+          description: RoutingNumberItemCount is the the total number of all Check Detail Records associated with the payor bank routing number designated in the Routing Number within Cash Letter.
+          example: 10
+          format: int32
+          type: integer
+        userField:
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: B1234567891012345
+          maxLength: 24
+          type: string
+      required:
+      - cashLetterRoutingNumber
