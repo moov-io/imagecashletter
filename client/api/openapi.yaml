@@ -634,6 +634,34 @@ components:
           description: CheckDetail ID
           example: d1e26288
           type: string
+        auxiliaryOnUs:
+          description: AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+          example: '*'
+          maxLength: 15
+          type: string
+        externalProcessingCode:
+          description: ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.
+          example: "1"
+          maxLength: 1
+          type: string
+        payorBankRoutingNumber:
+          description: |
+            PayorBankRoutingNumber identifies a number that identifies the institution by or through which the item is
+            payable. Must be a valid routing and transit number issued by the ABA’s Routing Number Registrar. Shall
+            represent the first 8 digits of a 9-digit routing number or 8 numeric digits of a 4 dash 4 routing number.
+            A valid routing number consists of 2 fields: the eight- digit Payor Bank Routing Number  and the
+            one-digit Payor Bank Routing Number Check Digit.
+          example: "01120036"
+          maxLength: 8
+          type: string
+        payorBankCheckDigit:
+          description: |
+            PayorBankCheckDigit identifies a digit representing the routing number check digit.  The
+            combination of Payor Bank Routing Number and payor Bank Routing Number Check Digit must be a mod-checked
+            routing number with a valid check digit.
+          example: "5"
+          maxLength: 1
+          type: string
     ReturnDetail:
       properties:
         id:
@@ -647,13 +675,13 @@ components:
           example: d1e26288
           type: string
         auxiliaryOnUs:
-          description: AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
-          example: "123456789"
+          description: AuxiliaryOnUs identifies a code used at the discretion of the creating bank. The handling of dashes and spaces shall be determined between the exchange partners.
+          example: '*'
           maxLength: 15
           type: string
         externalProcessingCode:
           description: ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.
-          example: G
+          example: "9"
           maxLength: 1
           type: string
         postingBankRoutingNumber:

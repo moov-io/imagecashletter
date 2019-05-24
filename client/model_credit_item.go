@@ -12,7 +12,7 @@ package openapi
 type CreditItem struct {
 	// CreditItem ID
 	Id string `json:"id,omitempty"`
-	// AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+	// AuxiliaryOnUs identifies a code used at the discretion of the creating bank. The handling of dashes and spaces shall be determined between the exchange partners.
 	AuxiliaryOnUs string `json:"auxiliaryOnUs,omitempty"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.
 	ExternalProcessingCode string `json:"externalProcessingCode,omitempty"`
