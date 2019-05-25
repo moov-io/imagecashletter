@@ -22,7 +22,7 @@ func mockReturnDetail() *ReturnDetail {
 	rd.AddendumCount = 4
 	rd.DocumentationTypeIndicator = "G"
 	rd.ForwardBundleDate = time.Now()
-	rd.EceInstitutionItemSequenceNumber = "1              "
+	rd.ECEInstitutionItemSequenceNumber = "1              "
 	rd.ExternalProcessingCode = ""
 	rd.ReturnNotificationIndicator = 2
 	rd.ArchiveTypeIndicator = "B"
@@ -60,8 +60,8 @@ func TestMockReturnDetail(t *testing.T) {
 	if rd.DocumentationTypeIndicator != "G" {
 		t.Error("DocumentationTypeIndicator does not validate")
 	}
-	if rd.EceInstitutionItemSequenceNumber != "1              " {
-		t.Error("EceInstitutionItemSequenceNumber does not validate")
+	if rd.ECEInstitutionItemSequenceNumber != "1              " {
+		t.Error("ECEInstitutionItemSequenceNumber does not validate")
 	}
 	if rd.ExternalProcessingCode != "" {
 		t.Error("ExternalProcessingCode does not validate")
@@ -119,8 +119,8 @@ func TestParseReturnDetail(t *testing.T) {
 	if record.DocumentationTypeIndicatorField() != "G" {
 		t.Errorf("DocumentationTypeIndicator Expected 'G' got: %v", record.DocumentationTypeIndicatorField())
 	}
-	if record.EceInstitutionItemSequenceNumberField() != "1              " {
-		t.Errorf("EceInstitutionItemSequenceNumber Expected '1              ' got: %v", record.EceInstitutionItemSequenceNumberField())
+	if record.ECEInstitutionItemSequenceNumberField() != "1              " {
+		t.Errorf("ECEInstitutionItemSequenceNumber Expected '1              ' got: %v", record.ECEInstitutionItemSequenceNumberField())
 	}
 	if record.ExternalProcessingCodeField() != " " {
 		t.Errorf("ExternalProcessingCode Expected ' ' got: %v", record.ExternalProcessingCodeField())
@@ -320,13 +320,13 @@ func TestRDFIReturnReason(t *testing.T) {
 	}
 }
 
-// TestRDFIEceInstitutionItemSequenceNumber validation
-func TestRDFIEceInstitutionItemSequenceNumber(t *testing.T) {
+// TestRDFIECEInstitutionItemSequenceNumber validation
+func TestRDFIECEInstitutionItemSequenceNumber(t *testing.T) {
 	rd := mockReturnDetail()
-	rd.EceInstitutionItemSequenceNumber = "               "
+	rd.ECEInstitutionItemSequenceNumber = "               "
 	if err := rd.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EceInstitutionItemSequenceNumber" {
+			if e.FieldName != "ECEInstitutionItemSequenceNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}

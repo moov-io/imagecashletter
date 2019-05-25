@@ -117,7 +117,7 @@ func (cl *CashLetter) build() error {
 			cdAddendumCRecordNumber := 1
 
 			// Set CheckDetail Sequence Numbers
-			cd.SetEceInstitutionItemSequenceNumber(cdSequenceNumber)
+			cd.SetECEInstitutionItemSequenceNumber(cdSequenceNumber)
 
 			// Set Addenda SequenceNumber and RecordNumber
 			for i := range cd.CheckDetailAddendumA {
@@ -155,7 +155,7 @@ func (cl *CashLetter) build() error {
 			rdAddendumDRecordNumber := 1
 
 			// Set ReturnDetail Sequence Numbers
-			rd.SetEceInstitutionItemSequenceNumber(rdSequenceNumber)
+			rd.SetECEInstitutionItemSequenceNumber(rdSequenceNumber)
 
 			// Set Addenda SequenceNumber and RecordNumber
 			for i := range rd.ReturnDetailAddendumA {

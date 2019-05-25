@@ -233,10 +233,14 @@ func (ci *CreditItem) fieldInclusion() error {
 	return nil
 }
 
+// ToDo:NBSM?
+
 // AuxiliaryOnUsField gets the AuxiliaryOnUs field
 func (ci *CreditItem) AuxiliaryOnUsField() string {
 	return ci.nbsmField(ci.AuxiliaryOnUs, 15)
 }
+
+// ToDo: NBSMO?
 
 // ExternalProcessingCodeField gets the ExternalProcessingCode field
 func (ci *CreditItem) ExternalProcessingCodeField() string {

@@ -39,6 +39,7 @@ type ReturnDetail struct {
 	// e.g., 100000 is $1,000.00
 	ItemAmount int `json:"itemAmount"`
 	// ReturnReason is a code that indicates the reason for non-payment.
+	// ToDo;  Add Return Reason Codes see ANSI X9.100-188 for allowable values
 	ReturnReason string `json:"returnReason"`
 	// AddendumCount is a number of Return Record Addenda to follow. This represents the number of
 	// ReturnDetailAddendumA, ReturnDetailAddendumB, ReturnDetailAddendumC and ReturnDetailAddendumD types.
@@ -77,9 +78,9 @@ type ReturnDetail struct {
 	// MM 01 through 12
 	// DD 01 through 31
 	ForwardBundleDate time.Time `json:"bundleBusinessDate"`
-	// EceInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the Return.
+	// ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the Return.
 	// Field must contain a numeric value. It cannot be all blanks.
-	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
+	ECEInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited
 	// Standards Committee X9. Also known as Position 44.
 	ExternalProcessingCode string `json:"externalProcessingCode"`
@@ -161,7 +162,7 @@ func (rd *ReturnDetail) Parse(record string) {
 	// 46-53
 	rd.ForwardBundleDate = rd.parseYYYYMMDDDate(record[45:53])
 	// 54-68
-	rd.EceInstitutionItemSequenceNumber = rd.parseStringField(record[53:68])
+	rd.ECEInstitutionItemSequenceNumber = rd.parseStringField(record[53:68])
 	// 69-69
 	rd.ExternalProcessingCode = rd.parseStringField(record[68:69])
 	// 70-70
@@ -187,7 +188,7 @@ func (rd *ReturnDetail) String() string {
 	buf.WriteString(rd.AddendumCountField())
 	buf.WriteString(rd.DocumentationTypeIndicatorField())
 	buf.WriteString(rd.ForwardBundleDateField())
-	buf.WriteString(rd.EceInstitutionItemSequenceNumberField())
+	buf.WriteString(rd.ECEInstitutionItemSequenceNumberField())
 	buf.WriteString(rd.ExternalProcessingCodeField())
 	buf.WriteString(rd.ReturnNotificationIndicatorField())
 	buf.WriteString(rd.ArchiveTypeIndicatorField())
@@ -262,9 +263,9 @@ func (rd *ReturnDetail) fieldInclusion() error {
 			Value: rd.ReturnReason,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetail()?"}
 	}
-	if rd.EceInstitutionItemSequenceNumberField() == "               " {
-		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber",
-			Value: rd.EceInstitutionItemSequenceNumber,
+	if rd.ECEInstitutionItemSequenceNumberField() == "               " {
+		return &FieldError{FieldName: "ECEInstitutionItemSequenceNumber",
+			Value: rd.ECEInstitutionItemSequenceNumber,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetail()?"}
 	}
 	return nil
@@ -310,10 +311,12 @@ func (rd *ReturnDetail) ForwardBundleDateField() string {
 	return rd.formatYYYYMMDDDate(rd.ForwardBundleDate)
 }
 
-// EceInstitutionItemSequenceNumberField gets a string of the EceInstitutionItemSequenceNumber field
-func (rd *ReturnDetail) EceInstitutionItemSequenceNumberField() string {
-	return rd.alphaField(rd.EceInstitutionItemSequenceNumber, 15)
+// ECEInstitutionItemSequenceNumberField gets a string of the ECEInstitutionItemSequenceNumber field
+func (rd *ReturnDetail) ECEInstitutionItemSequenceNumberField() string {
+	return rd.alphaField(rd.ECEInstitutionItemSequenceNumber, 15)
 }
+
+// ToDo: NBSMO?
 
 // ExternalProcessingCodeField gets the ExternalProcessingCode field - Also known as Position 44
 func (rd *ReturnDetail) ExternalProcessingCodeField() string {
@@ -417,9 +420,9 @@ func (rd *ReturnDetail) GetImageViewAnalysis() []ImageViewAnalysis {
 	return rd.ImageViewAnalysis
 }
 
-// SetEceInstitutionItemSequenceNumber sets EceInstitutionItemSequenceNumber
-func (rd *ReturnDetail) SetEceInstitutionItemSequenceNumber(seq int) string {
+// SetECEInstitutionItemSequenceNumber sets ECEInstitutionItemSequenceNumber
+func (rd *ReturnDetail) SetECEInstitutionItemSequenceNumber(seq int) string {
 	itemSequence := strconv.Itoa(seq)
-	rd.EceInstitutionItemSequenceNumber = itemSequence
-	return rd.EceInstitutionItemSequenceNumber
+	rd.ECEInstitutionItemSequenceNumber = itemSequence
+	return rd.ECEInstitutionItemSequenceNumber
 }

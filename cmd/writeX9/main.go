@@ -120,7 +120,7 @@ func write(path string) {
 					cd.PayorBankCheckDigit = "2"
 					cd.OnUs = "5558881"
 					cd.ItemAmount = 100000 // 1000.00
-					cd.EceInstitutionItemSequenceNumber = cdCount
+					cd.ECEInstitutionItemSequenceNumber = cdCount
 					cd.DocumentationTypeIndicator = "G"
 					cd.ReturnAcceptanceIndicator = "D"
 					cd.MICRValidIndicator = 1
@@ -182,10 +182,10 @@ func write(path string) {
 					ivDetail.OverrideIndicator = "0"
 
 					ivData := x9.NewImageViewData()
-					ivData.EceInstitutionRoutingNumber = "121042882"
+					ivData.ECEInstitutionRoutingNumber = "121042882"
 					ivData.BundleBusinessDate = time.Now()
 					ivData.CycleNumber = "1"
-					ivData.EceInstitutionItemSequenceNumber = "1             "
+					ivData.ECEInstitutionItemSequenceNumber = "1             "
 					ivData.SecurityOriginatorName = "Sec Orig Name"
 					ivData.SecurityAuthenticatorName = "Sec Auth Name"
 					ivData.SecurityKeyName = "SECURE"

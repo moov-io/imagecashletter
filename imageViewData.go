@@ -18,13 +18,13 @@ type ImageViewData struct {
 	ID string `json:"id"`
 	// recordType defines the type of record.
 	recordType string
-	// EceInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the
+	// ECEInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the
 	// bundle header.  Format: TTTTAAAAC, where:
 	// TTTT Federal Reserve Prefix
 	// AAAA ABA Institution Identifier
 	// C Check Digit
 	// For a number that identifies a non-financial institution: NNNNNNNNN
-	EceInstitutionRoutingNumber string `json:"eceInstitutionRoutingNumber"`
+	ECEInstitutionRoutingNumber string `json:"eceInstitutionRoutingNumber"`
 	// BundleBusinessDate is the business date of the bundle.
 	// Values:
 	// YYYY 1993 through 9999
@@ -34,12 +34,12 @@ type ImageViewData struct {
 	// CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which
 	// the bundle is created.
 	CycleNumber string `json:"cycleNumber"`
-	// EceInstitutionItemSequenceNumber is a number assigned by the institution that creates the CheckDetail Record or
+	// ECEInstitutionItemSequenceNumber is a number assigned by the institution that creates the CheckDetail Record or
 	// Return.  This number is imported from the CheckDetail.ECEInstitutionItemSequenceNumber or
 	// Return.ECEInstitutionItemSequenceNumber associated with the image view conveyed in this Image View Data Record.
 	// The ECE institution must construct the sequence number to guarantee uniqueness for a given routing number,
 	// business day, and cycle number. Must contain a numeric value.
-	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
+	ECEInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
 	// SecurityOriginatorName is a unique name that creates the Digital Signature for data to be exchanged.
 	// Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
 	// Shall not be present when ImageViewDetail.ImageIndicator is 0.
@@ -154,13 +154,13 @@ func (ivData *ImageViewData) Parse(record string) {
 	// Character position 1-2, Always "52"
 	ivData.recordType = "52"
 	// 03-11
-	ivData.EceInstitutionRoutingNumber = ivData.parseStringField(record[2:11])
+	ivData.ECEInstitutionRoutingNumber = ivData.parseStringField(record[2:11])
 	// 12-19
 	ivData.BundleBusinessDate = ivData.parseYYYYMMDDDate(record[11:19])
 	// 20-21
 	ivData.CycleNumber = ivData.parseStringField(record[19:21])
 	// 22-36
-	ivData.EceInstitutionItemSequenceNumber = ivData.parseStringField(record[21:36])
+	ivData.ECEInstitutionItemSequenceNumber = ivData.parseStringField(record[21:36])
 	// 37-52
 	ivData.SecurityOriginatorName = ivData.parseStringField(record[36:52])
 	// 53-68
@@ -199,10 +199,10 @@ func (ivData *ImageViewData) String() string {
 	var buf strings.Builder
 	buf.Grow(105)
 	buf.WriteString(ivData.recordType)
-	buf.WriteString(ivData.EceInstitutionRoutingNumberField())
+	buf.WriteString(ivData.ECEInstitutionRoutingNumberField())
 	buf.WriteString(ivData.BundleBusinessDateField())
 	buf.WriteString(ivData.CycleNumberField())
-	buf.WriteString(ivData.EceInstitutionItemSequenceNumberField())
+	buf.WriteString(ivData.ECEInstitutionItemSequenceNumberField())
 	buf.WriteString(ivData.SecurityOriginatorNameField())
 	buf.WriteString(ivData.SecurityAuthenticatorNameField())
 	buf.WriteString(ivData.SecurityKeyNameField())
@@ -260,14 +260,14 @@ func (ivData *ImageViewData) fieldInclusion() error {
 			Value: ivData.recordType,
 			Msg:   msgFieldInclusion + ", did you use ImageViewData()?"}
 	}
-	if ivData.EceInstitutionRoutingNumber == "" {
-		return &FieldError{FieldName: "EceInstitutionRoutingNumber",
-			Value: ivData.EceInstitutionRoutingNumber,
+	if ivData.ECEInstitutionRoutingNumber == "" {
+		return &FieldError{FieldName: "ECEInstitutionRoutingNumber",
+			Value: ivData.ECEInstitutionRoutingNumber,
 			Msg:   msgFieldInclusion + ", did you use ImageViewData()?"}
 	}
-	if ivData.EceInstitutionRoutingNumberField() == "000000000" {
-		return &FieldError{FieldName: "EceInstitutionRoutingNumber",
-			Value: ivData.EceInstitutionRoutingNumber,
+	if ivData.ECEInstitutionRoutingNumberField() == "000000000" {
+		return &FieldError{FieldName: "ECEInstitutionRoutingNumber",
+			Value: ivData.ECEInstitutionRoutingNumber,
 			Msg:   msgFieldInclusion + ", did you use ImageViewData()?"}
 	}
 	if ivData.BundleBusinessDate.IsZero() {
@@ -278,9 +278,9 @@ func (ivData *ImageViewData) fieldInclusion() error {
 	return nil
 }
 
-// EceInstitutionRoutingNumberField gets the EceInstitutionRoutingNumber field
-func (ivData *ImageViewData) EceInstitutionRoutingNumberField() string {
-	return ivData.stringField(ivData.EceInstitutionRoutingNumber, 9)
+// ECEInstitutionRoutingNumberField gets the ECEInstitutionRoutingNumber field
+func (ivData *ImageViewData) ECEInstitutionRoutingNumberField() string {
+	return ivData.stringField(ivData.ECEInstitutionRoutingNumber, 9)
 }
 
 // BundleBusinessDateField gets the BundleBusinessDate field
@@ -293,9 +293,9 @@ func (ivData *ImageViewData) CycleNumberField() string {
 	return ivData.alphaField(ivData.CycleNumber, 2)
 }
 
-// EceInstitutionItemSequenceNumberField gets a string of the EceInstitutionItemSequenceNumber field
-func (ivData *ImageViewData) EceInstitutionItemSequenceNumberField() string {
-	return ivData.alphaField(ivData.EceInstitutionItemSequenceNumber, 15)
+// ECEInstitutionItemSequenceNumberField gets a string of the ECEInstitutionItemSequenceNumber field
+func (ivData *ImageViewData) ECEInstitutionItemSequenceNumberField() string {
+	return ivData.alphaField(ivData.ECEInstitutionItemSequenceNumber, 15)
 }
 
 // SecurityOriginatorNameField gets the SecurityOriginatorName field

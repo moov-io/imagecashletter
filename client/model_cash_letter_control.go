@@ -21,7 +21,7 @@ type CashLetterControl struct {
 	// CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter.
 	CashLetterImagesCount int32 `json:"cashLetterImagesCount,omitempty"`
 	// ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl.
-	EceInstitutionName string `json:"eceInstitutionName,omitempty"`
+	ECEInstitutionName string `json:"eCEInstitutionName,omitempty"`
 	// SettlementDate identifies the date that the institution that creates the cash letter expects settlement. (Format - YYYYMMDD, where - YYYY year, MM month, DD day) 
 	SettlementDate string `json:"settlementDate"`
 	// CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of all types regardless of the value of this field. * ` ` - No Credit Items * `0` - Credit Items are not included in totals * `1` - Credit Items are included in totals 

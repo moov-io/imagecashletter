@@ -46,9 +46,9 @@ type CheckDetail struct {
 	// Amount identifies the amount of the check.  All amounts fields have two implied decimal points.
 	// e.g., 100000 is $1,000.00
 	ItemAmount int `json:"itemAmount"`
-	// EceInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
+	// ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
 	// Field must contain a numeric value. It cannot be all blanks.
-	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
+	ECEInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
 	// DocumentationTypeIndicator identifies a code that indicates the type of documentation that supports the check
 	// record.
 	// This field is superseded by the Cash Letter Documentation Type Indicator in the Cash Letter Header
@@ -177,7 +177,7 @@ func (cd *CheckDetail) Parse(record string) {
 	// 48-57
 	cd.ItemAmount = cd.parseNumField(record[47:57])
 	// 58-72
-	cd.EceInstitutionItemSequenceNumber = cd.parseStringField(record[57:72])
+	cd.ECEInstitutionItemSequenceNumber = cd.parseStringField(record[57:72])
 	// 73-73
 	cd.DocumentationTypeIndicator = cd.parseStringField(record[72:73])
 	// 74-74
@@ -205,7 +205,7 @@ func (cd *CheckDetail) String() string {
 	buf.WriteString(cd.PayorBankCheckDigitField())
 	buf.WriteString(cd.OnUsField())
 	buf.WriteString(cd.ItemAmountField())
-	buf.WriteString(cd.EceInstitutionItemSequenceNumberField())
+	buf.WriteString(cd.ECEInstitutionItemSequenceNumberField())
 	buf.WriteString(cd.DocumentationTypeIndicatorField())
 	buf.WriteString(cd.ReturnAcceptanceIndicatorField())
 	buf.WriteString(cd.MICRValidIndicatorField())
@@ -290,9 +290,9 @@ func (cd *CheckDetail) fieldInclusion() error {
 			Value: cd.PayorBankCheckDigit,
 			Msg:   msgFieldInclusion + ", did you use CheckDetail()?"}
 	}
-	if cd.EceInstitutionItemSequenceNumberField() == "               " {
-		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber",
-			Value: cd.EceInstitutionItemSequenceNumber,
+	if cd.ECEInstitutionItemSequenceNumberField() == "               " {
+		return &FieldError{FieldName: "ECEInstitutionItemSequenceNumber",
+			Value: cd.ECEInstitutionItemSequenceNumber,
 			Msg:   msgFieldInclusion + ", did you use CheckDetail()?"}
 	}
 	if cd.BOFDIndicator == "" {
@@ -303,10 +303,14 @@ func (cd *CheckDetail) fieldInclusion() error {
 	return nil
 }
 
+// ToDo:NBSM?
+
 // AuxiliaryOnUsField gets the AuxiliaryOnUs field
 func (cd *CheckDetail) AuxiliaryOnUsField() string {
 	return cd.nbsmField(cd.AuxiliaryOnUs, 15)
 }
+
+// ToDo: NBSMO
 
 // ExternalProcessingCodeField gets the ExternalProcessingCode field - Also known as Position 44
 func (cd *CheckDetail) ExternalProcessingCodeField() string {
@@ -333,9 +337,9 @@ func (cd *CheckDetail) ItemAmountField() string {
 	return cd.numericField(cd.ItemAmount, 10)
 }
 
-// EceInstitutionItemSequenceNumberField gets a string of the EceInstitutionItemSequenceNumber field
-func (cd *CheckDetail) EceInstitutionItemSequenceNumberField() string {
-	return cd.alphaField(cd.EceInstitutionItemSequenceNumber, 15)
+// ECEInstitutionItemSequenceNumberField gets a string of the ECEInstitutionItemSequenceNumber field
+func (cd *CheckDetail) ECEInstitutionItemSequenceNumberField() string {
+	return cd.alphaField(cd.ECEInstitutionItemSequenceNumber, 15)
 }
 
 // DocumentationTypeIndicatorField gets the DocumentationTypeIndicator field
@@ -439,9 +443,9 @@ func (cd *CheckDetail) GetImageViewAnalysis() []ImageViewAnalysis {
 	return cd.ImageViewAnalysis
 }
 
-// SetEceInstitutionItemSequenceNumber sets EceInstitutionItemSequenceNumber
-func (cd *CheckDetail) SetEceInstitutionItemSequenceNumber(seq int) string {
+// SetECEInstitutionItemSequenceNumber sets ECEInstitutionItemSequenceNumber
+func (cd *CheckDetail) SetECEInstitutionItemSequenceNumber(seq int) string {
 	itemSequence := strconv.Itoa(seq)
-	cd.EceInstitutionItemSequenceNumber = itemSequence
-	return cd.EceInstitutionItemSequenceNumber
+	cd.ECEInstitutionItemSequenceNumber = itemSequence
+	return cd.ECEInstitutionItemSequenceNumber
 }

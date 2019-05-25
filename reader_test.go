@@ -724,7 +724,7 @@ func TestCheckDetailIVDataError(t *testing.T) {
 	ivd := mockImageViewDetail()
 	cd.AddImageViewDetail(ivd)
 	ivData := mockImageViewData()
-	ivData.EceInstitutionRoutingNumber = "000000000"
+	ivData.ECEInstitutionRoutingNumber = "000000000"
 	cd.AddImageViewData(ivData)
 	r := NewReader(strings.NewReader(ivData.String()))
 	clh := mockCashLetterHeader()
@@ -820,7 +820,7 @@ func TestReturnDetailIVDataError(t *testing.T) {
 	ivDetail := mockImageViewDetail()
 	rd.AddImageViewDetail(ivDetail)
 	ivData := mockImageViewData()
-	ivData.EceInstitutionRoutingNumber = "000000000"
+	ivData.ECEInstitutionRoutingNumber = "000000000"
 	r := NewReader(strings.NewReader(ivData.String()))
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))

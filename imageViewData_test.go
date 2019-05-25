@@ -15,10 +15,10 @@ import (
 // mockImageViewData crates an imageViewData
 func mockImageViewData() ImageViewData {
 	ivData := NewImageViewData()
-	ivData.EceInstitutionRoutingNumber = "121042882"
+	ivData.ECEInstitutionRoutingNumber = "121042882"
 	ivData.BundleBusinessDate = time.Now()
 	ivData.CycleNumber = "1"
-	ivData.EceInstitutionItemSequenceNumber = "1             "
+	ivData.ECEInstitutionItemSequenceNumber = "1             "
 	ivData.SecurityOriginatorName = "Sec Orig Name"
 	ivData.SecurityAuthenticatorName = "Sec Auth Name"
 	ivData.SecurityKeyName = "SECURE"
@@ -42,17 +42,17 @@ func TestMockImageViewData(t *testing.T) {
 	if err := ivData.Validate(); err != nil {
 		t.Error("mockImageViewData does not validate and will break other tests: ", err)
 	}
-	if ivData.EceInstitutionRoutingNumber != "121042882" {
-		t.Error("EceInstitutionRoutingNumber does not validate")
+	if ivData.ECEInstitutionRoutingNumber != "121042882" {
+		t.Error("ECEInstitutionRoutingNumber does not validate")
 	}
 	if ivData.CycleNumber != "1" {
 		t.Error("CycleNumber does not validate")
 	}
-	if ivData.EceInstitutionItemSequenceNumber != "1             " {
+	if ivData.ECEInstitutionItemSequenceNumber != "1             " {
 		t.Error(" does not validate")
 	}
 	if ivData.SecurityOriginatorName != "Sec Orig Name" {
-		t.Error("EceInstitutionItemSequenceNumber does not validate")
+		t.Error("SecurityOriginatorName does not validate")
 	}
 	if ivData.SecurityAuthenticatorName != "Sec Auth Name" {
 		t.Error("SecurityAuthenticatorName does not validate")
@@ -232,13 +232,13 @@ func TestIVDataFIRecordType(t *testing.T) {
 	}
 }
 
-// TestIVDataFIEceInstitutionRoutingNumber validation
-func TestIVDataFIEceInstitutionRoutingNumber(t *testing.T) {
+// TestIVDataFIECEInstitutionRoutingNumber validation
+func TestIVDataFIECEInstitutionRoutingNumber(t *testing.T) {
 	ivData := mockImageViewData()
-	ivData.EceInstitutionRoutingNumber = ""
+	ivData.ECEInstitutionRoutingNumber = ""
 	if err := ivData.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EceInstitutionRoutingNumber" {
+			if e.FieldName != "ECEInstitutionRoutingNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}

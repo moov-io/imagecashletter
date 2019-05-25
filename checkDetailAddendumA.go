@@ -17,12 +17,12 @@ import (
 type CheckDetailAddendumA struct {
 	// ID is a client defined string used as a reference to this record.
 	ID string `json:"id"`
-	// RecordType defines the type of record.
+	// recordType defines the type of record.
 	recordType string
-	// recordNumber is a number representing the order in which each CheckDetailAddendumA was created.
+	// RecordNumber is a number representing the order in which each CheckDetailAddendumA was created.
 	// CheckDetailAddendumA shall be in sequential order starting with 1. Maximum 99.
 	RecordNumber int `json:"recordNumber"`
-	// RoutingNumber (Return Location Routing Number) is valid routing and transit number indicating where returns,
+	// ReturnLocationRoutingNumber is valid routing and transit number indicating where returns,
 	// final return notifications, and preliminary return notifications are sent, usually the BOFD.
 	// Format: TTTTAAAAC, where:
 	// TTTT Federal Reserve Prefix
@@ -46,7 +46,8 @@ type CheckDetailAddendumA struct {
 	// PayeeName is the name of the payee from the check.
 	PayeeName string `json:"payeeName"`
 	// TruncationIndicator identifies if the institution truncated the original check item.
-	// Values: Y: Yes this institution truncated this original check item and this is first endorsement
+	// Values:
+	// Y: Yes this institution truncated this original check item and this is first endorsement
 	// for the institution.
 	// N: No this institution did not truncate the original check or, this is not the first endorsement for the
 	// institution or, this item is an IRD not an original check item (EPC equals 4).

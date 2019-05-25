@@ -73,6 +73,8 @@ func (c *converters) numericField(n int, max uint) string {
 	return s
 }
 
+// ToDo: Review with AuxiliaryOnUs and ExternalProcessingCode
+
 // nbsmField is a numeric-blank/special MICR (NBSM) or numeric-blank/special MICR On-Us (NBSMOS)
 // which are right-justified and blank filled
 func (c *converters) nbsmField(s string, max uint) string {

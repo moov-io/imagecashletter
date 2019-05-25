@@ -18,7 +18,7 @@ func mockCheckDetail() *CheckDetail {
 	cd.PayorBankCheckDigit = "2"
 	cd.OnUs = "5558881"
 	cd.ItemAmount = 100000 // 1000.00
-	cd.EceInstitutionItemSequenceNumber = "1              "
+	cd.ECEInstitutionItemSequenceNumber = "1              "
 	cd.DocumentationTypeIndicator = "G"
 	cd.ReturnAcceptanceIndicator = "D"
 	cd.MICRValidIndicator = 1
@@ -56,8 +56,8 @@ func TestMockCheckDetail(t *testing.T) {
 	if cd.ItemAmount != 100000 {
 		t.Error("ItemAmount does not validate")
 	}
-	if cd.EceInstitutionItemSequenceNumber != "1              " {
-		t.Error("EceInstitutionItemSequenceNumber does not validate")
+	if cd.ECEInstitutionItemSequenceNumber != "1              " {
+		t.Error("ECEInstitutionItemSequenceNumber does not validate")
 	}
 	if cd.DocumentationTypeIndicator != "G" {
 		t.Error("DocumentationTypeIndicator does not validate")
@@ -120,9 +120,9 @@ func TestParseCheckDetail(t *testing.T) {
 	if record.ItemAmountField() != "0000100000" {
 		t.Errorf("ItemAmount Expected '0000100000' got:'%v'", record.ItemAmountField())
 	}
-	if record.EceInstitutionItemSequenceNumberField() != "1              " {
-		t.Errorf("EceInstitutionItemSequenceNumber Expected '1              ' got:'%v'",
-			record.EceInstitutionItemSequenceNumberField())
+	if record.ECEInstitutionItemSequenceNumberField() != "1              " {
+		t.Errorf("ECEInstitutionItemSequenceNumber Expected '1              ' got:'%v'",
+			record.ECEInstitutionItemSequenceNumberField())
 	}
 	if record.DocumentationTypeIndicatorField() != "G" {
 		t.Errorf("DocumentationTypeIndicator Expected 'G' got:'%v'", record.DocumentationTypeIndicatorField())
@@ -340,13 +340,13 @@ func TestCDFIPayorBankCheckDigit(t *testing.T) {
 	}
 }
 
-// TestCDFIEceInstitutionItemSequenceNumber validation
-func TestCDFIEceInstitutionItemSequenceNumber(t *testing.T) {
+// TestCDFIECEInstitutionItemSequenceNumber validation
+func TestCDFIECEInstitutionItemSequenceNumber(t *testing.T) {
 	cd := mockCheckDetail()
-	cd.EceInstitutionItemSequenceNumber = "               "
+	cd.ECEInstitutionItemSequenceNumber = "               "
 	if err := cd.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EceInstitutionItemSequenceNumber" {
+			if e.FieldName != "ECEInstitutionItemSequenceNumber" {
 				t.Errorf("%T: %s", err, err)
 			}
 		}

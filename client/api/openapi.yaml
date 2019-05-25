@@ -313,7 +313,7 @@ components:
           example: "999282654"
           maxLength: 9
           type: string
-        eceInstitutionRoutingNumber:
+        eCEInstitutionRoutingNumber:
           description: ECEInstitutionRoutingNumber is the routing and transit number of the institution that creates the Cash Letter Header record
           example: "217876527"
           maxLength: 9
@@ -456,7 +456,7 @@ components:
           example: 1
           format: int32
           type: integer
-        eceInstitutionName:
+        eCEInstitutionName:
           description: ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl.
           example: Citadel
           maxLength: 18
@@ -536,7 +536,7 @@ components:
           example: "231987654"
           maxLength: 9
           type: string
-        eceInstitutionRoutingNumber:
+        eCEInstitutionRoutingNumber:
           description: ECEInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the bundle header.
           example: "233431587"
           maxLength: 9
@@ -662,12 +662,359 @@ components:
           example: "5"
           maxLength: 1
           type: string
+        onUs:
+          description: OnUs identifies data specified by the payor bank. On-Us data usually consists of the payor’s account number, a serial number or transaction code, or both.
+          example: "5558881"
+          maxLength: 20
+          type: string
+        itemAmount:
+          description: Amount identifies the amount of the check.  All amounts fields have two implied decimal points. e.g., 100000 is $1,000.00
+          example: 100000
+          format: int32
+          type: integer
+        eCEInstitutionItemSequenceNumber:
+          description: ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail. Field must contain a numeric value. It cannot be all blanks.
+          example: "24531"
+          maxLength: 15
+          type: string
+        documentationTypeIndicator:
+          description: |
+            DocumentationTypeIndicator identifies a code that indicates the type of documentation that supports the check
+            record.  This field is superseded by the Cash Letter Documentation Type Indicator in the Cash Letter Header
+            Record for all Defined Values except ‘Z’ Not Same Type. In the case of Defined Value of ‘Z’, the
+            Documentation Type Indicator in this record takes precedent.
+
+            Shall be present when Cash Letter Documentation Type Indicator in the Cash Letter Header Record
+            is Defined Value of ‘Z’.
+
+            * `A` - No image provided, paper provided separately
+            * `B` - No image provided, paper provided separately, image upon request
+            * `C` - Image provided separately, no paper provided
+            * `D` - Image provided separately, no paper provided, image upon request
+            * `E` - Image and paper provided separately
+            * `F` - Image and paper provided separately, image upon request
+            * `G` - Image included, no paper provided
+            * `H` - Image included, no paper provided, image upon request
+            * `I` - Image included, paper provided separately
+            * `J` - Image included, paper provided separately, image upon request
+            * `K` - No image provided, no paper provided
+            * `L` - No image provided, no paper provided, image upon request
+            * `M` - No image provided, Electronic Check provided separately
+          enum:
+          - A
+          - B
+          - C
+          - D
+          - E
+          - F
+          - G
+          - H
+          - I
+          - J
+          - K
+          - L
+          - M
+          example: A
+          maxLength: 1
+          type: string
+        returnAcceptanceIndicator:
+          description: "ReturnAcceptanceIndicator is a code that indicates whether\
+            \ the institution that creates the CheckDetail\nwill or will not support\
+            \ electronic return processing.\n\n* `0` -\tWill not accept any electronic\
+            \ information\n* `1` -\tWill accept preliminary return notifications,\
+            \ returns, and final return notifications\n* `2` -\tWill accept preliminary\
+            \ return notifications and returns\n* `3` -\tWill accept preliminary return\
+            \ notifications and final return notifications\n* `4` -\tWill accept returns\
+            \ and final return notifications\n* `5` -\tWill accept preliminary return\
+            \ notifications only\n* `6` -\tWill accept returns only\n* `7` -\tWill\
+            \ accept final return notifications only\n* `8` -\tWill accept preliminary\
+            \ return notifications, returns, final return notifications, and image\
+            \ returns\n* `9` -\tWill accept preliminary return notifications, returns\
+            \ and image returns\n* `A` -\tWill accept preliminary return notifications,\
+            \ final return notifications and image returns\n* `B` -\tWill accept returns,\
+            \ final return notifications and image returns\n* `C` -\tWill accept preliminary\
+            \ return notifications and image returns\n* `D` -\tWill accept returns\
+            \ and image returns\n* `E` -\tWill accept final return notifications and\
+            \ image returns\n* `F` -\tWill accept image returns only\n"
+          enum:
+          - "0"
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "5"
+          - "6"
+          - "7"
+          - "8"
+          - "9"
+          - A
+          - B
+          - C
+          - D
+          - E
+          - F
+          example: "1"
+          maxLength: 1
+          type: string
+        mICRValidIndicator:
+          description: |
+            MICRValidIndicator is a code that indicates whether any character in the Magnetic Ink Character Recognition
+            (MICR) property is unreadable, or the OnUs property is missing from the CheckDetail.
+            * `1` - Good read
+            * `2` - Good read, missing field
+            * `3` - Read error encountered
+            * `4` - Missing field and read error encountered
+          enum:
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          example: "1"
+          maxLength: 1
+          type: string
+        bOFDIndicator:
+          description: |
+            BOFDIndicator is a code that indicates whether the ECE institution indicated on the Bundle Header Record (Type 20)
+            is the Bank of First Deposit (BOFD). This field shall be consistent with values contained in the Check Detail
+            Addendum A Record (Type 26) and Check Detail Addendum C Record (Type 28).
+            * `Y` - ECE institution is BOFD
+            * `N` - ECE institution is not BOFD
+            * `U` - ECE institution relationship to BOFD is undetermined
+          enum:
+          - Y
+          - N
+          - U
+          example: Y
+          maxLength: 1
+          type: string
+        addendumCount:
+          description: AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number of addendum records associated with this item. The standard supports up to 99 addendum records.
+          example: 1
+          format: int32
+          maximum: 99
+          minimum: 0
+          type: integer
+        correctionIndicator:
+          description: |
+            CorrectionIndicator identifies whether and how the MICR line was repaired, for fields other than Payor Bank
+            Routing Number and Amount.
+            * `0` - No Repair
+            * `1` - Repaired (form of repair unknown)
+            * `2` - Repaired without Operator intervention
+            * `3` - Repaired with Operator intervention
+            * `4` - Undetermined if repair has been done or not
+          enum:
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          example: "0"
+          type: string
+        archiveTypeIndicator:
+          description: |
+            ArchiveTypeIndicator is a code that indicates the type of archive that supports this CheckDetail.
+            Access method, availability and time-frames shall be defined by clearing arrangements.
+
+            * `A` - Microfilm
+            * `B` - Image
+            * `C` - Paper
+            * `D` - Microfilm and image
+            * `E` - Microfilm and paper
+            * `F` - Image and paper
+            * `G` - Microfilm, image and paper
+            * `H` - Electronic Check Instrument
+            * `I` - None
+          enum:
+          - A
+          - B
+          - C
+          - D
+          - E
+          - F
+          - G
+          - H
+          - I
+          example: A
+          type: string
+        checkDetailAddendumA:
+          $ref: '#/components/schemas/CheckDetailAddendumA'
+        checkDetailAddendumB:
+          $ref: '#/components/schemas/CheckDetailAddendumB'
+        checkDetailAddendumC:
+          $ref: '#/components/schemas/CheckDetailAddendumC'
+        imageViewDetail:
+          $ref: '#/components/schemas/ImageViewDetail'
+        imageViewData:
+          $ref: '#/components/schemas/ImageViewData'
+        imageViewAnalysis:
+          $ref: '#/components/schemas/ImageViewAnalysis'
     ReturnDetail:
       properties:
         id:
           description: CheckDetail ID
           example: d1e26288
           type: string
+        payorBankRoutingNumber:
+          description: |
+            PayorBankRoutingNumber identifies a number that identifies the institution by or through which the item is
+            payable. Must be a valid routing and transit number issued by the ABA’s Routing Number Registrar. Shall
+            represent the first 8 digits of a 9-digit routing number or 8 numeric digits of a 4 dash 4 routing number.
+            A valid routing number consists of 2 fields: the eight- digit Payor Bank Routing Number  and the
+            one-digit Payor Bank Routing Number Check Digit.
+          example: "01120036"
+          maxLength: 8
+          type: string
+        payorBankCheckDigit:
+          description: |
+            PayorBankCheckDigit identifies a digit representing the routing number check digit.  The
+            combination of Payor Bank Routing Number and payor Bank Routing Number Check Digit must be a mod-checked
+            routing number with a valid check digit.
+          example: "5"
+          maxLength: 1
+          type: string
+        onUs:
+          description: OnUs identifies data specified by the payor bank. On-Us data usually consists of the payor’s account number, a serial number or transaction code, or both.
+          example: "5558881"
+          maxLength: 20
+          type: string
+        itemAmount:
+          description: Amount identifies the amount of the check.  All amounts fields have two implied decimal points. e.g., 100000 is $1,000.00
+          example: 100000
+          format: int32
+          type: integer
+        returnReason:
+          description: ReturnReason is a code that indicates the reason for non-payment.
+          type: string
+        addendumCount:
+          description: AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number of addendum records associated with this item. The standard supports up to 99 addendum records.
+          example: 1
+          format: int32
+          maximum: 99
+          minimum: 0
+          type: integer
+        documentationTypeIndicator:
+          description: |
+            DocumentationTypeIndicator identifies a code that indicates the type of documentation that supports the check
+            record.  This field is superseded by the Cash Letter Documentation Type Indicator in the Cash Letter Header
+            Record for all Defined Values except ‘Z’ Not Same Type. In the case of Defined Value of ‘Z’, the
+            Documentation Type Indicator in this record takes precedent.
+
+            Shall be present when Cash Letter Documentation Type Indicator in the Cash Letter Header Record
+            is Defined Value of ‘Z’.
+
+            * `A` - No image provided, paper provided separately
+            * `B` - No image provided, paper provided separately, image upon request
+            * `C` - Image provided separately, no paper provided
+            * `D` - Image provided separately, no paper provided, image upon request
+            * `E` - Image and paper provided separately
+            * `F` - Image and paper provided separately, image upon request
+            * `G` - Image included, no paper provided
+            * `H` - Image included, no paper provided, image upon request
+            * `I` - Image included, paper provided separately
+            * `J` - Image included, paper provided separately, image upon request
+            * `K` - No image provided, no paper provided
+            * `L` - No image provided, no paper provided, image upon request
+            * `M` - No image provided, Electronic Check provided separately
+          enum:
+          - A
+          - B
+          - C
+          - D
+          - E
+          - F
+          - G
+          - H
+          - I
+          - J
+          - K
+          - L
+          - M
+          example: A
+          maxLength: 1
+          type: string
+        forwardBundleDate:
+          description: ForwardBundleDate represents for electronic check exchange items, the year, month, and day that designates the business date of the original forward bundle. This data is transferred from the BundleHeader.BundleBusinessDate.  For items presented in paper cash letters, the year, month, and day that the cash letter was created (Format - YYYYMMDD, where - YYYY year, MM month, DD day).
+          example: "20190522"
+          maxLength: 8
+          type: string
+        eCEInstitutionItemSequenceNumber:
+          description: ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail. Field must contain a numeric value. It cannot be all blanks.
+          example: "24531"
+          maxLength: 15
+          type: string
+        externalProcessingCode:
+          description: ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.
+          example: "9"
+          maxLength: 1
+          type: string
+        returnNotificationIndicator:
+          description: |
+            ReturnNotificationIndicator is a code that identifies the type of notification. The
+            CashLetterHeader.CollectionTypeIndicator and the BundleHeader.CollectionTypeIndicator when equal 05 or 06
+            takes precedence over this field.
+
+            * `1` - Preliminary notification
+            * `2` - Final notification
+          enum:
+          - "1"
+          - "2"
+          maxLength: 1
+          type: string
+        archiveTypeIndicator:
+          description: |
+            ArchiveTypeIndicator is a code that indicates the type of archive that supports this CheckDetail.
+            Access method, availability and time-frames shall be defined by clearing arrangements.
+            * `A` - Microfilm
+            * `B` - Image
+            * `C` - Paper
+            * `D` - Microfilm and image
+            * `E` - Microfilm and paper
+            * `F` - Image and paper
+            * `G` - Microfilm, image and paper
+            * `H` - Electronic Check Instrument
+            * `I` - None
+          enum:
+          - A
+          - B
+          - C
+          - D
+          - E
+          - F
+          - G
+          - H
+          - I
+          maxLength: 1
+          type: string
+        timesReturned:
+          description: |
+            TimesReturned is code used to indicate the number of times the paying bank has returned this item.
+
+            * `0` - The item has been returned an unknown number of times
+            * `1` - The item has been returned once
+            * `2` - The item has been returned twice
+            * `3` - The item has been returned three times
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          format: int32
+          type: integer
+        returnDetailAddendumA:
+          $ref: '#/components/schemas/ReturnDetailAddendumA'
+        returnDetailAddendumB:
+          $ref: '#/components/schemas/ReturnDetailAddendumB'
+        returnDetailAddendumC:
+          $ref: '#/components/schemas/ReturnDetailAddendumC'
+        returnDetailAddendumD:
+          $ref: '#/components/schemas/ReturnDetailAddendumD'
+        imageViewDetail:
+          $ref: '#/components/schemas/ImageViewDetail'
+        imageViewData:
+          $ref: '#/components/schemas/ImageViewData'
+        imageViewAnalysis:
+          $ref: '#/components/schemas/ImageViewAnalysis'
     CreditItem:
       properties:
         id:
@@ -827,3 +1174,176 @@ components:
           type: string
       required:
       - cashLetterRoutingNumber
+    CheckDetailAddendumA:
+      properties:
+        id:
+          description: CheckDetailAddendumA ID
+          example: d1e26288
+          type: string
+        recordNumber:
+          description: RecordNumber is a number representing the order in which each CheckDetailAddendumA was created. CheckDetailAddendumA shall be in sequential order starting with 1. Maximum 99.
+          example: 1
+          format: int32
+          maximum: 99
+          minimum: 1
+          type: integer
+        returnLocationRoutingNumber:
+          description: ReturnLocationRoutingNumber is valid routing and transit number indicating where returns, final return notifications, and preliminary return notifications are sent, usually the BOFD.
+          example: "231486745"
+          maxLength: 9
+          type: string
+        bOFDEndorsementDate:
+          description: BOFDEndorsementDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
+          example: "20190522"
+          maxLength: 10
+          type: string
+        bOFDItemSequenceNumber:
+          description: BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
+          example: "1"
+          maxLength: 15
+          type: string
+        bOFDAccountNumber:
+          description: BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
+          example: "938383"
+          maxLength: 18
+          type: string
+        bOFDBranchCode:
+          description: BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
+          example: "01"
+          maxLength: 5
+          type: string
+        payeeName:
+          description: PayeeName is the name of the payee from the check.
+          example: Payee Name
+          maxLength: 15
+          type: string
+        truncationIndicator:
+          description: TruncationIndicator identifies if the institution truncated the original check item.
+          enum:
+          - Y
+          - N
+          example: Y
+          maxLength: 1
+          type: string
+        bOFDConversionIndicator:
+          description: |
+            BOFDConversionIndicator is a code that indicates the conversion within the processing institution
+            between original paper check, image and IRD. The indicator is specific to the action of institution that created
+            this record.
+
+            * `0` - Did not convert physical document
+            * `1` - Original paper converted to IRD
+            * `2` - Original paper converted to image
+            * `3` - IRD converted to another IRD
+            * `4` - IRD converted to image of IRD
+            * `5` - Image converted to an IRD
+            * `6` - Image converted to another image (e.g., transcoded)
+            * `7` - Did not convert image (e.g., same as source)
+            * `8` - Undetermined
+          enum:
+          - "0"
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "5"
+          - "6"
+          - "7"
+          - "8"
+          example: "1"
+          maxLength: 1
+          type: string
+        bOFDBOFDCorrectionIndicator:
+          description: |
+            BOFDCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
+            creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount.
+            * `0` - No Repair
+            * `1` - Repaired (form of repair unknown)
+            * `2` - Repaired without Operator intervention
+            * `3` - Repaired with Operator intervention
+            * `4` - Undetermined if repair has been done or not
+          enum:
+          - "0"
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          example: "1"
+          maxLength: 1
+          type: string
+        userField:
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: Z
+          maxLength: 4
+          type: string
+    CheckDetailAddendumB:
+      properties:
+        id:
+          description: CheckDetailAddendumB ID
+          example: d1e26288
+          type: string
+        imageReferenceKeyIndicator:
+          description: |
+            ImageReferenceKeyIndicator identifies whether ImageReferenceKeyLength contains a variable value within the
+            allowable range, or contains a defined value and the content is ItemReferenceKey.
+
+            * `0` - ImageReferenceKeyIndicator has Defined Value of 0034 and ImageReferenceKey contains the Image
+            Reference Key.
+            * `1`- ImageReferenceKeyIndicator contains a value other than Value 0034; or ImageReferenceKeyIndicator
+            contains Value 0034, which is not a Defined Value, and the content of ImageReferenceKey has no special
+            significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the
+            ImageReferenceKey is not present.
+          enum:
+          - "0"
+          - "1"
+          example: "0"
+          maxLength: 1
+          type: string
+    CheckDetailAddendumC:
+      properties:
+        id:
+          description: CheckDetailAddendumC ID
+          example: d1e26288
+          type: string
+    ImageViewDetail:
+      properties:
+        id:
+          description: ImageViewDetail ID
+          example: d1e26288
+          type: string
+    ImageViewData:
+      properties:
+        id:
+          description: ImageViewData ID
+          example: d1e26288
+          type: string
+    ImageViewAnalysis:
+      properties:
+        id:
+          description: ImageViewAnalysis ID
+          example: d1e26288
+          type: string
+    ReturnDetailAddendumA:
+      properties:
+        id:
+          description: ReturnDetailAddendumA ID
+          example: d1e26288
+          type: string
+    ReturnDetailAddendumB:
+      properties:
+        id:
+          description: ReturnDetailAddendumB ID
+          example: d1e26288
+          type: string
+    ReturnDetailAddendumC:
+      properties:
+        id:
+          description: ReturnDetailAddendumC ID
+          example: d1e26288
+          type: string
+    ReturnDetailAddendumD:
+      properties:
+        id:
+          description: ReturnDetailAddendumD ID
+          example: d1e26288
+          type: string
