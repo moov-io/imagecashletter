@@ -22,9 +22,9 @@ type CheckDetailAddendumC struct {
 	// RecordType defines the type of record.
 	recordType string
 	// RecordNumber is a number representing the order in which each CheckDetailAddendumC was created.
-	// CheckDetailAddendumC shall be in sequential order starting with 1.  Maximum 99,
+	// CheckDetailAddendumC shall be in sequential order starting with 1.  Maximum 99.
 	RecordNumber int `json:"recordNumber"`
-	// RoutingNumber (Endorsing Bank Routing Number) is valid routing and transit number indicating the bank that
+	// EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that
 	// endorsed the check.
 	// Format: TTTTAAAAC, where:
 	// TTTT Federal Reserve Prefix
@@ -49,7 +49,7 @@ type CheckDetailAddendumC struct {
 	TruncationIndicator string `json:"truncationIndicator"`
 	// EndorsingConversionIndicator is a code that indicates the conversion within the processing institution among
 	// original paper check, image and IRD. The indicator is specific to the action of institution identified in the
-	// Endorsing Bank RoutingNumber.
+	// EndorsingBankRoutingNumber.
 	// Values:
 	// 0: Did not convert physical document
 	// 1: Original paper converted to IRD
@@ -71,6 +71,8 @@ type CheckDetailAddendumC struct {
 	// 4: Undetermined if repair has been done or no
 	EndorsingBankCorrectionIndicator int `json:"endorsingBankCorrectionIndicator"`
 	// ReturnReason is a code that indicates the reason for non-payment.
+	//
+	// ToDo:  Add Return Reason Codes see ANSI X9.100-188 for allowable values
 	ReturnReason string `json:"returnReason"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`

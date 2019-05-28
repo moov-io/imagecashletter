@@ -12,10 +12,10 @@ package openapi
 type CheckDetailAddendumA struct {
 	// CheckDetailAddendumA ID
 	Id string `json:"id,omitempty"`
-	// RecordNumber is a number representing the order in which each CheckDetailAddendumA was created. CheckDetailAddendumA shall be in sequential order starting with 1. Maximum 99.
-	RecordNumber int32 `json:"recordNumber,omitempty"`
-	// ReturnLocationRoutingNumber is valid routing and transit number indicating where returns, final return notifications, and preliminary return notifications are sent, usually the BOFD.
-	ReturnLocationRoutingNumber string `json:"returnLocationRoutingNumber,omitempty"`
+	// RecordNumber is a number representing the order in which each CheckDetailAddendumA was created. CheckDetailAddendumA shall be in sequential order starting with 1.
+	RecordNumber int32 `json:"recordNumber"`
+	// ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns, final return notifications, and preliminary return notifications are sent, usually the BOFD.
+	ReturnLocationRoutingNumber string `json:"returnLocationRoutingNumber"`
 	// BOFDEndorsementDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
 	BOFDEndorsementDate string `json:"bOFDEndorsementDate,omitempty"`
 	// BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
@@ -27,7 +27,7 @@ type CheckDetailAddendumA struct {
 	// PayeeName is the name of the payee from the check.
 	PayeeName string `json:"payeeName,omitempty"`
 	// TruncationIndicator identifies if the institution truncated the original check item.
-	TruncationIndicator string `json:"truncationIndicator,omitempty"`
+	TruncationIndicator string `json:"truncationIndicator"`
 	// BOFDConversionIndicator is a code that indicates the conversion within the processing institution between original paper check, image and IRD. The indicator is specific to the action of institution that created this record.  * `0` - Did not convert physical document * `1` - Original paper converted to IRD * `2` - Original paper converted to image * `3` - IRD converted to another IRD * `4` - IRD converted to image of IRD * `5` - Image converted to an IRD * `6` - Image converted to another image (e.g., transcoded) * `7` - Did not convert image (e.g., same as source) * `8` - Undetermined 
 	BOFDConversionIndicator string `json:"bOFDConversionIndicator,omitempty"`
 	// BOFDCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount. * `0` - No Repair * `1` - Repaired (form of repair unknown) * `2` - Repaired without Operator intervention * `3` - Repaired with Operator intervention * `4` - Undetermined if repair has been done or not 

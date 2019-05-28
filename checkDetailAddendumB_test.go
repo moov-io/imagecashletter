@@ -14,7 +14,7 @@ import (
 func mockCheckDetailAddendumB() CheckDetailAddendumB {
 	cdAddendumB := NewCheckDetailAddendumB()
 	cdAddendumB.ImageReferenceKeyIndicator = 1
-	cdAddendumB.MicrofilmArchiveSequenceNumber = "1A             "
+	cdAddendumB.MicrofilmArchiveSequenceNumber = "10             "
 	cdAddendumB.LengthImageReferenceKey = "0034"
 	cdAddendumB.ImageReferenceKey = "0"
 	cdAddendumB.Description = "CD Addendum B"
@@ -34,7 +34,7 @@ func TestMockCheckDetailAddendumB(t *testing.T) {
 	if cdAddendumB.ImageReferenceKeyIndicator != 1 {
 		t.Error("ImageReferenceKeyIndicator does not validate")
 	}
-	if cdAddendumB.MicrofilmArchiveSequenceNumber != "1A             " {
+	if cdAddendumB.MicrofilmArchiveSequenceNumber != "10             " {
 		t.Error("MicrofilmArchiveSequenceNumber does not validate")
 	}
 	if cdAddendumB.LengthImageReferenceKey != "0034" {
@@ -77,8 +77,8 @@ func TestParseCheckDetailAddendumB(t *testing.T) {
 		t.Errorf("ImageReferenceKeyIndicator Expected '1' got: %v",
 			record.ImageReferenceKeyIndicatorField())
 	}
-	if record.MicrofilmArchiveSequenceNumberField() != "1A             " {
-		t.Errorf("MicrofilmArchiveSequenceNumber Expected '1A             ' got: %v",
+	if record.MicrofilmArchiveSequenceNumberField() != "10             " {
+		t.Errorf("MicrofilmArchiveSequenceNumber Expected '10             ' got: %v",
 			record.MicrofilmArchiveSequenceNumberField())
 	}
 	if record.LengthImageReferenceKeyField() != "0034" {
@@ -101,7 +101,7 @@ func TestParseCheckDetailAddendumB(t *testing.T) {
 
 // testCDAddendumBString validates that a known parsed CheckDetailAddendumB can return to a string of the same value
 func testCDAddendumBString(t testing.TB) {
-	var line = "2711A             00340                                 CD Addendum B           "
+	var line = "27110             00340                                 CD Addendum B           "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()

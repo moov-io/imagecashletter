@@ -1237,12 +1237,12 @@ components:
           minimum: 1
           maximum: 99
           description: RecordNumber is a number representing the order in which each CheckDetailAddendumA was created.
-            CheckDetailAddendumA shall be in sequential order starting with 1. Maximum 99.
+            CheckDetailAddendumA shall be in sequential order starting with 1.
           example: 1
         returnLocationRoutingNumber:
           type: string
           maxLength: 9
-          description: ReturnLocationRoutingNumber is valid routing and transit number indicating where returns,
+          description: ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns,
             final return notifications, and preliminary return notifications are sent, usually the BOFD.
           example: '231486745'
         bOFDEndorsementDate:
@@ -1305,7 +1305,7 @@ components:
             * `6` - Image converted to another image (e.g., transcoded)
             * `7` - Did not convert image (e.g., same as source)
             * `8` - Undetermined
-          example: 1
+          example: '1'
         bOFDBOFDCorrectionIndicator:
           type: string
           maxLength:  1
@@ -1329,6 +1329,12 @@ components:
           maxLength: 4
           description: UserField identifies a field used at the discretion of users of the standard.
           example: 'Z'
+      required:
+        - recordNumber
+        - returnLocationRoutingNumber
+        - bofdEndorsementDate
+        - bofdItemSequenceNumber
+        - truncationIndicator
     CheckDetailAddendumB:
       properties:
         id:
@@ -1352,12 +1358,156 @@ components:
               significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the
               ImageReferenceKey is not present.
           example: '0'
+        microfilmArchiveSequenceNumber:
+          type: string
+          maxLength: 15
+          description: microfilmArchiveSequenceNumber is a number that identifies the item in the microfilm archive system;
+            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+          example: '1'
+        lengthImageReferenceKey:
+          type: string
+          enum:
+            - 0034
+          description: |
+            MicrofilmArchiveSequenceNumber A number that identifies the item in the microfilm archive system;
+            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+
+            * `0034` - ImageReferenceKey contains the ImageReferenceKey (ImageReferenceKeyIndicator is 0).
+            * `0000` - ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
+            * `0001` - 9999: May include Value 0034, and ImageReferenceKey has no special significance to Image Reference
+            Key (ImageReferenceKey is 1).
+        imageReferenceKey:
+          type: string
+          description: |
+            ImageReferenceKey is used to find the image of the item in the image data system.  Size is variable based on lengthImageReferenceKey.
+            The position within the file is variable based on the lengthImageReferenceKey.
+          example: '0'
+        descript:
+          type: string
+          maxLength: 15
+          description: Descript describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
+          example: 'Payment'
+        userField:
+          type: string
+          maxLength: 4
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'ZZZZ'
+      required:
+        - microfilmArchiveSequenceNumber
     CheckDetailAddendumC:
       properties:
         id:
           type: string
           description:  CheckDetailAddendumC ID
           example: d1e26288
+        recordNumber:
+          type: integer
+          minimum: 1
+          maximum: 99
+          description: RecordNumber is a number representing the order in which each CheckDetailAddendumC was created.
+            CheckDetailAddendumA shall be in sequential order starting with 1.
+          example: 1
+        endorsingBankRoutingNumber:
+          type: string
+          maxLength: 9
+          description: EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that
+            endorsed the check.
+          example: '231486745'
+        bOFDEndorsementBusinessDate:
+          type: string
+          maxLength: 10
+          description: BOFDEndorsementBusinessDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
+          example: '20190522'
+        endorsingBankSequenceNumber:
+          type: string
+          maxLength: 15
+          description: EndorsingItemSequenceNumber is a number that identifies the item at the endorsing bank.
+          example: '1'
+        truncationIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - Y
+            - N
+          description: TruncationIndicator identifies if the institution truncated the original check item.
+          example: 'Y'
+        endorsingBankConversionIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+          description: |
+            EndorsingBankConversionIndicator is a code that indicates the conversion within the processing institution
+            between original paper check, image and IRD. The indicator is specific to the action institution identified in the
+            EndorsingBankRoutingNumber.
+
+            * `0` - Did not convert physical document
+            * `1` - Original paper converted to IRD
+            * `2` - Original paper converted to image
+            * `3` - IRD converted to another IRD
+            * `4` - IRD converted to image of IRD
+            * `5` - Image converted to an IRD
+            * `6` - Image converted to another image (e.g., transcoded)
+            * `7` - Did not convert image (e.g., same as source)
+            * `8` - Undetermined
+          example: '1'
+        endorsingBankCorrectionIndicator:
+          type: string
+          maxLength:  1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            EndorsingCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
+            creator of this CheckDetailAddendumC Record for fields other than Payor Bank Routing Number and Amount.
+
+            * `0` - No Repair
+            * `1` - Repaired (form of repair unknown)
+            * `2` - Repaired without Operator intervention
+            * `3` - Repaired with Operator intervention
+            * `4` - Undetermined if repair has been done or not
+          example: '1'
+        returnReason:
+          type: string
+          description: ReturnReason is a code that indicates the reason for non-payment.
+          # ToDo;  Add Return Reason Codes see ANSI X9.100-188 for allowable values
+        userField:
+          type: string
+          maxLength: 19
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'Z'
+        endorsingBankIdentifier:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+          description: |
+           * `0` - Depository Bank (BOFD) - this value is used when the CheckDetailAddendumC Record reflects the Return
+           * `Processing Bank in lieu of BOFD.
+           * `1` - Other Collecting Bank
+           * `2` - Other Returning Bank
+           * `3` - Payor Bank
+          example: '0'
+      required:
+        - recordNumber
+        - endorsingBankRoutingNumber
+        - bofdEndorsementBusinessDate
+        - endorsingBankItemSequenceNumber
+        - truncationIndicator
     ImageViewDetail:
       properties:
         id:
@@ -1376,13 +1526,115 @@ components:
           type: string
           description: ImageViewAnalysis ID
           example: d1e26288
-
     ReturnDetailAddendumA:
       properties:
         id:
           type: string
           description: ReturnDetailAddendumA ID
           example: d1e26288
+        recordNumber:
+          type: integer
+          minimum: 1
+          maximum: 9
+          description: RecordNumber is a number representing the order in which each ReturnDetailAddendumA was created.
+            ReturnDetailAddendumA shall be in sequential order starting with 1.
+          example: 1
+        returnLocationRoutingNumber:
+          type: string
+          maxLength: 9
+          description: ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns,
+            final return notifications, and preliminary return notifications are sent, usually the BOFD.
+          example: '231486745'
+        bOFDEndorsementDate:
+          type: string
+          maxLength: 10
+          description: BOFDEndorsementDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
+          example: '20190522'
+        bOFDItemSequenceNumber:
+          type: string
+          maxLength: 15
+          description: BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
+          example: '1'
+        bOFDAccountNumber:
+          type: string
+          maxLength: 18
+          description: BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
+          example: '938383'
+        bOFDBranchCode:
+          type: string
+          maxLength: 5
+          description: BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
+          example: '01'
+        payeeName:
+          type: string
+          maxLength: 15
+          description: PayeeName is the name of the payee from the check.
+          example: 'Payee Name'
+        truncationIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - Y
+            - N
+          description: TruncationIndicator identifies if the institution truncated the original check item.
+          example: 'Y'
+        bOFDConversionIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+          description: |
+            BOFDConversionIndicator is a code that indicates the conversion within the processing institution
+            between original paper check, image and IRD. The indicator is specific to the action of institution that created
+            this record.
+
+            * `0` - Did not convert physical document
+            * `1` - Original paper converted to IRD
+            * `2` - Original paper converted to image
+            * `3` - IRD converted to another IRD
+            * `4` - IRD converted to image of IRD
+            * `5` - Image converted to an IRD
+            * `6` - Image converted to another image (e.g., transcoded)
+            * `7` - Did not convert image (e.g., same as source)
+            * `8` - Undetermined
+          example: '1'
+        bOFDBOFDCorrectionIndicator:
+          type: string
+          maxLength:  1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            BOFDCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
+            creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount.
+            * `0` - No Repair
+            * `1` - Repaired (form of repair unknown)
+            * `2` - Repaired without Operator intervention
+            * `3` - Repaired with Operator intervention
+            * `4` - Undetermined if repair has been done or not
+          example: '1'
+        userField:
+          type: string
+          maxLength: 1
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'Z'
+      required:
+        - recordNumber
+        - returnLocationRoutingNumber
+        - bofdEndorsementDate
+        - bofdItemSequenceNumber
+        - truncationIndicator
     ReturnDetailAddendumB:
       properties:
         id:

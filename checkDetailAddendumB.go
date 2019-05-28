@@ -26,7 +26,7 @@ type CheckDetailAddendumB struct {
 	// ImageReferenceKey has no special significance with regards to an Image Reference Key;
 	// or ImageReferenceKeyIndicator is 0000, meaning the ImageReferenceKey is not present.
 	ImageReferenceKeyIndicator int `json:"imageReferenceKeyIndicator"`
-	// MicrofilmArchiveSequenceNumber A number that identifies the item in the microfilm archive system;
+	// MicrofilmArchiveSequenceNumber a number that identifies the item in the microfilm archive system;
 	// it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
 	MicrofilmArchiveSequenceNumber string `json:"microfilmArchiveSequenceNumber"`
 	// ImageReferenceKeyLength is the number of characters in the ImageReferenceKey
@@ -36,9 +36,9 @@ type CheckDetailAddendumB struct {
 	// 0001 - 9999: May include Value 0034, and ImageReferenceKey has no special significance to
 	// Image Reference Key (ImageReferenceKey is 1).
 	LengthImageReferenceKey string `json:"imageReferenceKeyLength"`
-	// ImageReferenceKey  is used to find the image of the item in the image data system.
+	// ImageReferenceKey is used to find the image of the item in the image data system.
 	ImageReferenceKey string `json:"imageReferenceKey"`
-	//Description describes the transaction
+	// Description describes the transaction
 	Description string `json:"description"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`

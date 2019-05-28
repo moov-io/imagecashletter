@@ -21,7 +21,7 @@ type ReturnDetailAddendumA struct {
 	recordType string
 	// RecordNumber represents the chronological order (oldest to newest) in which each ReturnDetailAddendumA was
 	// created. The ReturnDetailAddendumA shall be in sequential order according to this field. ReturnDetailAddendumA
-	// RecordNumber9s) shall be in sequential order starting with 1, indicating the oldest addendum, and incrementing
+	// RecordNumbers shall be in sequential order starting with 1, indicating the oldest addendum, and incrementing
 	// by 1 for each subsequent addendum.
 	RecordNumber int `json:"recordNumber"`
 	// RoutingNumber (Return Location Routing Number) is valid routing and transit number indicating where returns,
