@@ -53,7 +53,7 @@ func TestMockCheckDetailAddendumB(t *testing.T) {
 
 // TestParseCheckDetailAddendumB validates parsing a CheckDetailAddendumB
 func TestParseCheckDetailAddendumB(t *testing.T) {
-	var line = "2711A             00340                                 CD Addendum B           "
+	var line = "27110             00340                                 CD Addendum B           "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
