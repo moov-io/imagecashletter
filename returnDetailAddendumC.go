@@ -17,7 +17,6 @@ type ReturnDetailAddendumC struct {
 	ID string `json:"id"`
 	// RecordType defines the type of record.
 	recordType string
-	// validator is composed for x9 data validation
 	// ImageReferenceKeyIndicator identifies whether ImageReferenceKeyLength contains a variable value within the
 	// allowable range, or contains a defined value and the content is ItemReferenceKey.
 	// Values:
@@ -39,7 +38,7 @@ type ReturnDetailAddendumC struct {
 	LengthImageReferenceKey string `json:"imageReferenceKeyLength"`
 	// ImageReferenceKey  is used to find the image of the item in the image data system.
 	ImageReferenceKey string `json:"imageReferenceKey"`
-	//Description describes the transaction
+	// Description describes the transaction
 	Description string `json:"description"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`

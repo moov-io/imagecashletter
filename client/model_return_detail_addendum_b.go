@@ -12,4 +12,14 @@ package openapi
 type ReturnDetailAddendumB struct {
 	// ReturnDetailAddendumB ID
 	Id string `json:"id,omitempty"`
+	// PayorBankName is short name of the institution by or through which the item is payable.
+	PayorBankName string `json:"payorBankName,omitempty"`
+	// AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+	AuxiliaryOnUs string `json:"auxiliaryOnUs,omitempty"`
+	// PayorBankSequenceNumber is a number that identifies the item at the payor bank.
+	PayorBankSequenceNumber string `json:"payorBankSequenceNumber,omitempty"`
+	// PayorBankBusinessDate is the year, month, and day the payor bank processed the Return Record. Format - YYYYMMDD, where - YYYY year, MM month, DD day
+	PayorBankBusinessDate string `json:"payorBankBusinessDate,omitempty"`
+	// PayorAccountName is the account name from payor bank records.
+	PayorAccountName string `json:"payorAccountName,omitempty"`
 }

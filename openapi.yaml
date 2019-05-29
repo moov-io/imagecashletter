@@ -1641,12 +1641,90 @@ components:
           type: string
           description: ReturnDetailAddendumB ID
           example: d1e26288
+        payorBankName:
+          type: string
+          maxLength: 18
+          description: PayorBankName is short name of the institution by or through which the item is payable.
+          example: 'Bank Short Name'
+        auxiliaryOnUs:
+          type: string
+          maxLength: 15
+          description: AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+          example: '012349'
+        payorBankSequenceNumber:
+          type: string
+          maxLength: 15
+          description: PayorBankSequenceNumber is a number that identifies the item at the payor bank.
+          example: '1'
+        payorBankBusinessDate:
+          type: string
+          maxLength: 10
+          description: PayorBankBusinessDate is the year, month, and day the payor bank processed the Return Record.
+              Format - YYYYMMDD, where - YYYY year, MM month, DD day
+          example: '20190522'
+        payorAccountName:
+          type: string
+          maxLength: 22
+          description: PayorAccountName is the account name from payor bank records.
+          example: 'Account Name'
+      required:
+        - PayorBankSequenceNumber
+        - PayorBankBusinessDate
     ReturnDetailAddendumC:
       properties:
         id:
           type: string
           description:  ReturnDetailAddendumC ID
           example: d1e26288
+        imageReferenceKeyIndicator:
+          type: string
+          enum:
+            - 0
+            - 1
+          description: |
+            ImageReferenceKeyIndicator identifies whether ImageReferenceKeyLength contains a variable value within the
+            allowable range, or contains a defined value and the content is ItemReferenceKey.
+
+            * `0` - ImageReferenceKeyIndicator has Defined Value of 0034 and ImageReferenceKey contains the Image
+            Reference Key.
+            * `1`- ImageReferenceKeyIndicator contains a value other than Value 0034; or ImageReferenceKeyIndicator
+            contains Value 0034, which is not a Defined Value, and the content of ImageReferenceKey has no special
+            significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the
+            ImageReferenceKey is not present.
+        microfilmArchiveSequenceNumber:
+          type: string
+          maxLength: 15
+          description: microfilmArchiveSequenceNumber is a number that identifies the item in the microfilm archive system;
+            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+          example: '1'
+        lengthImageReferenceKey:
+          type: string
+          enum:
+            - 0034
+          description: |
+            MicrofilmArchiveSequenceNumber A number that identifies the item in the microfilm archive system;
+            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+
+            * `0034` - ImageReferenceKey contains the ImageReferenceKey (ImageReferenceKeyIndicator is 0).
+            * `0000` - ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
+            * `0001` - 9999: May include Value 0034, and ImageReferenceKey has no special significance to Image Reference
+            Key (ImageReferenceKey is 1).
+        imageReferenceKey:
+          type: string
+          description: |
+            ImageReferenceKey is used to find the image of the item in the image data system.  Size is variable based on lengthImageReferenceKey.
+            The position within the file is variable based on the lengthImageReferenceKey.
+          example: '0'
+        descript:
+          type: string
+          maxLength: 15
+          description: Descript describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
+          example: 'Payment'
+        userField:
+          type: string
+          maxLength: 4
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'ZZZZ'
     ReturnDetailAddendumD:
       properties:
         id:
