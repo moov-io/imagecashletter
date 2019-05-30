@@ -12,4 +12,29 @@ package openapi
 type ImageViewAnalysis struct {
 	// ImageViewAnalysis ID
 	Id string `json:"id,omitempty"`
+	GlobalImageQuality string `json:"globalImageQuality,omitempty"`
+	GlobalImageUsability string `json:"globalImageUsability,omitempty"`
+	ImagingBankSpecificTest string `json:"imagingBankSpecificTest,omitempty"`
+	PartialImage string `json:"partialImage,omitempty"`
+	ExcessiveImageSkew string `json:"excessiveImageSkew,omitempty"`
+	PiggybackImage string `json:"piggybackImage,omitempty"`
+	TooLightOrTooDark string `json:"tooLightOrTooDark,omitempty"`
+	StreaksAndOrBands string `json:"streaksAndOrBands,omitempty"`
+	BelowMinimumImageSize string `json:"belowMinimumImageSize,omitempty"`
+	ExceedsMaximumImageSize string `json:"exceedsMaximumImageSize,omitempty"`
+	ImageEnabledPOD string `json:"imageEnabledPOD,omitempty"`
+	SourceDocumentBad string `json:"sourceDocumentBad,omitempty"`
+	DateUsability string `json:"dateUsability,omitempty"`
+	PayeeUsability string `json:"payeeUsability,omitempty"`
+	ConvenienceAmountUsability string `json:"convenienceAmountUsability,omitempty"`
+	AmountInWordsUsability string `json:"amountInWordsUsability,omitempty"`
+	SignatureUsability string `json:"signatureUsability,omitempty"`
+	PayorNameAddressUsability string `json:"payorNameAddressUsability,omitempty"`
+	MICRLineUsability string `json:"mICRLineUsability,omitempty"`
+	MemoLineUsability string `json:"memoLineUsability,omitempty"`
+	PayorBankNameAddressUsability string `json:"payorBankNameAddressUsability,omitempty"`
+	PayeeEndorsementUsability string `json:"payeeEndorsementUsability,omitempty"`
+	BOFDEndorsementUsability string `json:"bOFDEndorsementUsability,omitempty"`
+	TransitEndorsementUsability string `json:"transitEndorsementUsability,omitempty"`
+	UserField string `json:"userField,omitempty"`
 }

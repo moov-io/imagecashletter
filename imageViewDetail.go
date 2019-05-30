@@ -67,7 +67,7 @@ type ImageViewDetail struct {
 	// If data is present it shall be ignored, and ImageViewData.ImageDataLength shall take precedence.
 	ImageViewDataSize string `json:"imageViewDataSize"`
 	// ViewSideIndicator is a code that indicates the image view conveyed in the related ImageViewData
-	// Record.ImageData An image view may be a full view of the item (i.e., the entire full face of the document)
+	// Record.ImageData.  An image view may be a full view of the item (i.e., the entire full face of the document)
 	// or may be a partial view (snippet) as determined by ImageViewDetail.ViewDescriptor.
 	// Values:
 	// 0: Front image view

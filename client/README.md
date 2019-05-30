@@ -31,8 +31,18 @@ All URIs are relative to *http://localhost:8083*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*FilesApi* | [**AddCashLetterToFile**](docs/FilesApi.md#addcashlettertofile) | **Post** /files/{file_id}/cashLetters | Add CashLetter to File
+*FilesApi* | [**CreateFile**](docs/FilesApi.md#createfile) | **Post** /files/create | Create a new File object
+*FilesApi* | [**DeleteFileCashLetter**](docs/FilesApi.md#deletefilecashletter) | **Delete** /files/{file_id}/cashLetters/{cashLetter_id} | Delete a CashLetter from a File
+*FilesApi* | [**DeleteX9File**](docs/FilesApi.md#deletex9file) | **Delete** /files/{file_id} | Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
+*FilesApi* | [**GetFileByID**](docs/FilesApi.md#getfilebyid) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+*FilesApi* | [**GetFileCashLetter**](docs/FilesApi.md#getfilecashletter) | **Get** /files/{file_id}/cashLetters/{cashLetter_id} | Get a specific CashLetter on a FIle
+*FilesApi* | [**GetFileCashLetters**](docs/FilesApi.md#getfilecashletters) | **Get** /files/{file_id}/cashLetters | Get the cashLetters on a File.
+*FilesApi* | [**GetFileContents**](docs/FilesApi.md#getfilecontents) | **Get** /files/{file_id}/contents | Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
 *FilesApi* | [**GetFiles**](docs/FilesApi.md#getfiles) | **Get** /files | Gets a list of Files
-*FilesApi* | [**Ping**](docs/FilesApi.md#ping) | **Get** /ping | Ping the Wire service to check if running
+*FilesApi* | [**Ping**](docs/FilesApi.md#ping) | **Get** /ping | Ping the X9 service to check if running
+*FilesApi* | [**UpdateFile**](docs/FilesApi.md#updatefile) | **Post** /files/{file_id} | Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+*FilesApi* | [**ValidateFile**](docs/FilesApi.md#validatefile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
 
 ## Documentation For Models
@@ -50,6 +60,7 @@ Class | Method | HTTP request | Description
  - [Checks](docs/Checks.md)
  - [CreateFile](docs/CreateFile.md)
  - [CreditItem](docs/CreditItem.md)
+ - [Error](docs/Error.md)
  - [File](docs/File.md)
  - [FileControl](docs/FileControl.md)
  - [FileHeader](docs/FileHeader.md)

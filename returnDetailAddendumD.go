@@ -22,7 +22,7 @@ type ReturnDetailAddendumD struct {
 	// RecordNumber is a number representing the order in which each ReturnDetailAddendumD was created.
 	// ReturnDetailAddendumD shall be in sequential order starting with 1.  Maximum 99,
 	RecordNumber int `json:"recordNumber"`
-	// RoutingNumber (Endorsing Bank Routing Number) is valid routing and transit number indicating the bank that
+	// EndorsingBankRoutingNumber is valid routing and transit number indicating the bank that
 	// endorsed the check.
 	// Format: TTTTAAAAC, where:
 	// TTTT Federal Reserve Prefix

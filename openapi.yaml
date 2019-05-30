@@ -1,4 +1,5 @@
 openapi: 3.0.2
+# ImageViewDataSize is the total number of bytes in ImageViewData.ImageData.  Use of this field is NOT recommended, so it has not been included in the openapi.yaml
 info:
   description: Moov X9 () implements an HTTP API for creating, parsing and validating X9 (Check21) files.
   version: v1
@@ -21,7 +22,7 @@ paths:
     get:
       tags:
         - Files
-      summary: Ping the Wire service to check if running
+      summary: Ping the X9 service to check if running
       operationId: ping
       responses:
         '200':
@@ -45,7 +46,381 @@ paths:
       responses:
         '200':
           description: A list of File objects
-
+  /files/create:
+    post:
+      tags:
+        - Files
+      summary: Create a new File object
+      operationId: createFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: X-Idempotency-Key
+          in: header
+          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+          example: a4f88150
+          required: false
+          schema:
+            type: string
+      requestBody:
+        description: Content of the X9 file (in json or raw text)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFile'
+          text/plain:
+            schema:
+              description: A plaintext X9 file
+              type: string
+              example: 0135T231380104121042882201809051523NCitadel           Wells Fargo        US
+      responses:
+        '201':
+          description: A JSON object containing a new File
+          headers:
+            Location:
+              description: The location of the new resource
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '400':
+          description: "Invalid File Header Object"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /files/{file_id}:
+    get:
+      tags:
+        - Files
+      summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+      operationId: getFileByID
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      responses:
+        '200':
+          description: A File object for the supplied ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '404':
+          description: A resource with the specified ID was not found
+    post:
+      tags:
+        - Files
+      summary: Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      operationId: updateFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: X-Idempotency-Key
+          in: header
+          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+          example: a4f88150
+          required: false
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFile'
+      responses:
+        '201':
+          description: A JSON object containing a new File
+          headers:
+            Location:
+              description: The location of the new resource
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '400':
+          description: "Invalid File Header Object"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Files
+      summary: Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
+      operationId: deleteX9File
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Permanently deleted File.
+        '404':
+          description: A File with the specified ID was not found.
+  /files/{file_id}/contents:
+    get:
+      tags:
+        - Files
+      summary: Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
+      operationId: getFileContents
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      responses:
+        '200':
+          description: File built successfully without errors.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/RawFile'
+  /files/{file_id}/validate:
+    get:
+      tags:
+        - Files
+      summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+      operationId: validateFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      responses:
+        '200':
+          description: File validated successfully without errors.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '400':
+          description: Validation failed. Check response for errors
+  /files/{file_id}/cashLetters:
+    get:
+      tags:
+        - Files
+      summary: Get the cashLetters on a File.
+      operationId: getFileCashLetters
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      responses:
+        '200':
+          description: A list of CashLetter objects
+          headers:
+            X-Total-Count:
+              description: The total number of CashLetters on the File.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashLetters'
+    post:
+      tags:
+        - Files
+      summary: Add CashLetter to File
+      operationId: addCashLetterToFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: X-Idempotency-Key
+          in: header
+          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+          example: a4f88150
+          required: false
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CashLetter'
+      responses:
+        '200':
+          description: CashLetter added to File
+  /files/{file_id}/cashLetters/{cashLetter_id}:
+    get:
+      tags:
+        - Files
+      summary: Get a specific CashLetter on a FIle
+      operationId: getFileCashLetter
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+        - name: cashLetter_id
+          in: path
+          description: CashLetter ID
+          required: true
+          schema:
+            type: string
+            example: 45758063
+      responses:
+        '200':
+          description: CashLetter object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashLetter'
+        '404':
+          description: CashLetter or File not found
+    delete:
+      tags:
+        - Files
+      summary: Delete a CashLetter from a File
+      operationId: deleteFileCashLetter
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+        - name: cashLetter_id
+          in: path
+          description: CashLetter ID
+          required: true
+          schema:
+            type: string
+            example: 45758063
+      responses:
+        '200':
+          description: CashLetter deleted
+        '404':
+          description: CashLetter or File not found
 
 components:
   schemas:
@@ -61,10 +436,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CashLetter'
-#        bundles:
-#          type: array
-#          items:
-#            $ref: '#/components/schemas/Bundle'
+        bundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bundle'
         fileControl:
           $ref: '#/components/schemas/FileControl'
       required:
@@ -81,10 +456,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CashLetter'
-#        bundles:
-#          type: array
-#          items:
-#            $ref: '#/components/schemas/Bundle'
+        bundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bundle'
         fileControl:
           $ref: '#/components/schemas/FileControl'
     FileHeader:
@@ -208,7 +583,7 @@ components:
         id:
           type: string
           description: FileControl ID
-          example: d1e26288
+          example: 'd1e26288'
         cashLetterCount:
           type: integer
           description: CashLetterCount identifies the total number of cash letters within the file.
@@ -288,7 +663,7 @@ components:
         id:
           description: CashLetterHeader ID
           type: string
-          example: d1e26288
+          example: 'd1e26288'
         collectionTypeIndicator:
           type: string
           maxLength: 2
@@ -444,7 +819,7 @@ components:
         id:
           type: string
           description: CashLetterControl ID
-          example: d1e26288
+          example: 'd1e26288'
         cashLetterBundleCount:
           type: integer
           description: CashLetterBundleCount identifies the total number of bundles within the cash letter.
@@ -491,6 +866,10 @@ components:
         - cashLetterItemsCount
         - cashLetterTotalAmount
         - settlementDate
+    CashLetters:
+      type: array
+      items:
+        $ref: '#/components/schemas/CashLetter'
     Bundle:
       properties:
         bundleHeader:
@@ -510,7 +889,7 @@ components:
         id:
           type: string
           description: BundleHeader ID
-          example: d1e26288
+          example: 'd1e26288'
         collectionTypeIndicator:
           type: string
           maxLength: 2
@@ -585,7 +964,7 @@ components:
         id:
           type: string
           description: BundleControl ID
-          example: d1e26288
+          example: 'd1e26288'
         bundleItemsCount:
           type: integer
           description: BundleItemsCount identifies the total number of items within the bundle.
@@ -1514,18 +1893,322 @@ components:
           type: string
           description: ImageViewDetail ID
           example: d1e26288
+        imageIndicator:
+          type: integer
+          minimum: 0
+          maximum: 3
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+          description: |
+            ImageIndicator is a code that indicates the presence and disposition of an image view conveyed in the related
+            ImageViewData.  When an image view is not present (0) then certain conditional fields in this ImageViewDetail and
+            the related ImageViewData shall not be present and will be filled with blank space.
+
+            * `0` - Image view not present
+            * `1` - Image view present, actual check
+            * `2` - Image view present, not actual check
+            * `3` - Image view present, unable to determine if value is 1 or 2
+          example: 1
+        imageCreatorRoutingNumber:
+          type: string
+          maxLength: 9
+          description: ImageCreatorRoutingNumber identifies the financial institution that created the image view.
+          example: '2139876354'
+        imageCreatorDate:
+          type: string
+          maxLength: 10
+          description: |
+            ImageCreatorDate is the date assigned by the image creator for the image view conveyed in the related ImageData.
+            (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
+          example: '20190519'
+        imageViewFormatIndicator:
+          type: string
+          maxLength: 2
+          enum:
+            - 00
+            - 01
+            - 20
+            - 22
+            - 23
+          description: |
+            ImageViewFormatIndicator is a code that identifies the type of image format used in the related
+            ImageViewData.ImageData. The image format type is also commonly specified by reference to the file extension
+            used when image data is saved as an image file.
+
+            Agreement not required:
+            * `00` - TIFF 6; Extension: TIF
+            Agreement required:
+            * `01` - IOCA FS 11; Extension: ICA
+            * `20` - PNG (Portable Network Graphics); Extension: PNG ‘21’	JFIF (JPEG File Interchange Format); Extension: JPG
+            * `22` - SPIFF (Still Picture Interchange File Format) (ITU-T Rec. T.84 Annex F); Extension: SPF
+            * `23` - JBIG data stream (ITU-T Rec. T.82/ISO/IEC 11544:1993); Extension: JBG ‘24’	JPEG 2000 (ISO/IEC 15444-1:2000); Extension: JP2
+          example: '00'
+        imageViewCompressionAlgorithm:
+          type: string
+          maxLength: 2
+          enum:
+            - 00
+            - 01
+            - 02
+            - 20
+            - 21
+            - 22
+          description: |
+            ImageViewCompressionAlgorithm is a code that identifies the algorithm or method used to compress the Image Data
+            in the related ImageViewData.ImageData.
+
+            Agreement not required:
+            * `00` - Group 4 facsimile compression (ITU-T Rec. T.563/CCITT Rec. T.6)
+            Agreement required:
+            * `01` - JPEG Baseline (JPEG Interchange Format) (ITU-T Rec. T.81/ISO/IEC 10918)
+            * `02` - ABIC
+            * `21` - PNG (Portable Network Graphics)
+            * `22` - JBIG (ITU-T Rec. T.82/ISO/IEC 11544:1993)
+            * `23` - JPEG 2000 (ISO/IEC 15444–1:2000)
+          example: '02'
+        viewSideIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+          description: |
+            ViewSideIndicator is a code that indicates the image view conveyed in the related ImageViewData.
+            An image view may be a full view of the item (i.e., the entire full face of the document)
+            or may be a partial view (snippet) as determined by viewDescriptor.
+
+            * `0` - Front image view
+            * `1` - Rear image view
+          example: '0'
+        viewDescriptor:
+          type: string
+          maxLength: 2
+          enum:
+            - 00
+            - 01
+            - 02
+            - 03
+            - 04
+            - 05
+            - 06
+            - 07
+            - 08
+            - 09
+            - 10
+            - 11
+            - 12
+            - 13
+#            - 14 - 99
+          description: |
+            ViewDescriptor is a code that indicates the nature of the image view based on ImageViewData.ImageData.
+
+            * `00` -  Full view
+            * `01` -  Partial view–unspecified Area of Interest
+            * `02` -  Partial view–date Area of Interest
+            * `03` -  Partial view–payee Area of Interest
+            * `04` -  Partial view–convenience amount Area of Interest
+            * `05` -  Partial view–amount in words (legal amount) Area of Interest
+            * `06` -  Partial view–signature Area(s) of Interest
+            * `07` -  Partial view–payor name and address Area of Interest
+            * `08` -  Partial view–MICR line Area of Interest
+            * `09` -  Partial view–memo line Area of Interest
+            * `10` -  Partial view–payor bank name and address Area of Interest
+            * `11` -  Partial view–payee endorsement Area of Interest
+            * `12` -  Partial view–Bank Of First Deposit (BOFD) endorsement Area of Interest
+            * `13` -  Partial view–transit endorsement Area of Interest
+            * `14 - 99` -  Reserved for X9
+        digitalSignatureIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+          description: |
+            DigitalSignatureIndicator is a code that indicates the presence or absence of a digital signature for the image
+            view contained in ImageViewData.ImageData. If present, the Digital Signature is conveyed in the related DigitalSignature.
+
+            * `0` - Digital Signature is not present
+            * `1` - Digital Signature is present
+          example:  '0'
+        digitalSignatureMethod:
+          type: string
+          maxLength: 2
+          enum:
+            - 00
+            - 01
+            - 02
+            - 03
+            - 04
+#            - 05 - 99
+          description: |
+            DigitalSignatureMethod is a code that identifies the cryptographic algorithm used to generate and validate the
+            Digital Signature in ImageViewData.DigitalSignature.
+            * `00` - Digital Signature Algorithm (DSA) with SHA1 (ANSI X9.30)
+            * `01` - RSA with MD5 (ANSI X9.31)
+            * `02` - RSA with MDC2 (ANSI X9.31)
+            * `03` - RSA with SHA1 (ANSI X9.31)
+            * `04` - Elliptic Curve DSA (ECDSA) with SHA1 (ANSI X9.62)
+            * `05 - 99` - Reserved for emerging cryptographic algorithms.
+          example: '00'
+        securityKeySize:
+          type: integer
+          minimum: 0
+          maximum: 99999
+          description: SecurityKeySize is the length in bits of the cryptographic algorithm key used to create the Digital Signature.
+            Valid values 0–99999
+          example: 1
+        protectedDataStart:
+          type: integer
+          minimum: 0
+          maximum: 9999999
+          description: ProtectedDataStart is a number that represents the offset in bytes from the first byte (counted as byte 1)
+            of the image data in ImageViewData.ImageData to the first byte of the image data protected by the
+            digital signature.
+
+            Valid values -
+            0000000 - Digital Signature is applied to entire image data
+            000001–9999999 - Valid offset values
+          example: 0
+        protectedDataLength:
+          type: int
+          minimum: 0
+          maximum: 9999999
+          description: ProtectedDataLength is number of contiguous bytes of image data in the related ImageViewData.ImageData
+            protected by the digital signature starting with the byte indicated by the value of the ProtectedDataStart in
+            this ImageViewDetail. The ProtectedDataLength value shall not exceed the ImageViewData.ImageDataLength.
+
+            Valid values -
+            0000000 - Digital Signature is applied to entire image data
+            000001–9999999 - Valid length values
+          example: 0
+        imageRecreateIndicator:
+          type: integer
+          enum:
+            - 0
+            - 1
+          description: |
+            ImageRecreateIndicator is a code that indicates whether the sender has the ability to recreate the image view
+            conveyed in the related ImageViewData.ImageData.
+
+            * `0` - Sender can recreate the image view for the duration of the agreed upon retention time frames.
+            * `1` - Sender cannot recreate image view.
+          example: 0
+        userField:
+          type: string
+          maxLength: 8
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'Z'
+        overrideIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            -
+            - 0
+            - 1
+            - A
+            - B
+            - C
+            - D
+            - E
+            - F
+            - G
+            - H
+            - I
+            - J
+            - K
+            - L
+            - M
+            - N
+            - O
+          description: |
+            OverrideIndicator is a code that indicates to a receiving exchange partner that this image view has a detected
+            image test failure that cannot be corrected and that this view shall be accepted regardless of any image test
+            failures.
+
+            * ` ` -  blank/space indicates no observed image test failure present
+            * `0` -  No override information for this view or not applicable
+            * `1` -  Imperfect image
+            * `A` -  IQA Fail–Image view reviewed and deemed usable—no alternate format
+            * `B` -  IQA Fail–Image view reviewed and deemed usable—alternate format included in this file
+            * `C` -  IQA Fail–Image view reviewed and deemed usable–alternate format included in this file and original document available
+            * `D` -  IQA Fail–Image view reviewed and deemed usable–alternate format available
+            * `E` -  IQA Fail–Image view reviewed and deemed usable–original document available
+            * `F` -  IQA Fail–Image view reviewed and deemed usable–original document and alternate format available
+            * `G` -  IQA Fail–Image view reviewed and deemed unusable–no alternate format
+            * `H` -  IQA Fail–Image view reviewed and deemed unusable–alternate format included in this file
+            * `I` -  IQA Fail–Image view reviewed and deemed unusable–alternate format included in this file and original document available
+            * `J` -  IQA Fail–Image view reviewed and deemed unusable–alternate format available
+            * `K` -  IQA Fail–Image view reviewed and deemed unusable–original document available
+            * `L` -  IQA Fail–Image view reviewed and deemed unusable–original document and alternate format available
+            * `M` -  IQA Fail–Image view not reviewed–no alternate format
+            * `N` -  IQA Fail–Image view not reviewed–alternate format included in this file
+            * `O` -  IQA Fail–Image view not reviewed–alternate format included in this file and original
+          example: '0'
     ImageViewData:
       properties:
         id:
           type: string
           description: ImageViewData ID
-          example: d1e26288
+          example: 'd1e26288'
     ImageViewAnalysis:
       properties:
         id:
           type: string
           description: ImageViewAnalysis ID
-          example: d1e26288
+          example: 'd1e26288'
+        globalImageQuality:
+          type: string
+        globalImageUsability:
+          type: string
+        imagingBankSpecificTest:
+          type: string
+        partialImage:
+          type: string
+        excessiveImageSkew:
+          type: string
+        piggybackImage:
+          type: string
+        tooLightOrTooDark:
+          type: string
+        streaksAndOrBands:
+            type: string
+        belowMinimumImageSize:
+            type: string
+        exceedsMaximumImageSize:
+            type: string
+        imageEnabledPOD:
+            type: string
+        sourceDocumentBad:
+            type: string
+        dateUsability:
+            type: string
+        payeeUsability:
+            type: string
+        convenienceAmountUsability:
+            type: string
+        amountInWordsUsability:
+            type: string
+        signatureUsability:
+            type: string
+        payorNameAddressUsability:
+            type: string
+        mICRLineUsability:
+            type: string
+        memoLineUsability:
+            type: string
+        payorBankNameAddressUsability:
+            type: string
+        payeeEndorsementUsability:
+            type: string
+        bOFDEndorsementUsability:
+            type: string
+        transitEndorsementUsability:
+            type: string
+        userField:
+            type: string
     ReturnDetailAddendumA:
       properties:
         id:
@@ -1731,3 +2414,118 @@ components:
           type: string
           description:  ReturnDetailAddendumD ID
           example: d1e26288
+        recordNumber:
+          type: string
+          minimum: 1
+          maximum: 99
+          description: |
+            RecordNumber is a number representing the order in which each ReturnDetailAddendumD was created.
+            ReturnDetailAddendumD shall be in sequential order starting with 1.  Maximum 99.
+        endorsingBankRoutingNumber:
+          type: string
+          maxLength: 9
+          description: EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that
+            endorsed the check.
+          example: '231486745'
+        bOFDEndorsementBusinessDate:
+          type: string
+          maxLength: 10
+          description: BOFDEndorsementBusinessDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
+          example: '20190522'
+        endorsingBankSequenceNumber:
+          type: string
+          maxLength: 15
+          description: EndorsingItemSequenceNumber is a number that identifies the item at the endorsing bank.
+          example: '1'
+        truncationIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - Y
+            - N
+          description: TruncationIndicator identifies if the institution truncated the original check item.
+          example: 'Y'
+        endorsingBankConversionIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+          description: |
+            EndorsingBankConversionIndicator is a code that indicates the conversion within the processing institution
+            between original paper check, image and IRD. The indicator is specific to the action institution identified in the
+            EndorsingBankRoutingNumber.
+
+            * `0` - Did not convert physical document
+            * `1` - Original paper converted to IRD
+            * `2` - Original paper converted to image
+            * `3` - IRD converted to another IRD
+            * `4` - IRD converted to image of IRD
+            * `5` - Image converted to an IRD
+            * `6` - Image converted to another image (e.g., transcoded)
+            * `7` - Did not convert image (e.g., same as source)
+            * `8` - Undetermined
+          example: '1'
+        endorsingBankCorrectionIndicator:
+          type: string
+          maxLength:  1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            EndorsingCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
+            creator of this CheckDetailAddendumC Record for fields other than Payor Bank Routing Number and Amount.
+
+            * `0` - No Repair
+            * `1` - Repaired (form of repair unknown)
+            * `2` - Repaired without Operator intervention
+            * `3` - Repaired with Operator intervention
+            * `4` - Undetermined if repair has been done or not
+          example: '1'
+        returnReason:
+          type: string
+          description: ReturnReason is a code that indicates the reason for non-payment.
+          # ToDo;  Add Return Reason Codes see ANSI X9.100-188 for allowable values
+        userField:
+          type: string
+          maxLength: 19
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'Z'
+        endorsingBankIdentifier:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+          description: |
+            * `0` - Depository Bank (BOFD) - this value is used when the CheckDetailAddendumC Record reflects the Return
+            * `Processing Bank in lieu of BOFD.
+            * `1` - Other Collecting Bank
+            * `2` - Other Returning Bank
+            * `3` - Payor Bank
+          example: '0'
+      required:
+        - endorsingBankRoutingNumber
+        - bOFDEndorsementBusinessDate
+        - endorsingBankItemSequenceNumber
+        - truncationIndicator
+    Error:
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: An error message describing the problem intended for humans.
+          example: Validation error(s) present.
