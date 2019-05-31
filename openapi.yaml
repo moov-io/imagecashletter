@@ -46,6 +46,15 @@ paths:
       responses:
         '200':
           description: A list of File objects
+          headers:
+            X-Total-Count:
+              description: The total number of Originators
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Files'
   /files/create:
     post:
       tags:
