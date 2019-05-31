@@ -15,13 +15,13 @@ before_install:
   - GO111MODULE=off go get -u golang.org/x/lint/golint
   - GO111MODULE=off go get github.com/fzipp/gocyclo
   - GO111MODULE=off go get -u honnef.co/go/tools/cmd/staticcheck
-  - GO111MODULE=off go get golang.org/x/tools/cmd/cover
+ # - GO111MODULE=off go get golang.org/x/tools/cmd/cover
 before_script:
   - GOFILES=$(find . -type f -name '*.go' | grep -v vendor | grep -v client)
 script:
 # Just check gofmt on linux, it's the fastest builder
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then test -z $(gofmt -s -l $GOFILES); fi
-- go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+# - go test ./... -race -coverprofile=coverage.txt -covermode=atomic
 - misspell -error -locale US $GOFILES
 - gocyclo -over 50 $GOFILES
 - golint -set_exit_status $GOFILES
