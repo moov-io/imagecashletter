@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 **Id** | **string** | CheckDetailAddendumA ID | [optional] 
 **RecordNumber** | **int32** | RecordNumber is a number representing the order in which each CheckDetailAddendumA was created. CheckDetailAddendumA shall be in sequential order starting with 1. | 
 **ReturnLocationRoutingNumber** | **string** | ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns, final return notifications, and preliminary return notifications are sent, usually the BOFD. | 
-**BOFDEndorsementDate** | **string** | BOFDEndorsementDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day) | [optional] 
+**BOFDEndorsementDate** | [**time.Time**](time.Time.md) | BOFDEndorsementDate is the date of endorsement | [optional] 
 **BOFDItemSequenceNumber** | **string** | BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA. | [optional] 
 **BOFDAccountNumber** | **string** | BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit. | [optional] 
 **BOFDBranchCode** | **string** | BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit. | [optional] 

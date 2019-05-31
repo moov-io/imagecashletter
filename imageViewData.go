@@ -19,7 +19,8 @@ type ImageViewData struct {
 	// recordType defines the type of record.
 	recordType string
 	// ECEInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the
-	// bundle header.  Format: TTTTAAAAC, where:
+	// bundle header.  This number is imported from the Bundle Header Record (Clause 9.4) associated with the image view
+	// conveyed in this Image View Data Record. Format: TTTTAAAAC, where:
 	// TTTT Federal Reserve Prefix
 	// AAAA ABA Institution Identifier
 	// C Check Digit

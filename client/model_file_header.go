@@ -8,6 +8,9 @@
  */
 
 package openapi
+import (
+	"time"
+)
 
 type FileHeader struct {
 	// FileHeader ID
@@ -20,8 +23,8 @@ type FileHeader struct {
 	ImmediateDestination string `json:"immediateDestination"`
 	// ImmediateOrigin is the routing and transit number of the Federal Reserve Bank (FRB) or originator from which the file is being sent. 
 	ImmediateOrigin string `json:"immediateOrigin"`
-	// FileCreationDate is the date that the immediate origin institution creates the file. (Format YYYYMMDD, where - YYYY year, MM month, DD day) 
-	FileCreationDate string `json:"fileCreationDate"`
+	// FileCreationDate is the date that the immediate origin institution creates the file.
+	FileCreationDate time.Time `json:"fileCreationDate"`
 	// FileCreationTime is the time the immediate origin institution creates the file. (Format - hhmm, where - hh hour, mm minute) 
 	FileCreationTime string `json:"fileCreationTime"`
 	// ResendIndicator Indicates whether the file has been previously transmitted. (Y - Yes, N - No)

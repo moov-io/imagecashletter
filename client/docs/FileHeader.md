@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **TestFileIndicator** | **string** | TestFileIndicator dentifies whether the file is a test or production file.  * &#x60;T&#x60; - Test File * &#x60;P&#x60; - Production File  | 
 **ImmediateDestination** | **string** | ImmediateDestination is the routing and transit number of the Federal Reserve Bank (FRB) or receiver to which the file is being sent.  | 
 **ImmediateOrigin** | **string** | ImmediateOrigin is the routing and transit number of the Federal Reserve Bank (FRB) or originator from which the file is being sent.  | 
-**FileCreationDate** | **string** | FileCreationDate is the date that the immediate origin institution creates the file. (Format YYYYMMDD, where - YYYY year, MM month, DD day)  | 
+**FileCreationDate** | [**time.Time**](time.Time.md) | FileCreationDate is the date that the immediate origin institution creates the file. | 
 **FileCreationTime** | **string** | FileCreationTime is the time the immediate origin institution creates the file. (Format - hhmm, where - hh hour, mm minute)  | 
 **ResendIndicator** | **string** | ResendIndicator Indicates whether the file has been previously transmitted. (Y - Yes, N - No) | 
 **ImmediateDestinationName** | **string** | ImmediateDestinationName Identifies the short name of the institution that receives the file. | [optional] 

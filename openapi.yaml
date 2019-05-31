@@ -510,11 +510,9 @@ components:
           example: '201982859'
         fileCreationDate:
           type: string
-          maxLength: 8
-          description: |
-            FileCreationDate is the date that the immediate origin institution creates the file.
-            (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: '20190201'
+          format: 'date-time'
+          description: FileCreationDate is the date that the immediate origin institution creates the file.
+          example: 2006-01-02T15:04:05Z07:00
         fileCreationTime:
           type: string
           maxLength: 4
@@ -705,12 +703,12 @@ components:
           type: string
           maxLength: 8
           description: cashLetterBusinessDate is the business date of the cash letter. (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: '20190522'
+          example: 2006-01-02T15:04:05Z07:00
         cashLetterCreationDate:
           type: string
-          maxLength: 8
+          format: 'date-time'
           description: cashLetterCreationDate is the date that the cash letter is created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: '20190522'
+          example: 2006-01-02T15:04:05Z07:00
         cashLetterCreationTime:
           type: string
           maxLength: 4
@@ -843,11 +841,9 @@ components:
           example: "Citadel"
         settlementDate:
           type: string
-          maxLength: 8
-          description: |
-            SettlementDate identifies the date that the institution that creates the cash letter expects settlement.
-            (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: "20190522"
+          format: 'date-time'
+          description: SettlementDate identifies the date that the institution that creates the cash letter expects settlement.
+          example: 2006-01-02T15:04:05Z07:00
         creditTotalIndicator:
           maxLength: 1
           enum:
@@ -929,14 +925,14 @@ components:
           example: '233431587'
         bundleBusinessDate:
           type: string
-          maxLength: 8
-          description: BundleBusinessDate is the business date of the bundle. Format - YYYYMMDD, where - YYYY year, MM month, DD day.
-          example: '20160622'
+          format: 'date-time'
+          description: BundleBusinessDate is the business date of the bundle.
+          example: 2006-01-02T15:04:05Z07:00
         bundleCreationDate:
           type: string
-          maxLength: 8
-          description: BundleCreationDate is the date that the bundle is created. Format - YYYYMMDD, where - YYYY year, MM month, DD day.
-          example: '20160622'
+          format: 'date-time'
+          description: BundleCreationDate is the date that the bundle is created.
+          example: 2006-01-02T15:04:05Z07:00
         bundleID:
           type: string
           maxLength: 10
@@ -1327,12 +1323,12 @@ components:
           example: 'A'
         forwardBundleDate:
           type: string
-          maxLength: 8
+          format: 'date-time'
           description: ForwardBundleDate represents for electronic check exchange items, the year, month, and day that
-            designates the business date of the original forward bundle. This data is transferred from the
-            BundleHeader.BundleBusinessDate.  For items presented in paper cash letters, the year, month, and day that
-            the cash letter was created (Format - YYYYMMDD, where - YYYY year, MM month, DD day).
-          example: '20190522'
+            designates the business date of the original forward bundle. This data is transferred from the BundleHeader
+            BundleBusinessDate.  For items presented in paper cash letters, the year, month, and day that the cash
+            letter was created.
+          example: 2006-01-02T15:04:05Z07:00
         eCEInstitutionItemSequenceNumber:
           type: string
           maxLength: 15
@@ -1626,9 +1622,9 @@ components:
           example: '231486745'
         bOFDEndorsementDate:
           type: string
-          maxLength: 10
-          description: BOFDEndorsementDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: '20190522'
+          format: 'date-time'
+          description: BOFDEndorsementDate is the date of endorsement
+          example: 2006-01-02T15:04:05Z07:00
         bOFDItemSequenceNumber:
           type: string
           maxLength: 15
@@ -1794,9 +1790,9 @@ components:
           example: '231486745'
         bOFDEndorsementBusinessDate:
           type: string
-          maxLength: 10
-          description: BOFDEndorsementBusinessDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: '20190522'
+          format: 'date-time'
+          description: BOFDEndorsementBusinessDate is the date of endorsement.
+          example: 2006-01-02T15:04:05Z07:00
         endorsingBankSequenceNumber:
           type: string
           maxLength: 15
@@ -1919,11 +1915,10 @@ components:
           example: '2139876354'
         imageCreatorDate:
           type: string
-          maxLength: 10
+          format: 'date-time'
           description: |
             ImageCreatorDate is the date assigned by the image creator for the image view conveyed in the related ImageData.
-            (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: '20190519'
+          example: 2006-01-02T15:04:05Z07:00
         imageViewFormatIndicator:
           type: string
           maxLength: 2
@@ -2153,6 +2148,175 @@ components:
           type: string
           description: ImageViewData ID
           example: 'd1e26288'
+        eCEInstitutionRoutingNumber:
+          type: string
+          maxLength: 9
+          description: ECEInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the
+            bundle header.  This number is imported from the Bundle Header Record (Clause 9.4) associated with the image view conveyed
+            in this Image View Data Property.
+          example: '2318769876'
+        bundleBusinessDate:
+          type: string
+          format: 'date-time'
+          description: BundleBusinessDate is the business date of the bundle.
+          example: 2006-01-02T15:04:05Z07:00
+        cycleNumber:
+          type: string
+          maxLength: 2
+          description: CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which
+            the bundle is created.
+          example: '1'
+        ivData.ECEInstitutionItemSequenceNumber:
+          type: string
+          maxLength: 15
+          description: ECEInstitutionItemSequenceNumber is a number assigned by the institution that creates the
+            CheckDetail or Return.  This number is imported from the CheckDetail.ECEInstitutionItemSequenceNumber or
+            Return.ECEInstitutionItemSequenceNumber associated with the image view conveyed in this Image View Data Record.
+            The ECE institution must construct the sequence number to guarantee uniqueness for a given routing number,
+            business day, and cycle number. Must contain a numeric value.
+          example: '1'
+        ivData.SecurityOriginatorName:
+          type: string
+          maxLength: 16
+          description: SecurityOriginatorName is a unique name that creates the Digital Signature for data to be exchanged.
+            Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          example: 'Name'
+        ivData.SecurityAuthenticatorName:
+          type: string
+          maxLength: 16
+          description: SecurityAuthenticatorName is the unique name that performs authentication on received data.
+            Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          example: 'Name'
+        ivData.SecurityKeyName:
+          type: string
+          maxLength: 16
+          description: SecurityKeyName is a name or character sequence used by the signer (originator) to communicate a
+            key identifierto the recipient (authenticator) so the recipient can obtain the key needed to validate the
+            signature. The name is typically used as an identifier related to the key pair used to sign the image. The
+            name is mutually known to the security originator and the security authenticator and is unique to this
+            relationship.
+            Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          example: 'SECURE'
+        ivData.ClippingOrigin:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            ClippingOrigin is a code that defines the corner of the conveyed image view that is taken as the
+            reference point for the clipping coordinates. Top, bottom, left, and right references apply to a view that
+            presents a visually correct orientation. When clipping information is present, the nature of the Area of
+            Interest defined by the clipping rectangle is determined by the value of the ImageViewDetail.ViewDescriptor.
+            Primary front and rear views shall only have a Defined Value of 0.  Can be blank.
+
+            * `0` - Clipping information is not present–full view present
+            * `1` - Clipping origin is top left corner of image view
+            * `2` - Clipping origin is top right corner of image view
+            * `3` - Clipping origin is bottom right corner of image view
+            * `4` - Clipping origin is bottom left corner of image view
+          example: 1
+        ivData.ClippingCoordinateH1:
+          type: string
+          maxLength: 4
+          description: ClippingCoordinateH1 is a number that represents the horizontal offset in pixels from the
+            clipping origin to the nearest vertical side of the clipping rectangle. The clipping coordinates
+            (h1, h2, v1, v2) convey the clipping rectangle’s offsets in both horizontal (h) and vertical (v)
+            directions. The offset values collectively establish the boundary sides of the clipping rectangle. Pixels
+            on the boundary of the clipping rectangle are included in the selected array of pixels. That is, the first
+            pixel of the selected array is at offset (h1, v1) and the last pixel of the selected array is at offset
+            (h2, v2). The corner pixel at the origin of the image view is assumed to have the offset value (0, 0).
+            Shall be present if Image View Data.ClippingOrigin is present and non-zero.
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+            Valid values - 0000–9999
+          example: '0001'
+        ivData.ClippingCoordinateH2:
+          type: string
+          maxLength: 4
+          description: ClippingCoordinateH2 is a number that represents the horizontal offset in pixels from the
+            clipping origin to the furthermost vertical side of the clipping rectangle.
+            Shall be present if Image View Data.ClippingOrigin is present and non-zero.
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+            Valid values - 0000–9999
+          example: '0001'
+        ivData.ClippingCoordinateV1:
+          type: string
+          maxLength: 4
+          description: ClippingCoordinateV1 is a number that represents the vertical offset in pixels from the
+           clipping origin to the nearest horizontal side of the clipping rectangle.
+           Shall be present if Image View Data.ClippingOrigin is present and non-zero.
+           Shall not be present when ImageViewDetail.ImageIndicator is 0.
+           Valid values - 0000–9999
+          example: '0001'
+        ivData.ClippingCoordinateV2:
+          type: string
+          maxLength: 4
+          description: ClippingCoordinateV2 is number that represents the vertical offset in pixels from the
+            clipping origin to the furthermost horizontal side of the clipping rectangle.
+            Shall be present if Image View Data.ClippingOrigin is present and non-zero.
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+            Valid values - 0000–9999
+          example: '0001'
+        ivData.LengthImageReferenceKey:
+          type: string
+          maxLength: 4
+          description: LengthImageReferenceKey is the number of characters in the ImageViewData.ImageReferenceKey.
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+            Valid values -
+            0000	ImageReferenceKey is not present
+            0001–9999  Valid when ImageReferenceKey is present
+          example: '0001'
+        ivData.ImageReferenceKey:
+          type: string
+          description: ImageReferenceKey is assigned by the ECE institution that creates the CheckDetail or Return, and the related
+           Image View Records. This designator, when used, shall uniquely identify the item image to the ECE institution.
+           This designator is a special key with significance to the creating institution. It is intended to be used to
+           locate within an archive the unique image associated with the item. The designator could be a full access path
+           and name that would allow direct look up and access to the image, for example a URL. This shall match
+           CheckDetailAddendumB.ImageReferenceKey, or ReturnAddendumCImageReferenceKey Record, if used.
+           Valid size - 0 – 9999
+          example: '0'
+        ivData.LengthDigitalSignature:
+          type: string
+          maxLength: 4
+          description: LengthDigitalSignature is the number of bytes in the Image View Data.DigitalSignature.
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          example: '0    '
+        ivData.DigitalSignature:
+          type: string
+          description: DigitalSignature is created by applying the cryptographic algorithm and private/secret key
+            against the data to be protected. The Digital Signature provides user authentication and data integrity.
+            Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+            Valid size - 0-99999
+          example: '0101'
+        ivData.LengthImageData:
+          type: string
+          maxLength: 4
+          description: LengthImageData is the number of bytes in the ImageViewData.ImageData.
+           Shall be present when ImageViewDetail.ImageIndicator is NOT 0
+           Valid values - 0000001–99999999
+          example: '0000001'
+        ivData.ImageData:
+          type: string
+          description: ImageData contains the image view. The Image Data generally consists of an image header and the
+            image raster data. The image header provides information that is required to interpret the image raster
+            data. The image raster data contains the scanned image of the physical item in raster (line by line) format.
+            Each scan line comprises a set of concatenated pixels. The image comprises a set of scan lines. The image
+            raster data is typically compressed to reduce the number of bytes needed to transmit and store the image.
+            The header/image format type is defined by the ImageViewDetail.ImageViewFormatIndicator . The syntax and
+            semantics of the image header/image format are understood by referring to the appropriate image format
+            specification. The compression scheme used to compress the image raster data is specified in the
+            ImageViewCompressionAlgorithmIdentifier and in the image header portion of the Image Data or by
+            association with the selected image format.
+            Shall be present when ImageViewDetail.ImageIndicator Record is NOT 0.
+            Valid size - 0-9999999
+          example: '0101'
     ImageViewAnalysis:
       properties:
         id:
@@ -2161,54 +2325,387 @@ components:
           example: 'd1e26288'
         globalImageQuality:
           type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            GlobalImageQuality is a code that indicates whether the image view was tested for any of the conditions related
+            to image quality defined in the Image Quality Information.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
         globalImageUsability:
           type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            GlobalImageUsability is a code that indicates whether the image view was tested for any of the conditions
+            related to image usability defined in the Image Usability Information.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
         imagingBankSpecificTest:
           type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            ImagingBankSpecificTest designates the capture institution may be able to perform specific tests that can
+            indicate a potentially problematic image view caused by conditions other than those listed in the Image Quality
+            and Image Usability Information fields. By mutual agreement, clearing partners can use the UserField to report
+            the presence or absence of additional image conditions found through tests that are particular to the specific
+            imaging institution. The meaning and interpretation of the User Field data must be understood and agreed upon
+            between participants.
+
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
         partialImage:
           type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            PartialImage is a code that indicates if only a portion of the image view is represented digitally while the
+            other portion is suspected to be missing or corrupt.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
         excessiveImageSkew:
           type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            ExcessiveImageSkew is a code that indicates if the image view skew exceeds an acceptable value. This value is
+            specific to the imaging institution’s own defined requirements and/or constraints.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
         piggybackImage:
           type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            PiggybackImage is a code that indicates if a “piggyback” condition has been detected. With a “piggyback”
+            condition, the intended image view may be extended, obscured, or replaced by image(s) of additional document(s).
+            A piggyback occurs when two or more documents are fed together and captured as one document when only a single
+            document should have been fed and captured.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
         tooLightOrTooDark:
           type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            TooLightOrTooDark is a code that indicates if the image view is too light or too dark. The value is specific to
+            the imaging institution’s own defined requirements and/or constraints.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
         streaksAndOrBands:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              StreaksAndOrBands is a A code that indicates if the image view is likely corrupted due to streaks and/or bands.
+              Streaks and bands can be caused by such problems as dirt, dust, ink, or debris on a lens or in the optical path,
+              and failures in the imaging equipment scanner.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         belowMinimumImageSize:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              BelowMinimumImageSize is a code that indicates if the size of the compressed image view is below an acceptable
+              value. The value is specific to the imaging institution’s own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         exceedsMaximumImageSize:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              ExceedsMaximumImageSize is a code that indicates if the size of the compressed image view is above an
+              acceptable value. The value is specific to the imaging institution’s own defined requirements and/or
+              constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         imageEnabledPOD:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              ImageEnabledPOD is a code that indicates if the image view was used within an image-enabled POD
+              (Proof of Deposit) application.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         sourceDocumentBad:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              SourceDocumentBad is a code that indicates if it is possible to obtain a better image from the source document
+              when it is known that the current image of the document is unusable.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         dateUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              DateUsability is a code that indicates if the date Area of Interest is usable and readable from the image. The
+              definition of the Area of Interest for image usability testing purposes is specific to the imaging institution's
+              own defined requirements and/or constraint
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         payeeUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              PayeeUsability is a code that indicates if the payee name Area of Interest is usable and readable from the
+              image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging
+              institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         convenienceAmountUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              AmountInWordsUsability is a code that indicates if the amount in words (legal amount) Area of Interest is usable
+              and readable from the image. The definition of the Area of Interest for image usability testing purposes is
+              specific to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         amountInWordsUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              SignatureUsability is a code that indicates if the signature Area of Interest is usable and readable from the
+              image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging
+              institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         signatureUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         payorNameAddressUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              PayorNameAddressUsability is a code that indicates if the payor name and address Area of Interest is usable and
+              readable from the image. The definition of the Area of Interest for image usability testing purposes is specific
+              to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         mICRLineUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              MICRLineUsability is a code that indicates if the MICR line Area of Interest is usable and readable from the
+              image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging
+              institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         memoLineUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description:
+              MemoLineUsability is code that indicates if the memo line Area of Interest is usable and readable from the
+              image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging
+              institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         payorBankNameAddressUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              PayorBankNameAddressUsability is a code that indicates if the payor bank name and address Area of Interest is
+              usable and readable from the image. The definition of the Area of Interest for image usability testing purposes
+              is specific to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         payeeEndorsementUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              PayeeEndorsementUsability is a code that indicates if the payee endorsement Area of Interest is usable and
+              readable from the image. The definition of the Area of Interest for image usability testing purposes is specific
+              to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         bOFDEndorsementUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              BOFDEndorsementUsability is a code that indicates if the Bank of First Deposit (BOFD) endorsement Area of
+              Interest is usable and readable from the image. The definition of the Area of Interest for image usability
+              testing purposes is specific to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         transitEndorsementUsability:
             type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              TransitEndorsementUsability is a code that indicates if the transit endorsement Area of Interest is usable and
+              readable from the image. The definition of the Area of Interest for image usability testing purposes is specific
+              to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
         userField:
             type: string
+            maxLength: 20
+            description: UserField identifies a field used at the discretion of users of the standard.
+            example: 'ZZZZZ'
     ReturnDetailAddendumA:
       properties:
         id:
@@ -2230,9 +2727,9 @@ components:
           example: '231486745'
         bOFDEndorsementDate:
           type: string
-          maxLength: 10
-          description: BOFDEndorsementDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: '20190522'
+          format: 'date-time'
+          description: BOFDEndorsementDate is the date of endorsement
+          example: 2006-01-02T15:04:05Z07:00
         bOFDItemSequenceNumber:
           type: string
           maxLength: 15
@@ -2341,10 +2838,9 @@ components:
           example: '1'
         payorBankBusinessDate:
           type: string
-          maxLength: 10
+          format: 'date-time'
           description: PayorBankBusinessDate is the year, month, and day the payor bank processed the Return Record.
-              Format - YYYYMMDD, where - YYYY year, MM month, DD day
-          example: '20190522'
+          example: 2006-01-02T15:04:05Z07:00
         payorAccountName:
           type: string
           maxLength: 22
@@ -2429,9 +2925,9 @@ components:
           example: '231486745'
         bOFDEndorsementBusinessDate:
           type: string
-          maxLength: 10
-          description: BOFDEndorsementBusinessDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: '20190522'
+          format: 'date-time'
+          description: BOFDEndorsementBusinessDate is the date of endorsement
+          example: 2006-01-02T15:04:05Z07:00
         endorsingBankSequenceNumber:
           type: string
           maxLength: 15

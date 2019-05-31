@@ -8,6 +8,9 @@
  */
 
 package openapi
+import (
+	"time"
+)
 
 type CashLetterHeader struct {
 	// CashLetterHeader ID
@@ -21,7 +24,7 @@ type CashLetterHeader struct {
 	// cashLetterBusinessDate is the business date of the cash letter. (Format YYYYMMDD, where - YYYY year, MM month, DD day)
 	CashLetterBusinessDate string `json:"cashLetterBusinessDate,omitempty"`
 	// cashLetterCreationDate is the date that the cash letter is created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-	CashLetterCreationDate string `json:"cashLetterCreationDate,omitempty"`
+	CashLetterCreationDate time.Time `json:"cashLetterCreationDate,omitempty"`
 	// CashLetterCreationTime is the time that the cash letter is created. (Format - hhmm, where - hh hour, mm minute)
 	CashLetterCreationTime string `json:"cashLetterCreationTime,omitempty"`
 	// RecordTypeIndicator is a code that indicates the presence of records or the type of records contained in the cash letter. If an image is associated with any CheckDetail or Return, the cash letter must have a RecordTypeIndicator of I or F.  * `N` - No electronic check records or image records (Type 2x’s, 3x’s, 5x’s); e.g., an empty cash letter. * `E` - Cash letter contains electronic check records with no images (Type 2x’s and 3x’s only). * `I` - Cash letter contains electronic check records (Type 2x’s, 3x’s) and image records (Type 5x’s). * `F` - Cash letter contains electronic check records (Type 2x’s and 3x’s) and image records (Type 5x’s) that correspond to a previously sent cash letter (i.e., E file). 

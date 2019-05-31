@@ -8,6 +8,9 @@
  */
 
 package openapi
+import (
+	"time"
+)
 
 type CheckDetailAddendumC struct {
 	// CheckDetailAddendumC ID
@@ -16,8 +19,8 @@ type CheckDetailAddendumC struct {
 	RecordNumber int32 `json:"recordNumber"`
 	// EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that endorsed the check.
 	EndorsingBankRoutingNumber string `json:"endorsingBankRoutingNumber"`
-	// BOFDEndorsementBusinessDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
-	BOFDEndorsementBusinessDate string `json:"bOFDEndorsementBusinessDate,omitempty"`
+	// BOFDEndorsementBusinessDate is the date of endorsement.
+	BOFDEndorsementBusinessDate time.Time `json:"bOFDEndorsementBusinessDate,omitempty"`
 	// EndorsingItemSequenceNumber is a number that identifies the item at the endorsing bank.
 	EndorsingBankSequenceNumber string `json:"endorsingBankSequenceNumber,omitempty"`
 	// TruncationIndicator identifies if the institution truncated the original check item.

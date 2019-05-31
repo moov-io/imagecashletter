@@ -8,6 +8,9 @@
  */
 
 package openapi
+import (
+	"time"
+)
 
 type ReturnDetail struct {
 	// CheckDetail ID
@@ -26,8 +29,8 @@ type ReturnDetail struct {
 	AddendumCount int32 `json:"addendumCount,omitempty"`
 	// DocumentationTypeIndicator identifies a code that indicates the type of documentation that supports the check record.  This field is superseded by the Cash Letter Documentation Type Indicator in the Cash Letter Header Record for all Defined Values except ‘Z’ Not Same Type. In the case of Defined Value of ‘Z’, the Documentation Type Indicator in this record takes precedent.  Shall be present when Cash Letter Documentation Type Indicator in the Cash Letter Header Record is Defined Value of ‘Z’.  * `A` - No image provided, paper provided separately * `B` - No image provided, paper provided separately, image upon request * `C` - Image provided separately, no paper provided * `D` - Image provided separately, no paper provided, image upon request * `E` - Image and paper provided separately * `F` - Image and paper provided separately, image upon request * `G` - Image included, no paper provided * `H` - Image included, no paper provided, image upon request * `I` - Image included, paper provided separately * `J` - Image included, paper provided separately, image upon request * `K` - No image provided, no paper provided * `L` - No image provided, no paper provided, image upon request * `M` - No image provided, Electronic Check provided separately 
 	DocumentationTypeIndicator string `json:"documentationTypeIndicator,omitempty"`
-	// ForwardBundleDate represents for electronic check exchange items, the year, month, and day that designates the business date of the original forward bundle. This data is transferred from the BundleHeader.BundleBusinessDate.  For items presented in paper cash letters, the year, month, and day that the cash letter was created (Format - YYYYMMDD, where - YYYY year, MM month, DD day).
-	ForwardBundleDate string `json:"forwardBundleDate,omitempty"`
+	// ForwardBundleDate represents for electronic check exchange items, the year, month, and day that designates the business date of the original forward bundle. This data is transferred from the BundleHeader BundleBusinessDate.  For items presented in paper cash letters, the year, month, and day that the cash letter was created.
+	ForwardBundleDate time.Time `json:"forwardBundleDate,omitempty"`
 	// ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail. Field must contain a numeric value. It cannot be all blanks.
 	ECEInstitutionItemSequenceNumber string `json:"eCEInstitutionItemSequenceNumber,omitempty"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.

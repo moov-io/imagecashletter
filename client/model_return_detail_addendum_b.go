@@ -8,6 +8,9 @@
  */
 
 package openapi
+import (
+	"time"
+)
 
 type ReturnDetailAddendumB struct {
 	// ReturnDetailAddendumB ID
@@ -18,8 +21,8 @@ type ReturnDetailAddendumB struct {
 	AuxiliaryOnUs string `json:"auxiliaryOnUs,omitempty"`
 	// PayorBankSequenceNumber is a number that identifies the item at the payor bank.
 	PayorBankSequenceNumber string `json:"payorBankSequenceNumber,omitempty"`
-	// PayorBankBusinessDate is the year, month, and day the payor bank processed the Return Record. Format - YYYYMMDD, where - YYYY year, MM month, DD day
-	PayorBankBusinessDate string `json:"payorBankBusinessDate,omitempty"`
+	// PayorBankBusinessDate is the year, month, and day the payor bank processed the Return Record.
+	PayorBankBusinessDate time.Time `json:"payorBankBusinessDate,omitempty"`
 	// PayorAccountName is the account name from payor bank records.
 	PayorAccountName string `json:"payorAccountName,omitempty"`
 }

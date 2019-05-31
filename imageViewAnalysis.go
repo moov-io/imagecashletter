@@ -56,7 +56,7 @@ type ImageViewAnalysis struct {
 	// 1: Condition present
 	// 2: Condition not present
 	ExcessiveImageSkew int `json:"excessiveImageSkew"`
-	// PiggybackImage is A code that indicates if a “piggyback” condition has been detected. With a “piggyback”
+	// PiggybackImage is a code that indicates if a “piggyback” condition has been detected. With a “piggyback”
 	// condition, the intended image view may be extended, obscured, or replaced by image(s) of additional document(s).
 	// A piggyback occurs when two or more documents are fed together and captured as one document when only a single
 	// document should have been fed and captured.

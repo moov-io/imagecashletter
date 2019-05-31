@@ -8,6 +8,9 @@
  */
 
 package openapi
+import (
+	"time"
+)
 
 type ImageViewDetail struct {
 	// ImageViewDetail ID
@@ -16,8 +19,8 @@ type ImageViewDetail struct {
 	ImageIndicator int32 `json:"imageIndicator,omitempty"`
 	// ImageCreatorRoutingNumber identifies the financial institution that created the image view.
 	ImageCreatorRoutingNumber string `json:"imageCreatorRoutingNumber,omitempty"`
-	// ImageCreatorDate is the date assigned by the image creator for the image view conveyed in the related ImageData. (Format - YYYYMMDD, where - YYYY year, MM month, DD day) 
-	ImageCreatorDate string `json:"imageCreatorDate,omitempty"`
+	// ImageCreatorDate is the date assigned by the image creator for the image view conveyed in the related ImageData. 
+	ImageCreatorDate time.Time `json:"imageCreatorDate,omitempty"`
 	// ImageViewFormatIndicator is a code that identifies the type of image format used in the related ImageViewData.ImageData. The image format type is also commonly specified by reference to the file extension used when image data is saved as an image file.  Agreement not required: * `00` - TIFF 6; Extension: TIF Agreement required: * `01` - IOCA FS 11; Extension: ICA * `20` - PNG (Portable Network Graphics); Extension: PNG ‘21’ JFIF (JPEG File Interchange Format); Extension: JPG * `22` - SPIFF (Still Picture Interchange File Format) (ITU-T Rec. T.84 Annex F); Extension: SPF * `23` - JBIG data stream (ITU-T Rec. T.82/ISO/IEC 11544:1993); Extension: JBG ‘24’ JPEG 2000 (ISO/IEC 15444-1:2000); Extension: JP2 
 	ImageViewFormatIndicator string `json:"imageViewFormatIndicator,omitempty"`
 	// ImageViewCompressionAlgorithm is a code that identifies the algorithm or method used to compress the Image Data in the related ImageViewData.ImageData.  Agreement not required: * `00` - Group 4 facsimile compression (ITU-T Rec. T.563/CCITT Rec. T.6) Agreement required: * `01` - JPEG Baseline (JPEG Interchange Format) (ITU-T Rec. T.81/ISO/IEC 10918) * `02` - ABIC * `21` - PNG (Portable Network Graphics) * `22` - JBIG (ITU-T Rec. T.82/ISO/IEC 11544:1993) * `23` - JPEG 2000 (ISO/IEC 15444–1:2000) 

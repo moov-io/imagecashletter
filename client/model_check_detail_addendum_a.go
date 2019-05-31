@@ -8,6 +8,9 @@
  */
 
 package openapi
+import (
+	"time"
+)
 
 type CheckDetailAddendumA struct {
 	// CheckDetailAddendumA ID
@@ -16,8 +19,8 @@ type CheckDetailAddendumA struct {
 	RecordNumber int32 `json:"recordNumber"`
 	// ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns, final return notifications, and preliminary return notifications are sent, usually the BOFD.
 	ReturnLocationRoutingNumber string `json:"returnLocationRoutingNumber"`
-	// BOFDEndorsementDate is the date of endorsement (Format - YYYYMMDD, where - YYYY year, MM month, DD day)
-	BOFDEndorsementDate string `json:"bOFDEndorsementDate,omitempty"`
+	// BOFDEndorsementDate is the date of endorsement
+	BOFDEndorsementDate time.Time `json:"bOFDEndorsementDate,omitempty"`
 	// BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
 	BOFDItemSequenceNumber string `json:"bOFDItemSequenceNumber,omitempty"`
 	// BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.

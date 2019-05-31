@@ -8,6 +8,9 @@
  */
 
 package openapi
+import (
+	"time"
+)
 
 type BundleHeader struct {
 	// BundleHeader ID
@@ -18,10 +21,10 @@ type BundleHeader struct {
 	DestinationRoutingNumber string `json:"destinationRoutingNumber,omitempty"`
 	// ECEInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the bundle header.
 	ECEInstitutionRoutingNumber string `json:"eCEInstitutionRoutingNumber,omitempty"`
-	// BundleBusinessDate is the business date of the bundle. Format - YYYYMMDD, where - YYYY year, MM month, DD day.
-	BundleBusinessDate string `json:"bundleBusinessDate,omitempty"`
-	// BundleCreationDate is the date that the bundle is created. Format - YYYYMMDD, where - YYYY year, MM month, DD day.
-	BundleCreationDate string `json:"bundleCreationDate,omitempty"`
+	// BundleBusinessDate is the business date of the bundle.
+	BundleBusinessDate time.Time `json:"bundleBusinessDate,omitempty"`
+	// BundleCreationDate is the date that the bundle is created.
+	BundleCreationDate time.Time `json:"bundleCreationDate,omitempty"`
 	// BundleID is number that identifies the bundle, assigned by the institution that creates the bundle.
 	BundleID string `json:"bundleID,omitempty"`
 	// BundleSequenceNumber is a number assigned by the institution that creates the bundle. Usually denotes the relative position of the bundle within the cash letter.
