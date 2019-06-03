@@ -35,15 +35,15 @@ We recommend using additional git remote's for pushing/pulling code. Go cares ab
 To pull our source code run:
 
 ```
-$ go get github.com/moov-io/x9
+$ go get github.com/moov-io/imagecashletter
 ```
 
 Then, add your (or another user's) fork.
 
 ```
-$ cd $GOPATH/src/github.com/moov-io/x9
+$ cd $GOPATH/src/github.com/moov-io/imagecashletter
 
-$ git remote add $user git@github.com:$user/x9.git
+$ git remote add $user git@github.com:$user/imagecashletter.git
 
 $ git fetch $user
 ```
@@ -99,7 +99,7 @@ Profiling
 
 ```
 
-Use fPath to define the file to be read ( e.g. -fPath=github.com/moov-io/x9/cmd/readx9/_filename_ )
+Use fPath to define the file to be read ( e.g. -fPath=github.com/moov-io/imagecashletter/cmd/readImageCashLetter/_filename_ )
 
 Benchmark 
 
