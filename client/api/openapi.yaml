@@ -13,8 +13,8 @@ servers:
   url: http://localhost:8083
 tags:
 - description: |
-    File contains ImageCashLetter Cash Letters and Bundles.
-  name: Files
+    Files contains ImageCashLetter Cash Letters and Bundles.
+  name: Image Cash Letter Files
 paths:
   /ping:
     get:
@@ -58,7 +58,7 @@ paths:
       - cookieAuth: []
       summary: Gets a list of Files
       tags:
-      - Files
+      - Image Cash Letter Files
   /files/create:
     post:
       operationId: createFile
@@ -119,7 +119,7 @@ paths:
       - cookieAuth: []
       summary: Create a new File object
       tags:
-      - Files
+      - Image Cash Letter Files
   /files/{file_id}:
     delete:
       operationId: deleteImageCashLetterFile
@@ -152,7 +152,7 @@ paths:
       - cookieAuth: []
       summary: Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
       tags:
-      - Files
+      - Image Cash Letter Files
     get:
       operationId: getFileByID
       parameters:
@@ -188,7 +188,7 @@ paths:
       - cookieAuth: []
       summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
       tags:
-      - Files
+      - Image Cash Letter Files
     post:
       operationId: updateFile
       parameters:
@@ -251,7 +251,7 @@ paths:
       - cookieAuth: []
       summary: Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
       tags:
-      - Files
+      - Image Cash Letter Files
   /files/{file_id}/contents:
     get:
       operationId: getFileContents
@@ -286,7 +286,7 @@ paths:
       - cookieAuth: []
       summary: Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
       tags:
-      - Files
+      - Image Cash Letter Files
   /files/{file_id}/validate:
     get:
       operationId: validateFile
@@ -323,7 +323,7 @@ paths:
       - cookieAuth: []
       summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
       tags:
-      - Files
+      - Image Cash Letter Files
   /files/{file_id}/cashLetters:
     get:
       operationId: getFileCashLetters
@@ -366,7 +366,7 @@ paths:
       - cookieAuth: []
       summary: Get the cashLetters on a File.
       tags:
-      - Files
+      - Image Cash Letter Files
     post:
       operationId: addCashLetterToFile
       parameters:
@@ -411,7 +411,7 @@ paths:
       - cookieAuth: []
       summary: Add CashLetter to File
       tags:
-      - Files
+      - Image Cash Letter Files
   /files/{file_id}/cashLetters/{cashLetter_id}:
     delete:
       operationId: deleteFileCashLetter
@@ -453,7 +453,7 @@ paths:
       - cookieAuth: []
       summary: Delete a CashLetter from a File
       tags:
-      - Files
+      - Image Cash Letter Files
     get:
       operationId: getFileCashLetter
       parameters:
@@ -498,7 +498,7 @@ paths:
       - cookieAuth: []
       summary: Get a specific CashLetter on a FIle
       tags:
-      - Files
+      - Image Cash Letter Files
 components:
   schemas:
     CreateFile:

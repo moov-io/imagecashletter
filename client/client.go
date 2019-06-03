@@ -46,6 +46,8 @@ type APIClient struct {
 	// API Services
 
 	FilesApi *FilesApiService
+
+	ImageCashLetterFilesApi *ImageCashLetterFilesApiService
 }
 
 type service struct {
@@ -65,6 +67,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 
 	// API Services
 	c.FilesApi = (*FilesApiService)(&c.common)
+	c.ImageCashLetterFilesApi = (*ImageCashLetterFilesApiService)(&c.common)
 
 	return c
 }

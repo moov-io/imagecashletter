@@ -14,9 +14,9 @@ servers:
     description: Local development
 
 tags:
-  - name: Files
+  - name: 'Image Cash Letter Files'
     description: |
-      File contains ImageCashLetter Cash Letters and Bundles.
+      Files contains ImageCashLetter Cash Letters and Bundles.
 paths:
   /ping:
     get:
@@ -29,8 +29,7 @@ paths:
           description: Service is running properly
   /files:
     get:
-      tags:
-        - Files
+      tags: ['Image Cash Letter Files']
       summary: Gets a list of Files
       operationId: getFiles
       security:
@@ -57,8 +56,7 @@ paths:
                 $ref: '#/components/schemas/Files'
   /files/create:
     post:
-      tags:
-        - Files
+      tags: ['Image Cash Letter Files']
       summary: Create a new File object
       operationId: createFile
       security:
@@ -111,8 +109,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   /files/{file_id}:
     get:
-      tags:
-        - Files
+      tags: ['Image Cash Letter Files']
       summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
       operationId: getFileByID
       security:
@@ -142,8 +139,7 @@ paths:
         '404':
           description: A resource with the specified ID was not found
     post:
-      tags:
-        - Files
+      tags: ['Image Cash Letter Files']
       summary: Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
       operationId: updateFile
       security:
@@ -196,8 +192,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
-      tags:
-        - Files
+      tags: ['Image Cash Letter Files']
       summary: Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
       operationId: deleteImageCashLetterFile
       security:
@@ -224,8 +219,7 @@ paths:
           description: A File with the specified ID was not found.
   /files/{file_id}/contents:
     get:
-      tags:
-        - Files
+      tags: ['Image Cash Letter Files']
       summary: Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
       operationId: getFileContents
       security:
@@ -254,8 +248,7 @@ paths:
                 $ref: '#/components/schemas/RawFile'
   /files/{file_id}/validate:
     get:
-      tags:
-        - Files
+      tags: ['Image Cash Letter Files']
       summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
       operationId: validateFile
       security:
@@ -286,8 +279,7 @@ paths:
           description: Validation failed. Check response for errors
   /files/{file_id}/cashLetters:
     get:
-      tags:
-        - Files
+      tags: ['Image Cash Letter Files']
       summary: Get the cashLetters on a File.
       operationId: getFileCashLetters
       security:
@@ -320,8 +312,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CashLetters'
     post:
-      tags:
-        - Files
+      tags: ['Image Cash Letter Files']
       summary: Add CashLetter to File
       operationId: addCashLetterToFile
       security:
@@ -359,8 +350,7 @@ paths:
           description: CashLetter added to File
   /files/{file_id}/cashLetters/{cashLetter_id}:
     get:
-      tags:
-        - Files
+      tags: ['Image Cash Letter Files']
       summary: Get a specific CashLetter on a FIle
       operationId: getFileCashLetter
       security:
@@ -397,8 +387,7 @@ paths:
         '404':
           description: CashLetter or File not found
     delete:
-      tags:
-        - Files
+      tags: ['Image Cash Letter Files']
       summary: Delete a CashLetter from a File
       operationId: deleteFileCashLetter
       security:

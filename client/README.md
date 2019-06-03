@@ -31,18 +31,18 @@ All URIs are relative to *http://localhost:8083*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*FilesApi* | [**AddCashLetterToFile**](docs/FilesApi.md#addcashlettertofile) | **Post** /files/{file_id}/cashLetters | Add CashLetter to File
-*FilesApi* | [**CreateFile**](docs/FilesApi.md#createfile) | **Post** /files/create | Create a new File object
-*FilesApi* | [**DeleteFileCashLetter**](docs/FilesApi.md#deletefilecashletter) | **Delete** /files/{file_id}/cashLetters/{cashLetter_id} | Delete a CashLetter from a File
-*FilesApi* | [**DeleteImageCashLetterFile**](docs/FilesApi.md#deleteimagecashletterfile) | **Delete** /files/{file_id} | Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
-*FilesApi* | [**GetFileByID**](docs/FilesApi.md#getfilebyid) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
-*FilesApi* | [**GetFileCashLetter**](docs/FilesApi.md#getfilecashletter) | **Get** /files/{file_id}/cashLetters/{cashLetter_id} | Get a specific CashLetter on a FIle
-*FilesApi* | [**GetFileCashLetters**](docs/FilesApi.md#getfilecashletters) | **Get** /files/{file_id}/cashLetters | Get the cashLetters on a File.
-*FilesApi* | [**GetFileContents**](docs/FilesApi.md#getfilecontents) | **Get** /files/{file_id}/contents | Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
-*FilesApi* | [**GetFiles**](docs/FilesApi.md#getfiles) | **Get** /files | Gets a list of Files
 *FilesApi* | [**Ping**](docs/FilesApi.md#ping) | **Get** /ping | Ping the ImageCashLetter service to check if running
-*FilesApi* | [**UpdateFile**](docs/FilesApi.md#updatefile) | **Post** /files/{file_id} | Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-*FilesApi* | [**ValidateFile**](docs/FilesApi.md#validatefile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+*ImageCashLetterFilesApi* | [**AddCashLetterToFile**](docs/ImageCashLetterFilesApi.md#addcashlettertofile) | **Post** /files/{file_id}/cashLetters | Add CashLetter to File
+*ImageCashLetterFilesApi* | [**CreateFile**](docs/ImageCashLetterFilesApi.md#createfile) | **Post** /files/create | Create a new File object
+*ImageCashLetterFilesApi* | [**DeleteFileCashLetter**](docs/ImageCashLetterFilesApi.md#deletefilecashletter) | **Delete** /files/{file_id}/cashLetters/{cashLetter_id} | Delete a CashLetter from a File
+*ImageCashLetterFilesApi* | [**DeleteImageCashLetterFile**](docs/ImageCashLetterFilesApi.md#deleteimagecashletterfile) | **Delete** /files/{file_id} | Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
+*ImageCashLetterFilesApi* | [**GetFileByID**](docs/ImageCashLetterFilesApi.md#getfilebyid) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+*ImageCashLetterFilesApi* | [**GetFileCashLetter**](docs/ImageCashLetterFilesApi.md#getfilecashletter) | **Get** /files/{file_id}/cashLetters/{cashLetter_id} | Get a specific CashLetter on a FIle
+*ImageCashLetterFilesApi* | [**GetFileCashLetters**](docs/ImageCashLetterFilesApi.md#getfilecashletters) | **Get** /files/{file_id}/cashLetters | Get the cashLetters on a File.
+*ImageCashLetterFilesApi* | [**GetFileContents**](docs/ImageCashLetterFilesApi.md#getfilecontents) | **Get** /files/{file_id}/contents | Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
+*ImageCashLetterFilesApi* | [**GetFiles**](docs/ImageCashLetterFilesApi.md#getfiles) | **Get** /files | Gets a list of Files
+*ImageCashLetterFilesApi* | [**UpdateFile**](docs/ImageCashLetterFilesApi.md#updatefile) | **Post** /files/{file_id} | Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+*ImageCashLetterFilesApi* | [**ValidateFile**](docs/ImageCashLetterFilesApi.md#validatefile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
 
 ## Documentation For Models
