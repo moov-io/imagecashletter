@@ -35,7 +35,7 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then test -z $(gofmt -s -l $GOFILES); fi
   - go test ./... -race -coverprofile=coverage.txt -covermode=atomic
   - misspell -error -locale US $GOFILES
-  - gocyclo -over 20 $GOFILES
+  - gocyclo -over 50 $GOFILES
   - golint -set_exit_status $GOFILES
   - staticcheck ./cmd/*/*.go ./pkg/*/*.go *.go
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install -y mingw; export PATH=/c/tools/mingw64/bin:"$PATH";fi
