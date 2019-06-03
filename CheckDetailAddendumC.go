@@ -11,8 +11,6 @@ import (
 	"time"
 )
 
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
-
 // Errors specific to a CheckDetailAddendumC Record
 
 // CheckDetailAddendumC Record
@@ -71,8 +69,6 @@ type CheckDetailAddendumC struct {
 	// 4: Undetermined if repair has been done or no
 	EndorsingBankCorrectionIndicator int `json:"endorsingBankCorrectionIndicator"`
 	// ReturnReason is a code that indicates the reason for non-payment.
-	//
-	// ToDo:  Add Return Reason Codes see ANSI X9.100-188 for allowable values
 	ReturnReason string `json:"returnReason"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`

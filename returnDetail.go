@@ -316,8 +316,6 @@ func (rd *ReturnDetail) ECEInstitutionItemSequenceNumberField() string {
 	return rd.alphaField(rd.ECEInstitutionItemSequenceNumber, 15)
 }
 
-// ToDo: NBSMO?
-
 // ExternalProcessingCodeField gets the ExternalProcessingCode field - Also known as Position 44
 func (rd *ReturnDetail) ExternalProcessingCodeField() string {
 	return rd.alphaField(rd.ExternalProcessingCode, 1)

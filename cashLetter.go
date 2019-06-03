@@ -70,10 +70,6 @@ func (cl *CashLetter) Validate() error {
 				FieldName: "CollectionTypeIndicator", Msg: msg}
 		}
 	}
-
-	// ToDo: Future Consideration - Should the library validate Routing Number Summary Data with Cash letter Data
-	// ToDo: or the caller?   My initial thought is the caller, so this can be as light as possible.
-
 	return nil
 }
 

@@ -303,14 +303,10 @@ func (cd *CheckDetail) fieldInclusion() error {
 	return nil
 }
 
-// ToDo:NBSM?
-
 // AuxiliaryOnUsField gets the AuxiliaryOnUs field
 func (cd *CheckDetail) AuxiliaryOnUsField() string {
 	return cd.nbsmField(cd.AuxiliaryOnUs, 15)
 }
-
-// ToDo: NBSMO
 
 // ExternalProcessingCodeField gets the ExternalProcessingCode field - Also known as Position 44
 func (cd *CheckDetail) ExternalProcessingCodeField() string {
