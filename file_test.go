@@ -2,11 +2,11 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package x9
+package imagecashletter
 
 import "testing"
 
-// mockFile creates an X9 file
+// mockFile creates an imagecashletter file
 func mockFile() *File {
 	mockFile := NewFile()
 	mockFile.SetHeader(mockFileHeader())

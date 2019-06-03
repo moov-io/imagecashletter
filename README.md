@@ -1,14 +1,14 @@
 moov-io/imagecashletter
 ===
-[![GoDoc](https://godoc.org/github.com/moov-io/x9?status.svg)](https://godoc.org/github.com/moov-io/x9)
-[![Build Status](https://travis-ci.com/moov-io/x9.svg?branch=master)](https://travis-ci.com/moov-io/x9)
-[![Coverage Status](https://codecov.io/gh/moov-io/x9/branch/master/graph/badge.svg)](https://codecov.io/gh/moov-io/x9)
-[![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/x9)](https://goreportcard.com/report/github.com/moov-io/x9)
+[![GoDoc](https://godoc.org/github.com/moov-io/imagecashletter?status.svg)](https://godoc.org/github.com/moov-io/imagecashletter)
+[![Build Status](https://travis-ci.com/moov-io/imagecashletter.svg?branch=master)](https://travis-ci.com/moov-io/imagecashletter)
+[![Coverage Status](https://codecov.io/gh/moov-io/imagecashletter/branch/master/graph/badge.svg)](https://codecov.io/gh/moov-io/imagecashletter)
+[![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/imagecashletter)](https://goreportcard.com/report/github.com/moov-io/imagecashletter)
 [![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/x9/master/LICENSE)
 
 X9’s Specifications for ICL (Image Cash ledger) to provide Check 21 services
 
-Package `github.com/moov-io/imagecashletter` implements a file reader and writer for parsing [x9](https://en.wikipedia.org/wiki/Check_21_Act) files.
+Package `github.com/moov-io/imagecashletter` implements a file reader and writer for parsing [imagecashletter](https://en.wikipedia.org/wiki/Check_21_Act) files.
 
 Docs: [docs.moov.io](http://docs.moov.io/en/latest/) | [api docs](https://api.moov.io/)
 

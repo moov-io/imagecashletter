@@ -2,7 +2,7 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package x9
+package imagecashletter
 
 import (
 	"errors"
@@ -24,7 +24,7 @@ var (
 	msgInvalid = "is invalid"
 )
 
-// validator is common validation and formatting of golang types to x9 type strings
+// validator is common validation and formatting of golang types to imagecashletter type strings
 type validator struct{}
 
 // FieldError is returned for errors at a field level in a record
@@ -41,8 +41,6 @@ type FieldError struct {
 func (e *FieldError) Error() string {
 	return fmt.Sprintf("%s %s %s", e.FieldName, e.Value, e.Msg)
 }
-
-// ToDo: return invalid value in error message
 
 // isCreditTotalIndicator ensures CreditTotalIndicator of a FileControl, CashLetterControl, and BundleControl is valid
 func (v *validator) isCreditTotalIndicator(code int) error {

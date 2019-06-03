@@ -2,7 +2,7 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package x9
+package imagecashletter
 
 import (
 	"strconv"
@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// converters handles golang to x9 type Converters
+// converters handles golang to imagecashletter type Converters
 type converters struct{}
 
 func (c *converters) parseNumField(r string) (s int) {

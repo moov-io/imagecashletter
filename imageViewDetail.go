@@ -2,7 +2,7 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package x9
+package imagecashletter
 
 import (
 	"fmt"
@@ -89,7 +89,7 @@ type ImageViewDetail struct {
 	// 11: Partial view–payee endorsement Area of Interest
 	// 12: Partial view–Bank Of First Deposit (BOFD) endorsement Area of Interest
 	// 13: Partial view–transit endorsement Area of Interest
-	// 14 - 99: Reserved for X9
+	// 14 - 99: Reserved for imagecashletter
 	ViewDescriptor string `json:"viewDescriptor"`
 	// DigitalSignatureIndicator is a code that indicates the presence or absence of a digital signature for the image
 	// view contained in ImageViewData.ImageData. If present, the Digital Signature is conveyed in the related
@@ -164,9 +164,9 @@ type ImageViewDetail struct {
 	OverrideIndicator string `json:"overrideIndicator"`
 	// reservedTwo is a field reserved for future use.  Reserved should be blank.
 	reservedTwo string
-	// validator is composed for x9 data validation
+	// validator is composed for imagecashletter data validation
 	validator
-	// converters is composed for x9 to golang Converters
+	// converters is composed for imagecashletter to golang Converters
 	converters
 }
 
@@ -246,7 +246,7 @@ func (ivDetail *ImageViewDetail) String() string {
 	return buf.String()
 }
 
-// Validate performs X9 format rule checks on the record and returns an error if not Validated
+// Validate performs imagecashletter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (ivDetail *ImageViewDetail) Validate() error {
 	if err := ivDetail.fieldInclusion(); err != nil {

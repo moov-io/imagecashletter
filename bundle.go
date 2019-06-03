@@ -2,7 +2,7 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package x9
+package imagecashletter
 
 import (
 	"fmt"
@@ -59,7 +59,7 @@ func NewBundle(bh *BundleHeader) *Bundle {
 	return b
 }
 
-// Validate performs X9 validations and format rule checks and returns an error if not Validated
+// Validate performs imagecashletter validations and format rule checks and returns an error if not Validated
 func (b *Bundle) Validate() error {
 	if (len(b.Checks) <= 0) && (len(b.Returns) <= 0) {
 		return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "entries", Msg: msgBundleEntries}

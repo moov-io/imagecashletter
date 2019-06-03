@@ -2,7 +2,7 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package x9
+package imagecashletter
 
 import (
 	"fmt"
@@ -100,9 +100,9 @@ type UserPayeeEndorsement struct {
 	EndorsementIndicator int `json:"endorsementIndicator"`
 	// UserField is a field used at the discretion of users of this record.
 	UserField string `json:"userField"`
-	// validator is composed for x9 data validation
+	// validator is composed for imagecashletter data validation
 	validator
-	// converters is composed for x9 to golang Converters
+	// converters is composed for imagecashletter to golang Converters
 	converters
 }
 
@@ -195,7 +195,7 @@ func (upe *UserPayeeEndorsement) String() string {
 	return buf.String()
 }
 
-// Validate performs X9 format rule checks on the record and returns an error if not Validated
+// Validate performs imagecashletter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (upe *UserPayeeEndorsement) Validate() error {
 	if err := upe.fieldInclusion(); err != nil {

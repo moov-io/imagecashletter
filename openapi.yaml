@@ -1,0 +1,3033 @@
+openapi: 3.0.2
+# ImageViewDataSize is the total number of bytes in ImageViewData.ImageData.  Use of this field is NOT recommended, so it has not been included in the openapi.yaml
+info:
+  description: Moov ImageCashLetter () implements an HTTP API for creating, parsing and validating ImageCashLetter files.
+  version: v1
+  title: ImageCashLetter API
+  contact:
+    url: https://github.com/moov-io/imagecashletter
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:8083
+    description: Local development
+
+tags:
+  - name: Files
+    description: |
+      File contains ImageCashLetter Cash Letters and Bundles.
+paths:
+  /ping:
+    get:
+      tags:
+        - Files
+      summary: Ping the ImageCashLetter service to check if running
+      operationId: ping
+      responses:
+        '200':
+          description: Service is running properly
+  /files:
+    get:
+      tags:
+        - Files
+      summary: Gets a list of Files
+      operationId: getFiles
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of File objects
+          headers:
+            X-Total-Count:
+              description: The total number of Originators
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Files'
+  /files/create:
+    post:
+      tags:
+        - Files
+      summary: Create a new File object
+      operationId: createFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: X-Idempotency-Key
+          in: header
+          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+          example: a4f88150
+          required: false
+          schema:
+            type: string
+      requestBody:
+        description: Content of the ImageCashLetter file (in json or raw text)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFile'
+          text/plain:
+            schema:
+              description: A plaintext ImageCashLetter file
+              type: string
+              example: 0135T231380104121042882201809051523NCitadel           Wells Fargo        US
+      responses:
+        '201':
+          description: A JSON object containing a new File
+          headers:
+            Location:
+              description: The location of the new resource
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '400':
+          description: "Invalid File Header Object"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /files/{file_id}:
+    get:
+      tags:
+        - Files
+      summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+      operationId: getFileByID
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      responses:
+        '200':
+          description: A File object for the supplied ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '404':
+          description: A resource with the specified ID was not found
+    post:
+      tags:
+        - Files
+      summary: Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      operationId: updateFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: X-Idempotency-Key
+          in: header
+          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+          example: a4f88150
+          required: false
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFile'
+      responses:
+        '201':
+          description: A JSON object containing a new File
+          headers:
+            Location:
+              description: The location of the new resource
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '400':
+          description: "Invalid File Header Object"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Files
+      summary: Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
+      operationId: deleteImageCashLetterFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Permanently deleted File.
+        '404':
+          description: A File with the specified ID was not found.
+  /files/{file_id}/contents:
+    get:
+      tags:
+        - Files
+      summary: Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
+      operationId: getFileContents
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      responses:
+        '200':
+          description: File built successfully without errors.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/RawFile'
+  /files/{file_id}/validate:
+    get:
+      tags:
+        - Files
+      summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+      operationId: validateFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      responses:
+        '200':
+          description: File validated successfully without errors.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '400':
+          description: Validation failed. Check response for errors
+  /files/{file_id}/cashLetters:
+    get:
+      tags:
+        - Files
+      summary: Get the cashLetters on a File.
+      operationId: getFileCashLetters
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      responses:
+        '200':
+          description: A list of CashLetter objects
+          headers:
+            X-Total-Count:
+              description: The total number of CashLetters on the File.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashLetters'
+    post:
+      tags:
+        - Files
+      summary: Add CashLetter to File
+      operationId: addCashLetterToFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: X-Idempotency-Key
+          in: header
+          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+          example: a4f88150
+          required: false
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CashLetter'
+      responses:
+        '200':
+          description: CashLetter added to File
+  /files/{file_id}/cashLetters/{cashLetter_id}:
+    get:
+      tags:
+        - Files
+      summary: Get a specific CashLetter on a FIle
+      operationId: getFileCashLetter
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+        - name: cashLetter_id
+          in: path
+          description: CashLetter ID
+          required: true
+          schema:
+            type: string
+            example: 45758063
+      responses:
+        '200':
+          description: CashLetter object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashLetter'
+        '404':
+          description: CashLetter or File not found
+    delete:
+      tags:
+        - Files
+      summary: Delete a CashLetter from a File
+      operationId: deleteFileCashLetter
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+        - name: cashLetter_id
+          in: path
+          description: CashLetter ID
+          required: true
+          schema:
+            type: string
+            example: 45758063
+      responses:
+        '200':
+          description: CashLetter deleted
+        '404':
+          description: CashLetter or File not found
+
+components:
+  schemas:
+    CreateFile:
+      properties:
+        id:
+          type: string
+          description: File ID
+          example: 3f2d23ee214
+        fileHeader:
+          $ref: '#/components/schemas/FileHeader'
+        cashLetters:
+          type: array
+          items:
+            $ref: '#/components/schemas/CashLetter'
+        bundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bundle'
+        fileControl:
+          $ref: '#/components/schemas/FileControl'
+      required:
+        - fileHeader
+    File:
+      properties:
+        id:
+          type: string
+          description: File ID
+          example: 3f2d23ee214
+        fileHeader:
+          $ref: '#/components/schemas/FileHeader'
+        cashLetters:
+          type: array
+          items:
+            $ref: '#/components/schemas/CashLetter'
+        bundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bundle'
+        fileControl:
+          $ref: '#/components/schemas/FileControl'
+    FileHeader:
+      properties:
+        id:
+          description: FileHeader ID
+          type: string
+          example: d1e26288
+        standardLevel:
+          type: string
+          maxLength: 2
+          enum:
+            - 03
+            - 30
+            - 35
+          description: |
+            StandardLevel identifies the standard level of the file.
+
+            * `03` - DSTU X9.37 - 2003
+            * `30` - X9.100-187-2008
+            * `35` - X9.100-187-2013 and 2016
+          example: '35'
+        testFileIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - T
+            - P
+          description: |
+            TestFileIndicator dentifies whether the file is a test or production file.
+
+            * `T` - Test File
+            * `P` - Production File
+          example: 'P'
+        immediateDestination:
+          type: string
+          maxLength: 9
+          description: |
+            ImmediateDestination is the routing and transit number of the Federal Reserve Bank (FRB)
+            or receiver to which the file is being sent.
+          example: '231380102'
+        immediateOrigin:
+          type: string
+          maxLength: 9
+          description: |
+            ImmediateOrigin is the routing and transit number of the Federal Reserve Bank (FRB)
+            or originator from which the file is being sent.
+          example: '201982859'
+        fileCreationDate:
+          type: string
+          format: 'date-time'
+          description: FileCreationDate is the date that the immediate origin institution creates the file.
+          example: 2006-01-02T15:04:05Z07:00
+        fileCreationTime:
+          type: string
+          maxLength: 4
+          description: |
+            FileCreationTime is the time the immediate origin institution creates the file.
+            (Format - hhmm, where - hh hour, mm minute)
+          example: '1310'
+        resendIndicator:
+          type: string
+          maxLength: 1
+          description: ResendIndicator Indicates whether the file has been previously transmitted. (Y - Yes, N - No)
+          example: 'Y'
+        immediateDestinationName:
+          type: string
+          maxLength: 18
+          description: ImmediateDestinationName Identifies the short name of the institution that receives the file.
+          example: 'ABC Bank'
+        immediateOriginName:
+          type: string
+          maxLength: 18
+          description: immediateOriginName identifies the short name of the institution that sends the file.
+          example: 'Bank One'
+        fileIDModifier:
+          type: string
+          maxLength: 1
+          description: |
+            FileIDModifier is a code that permits multiple files, created on the same date, same time and between the
+            same institutions, to be distinguished one from another. If all of the following fields in a previous file are
+            equal to the same fields in this file: FileHeader ImmediateDestination, ImmediateOrigin, FileCreationDate, and
+            FileCreationTime, it must be defined.
+          example: 'A'
+        countryCode:
+          type: string
+          maxLength: 2
+          description: |
+            CountryCode is a 2-character code as approved by the International Organization for Standardization (ISO) used
+            to identify the country in which the payer bank is located.
+          example: 'US'
+        userField:
+          type: string
+          maxLength: 4
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'ZZZZ'
+        companionDocumentIndicator:
+          type: string
+          maxLength: 1
+          description: |
+            CompanionDocumentIndicator identifies a field used to indicate the Companion Document being used.
+            Shall be present only under clearing arrangements. Companion Document usage and values
+            defined by clearing arrangements.
+            Values:
+            0–9 Reserved for United States use
+            A–J Reserved for Canadian use
+            Other - as defined by clearing arrangements.
+          example: '1'
+      required:
+        - standardLevel
+        - testFileIndicator
+        - resendIndicator
+        - immediateDestination
+        - immediateOrigin
+        - fileCreationDate
+        - fileCreationTime
+    FileControl:
+      properties:
+        id:
+          type: string
+          description: FileControl ID
+          example: 'd1e26288'
+        cashLetterCount:
+          type: integer
+          description: CashLetterCount identifies the total number of cash letters within the file.
+          example: 1
+        totalRecordCount:
+          type: integer
+          description: TotalRecordCount identifies the total number of records of all types sent in the file, including the FileControl.
+          example: 1
+        totalItemCount:
+          type: integer
+          description: totalItemCount identifies the total number of Items sent within the file.
+          example: 5
+        fileTotalAmount:
+          type: integer
+          description: FileTotalAmount identifies the total Item amount of the complete file.
+          example: 100
+        immediateOriginContactName:
+          type: string
+          maxLength: 14
+          description: immediateOriginContactName identifies contact at the institution that creates the file.
+          example: 'John Smith'
+        immediateOriginContactPhoneNumber:
+          type: string
+          maxLength: 10
+          description: ImmediateOriginContactPhoneNumber identifies the phone number of the contact at the institution that creates the file.
+          example: '555-555-1212'
+        creditTotalIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            -
+            - 0
+            - 1
+          description: |
+            CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount.
+            TotalRecordCount includes all records of all types regardless of the value of this field.
+            * ` ` - No Credit Items
+            * `0` - Credit Items are not included in totals
+            * `1` - Credit Items are included in totals
+          example: 1
+      required:
+        - cashLetterCount
+        - totalRecordCount
+        - totalItemCount
+        - fileTotalAmount
+    RawFile:
+      type: string
+      description: Plaintext ImageCashLetter file
+      example: "0135T231380104121042882201809051523NCitadel           Wells Fargo        US     "
+    Files:
+      type: array
+      items:
+        $ref: '#/components/schemas/File'
+    CashLetter:
+      properties:
+        cashLetterHeader:
+          $ref: '#/components/schemas/CashLetterHeader'
+        # Current Implementation: CreditItem(s) Precede CheckDetail(s) - CreditItem(s) outside the leading Bundle
+        # and Within the First Cash Letter.  Please adjust reader and writer, and openAPI for your specific clearing arrangement
+        # implementation or contact MOOV for your particular implementation.
+        creditItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreditItem'
+        bundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bundle'
+        routingNumberSummary:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoutingNumberSummary'
+        cashLetterControl:
+          $ref: '#/components/schemas/CashLetterControl'
+    CashLetterHeader:
+      properties:
+        id:
+          description: CashLetterHeader ID
+          type: string
+          example: 'd1e26288'
+        collectionTypeIndicator:
+          type: string
+          maxLength: 2
+          enum:
+            - 00
+            - 01
+            - 02
+            - 03
+            - 04
+            - 05
+            - 06
+            - 20
+            - 99
+          description: |
+            CollectionTypeIndicator is a code that identifies the type of cash letter.
+
+            * `00` - Preliminary Forward Information
+            * `01` - Forward Presentment
+            * `02` - Forward Presentment - Same-Day Settlement
+            * `03` - Return
+            * `04` - Return Notification
+            * `05` - Preliminary Return Notification
+            * `06` - Final Return Notification
+            * `20` - No Detail
+            * `99` - Bundles not the same collection type. Use of the value is only allowed by clearing arrangement.
+          example:
+            '00'
+        destinationRoutingNumber:
+          type: string
+          maxLength: 9
+          description: DestinationRoutingNumber is the routing and transit number of the institution that receives and processes the cash letter or the bundle.
+          example: '999282654'
+        eCEInstitutionRoutingNumber:
+          type: string
+          maxLength: 9
+          description: ECEInstitutionRoutingNumber is the routing and transit number of the institution that creates the Cash Letter Header record
+          example : '217876527'
+        cashLetterBusinessDate:
+          type: string
+          maxLength: 8
+          description: cashLetterBusinessDate is the business date of the cash letter. (Format YYYYMMDD, where - YYYY year, MM month, DD day)
+          example: 2006-01-02T15:04:05Z07:00
+        cashLetterCreationDate:
+          type: string
+          format: 'date-time'
+          description: cashLetterCreationDate is the date that the cash letter is created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
+          example: 2006-01-02T15:04:05Z07:00
+        cashLetterCreationTime:
+          type: string
+          maxLength: 4
+          description: CashLetterCreationTime is the time that the cash letter is created. (Format - hhmm, where - hh hour, mm minute)
+          example: '1310'
+        recordTypeIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - N
+            - E
+            - I
+            - F
+          description: |
+            RecordTypeIndicator is a code that indicates the presence of records or the type of records contained in the cash letter.
+            If an image is associated with any CheckDetail or Return, the cash letter must have a
+            RecordTypeIndicator of I or F.
+
+            * `N` - No electronic check records or image records (Type 2x’s, 3x’s, 5x’s); e.g., an empty cash letter.
+            * `E` - Cash letter contains electronic check records with no images (Type 2x’s and 3x’s only).
+            * `I` - Cash letter contains electronic check records (Type 2x’s, 3x’s) and image records (Type 5x’s).
+            * `F` - Cash letter contains electronic check records (Type 2x’s and 3x’s) and image records (Type 5x’s)
+            that correspond to a previously sent cash letter (i.e., E file).
+          example: 'N'
+        documentationTypeIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - A
+            - B
+            - C
+            - D
+            - E
+            - F
+            - G
+            - H
+            - I
+            - J
+            - K
+            - L
+            - M
+            - Z
+          description: |
+            DocumentationTypeIndicator is a code that indicates the type of documentation that supports all check records in the cash letter.
+
+            * `A` - No image provided, paper provided separately
+            * `B` - No image provided, paper provided separately, image upon request
+            * `C` - Image provided separately, no paper provided
+            * `D` - Image provided separately, no paper provided, image upon request
+            * `E` - Image and paper provided separately
+            * `F` - Image and paper provided separately, image upon request
+            * `G` - Image included, no paper provided
+            * `H` - Image included, no paper provided, image upon request
+            * `I` - Image included, paper provided separately
+            * `J` - Image included, paper provided separately, image upon request
+            * `K` - No image provided, no paper provided
+            * `L` - No image provided, no paper provided, image upon request
+            * `M` - No image provided, Electronic Check provided separately
+            * `Z` - Not Same Type–Documentation associated with each item in Cash Letter will be different.
+            The Check Detail
+          example: 'A'
+        cashLetterID:
+          type: string
+          maxLength: 8
+          description: CashLetterID uniquely identifies the cash letter. It is assigned by the institution that creates the cash
+            letter and must be unique within a Cash Letter Business Date.
+          example: '1'
+        originatorContactName:
+          type: string
+          maxLength: 14
+          description: OriginatorContactName is the name of contact at the institution that creates the cash letter.
+          example: "John Smith"
+        originatorContactPhoneNumber:
+          type: string
+          maxLength: 10
+          description: OriginatorContactPhoneNumber is the phone number of the contact at the institution that creates the cash letter.
+          example: '5685551212'
+        fedWorkType:
+          type: string
+          maxLength: 1
+          description: fedWorkType is any valid codes specified by the Federal Reserve Bank
+          example: 'V'
+        returnsIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            -
+            - E
+            - R
+            - J
+          description: |
+            ReturnsIndicator ddentifies type of returns
+
+            * ` ` - Original Message
+            * `E` - Administrative - items being returned that are handled by the bank and usually do not directly
+            affect the customer or its account.
+            * `R` - Customer–items being returned that directly affect a customer’s account.
+            * `J` - Reject Return
+        userField:
+          type: string
+          maxLength: 1
+          description: UserField is a field used at the discretion of users of the standard
+          example: 'V'
+    CashLetterControl:
+      properties:
+        id:
+          type: string
+          description: CashLetterControl ID
+          example: 'd1e26288'
+        cashLetterBundleCount:
+          type: integer
+          description: CashLetterBundleCount identifies the total number of bundles within the cash letter.
+          example: 1
+        cashLetterItemsCount:
+          type: integer
+          description: CashLetterItemsCount identifies the total number of items within the cash letter.
+          example: 1
+        cashLetterTotalAmount:
+          type: integer
+          description: CashLetterTotalAmount identifies the total dollar value of all item amounts within the cash letter.
+          example: 100
+        cashLetterImagesCount:
+          type: integer
+          description: CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter.
+          example: 1
+        eCEInstitutionName:
+          type: string
+          maxLength: 18
+          description: ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl.
+          example: "Citadel"
+        settlementDate:
+          type: string
+          format: 'date-time'
+          description: SettlementDate identifies the date that the institution that creates the cash letter expects settlement.
+          example: 2006-01-02T15:04:05Z07:00
+        creditTotalIndicator:
+          maxLength: 1
+          enum:
+            -
+            - 0
+            - 1
+          description: |
+            CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals.
+            If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of
+            all types regardless of the value of this field.
+            * ` ` - No Credit Items
+            * `0` - Credit Items are not included in totals
+            * `1` - Credit Items are included in totals
+          example: 1
+      required:
+        - cashLetterItemsCount
+        - cashLetterTotalAmount
+        - settlementDate
+    CashLetters:
+      type: array
+      items:
+        $ref: '#/components/schemas/CashLetter'
+    Bundle:
+      properties:
+        bundleHeader:
+          $ref: '#/components/schemas/BundleHeader'
+        checks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Checks'
+        returns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Returns'
+        bundleControl:
+          $ref: '#/components/schemas/BundleControl'
+    BundleHeader:
+      properties:
+        id:
+          type: string
+          description: BundleHeader ID
+          example: 'd1e26288'
+        collectionTypeIndicator:
+          type: string
+          maxLength: 2
+          enum:
+            - 00
+            - 01
+            - 02
+            - 03
+            - 04
+            - 05
+            - 06
+          description: |
+            A code that identifies the type of bundle. It is the same value as the CollectionTypeIndicator
+            in the CashLetterHeader within which the bundle is contained, unless the CollectionTypeIndicator
+            in the CashLetterHeader is 99.
+
+            * `00` - Preliminary Forward Information
+            * `01` - Forward Presentment
+            * `02` - Forward Presentment - Same-Day Settlement
+            * `03` - Return
+            * `04` - Return Notification
+            * `05` - Preliminary Return Notification
+            * `06` - Final Return Notification
+          example:
+            '00'
+        destinationRoutingNumber:
+          type: string
+          maxLength: 9
+          description: DestinationRoutingNumber contains the routing and transit number of the institution that
+            receives and processes the cash letter or the bundle.
+          example: '231987654'
+        eCEInstitutionRoutingNumber:
+          type: string
+          maxLength: 9
+          description: ECEInstitutionRoutingNumber contains the routing and transit number of the institution that
+            that creates the bundle header.
+          example: '233431587'
+        bundleBusinessDate:
+          type: string
+          format: 'date-time'
+          description: BundleBusinessDate is the business date of the bundle.
+          example: 2006-01-02T15:04:05Z07:00
+        bundleCreationDate:
+          type: string
+          format: 'date-time'
+          description: BundleCreationDate is the date that the bundle is created.
+          example: 2006-01-02T15:04:05Z07:00
+        bundleID:
+          type: string
+          maxLength: 10
+          description: BundleID is number that identifies the bundle, assigned by the institution that creates the bundle.
+          example:  '9999'
+        bundleSequenceNumber:
+          type: string
+          maxLength: 4
+          description: BundleSequenceNumber is a number assigned by the institution that creates the bundle. Usually denotes
+            the relative position of the bundle within the cash letter.
+          example:  '1'
+        cycleNumber:
+          type: string
+          maxLength: 2
+          description: CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which
+            the bundle is created.
+          example: "01"
+        userField:
+          type: string
+          maxLength: 5
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: "B1234"
+    BundleControl:
+      properties:
+        id:
+          type: string
+          description: BundleControl ID
+          example: 'd1e26288'
+        bundleItemsCount:
+          type: integer
+          description: BundleItemsCount identifies the total number of items within the bundle.
+          example: 1
+        bundleTotalAmount:
+          type: integer
+          description: BundleTotalAmount identifies the total amount of item amounts within the bundle.
+          example: 100
+        micrValidTotalAmount:
+          type: integer
+          description: MICRValidTotalAmount identifies the total amount of all CheckDetail Records within the bundle which
+            contains 1 in the MICRValidIndicator.
+          example: 100
+        bundleImagesCount:
+          type: integer
+          description: BundleImagesCount identifies the total number of Image ViewDetail Records  within the bundle.
+          example: 1
+        userField:
+          type: string
+          maxLength: 20
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: "B12345678"
+        creditTotalIndicator:
+          maxLength: 1
+          enum:
+            -
+            - 0
+            - 1
+          description: |
+            CreditTotalIndicator is a code that indicates whether Credits Items are included in the totals.
+            If so they  they will be included in this record’s: Items Within Bundle Count, Bundle Total Amount and,
+            Images Within Bundle Count
+            * ` ` - No Credit Items
+            * `0` - Credit Items are not included in totals
+            * `1` - Credit Items are included in totals
+          example: 1
+      required:
+        - bundleItemsCount
+        - bundleTotalAmount
+    Checks:
+      properties:
+        checkDetail:
+          $ref: '#/components/schemas/CheckDetail'
+    Returns:
+      properties:
+        returnDetail:
+          $ref: '#/components/schemas/ReturnDetail'
+    CheckDetail:
+      properties:
+        id:
+          type: string
+          description: CheckDetail ID
+          example: d1e26288
+        auxiliaryOnUs:
+          type: string
+          maxLength: 15
+          description: AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+          example: '*'
+        externalProcessingCode:
+          type: string
+          maxLength: 1
+          description: ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited
+            Standards Committee X9. Also known as Position 44.
+          example: '1'
+        payorBankRoutingNumber:
+          type: string
+          maxLength: 8
+          description: |
+            PayorBankRoutingNumber identifies a number that identifies the institution by or through which the item is
+            payable. Must be a valid routing and transit number issued by the ABA’s Routing Number Registrar. Shall
+            represent the first 8 digits of a 9-digit routing number or 8 numeric digits of a 4 dash 4 routing number.
+            A valid routing number consists of 2 fields: the eight- digit Payor Bank Routing Number  and the
+            one-digit Payor Bank Routing Number Check Digit.
+          example: '01120036'
+        payorBankCheckDigit:
+          type: string
+          maxLength: 1
+          description: |
+            PayorBankCheckDigit identifies a digit representing the routing number check digit.  The
+            combination of Payor Bank Routing Number and payor Bank Routing Number Check Digit must be a mod-checked
+            routing number with a valid check digit.
+          example: 5
+        onUs:
+          type: string
+          maxLength: 20
+          description: OnUs identifies data specified by the payor bank. On-Us data usually consists of the payor’s account number,
+            a serial number or transaction code, or both.
+          example: '5558881'
+        itemAmount:
+          type: integer
+          description: Amount identifies the amount of the check.  All amounts fields have two implied decimal points.
+              e.g., 100000 is $1,000.00
+          example: 100000
+        eCEInstitutionItemSequenceNumber:
+          type: string
+          maxLength: 15
+          description: ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
+            Field must contain a numeric value. It cannot be all blanks.
+          example: '24531'
+        documentationTypeIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - A
+            - B
+            - C
+            - D
+            - E
+            - F
+            - G
+            - H
+            - I
+            - J
+            - K
+            - L
+            - M
+          description: |
+            DocumentationTypeIndicator identifies a code that indicates the type of documentation that supports the check
+            record.  This field is superseded by the Cash Letter Documentation Type Indicator in the Cash Letter Header
+            Record for all Defined Values except ‘Z’ Not Same Type. In the case of Defined Value of ‘Z’, the
+            Documentation Type Indicator in this record takes precedent.
+
+            Shall be present when Cash Letter Documentation Type Indicator in the Cash Letter Header Record
+            is Defined Value of ‘Z’.
+
+            * `A` - No image provided, paper provided separately
+            * `B` - No image provided, paper provided separately, image upon request
+            * `C` - Image provided separately, no paper provided
+            * `D` - Image provided separately, no paper provided, image upon request
+            * `E` - Image and paper provided separately
+            * `F` - Image and paper provided separately, image upon request
+            * `G` - Image included, no paper provided
+            * `H` - Image included, no paper provided, image upon request
+            * `I` - Image included, paper provided separately
+            * `J` - Image included, paper provided separately, image upon request
+            * `K` - No image provided, no paper provided
+            * `L` - No image provided, no paper provided, image upon request
+            * `M` - No image provided, Electronic Check provided separately
+          example: 'A'
+        returnAcceptanceIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+            - A
+            - B
+            - C
+            - D
+            - E
+            - F
+          description: |
+            ReturnAcceptanceIndicator is a code that indicates whether the institution that creates the CheckDetail
+            will or will not support electronic return processing.
+
+            * `0` -	Will not accept any electronic information
+            * `1` -	Will accept preliminary return notifications, returns, and final return notifications
+            * `2` -	Will accept preliminary return notifications and returns
+            * `3` -	Will accept preliminary return notifications and final return notifications
+            * `4` -	Will accept returns and final return notifications
+            * `5` -	Will accept preliminary return notifications only
+            * `6` -	Will accept returns only
+            * `7` -	Will accept final return notifications only
+            * `8` -	Will accept preliminary return notifications, returns, final return notifications, and image returns
+            * `9` -	Will accept preliminary return notifications, returns and image returns
+            * `A` -	Will accept preliminary return notifications, final return notifications and image returns
+            * `B` -	Will accept returns, final return notifications and image returns
+            * `C` -	Will accept preliminary return notifications and image returns
+            * `D` -	Will accept returns and image returns
+            * `E` -	Will accept final return notifications and image returns
+            * `F` -	Will accept image returns only
+          example: '1'
+        mICRValidIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            MICRValidIndicator is a code that indicates whether any character in the Magnetic Ink Character Recognition
+            (MICR) property is unreadable, or the OnUs property is missing from the CheckDetail.
+            * `1` - Good read
+            * `2` - Good read, missing field
+            * `3` - Read error encountered
+            * `4` - Missing field and read error encountered
+          example: '1'
+        bOFDIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - Y
+            - N
+            - U
+          description: |
+            BOFDIndicator is a code that indicates whether the ECE institution indicated on the Bundle Header Record (Type 20)
+            is the Bank of First Deposit (BOFD). This field shall be consistent with values contained in the Check Detail
+            Addendum A Record (Type 26) and Check Detail Addendum C Record (Type 28).
+            * `Y` - ECE institution is BOFD
+            * `N` - ECE institution is not BOFD
+            * `U` - ECE institution relationship to BOFD is undetermined
+          example: 'Y'
+        addendumCount:
+          type: integer
+          minimum: 0
+          maximum: 99
+          description: AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of
+            CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number
+            of addendum records associated with this item. The standard supports up to 99 addendum records.
+          example: 1
+        correctionIndicator:
+          type: string
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            CorrectionIndicator identifies whether and how the MICR line was repaired, for fields other than Payor Bank
+            Routing Number and Amount.
+            * `0` - No Repair
+            * `1` - Repaired (form of repair unknown)
+            * `2` - Repaired without Operator intervention
+            * `3` - Repaired with Operator intervention
+            * `4` - Undetermined if repair has been done or not
+          example: '0'
+        archiveTypeIndicator:
+          type: string
+          enum:
+            - A
+            - B
+            - C
+            - D
+            - E
+            - F
+            - G
+            - H
+            - I
+          description: |
+            ArchiveTypeIndicator is a code that indicates the type of archive that supports this CheckDetail.
+            Access method, availability and time-frames shall be defined by clearing arrangements.
+
+            * `A` - Microfilm
+            * `B` - Image
+            * `C` - Paper
+            * `D` - Microfilm and image
+            * `E` - Microfilm and paper
+            * `F` - Image and paper
+            * `G` - Microfilm, image and paper
+            * `H` - Electronic Check Instrument
+            * `I` - None
+          example: 'A'
+        checkDetailAddendumA:
+          $ref: '#/components/schemas/CheckDetailAddendumA'
+        checkDetailAddendumB:
+          $ref: '#/components/schemas/CheckDetailAddendumB'
+        checkDetailAddendumC:
+          $ref: '#/components/schemas/CheckDetailAddendumC'
+        imageViewDetail:
+          $ref: '#/components/schemas/ImageViewDetail'
+        imageViewData:
+          $ref: '#/components/schemas/ImageViewData'
+        imageViewAnalysis:
+          $ref: '#/components/schemas/ImageViewAnalysis'
+    ReturnDetail:
+      properties:
+        id:
+          type: string
+          description: CheckDetail ID
+          example: d1e26288
+        payorBankRoutingNumber:
+          type: string
+          maxLength: 8
+          description: |
+            PayorBankRoutingNumber identifies a number that identifies the institution by or through which the item is
+            payable. Must be a valid routing and transit number issued by the ABA’s Routing Number Registrar. Shall
+            represent the first 8 digits of a 9-digit routing number or 8 numeric digits of a 4 dash 4 routing number.
+            A valid routing number consists of 2 fields: the eight- digit Payor Bank Routing Number  and the
+            one-digit Payor Bank Routing Number Check Digit.
+          example: '01120036'
+        payorBankCheckDigit:
+          type: string
+          maxLength: 1
+          description: |
+            PayorBankCheckDigit identifies a digit representing the routing number check digit.  The
+            combination of Payor Bank Routing Number and payor Bank Routing Number Check Digit must be a mod-checked
+            routing number with a valid check digit.
+          example: 5
+        onUs:
+          type: string
+          maxLength: 20
+          description: OnUs identifies data specified by the payor bank. On-Us data usually consists of the payor’s account number,
+            a serial number or transaction code, or both.
+          example: '5558881'
+        itemAmount:
+          type: integer
+          description: Amount identifies the amount of the check.  All amounts fields have two implied decimal points.
+            e.g., 100000 is $1,000.00
+          example: 100000
+        returnReason:
+          type: string
+          description: ReturnReason is a code that indicates the reason for non-payment.
+        addendumCount:
+          type: integer
+          minimum: 0
+          maximum: 99
+          description: AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of
+            CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number
+            of addendum records associated with this item. The standard supports up to 99 addendum records.
+          example: 1
+        documentationTypeIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - A
+            - B
+            - C
+            - D
+            - E
+            - F
+            - G
+            - H
+            - I
+            - J
+            - K
+            - L
+            - M
+          description: |
+            DocumentationTypeIndicator identifies a code that indicates the type of documentation that supports the check
+            record.  This field is superseded by the Cash Letter Documentation Type Indicator in the Cash Letter Header
+            Record for all Defined Values except ‘Z’ Not Same Type. In the case of Defined Value of ‘Z’, the
+            Documentation Type Indicator in this record takes precedent.
+
+            Shall be present when Cash Letter Documentation Type Indicator in the Cash Letter Header Record
+            is Defined Value of ‘Z’.
+
+            * `A` - No image provided, paper provided separately
+            * `B` - No image provided, paper provided separately, image upon request
+            * `C` - Image provided separately, no paper provided
+            * `D` - Image provided separately, no paper provided, image upon request
+            * `E` - Image and paper provided separately
+            * `F` - Image and paper provided separately, image upon request
+            * `G` - Image included, no paper provided
+            * `H` - Image included, no paper provided, image upon request
+            * `I` - Image included, paper provided separately
+            * `J` - Image included, paper provided separately, image upon request
+            * `K` - No image provided, no paper provided
+            * `L` - No image provided, no paper provided, image upon request
+            * `M` - No image provided, Electronic Check provided separately
+          example: 'A'
+        forwardBundleDate:
+          type: string
+          format: 'date-time'
+          description: ForwardBundleDate represents for electronic check exchange items, the year, month, and day that
+            designates the business date of the original forward bundle. This data is transferred from the BundleHeader
+            BundleBusinessDate.  For items presented in paper cash letters, the year, month, and day that the cash
+            letter was created.
+          example: 2006-01-02T15:04:05Z07:00
+        eCEInstitutionItemSequenceNumber:
+          type: string
+          maxLength: 15
+          description: ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
+            Field must contain a numeric value. It cannot be all blanks.
+          example: '24531'
+        externalProcessingCode:
+          type: string
+          maxLength: 1
+          description: ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited
+            Standards Committee X9. Also known as Position 44.
+          example: '9'
+        returnNotificationIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 1
+            - 2
+          description: |
+            ReturnNotificationIndicator is a code that identifies the type of notification. The
+            CashLetterHeader.CollectionTypeIndicator and the BundleHeader.CollectionTypeIndicator when equal 05 or 06
+            takes precedence over this field.
+
+            * `1` - Preliminary notification
+            * `2` - Final notification
+        archiveTypeIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - A
+            - B
+            - C
+            - D
+            - E
+            - F
+            - G
+            - H
+            - I
+          description: |
+            ArchiveTypeIndicator is a code that indicates the type of archive that supports this CheckDetail.
+            Access method, availability and time-frames shall be defined by clearing arrangements.
+            * `A` - Microfilm
+            * `B` - Image
+            * `C` - Paper
+            * `D` - Microfilm and image
+            * `E` - Microfilm and paper
+            * `F` - Image and paper
+            * `G` - Microfilm, image and paper
+            * `H` - Electronic Check Instrument
+            * `I` - None
+        timesReturned:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            TimesReturned is code used to indicate the number of times the paying bank has returned this item.
+
+            * `0` - The item has been returned an unknown number of times
+            * `1` - The item has been returned once
+            * `2` - The item has been returned twice
+            * `3` - The item has been returned three times
+        returnDetailAddendumA:
+          $ref: '#/components/schemas/ReturnDetailAddendumA'
+        returnDetailAddendumB:
+          $ref: '#/components/schemas/ReturnDetailAddendumB'
+        returnDetailAddendumC:
+          $ref: '#/components/schemas/ReturnDetailAddendumC'
+        returnDetailAddendumD:
+          $ref: '#/components/schemas/ReturnDetailAddendumD'
+        imageViewDetail:
+          $ref: '#/components/schemas/ImageViewDetail'
+        imageViewData:
+          $ref: '#/components/schemas/ImageViewData'
+        imageViewAnalysis:
+          $ref: '#/components/schemas/ImageViewAnalysis'
+    CreditItem:
+      properties:
+        id:
+          type: string
+          description: CreditItem ID
+          example: d1e26288
+        auxiliaryOnUs:
+          type: string
+          maxLength: 15
+          description: AuxiliaryOnUs identifies a code used at the discretion of the creating bank. The handling of
+            dashes and spaces shall be determined between the exchange partners.
+          example: '*'
+        externalProcessingCode:
+          type: string
+          maxLength: 1
+          description: ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited
+            Standards Committee X9. Also known as Position 44.
+          example: '9'
+        postingBankRoutingNumber:
+          type: string
+          maxLength: 9
+          description: PostingBankRoutingNumber is a routing number assigned by the posting bank to identify this credit.
+          example: '231986436'
+        onUs:
+          type: string
+          maxLength: 20
+          description: OnUs identifies data specified by the payor bank. On-Us data usually consists of the payor’s
+            account number, a serial number or transaction code, or both.
+          example: '5558881'
+        itemAmount:
+          type: integer
+          description: Amount identifies the amount of the check.  All amounts fields have two implied decimal points.
+            e.g., 100000 is $1,000.00
+          example: 100000
+        creditItemSequenceNumber:
+          type: string
+          description: CreditItemSequenceNumber identifies a number assigned by the institution that creates the CreditItem.
+          example: '1'
+        documentationTypeIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - A
+            - B
+            - C
+            - D
+            - E
+            - F
+            - G
+            - H
+            - I
+            - J
+            - K
+            - L
+          description: |
+            DocumentationTypeIndicator is a code used to indicate the type of documentation that supports this record.
+            Shall be present when Cash Letter Documentation Type Indicator in the Cash Letter Header Record is Defined
+            Value of ‘Z’.
+
+            * `A` - No image provided, paper provided separately
+            * `B` - No image provided, paper provided separately, image upon request
+            * `C` - Image provided separately, no paper provided
+            * `D` - Image provided separately, no paper provided, image upon request
+            * `E` - Image and paper provided separately
+            * `F` - Image and paper provided separately, image upon request
+            * `G` - Image included, no paper provided
+            * `H` - Image included, no paper provided, image upon request
+            * `I` - Image included, paper provided separately
+            * `J` - Image included, paper provided separately, image upon request
+            * `K` - No image provided, no paper provided
+            * `L` - No image provided, no paper provided, image upon request
+          example: 'A'
+        acccountTypeCode:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            -
+          description: |
+            AccountTypeCode is a code that indicates the type of account to which this CreditItem is associated.
+
+            * `0` - Unknown
+            * `1` - DDA account
+            * `2` - General Ledger account
+            * `3` - Savings account
+            * `4` - Money Market account
+            * `5` - Other Account
+          example: '1'
+        sourceWorkCode:
+          type: string
+          maxLength: 2
+          enum:
+            - 00
+            - 01
+            - 02
+            - 03
+            - 04
+            - 05
+            - 06
+            - 07
+            - 08
+            - 09
+            - 10
+            - 11
+#            - 21
+#            - 22
+#            - 23
+#            - 24
+#            - 25
+#            - 26
+#            - 27
+#            - 28
+#            - 29
+#            - 30
+#            - 31
+#            - 32
+#            - 33
+#            - 34
+#            - 35
+#            - 36
+#            - 37
+#            - 38
+#            - 39
+#            - 40
+#            - 41
+#            - 42
+#            - 43
+#            - 44
+#            - 45
+#            - 46
+#            - 47
+#            - 48
+#            - 49
+#            - 50
+          description: |
+            AccountTypeCode is a code that indicates the type of account to which this CreditItem is associated.
+
+            * `00` - Unknown
+            * `01` - Internal–ATM
+            * `02` - Internal–Branch
+            * `03` - Internal–Other
+            * `04` - External–Bank to Bank (Correspondent)
+            * `05` - External–Business to Bank (Customer)
+            * `06` - External–Business to Bank Remote Capture
+            * `07` - External–Processor to Bank
+            * `08` - External–Bank to Processor
+            * `09` - Lockbox
+            * `10` - International–Internal
+            * `11` - International–External
+            * `21–50` - User Defined
+          example: '01'
+        userField:
+          type: string
+          maxLength: 16
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: "B12345678"
+      required:
+        - PostingBankRoutingNumber
+        - CreditItemSequenceNumbe
+    RoutingNumberSummary:
+      properties:
+        id:
+          type: string
+          description: RoutingNumberSummary ID
+          example: d1e26288
+        cashLetterRoutingNumber:
+          type: string
+          maxLength: 9
+          description: CashLetterRoutingNumber is a number that identifies a given payor bank within a cash letter
+            containing one or more payor banks.
+          example: '231380104'
+        routingNumberTotalAmount:
+          type: integer
+          description: RoutingNumberTotalAmount is the total amount for all Check Detail Records associated with the
+            Payor bank routing number designated in the Routing Number within Cash Letter.
+          example: 10000
+        routingNumberItemCount:
+          type: integer
+          description: RoutingNumberItemCount is the the total number of all Check Detail Records associated with the
+            payor bank routing number designated in the Routing Number within Cash Letter.
+          example: 10
+        userField:
+          type: string
+          maxLength: 24
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: "B1234567891012345"
+      required:
+        - cashLetterRoutingNumber
+    CheckDetailAddendumA:
+      properties:
+        id:
+          type: string
+          description: CheckDetailAddendumA ID
+          example: d1e26288
+        recordNumber:
+          type: integer
+          minimum: 1
+          maximum: 99
+          description: RecordNumber is a number representing the order in which each CheckDetailAddendumA was created.
+            CheckDetailAddendumA shall be in sequential order starting with 1.
+          example: 1
+        returnLocationRoutingNumber:
+          type: string
+          maxLength: 9
+          description: ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns,
+            final return notifications, and preliminary return notifications are sent, usually the BOFD.
+          example: '231486745'
+        bOFDEndorsementDate:
+          type: string
+          format: 'date-time'
+          description: BOFDEndorsementDate is the date of endorsement
+          example: 2006-01-02T15:04:05Z07:00
+        bOFDItemSequenceNumber:
+          type: string
+          maxLength: 15
+          description: BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
+          example: '1'
+        bOFDAccountNumber:
+          type: string
+          maxLength: 18
+          description: BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
+          example: '938383'
+        bOFDBranchCode:
+          type: string
+          maxLength: 5
+          description: BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
+          example: '01'
+        payeeName:
+          type: string
+          maxLength: 15
+          description: PayeeName is the name of the payee from the check.
+          example: 'Payee Name'
+        truncationIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - Y
+            - N
+          description: TruncationIndicator identifies if the institution truncated the original check item.
+          example: 'Y'
+        bOFDConversionIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+          description: |
+            BOFDConversionIndicator is a code that indicates the conversion within the processing institution
+            between original paper check, image and IRD. The indicator is specific to the action of institution that created
+            this record.
+
+            * `0` - Did not convert physical document
+            * `1` - Original paper converted to IRD
+            * `2` - Original paper converted to image
+            * `3` - IRD converted to another IRD
+            * `4` - IRD converted to image of IRD
+            * `5` - Image converted to an IRD
+            * `6` - Image converted to another image (e.g., transcoded)
+            * `7` - Did not convert image (e.g., same as source)
+            * `8` - Undetermined
+          example: '1'
+        bOFDBOFDCorrectionIndicator:
+          type: string
+          maxLength:  1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            BOFDCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
+            creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount.
+            * `0` - No Repair
+            * `1` - Repaired (form of repair unknown)
+            * `2` - Repaired without Operator intervention
+            * `3` - Repaired with Operator intervention
+            * `4` - Undetermined if repair has been done or not
+          example: '1'
+        userField:
+          type: string
+          maxLength: 4
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'Z'
+      required:
+        - recordNumber
+        - returnLocationRoutingNumber
+        - bofdEndorsementDate
+        - bofdItemSequenceNumber
+        - truncationIndicator
+    CheckDetailAddendumB:
+      properties:
+        id:
+          type: string
+          description: CheckDetailAddendumB ID
+          example: d1e26288
+        imageReferenceKeyIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+          description: |
+              ImageReferenceKeyIndicator identifies whether ImageReferenceKeyLength contains a variable value within the
+              allowable range, or contains a defined value and the content is ItemReferenceKey.
+
+              * `0` - ImageReferenceKeyIndicator has Defined Value of 0034 and ImageReferenceKey contains the Image
+              Reference Key.
+              * `1`- ImageReferenceKeyIndicator contains a value other than Value 0034; or ImageReferenceKeyIndicator
+              contains Value 0034, which is not a Defined Value, and the content of ImageReferenceKey has no special
+              significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the
+              ImageReferenceKey is not present.
+          example: '0'
+        microfilmArchiveSequenceNumber:
+          type: string
+          maxLength: 15
+          description: microfilmArchiveSequenceNumber is a number that identifies the item in the microfilm archive system;
+            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+          example: '1'
+        lengthImageReferenceKey:
+          type: string
+          enum:
+            - 0034
+          description: |
+            MicrofilmArchiveSequenceNumber A number that identifies the item in the microfilm archive system;
+            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+
+            * `0034` - ImageReferenceKey contains the ImageReferenceKey (ImageReferenceKeyIndicator is 0).
+            * `0000` - ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
+            * `0001` - 9999: May include Value 0034, and ImageReferenceKey has no special significance to Image Reference
+            Key (ImageReferenceKey is 1).
+        imageReferenceKey:
+          type: string
+          description: |
+            ImageReferenceKey is used to find the image of the item in the image data system.  Size is variable based on lengthImageReferenceKey.
+            The position within the file is variable based on the lengthImageReferenceKey.
+          example: '0'
+        descript:
+          type: string
+          maxLength: 15
+          description: Descript describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
+          example: 'Payment'
+        userField:
+          type: string
+          maxLength: 4
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'ZZZZ'
+      required:
+        - microfilmArchiveSequenceNumber
+    CheckDetailAddendumC:
+      properties:
+        id:
+          type: string
+          description:  CheckDetailAddendumC ID
+          example: d1e26288
+        recordNumber:
+          type: integer
+          minimum: 1
+          maximum: 99
+          description: RecordNumber is a number representing the order in which each CheckDetailAddendumC was created.
+            CheckDetailAddendumA shall be in sequential order starting with 1.
+          example: 1
+        endorsingBankRoutingNumber:
+          type: string
+          maxLength: 9
+          description: EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that
+            endorsed the check.
+          example: '231486745'
+        bOFDEndorsementBusinessDate:
+          type: string
+          format: 'date-time'
+          description: BOFDEndorsementBusinessDate is the date of endorsement.
+          example: 2006-01-02T15:04:05Z07:00
+        endorsingBankSequenceNumber:
+          type: string
+          maxLength: 15
+          description: EndorsingItemSequenceNumber is a number that identifies the item at the endorsing bank.
+          example: '1'
+        truncationIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - Y
+            - N
+          description: TruncationIndicator identifies if the institution truncated the original check item.
+          example: 'Y'
+        endorsingBankConversionIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+          description: |
+            EndorsingBankConversionIndicator is a code that indicates the conversion within the processing institution
+            between original paper check, image and IRD. The indicator is specific to the action institution identified in the
+            EndorsingBankRoutingNumber.
+
+            * `0` - Did not convert physical document
+            * `1` - Original paper converted to IRD
+            * `2` - Original paper converted to image
+            * `3` - IRD converted to another IRD
+            * `4` - IRD converted to image of IRD
+            * `5` - Image converted to an IRD
+            * `6` - Image converted to another image (e.g., transcoded)
+            * `7` - Did not convert image (e.g., same as source)
+            * `8` - Undetermined
+          example: '1'
+        endorsingBankCorrectionIndicator:
+          type: string
+          maxLength:  1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            EndorsingCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
+            creator of this CheckDetailAddendumC Record for fields other than Payor Bank Routing Number and Amount.
+
+            * `0` - No Repair
+            * `1` - Repaired (form of repair unknown)
+            * `2` - Repaired without Operator intervention
+            * `3` - Repaired with Operator intervention
+            * `4` - Undetermined if repair has been done or not
+          example: '1'
+        returnReason:
+          type: string
+          description: ReturnReason is a code that indicates the reason for non-payment.
+        userField:
+          type: string
+          maxLength: 19
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'Z'
+        endorsingBankIdentifier:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+          description: |
+           * `0` - Depository Bank (BOFD) - this value is used when the CheckDetailAddendumC Record reflects the Return
+           * `Processing Bank in lieu of BOFD.
+           * `1` - Other Collecting Bank
+           * `2` - Other Returning Bank
+           * `3` - Payor Bank
+          example: '0'
+      required:
+        - recordNumber
+        - endorsingBankRoutingNumber
+        - bofdEndorsementBusinessDate
+        - endorsingBankItemSequenceNumber
+        - truncationIndicator
+    ImageViewDetail:
+      properties:
+        id:
+          type: string
+          description: ImageViewDetail ID
+          example: d1e26288
+        imageIndicator:
+          type: integer
+          minimum: 0
+          maximum: 3
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+          description: |
+            ImageIndicator is a code that indicates the presence and disposition of an image view conveyed in the related
+            ImageViewData.  When an image view is not present (0) then certain conditional fields in this ImageViewDetail and
+            the related ImageViewData shall not be present and will be filled with blank space.
+
+            * `0` - Image view not present
+            * `1` - Image view present, actual check
+            * `2` - Image view present, not actual check
+            * `3` - Image view present, unable to determine if value is 1 or 2
+          example: 1
+        imageCreatorRoutingNumber:
+          type: string
+          maxLength: 9
+          description: ImageCreatorRoutingNumber identifies the financial institution that created the image view.
+          example: '2139876354'
+        imageCreatorDate:
+          type: string
+          format: 'date-time'
+          description: |
+            ImageCreatorDate is the date assigned by the image creator for the image view conveyed in the related ImageData.
+          example: 2006-01-02T15:04:05Z07:00
+        imageViewFormatIndicator:
+          type: string
+          maxLength: 2
+          enum:
+            - 00
+            - 01
+            - 20
+            - 22
+            - 23
+          description: |
+            ImageViewFormatIndicator is a code that identifies the type of image format used in the related
+            ImageViewData.ImageData. The image format type is also commonly specified by reference to the file extension
+            used when image data is saved as an image file.
+
+            Agreement not required:
+            * `00` - TIFF 6; Extension: TIF
+            Agreement required:
+            * `01` - IOCA FS 11; Extension: ICA
+            * `20` - PNG (Portable Network Graphics); Extension: PNG ‘21’	JFIF (JPEG File Interchange Format); Extension: JPG
+            * `22` - SPIFF (Still Picture Interchange File Format) (ITU-T Rec. T.84 Annex F); Extension: SPF
+            * `23` - JBIG data stream (ITU-T Rec. T.82/ISO/IEC 11544:1993); Extension: JBG ‘24’	JPEG 2000 (ISO/IEC 15444-1:2000); Extension: JP2
+          example: '00'
+        imageViewCompressionAlgorithm:
+          type: string
+          maxLength: 2
+          enum:
+            - 00
+            - 01
+            - 02
+            - 20
+            - 21
+            - 22
+          description: |
+            ImageViewCompressionAlgorithm is a code that identifies the algorithm or method used to compress the Image Data
+            in the related ImageViewData.ImageData.
+
+            Agreement not required:
+            * `00` - Group 4 facsimile compression (ITU-T Rec. T.563/CCITT Rec. T.6)
+            Agreement required:
+            * `01` - JPEG Baseline (JPEG Interchange Format) (ITU-T Rec. T.81/ISO/IEC 10918)
+            * `02` - ABIC
+            * `21` - PNG (Portable Network Graphics)
+            * `22` - JBIG (ITU-T Rec. T.82/ISO/IEC 11544:1993)
+            * `23` - JPEG 2000 (ISO/IEC 15444–1:2000)
+          example: '02'
+        viewSideIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+          description: |
+            ViewSideIndicator is a code that indicates the image view conveyed in the related ImageViewData.
+            An image view may be a full view of the item (i.e., the entire full face of the document)
+            or may be a partial view (snippet) as determined by viewDescriptor.
+
+            * `0` - Front image view
+            * `1` - Rear image view
+          example: '0'
+        viewDescriptor:
+          type: string
+          maxLength: 2
+          enum:
+            - 00
+            - 01
+            - 02
+            - 03
+            - 04
+            - 05
+            - 06
+            - 07
+            - 08
+            - 09
+            - 10
+            - 11
+            - 12
+            - 13
+#            - 14 - 99
+          description: |
+            ViewDescriptor is a code that indicates the nature of the image view based on ImageViewData.ImageData.
+
+            * `00` -  Full view
+            * `01` -  Partial view–unspecified Area of Interest
+            * `02` -  Partial view–date Area of Interest
+            * `03` -  Partial view–payee Area of Interest
+            * `04` -  Partial view–convenience amount Area of Interest
+            * `05` -  Partial view–amount in words (legal amount) Area of Interest
+            * `06` -  Partial view–signature Area(s) of Interest
+            * `07` -  Partial view–payor name and address Area of Interest
+            * `08` -  Partial view–MICR line Area of Interest
+            * `09` -  Partial view–memo line Area of Interest
+            * `10` -  Partial view–payor bank name and address Area of Interest
+            * `11` -  Partial view–payee endorsement Area of Interest
+            * `12` -  Partial view–Bank Of First Deposit (BOFD) endorsement Area of Interest
+            * `13` -  Partial view–transit endorsement Area of Interest
+            * `14 - 99` -  Reserved for X9
+        digitalSignatureIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+          description: |
+            DigitalSignatureIndicator is a code that indicates the presence or absence of a digital signature for the image
+            view contained in ImageViewData.ImageData. If present, the Digital Signature is conveyed in the related DigitalSignature.
+
+            * `0` - Digital Signature is not present
+            * `1` - Digital Signature is present
+          example:  '0'
+        digitalSignatureMethod:
+          type: string
+          maxLength: 2
+          enum:
+            - 00
+            - 01
+            - 02
+            - 03
+            - 04
+#            - 05 - 99
+          description: |
+            DigitalSignatureMethod is a code that identifies the cryptographic algorithm used to generate and validate the
+            Digital Signature in ImageViewData.DigitalSignature.
+            * `00` - Digital Signature Algorithm (DSA) with SHA1 (ANSI X9.30)
+            * `01` - RSA with MD5 (ANSI X9.31)
+            * `02` - RSA with MDC2 (ANSI X9.31)
+            * `03` - RSA with SHA1 (ANSI X9.31)
+            * `04` - Elliptic Curve DSA (ECDSA) with SHA1 (ANSI X9.62)
+            * `05 - 99` - Reserved for emerging cryptographic algorithms.
+          example: '00'
+        securityKeySize:
+          type: integer
+          minimum: 0
+          maximum: 99999
+          description: SecurityKeySize is the length in bits of the cryptographic algorithm key used to create the Digital Signature.
+            Valid values 0–99999
+          example: 1
+        protectedDataStart:
+          type: integer
+          minimum: 0
+          maximum: 9999999
+          description: ProtectedDataStart is a number that represents the offset in bytes from the first byte (counted as byte 1)
+            of the image data in ImageViewData.ImageData to the first byte of the image data protected by the
+            digital signature.
+
+            Valid values -
+            0000000 - Digital Signature is applied to entire image data
+            000001–9999999 - Valid offset values
+          example: 0
+        protectedDataLength:
+          type: int
+          minimum: 0
+          maximum: 9999999
+          description: ProtectedDataLength is number of contiguous bytes of image data in the related ImageViewData.ImageData
+            protected by the digital signature starting with the byte indicated by the value of the ProtectedDataStart in
+            this ImageViewDetail. The ProtectedDataLength value shall not exceed the ImageViewData.ImageDataLength.
+
+            Valid values -
+            0000000 - Digital Signature is applied to entire image data
+            000001–9999999 - Valid length values
+          example: 0
+        imageRecreateIndicator:
+          type: integer
+          enum:
+            - 0
+            - 1
+          description: |
+            ImageRecreateIndicator is a code that indicates whether the sender has the ability to recreate the image view
+            conveyed in the related ImageViewData.ImageData.
+
+            * `0` - Sender can recreate the image view for the duration of the agreed upon retention time frames.
+            * `1` - Sender cannot recreate image view.
+          example: 0
+        userField:
+          type: string
+          maxLength: 8
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'Z'
+        overrideIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            -
+            - 0
+            - 1
+            - A
+            - B
+            - C
+            - D
+            - E
+            - F
+            - G
+            - H
+            - I
+            - J
+            - K
+            - L
+            - M
+            - N
+            - O
+          description: |
+            OverrideIndicator is a code that indicates to a receiving exchange partner that this image view has a detected
+            image test failure that cannot be corrected and that this view shall be accepted regardless of any image test
+            failures.
+
+            * ` ` -  blank/space indicates no observed image test failure present
+            * `0` -  No override information for this view or not applicable
+            * `1` -  Imperfect image
+            * `A` -  IQA Fail–Image view reviewed and deemed usable—no alternate format
+            * `B` -  IQA Fail–Image view reviewed and deemed usable—alternate format included in this file
+            * `C` -  IQA Fail–Image view reviewed and deemed usable–alternate format included in this file and original document available
+            * `D` -  IQA Fail–Image view reviewed and deemed usable–alternate format available
+            * `E` -  IQA Fail–Image view reviewed and deemed usable–original document available
+            * `F` -  IQA Fail–Image view reviewed and deemed usable–original document and alternate format available
+            * `G` -  IQA Fail–Image view reviewed and deemed unusable–no alternate format
+            * `H` -  IQA Fail–Image view reviewed and deemed unusable–alternate format included in this file
+            * `I` -  IQA Fail–Image view reviewed and deemed unusable–alternate format included in this file and original document available
+            * `J` -  IQA Fail–Image view reviewed and deemed unusable–alternate format available
+            * `K` -  IQA Fail–Image view reviewed and deemed unusable–original document available
+            * `L` -  IQA Fail–Image view reviewed and deemed unusable–original document and alternate format available
+            * `M` -  IQA Fail–Image view not reviewed–no alternate format
+            * `N` -  IQA Fail–Image view not reviewed–alternate format included in this file
+            * `O` -  IQA Fail–Image view not reviewed–alternate format included in this file and original
+          example: '0'
+    ImageViewData:
+      properties:
+        id:
+          type: string
+          description: ImageViewData ID
+          example: 'd1e26288'
+        eCEInstitutionRoutingNumber:
+          type: string
+          maxLength: 9
+          description: ECEInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the
+            bundle header.  This number is imported from the Bundle Header Record (Clause 9.4) associated with the image view conveyed
+            in this Image View Data Property.
+          example: '2318769876'
+        bundleBusinessDate:
+          type: string
+          format: 'date-time'
+          description: BundleBusinessDate is the business date of the bundle.
+          example: 2006-01-02T15:04:05Z07:00
+        cycleNumber:
+          type: string
+          maxLength: 2
+          description: CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which
+            the bundle is created.
+          example: '1'
+        ivData.ECEInstitutionItemSequenceNumber:
+          type: string
+          maxLength: 15
+          description: ECEInstitutionItemSequenceNumber is a number assigned by the institution that creates the
+            CheckDetail or Return.  This number is imported from the CheckDetail.ECEInstitutionItemSequenceNumber or
+            Return.ECEInstitutionItemSequenceNumber associated with the image view conveyed in this Image View Data Record.
+            The ECE institution must construct the sequence number to guarantee uniqueness for a given routing number,
+            business day, and cycle number. Must contain a numeric value.
+          example: '1'
+        ivData.SecurityOriginatorName:
+          type: string
+          maxLength: 16
+          description: SecurityOriginatorName is a unique name that creates the Digital Signature for data to be exchanged.
+            Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          example: 'Name'
+        ivData.SecurityAuthenticatorName:
+          type: string
+          maxLength: 16
+          description: SecurityAuthenticatorName is the unique name that performs authentication on received data.
+            Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          example: 'Name'
+        ivData.SecurityKeyName:
+          type: string
+          maxLength: 16
+          description: SecurityKeyName is a name or character sequence used by the signer (originator) to communicate a
+            key identifierto the recipient (authenticator) so the recipient can obtain the key needed to validate the
+            signature. The name is typically used as an identifier related to the key pair used to sign the image. The
+            name is mutually known to the security originator and the security authenticator and is unique to this
+            relationship.
+            Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          example: 'SECURE'
+        ivData.ClippingOrigin:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            ClippingOrigin is a code that defines the corner of the conveyed image view that is taken as the
+            reference point for the clipping coordinates. Top, bottom, left, and right references apply to a view that
+            presents a visually correct orientation. When clipping information is present, the nature of the Area of
+            Interest defined by the clipping rectangle is determined by the value of the ImageViewDetail.ViewDescriptor.
+            Primary front and rear views shall only have a Defined Value of 0.  Can be blank.
+
+            * `0` - Clipping information is not present–full view present
+            * `1` - Clipping origin is top left corner of image view
+            * `2` - Clipping origin is top right corner of image view
+            * `3` - Clipping origin is bottom right corner of image view
+            * `4` - Clipping origin is bottom left corner of image view
+          example: 1
+        ivData.ClippingCoordinateH1:
+          type: string
+          maxLength: 4
+          description: ClippingCoordinateH1 is a number that represents the horizontal offset in pixels from the
+            clipping origin to the nearest vertical side of the clipping rectangle. The clipping coordinates
+            (h1, h2, v1, v2) convey the clipping rectangle’s offsets in both horizontal (h) and vertical (v)
+            directions. The offset values collectively establish the boundary sides of the clipping rectangle. Pixels
+            on the boundary of the clipping rectangle are included in the selected array of pixels. That is, the first
+            pixel of the selected array is at offset (h1, v1) and the last pixel of the selected array is at offset
+            (h2, v2). The corner pixel at the origin of the image view is assumed to have the offset value (0, 0).
+            Shall be present if Image View Data.ClippingOrigin is present and non-zero.
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+            Valid values - 0000–9999
+          example: '0001'
+        ivData.ClippingCoordinateH2:
+          type: string
+          maxLength: 4
+          description: ClippingCoordinateH2 is a number that represents the horizontal offset in pixels from the
+            clipping origin to the furthermost vertical side of the clipping rectangle.
+            Shall be present if Image View Data.ClippingOrigin is present and non-zero.
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+            Valid values - 0000–9999
+          example: '0001'
+        ivData.ClippingCoordinateV1:
+          type: string
+          maxLength: 4
+          description: ClippingCoordinateV1 is a number that represents the vertical offset in pixels from the
+           clipping origin to the nearest horizontal side of the clipping rectangle.
+           Shall be present if Image View Data.ClippingOrigin is present and non-zero.
+           Shall not be present when ImageViewDetail.ImageIndicator is 0.
+           Valid values - 0000–9999
+          example: '0001'
+        ivData.ClippingCoordinateV2:
+          type: string
+          maxLength: 4
+          description: ClippingCoordinateV2 is number that represents the vertical offset in pixels from the
+            clipping origin to the furthermost horizontal side of the clipping rectangle.
+            Shall be present if Image View Data.ClippingOrigin is present and non-zero.
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+            Valid values - 0000–9999
+          example: '0001'
+        ivData.LengthImageReferenceKey:
+          type: string
+          maxLength: 4
+          description: LengthImageReferenceKey is the number of characters in the ImageViewData.ImageReferenceKey.
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+            Valid values -
+            0000	ImageReferenceKey is not present
+            0001–9999  Valid when ImageReferenceKey is present
+          example: '0001'
+        ivData.ImageReferenceKey:
+          type: string
+          description: ImageReferenceKey is assigned by the ECE institution that creates the CheckDetail or Return, and the related
+           Image View Records. This designator, when used, shall uniquely identify the item image to the ECE institution.
+           This designator is a special key with significance to the creating institution. It is intended to be used to
+           locate within an archive the unique image associated with the item. The designator could be a full access path
+           and name that would allow direct look up and access to the image, for example a URL. This shall match
+           CheckDetailAddendumB.ImageReferenceKey, or ReturnAddendumCImageReferenceKey Record, if used.
+           Valid size - 0 – 9999
+          example: '0'
+        ivData.LengthDigitalSignature:
+          type: string
+          maxLength: 4
+          description: LengthDigitalSignature is the number of bytes in the Image View Data.DigitalSignature.
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          example: '0    '
+        ivData.DigitalSignature:
+          type: string
+          description: DigitalSignature is created by applying the cryptographic algorithm and private/secret key
+            against the data to be protected. The Digital Signature provides user authentication and data integrity.
+            Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
+            Shall not be present when ImageViewDetail.ImageIndicator is 0.
+            Valid size - 0-99999
+          example: '0101'
+        ivData.LengthImageData:
+          type: string
+          maxLength: 4
+          description: LengthImageData is the number of bytes in the ImageViewData.ImageData.
+           Shall be present when ImageViewDetail.ImageIndicator is NOT 0
+           Valid values - 0000001–99999999
+          example: '0000001'
+        ivData.ImageData:
+          type: string
+          description: ImageData contains the image view. The Image Data generally consists of an image header and the
+            image raster data. The image header provides information that is required to interpret the image raster
+            data. The image raster data contains the scanned image of the physical item in raster (line by line) format.
+            Each scan line comprises a set of concatenated pixels. The image comprises a set of scan lines. The image
+            raster data is typically compressed to reduce the number of bytes needed to transmit and store the image.
+            The header/image format type is defined by the ImageViewDetail.ImageViewFormatIndicator . The syntax and
+            semantics of the image header/image format are understood by referring to the appropriate image format
+            specification. The compression scheme used to compress the image raster data is specified in the
+            ImageViewCompressionAlgorithmIdentifier and in the image header portion of the Image Data or by
+            association with the selected image format.
+            Shall be present when ImageViewDetail.ImageIndicator Record is NOT 0.
+            Valid size - 0-9999999
+          example: '0101'
+    ImageViewAnalysis:
+      properties:
+        id:
+          type: string
+          description: ImageViewAnalysis ID
+          example: 'd1e26288'
+        globalImageQuality:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            GlobalImageQuality is a code that indicates whether the image view was tested for any of the conditions related
+            to image quality defined in the Image Quality Information.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
+        globalImageUsability:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            GlobalImageUsability is a code that indicates whether the image view was tested for any of the conditions
+            related to image usability defined in the Image Usability Information.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
+        imagingBankSpecificTest:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            ImagingBankSpecificTest designates the capture institution may be able to perform specific tests that can
+            indicate a potentially problematic image view caused by conditions other than those listed in the Image Quality
+            and Image Usability Information fields. By mutual agreement, clearing partners can use the UserField to report
+            the presence or absence of additional image conditions found through tests that are particular to the specific
+            imaging institution. The meaning and interpretation of the User Field data must be understood and agreed upon
+            between participants.
+
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
+        partialImage:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            PartialImage is a code that indicates if only a portion of the image view is represented digitally while the
+            other portion is suspected to be missing or corrupt.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
+        excessiveImageSkew:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            ExcessiveImageSkew is a code that indicates if the image view skew exceeds an acceptable value. This value is
+            specific to the imaging institution’s own defined requirements and/or constraints.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
+        piggybackImage:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            PiggybackImage is a code that indicates if a “piggyback” condition has been detected. With a “piggyback”
+            condition, the intended image view may be extended, obscured, or replaced by image(s) of additional document(s).
+            A piggyback occurs when two or more documents are fed together and captured as one document when only a single
+            document should have been fed and captured.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
+        tooLightOrTooDark:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            TooLightOrTooDark is a code that indicates if the image view is too light or too dark. The value is specific to
+            the imaging institution’s own defined requirements and/or constraints.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
+          example: '0'
+        streaksAndOrBands:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              StreaksAndOrBands is a A code that indicates if the image view is likely corrupted due to streaks and/or bands.
+              Streaks and bands can be caused by such problems as dirt, dust, ink, or debris on a lens or in the optical path,
+              and failures in the imaging equipment scanner.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        belowMinimumImageSize:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              BelowMinimumImageSize is a code that indicates if the size of the compressed image view is below an acceptable
+              value. The value is specific to the imaging institution’s own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        exceedsMaximumImageSize:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              ExceedsMaximumImageSize is a code that indicates if the size of the compressed image view is above an
+              acceptable value. The value is specific to the imaging institution’s own defined requirements and/or
+              constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        imageEnabledPOD:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              ImageEnabledPOD is a code that indicates if the image view was used within an image-enabled POD
+              (Proof of Deposit) application.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        sourceDocumentBad:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              SourceDocumentBad is a code that indicates if it is possible to obtain a better image from the source document
+              when it is known that the current image of the document is unusable.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        dateUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              DateUsability is a code that indicates if the date Area of Interest is usable and readable from the image. The
+              definition of the Area of Interest for image usability testing purposes is specific to the imaging institution's
+              own defined requirements and/or constraint
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        payeeUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              PayeeUsability is a code that indicates if the payee name Area of Interest is usable and readable from the
+              image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging
+              institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        convenienceAmountUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              AmountInWordsUsability is a code that indicates if the amount in words (legal amount) Area of Interest is usable
+              and readable from the image. The definition of the Area of Interest for image usability testing purposes is
+              specific to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        amountInWordsUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              SignatureUsability is a code that indicates if the signature Area of Interest is usable and readable from the
+              image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging
+              institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        signatureUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        payorNameAddressUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              PayorNameAddressUsability is a code that indicates if the payor name and address Area of Interest is usable and
+              readable from the image. The definition of the Area of Interest for image usability testing purposes is specific
+              to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        mICRLineUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              MICRLineUsability is a code that indicates if the MICR line Area of Interest is usable and readable from the
+              image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging
+              institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        memoLineUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description:
+              MemoLineUsability is code that indicates if the memo line Area of Interest is usable and readable from the
+              image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging
+              institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        payorBankNameAddressUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              PayorBankNameAddressUsability is a code that indicates if the payor bank name and address Area of Interest is
+              usable and readable from the image. The definition of the Area of Interest for image usability testing purposes
+              is specific to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        payeeEndorsementUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              PayeeEndorsementUsability is a code that indicates if the payee endorsement Area of Interest is usable and
+              readable from the image. The definition of the Area of Interest for image usability testing purposes is specific
+              to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        bOFDEndorsementUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              BOFDEndorsementUsability is a code that indicates if the Bank of First Deposit (BOFD) endorsement Area of
+              Interest is usable and readable from the image. The definition of the Area of Interest for image usability
+              testing purposes is specific to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        transitEndorsementUsability:
+            type: string
+            maxLength: 1
+            enum:
+              - 0
+              - 1
+              - 2
+            description: |
+              TransitEndorsementUsability is a code that indicates if the transit endorsement Area of Interest is usable and
+              readable from the image. The definition of the Area of Interest for image usability testing purposes is specific
+              to the imaging institution's own defined requirements and/or constraints.
+
+              * `0` -  The image was not tested for any of the image quality conditions
+              * `1` -  The image was tested and one or more image quality conditions were reported
+              * `2` -  The image was tested and no image quality conditions were reported
+            example: '0'
+        userField:
+            type: string
+            maxLength: 20
+            description: UserField identifies a field used at the discretion of users of the standard.
+            example: 'ZZZZZ'
+    ReturnDetailAddendumA:
+      properties:
+        id:
+          type: string
+          description: ReturnDetailAddendumA ID
+          example: d1e26288
+        recordNumber:
+          type: integer
+          minimum: 1
+          maximum: 9
+          description: RecordNumber is a number representing the order in which each ReturnDetailAddendumA was created.
+            ReturnDetailAddendumA shall be in sequential order starting with 1.
+          example: 1
+        returnLocationRoutingNumber:
+          type: string
+          maxLength: 9
+          description: ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns,
+            final return notifications, and preliminary return notifications are sent, usually the BOFD.
+          example: '231486745'
+        bOFDEndorsementDate:
+          type: string
+          format: 'date-time'
+          description: BOFDEndorsementDate is the date of endorsement
+          example: 2006-01-02T15:04:05Z07:00
+        bOFDItemSequenceNumber:
+          type: string
+          maxLength: 15
+          description: BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
+          example: '1'
+        bOFDAccountNumber:
+          type: string
+          maxLength: 18
+          description: BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
+          example: '938383'
+        bOFDBranchCode:
+          type: string
+          maxLength: 5
+          description: BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
+          example: '01'
+        payeeName:
+          type: string
+          maxLength: 15
+          description: PayeeName is the name of the payee from the check.
+          example: 'Payee Name'
+        truncationIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - Y
+            - N
+          description: TruncationIndicator identifies if the institution truncated the original check item.
+          example: 'Y'
+        bOFDConversionIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+          description: |
+            BOFDConversionIndicator is a code that indicates the conversion within the processing institution
+            between original paper check, image and IRD. The indicator is specific to the action of institution that created
+            this record.
+
+            * `0` - Did not convert physical document
+            * `1` - Original paper converted to IRD
+            * `2` - Original paper converted to image
+            * `3` - IRD converted to another IRD
+            * `4` - IRD converted to image of IRD
+            * `5` - Image converted to an IRD
+            * `6` - Image converted to another image (e.g., transcoded)
+            * `7` - Did not convert image (e.g., same as source)
+            * `8` - Undetermined
+          example: '1'
+        bOFDBOFDCorrectionIndicator:
+          type: string
+          maxLength:  1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            BOFDCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
+            creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount.
+            * `0` - No Repair
+            * `1` - Repaired (form of repair unknown)
+            * `2` - Repaired without Operator intervention
+            * `3` - Repaired with Operator intervention
+            * `4` - Undetermined if repair has been done or not
+          example: '1'
+        userField:
+          type: string
+          maxLength: 1
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'Z'
+      required:
+        - recordNumber
+        - returnLocationRoutingNumber
+        - bofdEndorsementDate
+        - bofdItemSequenceNumber
+        - truncationIndicator
+    ReturnDetailAddendumB:
+      properties:
+        id:
+          type: string
+          description: ReturnDetailAddendumB ID
+          example: d1e26288
+        payorBankName:
+          type: string
+          maxLength: 18
+          description: PayorBankName is short name of the institution by or through which the item is payable.
+          example: 'Bank Short Name'
+        auxiliaryOnUs:
+          type: string
+          maxLength: 15
+          description: AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+          example: '012349'
+        payorBankSequenceNumber:
+          type: string
+          maxLength: 15
+          description: PayorBankSequenceNumber is a number that identifies the item at the payor bank.
+          example: '1'
+        payorBankBusinessDate:
+          type: string
+          format: 'date-time'
+          description: PayorBankBusinessDate is the year, month, and day the payor bank processed the Return Record.
+          example: 2006-01-02T15:04:05Z07:00
+        payorAccountName:
+          type: string
+          maxLength: 22
+          description: PayorAccountName is the account name from payor bank records.
+          example: 'Account Name'
+      required:
+        - PayorBankSequenceNumber
+        - PayorBankBusinessDate
+    ReturnDetailAddendumC:
+      properties:
+        id:
+          type: string
+          description:  ReturnDetailAddendumC ID
+          example: d1e26288
+        imageReferenceKeyIndicator:
+          type: string
+          enum:
+            - 0
+            - 1
+          description: |
+            ImageReferenceKeyIndicator identifies whether ImageReferenceKeyLength contains a variable value within the
+            allowable range, or contains a defined value and the content is ItemReferenceKey.
+
+            * `0` - ImageReferenceKeyIndicator has Defined Value of 0034 and ImageReferenceKey contains the Image
+            Reference Key.
+            * `1`- ImageReferenceKeyIndicator contains a value other than Value 0034; or ImageReferenceKeyIndicator
+            contains Value 0034, which is not a Defined Value, and the content of ImageReferenceKey has no special
+            significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the
+            ImageReferenceKey is not present.
+        microfilmArchiveSequenceNumber:
+          type: string
+          maxLength: 15
+          description: microfilmArchiveSequenceNumber is a number that identifies the item in the microfilm archive system;
+            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+          example: '1'
+        lengthImageReferenceKey:
+          type: string
+          enum:
+            - 0034
+          description: |
+            MicrofilmArchiveSequenceNumber A number that identifies the item in the microfilm archive system;
+            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+
+            * `0034` - ImageReferenceKey contains the ImageReferenceKey (ImageReferenceKeyIndicator is 0).
+            * `0000` - ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
+            * `0001` - 9999: May include Value 0034, and ImageReferenceKey has no special significance to Image Reference
+            Key (ImageReferenceKey is 1).
+        imageReferenceKey:
+          type: string
+          description: |
+            ImageReferenceKey is used to find the image of the item in the image data system.  Size is variable based on lengthImageReferenceKey.
+            The position within the file is variable based on the lengthImageReferenceKey.
+          example: '0'
+        descript:
+          type: string
+          maxLength: 15
+          description: Descript describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
+          example: 'Payment'
+        userField:
+          type: string
+          maxLength: 4
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'ZZZZ'
+    ReturnDetailAddendumD:
+      properties:
+        id:
+          type: string
+          description:  ReturnDetailAddendumD ID
+          example: d1e26288
+        recordNumber:
+          type: string
+          minimum: 1
+          maximum: 99
+          description: |
+            RecordNumber is a number representing the order in which each ReturnDetailAddendumD was created.
+            ReturnDetailAddendumD shall be in sequential order starting with 1.  Maximum 99.
+        endorsingBankRoutingNumber:
+          type: string
+          maxLength: 9
+          description: EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that
+            endorsed the check.
+          example: '231486745'
+        bOFDEndorsementBusinessDate:
+          type: string
+          format: 'date-time'
+          description: BOFDEndorsementBusinessDate is the date of endorsement
+          example: 2006-01-02T15:04:05Z07:00
+        endorsingBankSequenceNumber:
+          type: string
+          maxLength: 15
+          description: EndorsingItemSequenceNumber is a number that identifies the item at the endorsing bank.
+          example: '1'
+        truncationIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - Y
+            - N
+          description: TruncationIndicator identifies if the institution truncated the original check item.
+          example: 'Y'
+        endorsingBankConversionIndicator:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+          description: |
+            EndorsingBankConversionIndicator is a code that indicates the conversion within the processing institution
+            between original paper check, image and IRD. The indicator is specific to the action institution identified in the
+            EndorsingBankRoutingNumber.
+
+            * `0` - Did not convert physical document
+            * `1` - Original paper converted to IRD
+            * `2` - Original paper converted to image
+            * `3` - IRD converted to another IRD
+            * `4` - IRD converted to image of IRD
+            * `5` - Image converted to an IRD
+            * `6` - Image converted to another image (e.g., transcoded)
+            * `7` - Did not convert image (e.g., same as source)
+            * `8` - Undetermined
+          example: '1'
+        endorsingBankCorrectionIndicator:
+          type: string
+          maxLength:  1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+          description: |
+            EndorsingCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
+            creator of this CheckDetailAddendumC Record for fields other than Payor Bank Routing Number and Amount.
+
+            * `0` - No Repair
+            * `1` - Repaired (form of repair unknown)
+            * `2` - Repaired without Operator intervention
+            * `3` - Repaired with Operator intervention
+            * `4` - Undetermined if repair has been done or not
+          example: '1'
+        returnReason:
+          type: string
+          description: ReturnReason is a code that indicates the reason for non-payment.
+        userField:
+          type: string
+          maxLength: 19
+          description: UserField identifies a field used at the discretion of users of the standard.
+          example: 'Z'
+        endorsingBankIdentifier:
+          type: string
+          maxLength: 1
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+          description: |
+            * `0` - Depository Bank (BOFD) - this value is used when the CheckDetailAddendumC Record reflects the Return
+            * `Processing Bank in lieu of BOFD.
+            * `1` - Other Collecting Bank
+            * `2` - Other Returning Bank
+            * `3` - Payor Bank
+          example: '0'
+      required:
+        - endorsingBankRoutingNumber
+        - bOFDEndorsementBusinessDate
+        - endorsingBankItemSequenceNumber
+        - truncationIndicator
+    Error:
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: An error message describing the problem intended for humans.
+          example: Validation error(s) present.

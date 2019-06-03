@@ -2,7 +2,7 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package x9
+package imagecashletter
 
 import (
 	"bufio"
@@ -76,8 +76,8 @@ func NewReader(r io.Reader) *Reader {
 	}
 }
 
-// Read reads each line of the X9file and defines which parser to use based
-// on the first character of each line. It also enforces X9 formatting rules and returns
+// Read reads each line of the imagecashletter file and defines which parser to use based
+// on the first character of each line. It also enforces imagecashletter formatting rules and returns
 // the appropriate error if issues are found.  It supports EBCDIC and ASCII
 func (r *Reader) Read() (File, error) {
 	r.lineNum = 0
@@ -88,7 +88,6 @@ func (r *Reader) Read() (File, error) {
 
 		lineLength := len(line)
 
-		// ToDo: Adjust below stump code
 		if lineLength < 80 {
 			msg := fmt.Sprintf(msgRecordLength, lineLength)
 			err := &FileError{FieldName: "RecordLength", Value: strconv.Itoa(lineLength), Msg: msg}
