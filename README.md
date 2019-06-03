@@ -8,7 +8,7 @@ moov-io/x9
 
 X9’s Specifications for ICL (Image Cash ledger) to provide Check 21 services
 
-Package `github.com/moov-io/x9` implements a file reader and writer for parsing [x9](https://en.wikipedia.org/wiki/Check_21_Act) files.
+Package `github.com/moov-io/x9` implements a file reader and writer written in Go along with a HTTP API for creating, parsing and validating [x9](https://en.wikipedia.org/wiki/Check_21_Act) files.
 
 Docs: [docs.moov.io](http://docs.moov.io/en/latest/) | [api docs](https://api.moov.io/)
 
@@ -21,18 +21,21 @@ x9 is under active development, and should not be used in Production.  Please st
 	* Bundles
 	* Check Detail
 	* Return Detail
-	* Image Views
+    * Image Views
 
 * Future Development
-    * Add additional property validations as necessary based on testing
-    * Add User Record Functionality
-    * Benchmarking and Profiling Tests
+   * Add additional property validations as necessary based on testing
+   * Add User Record Functionality
+   * Benchmarking and Profiling Tests
 
-## Project Roadmap
-* Please open an issue with a valid test file.
-* Review the project issues for more detailed information
+## Project Road Map
+   * Please open an issue with a valid test file.
+   * Review the project issues for more detailed information
 
-## Usage and tests
+## Usage
+
+The ACH project implements a Go library for creating, parsing and validating [x9](https://en.wikipedia.org/wiki/Check_21_Act) files.
+
 The following is a high level example of reading and writing an X9 file. 
 
 ### Read a file
