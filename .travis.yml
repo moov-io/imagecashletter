@@ -2,7 +2,7 @@ language: go
 sudo: false
 env:
   matrix:
-    - GO111MODULE=auto
+    - GO111MODULE=on
 matrix:
   include:
     - os: linux
