@@ -2,7 +2,7 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package x9
+package imagecashletter
 
 import (
 	"fmt"
@@ -10,8 +10,6 @@ import (
 	"strings"
 	"time"
 )
-
-// ToDo: Handle inserted length field (variable length) Big Endian and Little Endian format
 
 // Errors specific to a CheckDetailAddendumC Record
 

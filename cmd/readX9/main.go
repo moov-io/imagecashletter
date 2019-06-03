@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/moov-io/x9"
+	"github.com/moov-io/imagecashletter"
 	"log"
 	"os"
 	"runtime/pprof"
@@ -38,7 +38,7 @@ func main() {
 		log.Panicf("Can not open file: %s: \n", err)
 	}
 
-	r := x9.NewReader(f)
+	r := imagecashletter.NewReader(f)
 	x9File, err := r.Read()
 	if err != nil {
 		fmt.Printf("Issue reading file: %+v \n", err)

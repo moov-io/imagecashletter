@@ -1,4 +1,4 @@
-package x9
+package imagecashletter
 
 import (
 	"testing"

@@ -1,4 +1,4 @@
-module github.com/moov-io/x9
+module github.com/moov-io/imagecashletter
 
 go 1.12
 

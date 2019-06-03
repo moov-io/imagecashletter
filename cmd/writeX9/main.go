@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/moov-io/x9"
+	"github.com/moov-io/imagecashletter"
 	"log"
 	"os"
 	"path/filepath"
@@ -53,7 +53,7 @@ func write(path string) {
 	}
 
 	// To create a file
-	fh := x9.NewFileHeader()
+	fh := imagecashletter.NewFileHeader()
 	fh.StandardLevel = "35"
 	fh.TestFileIndicator = "T"
 	fh.ImmediateDestination = "231380104"
@@ -68,7 +68,7 @@ func write(path string) {
 	fh.UserField = ""
 	fh.CompanionDocumentIndicator = ""
 
-	file := x9.NewFile()
+	file := imagecashletter.NewFile()
 	file.SetHeader(fh)
 
 	// Create 4 CashLetters
@@ -76,7 +76,7 @@ func write(path string) {
 
 		count := strconv.Itoa(i + 1)
 		// cashLetterHeader
-		clh := x9.NewCashLetterHeader()
+		clh := imagecashletter.NewCashLetterHeader()
 		clh.CollectionTypeIndicator = "01"
 		clh.DestinationRoutingNumber = "231380104"
 		clh.ECEInstitutionRoutingNumber = "121042882"
@@ -91,13 +91,13 @@ func write(path string) {
 		clh.FedWorkType = ""
 		clh.ReturnsIndicator = ""
 		clh.UserField = ""
-		cl := x9.NewCashLetter(clh)
+		cl := imagecashletter.NewCashLetter(clh)
 
 		for y := 0; y < 2; y++ {
 			{
 				// Create Bundle
 				bcount := strconv.Itoa(i + y)
-				bh := x9.NewBundleHeader()
+				bh := imagecashletter.NewBundleHeader()
 				bh.CollectionTypeIndicator = "01"
 				bh.DestinationRoutingNumber = "231380104"
 				bh.ECEInstitutionRoutingNumber = "121042882"
@@ -107,13 +107,13 @@ func write(path string) {
 				bh.BundleSequenceNumber = bcount
 				bh.CycleNumber = "01"
 				bh.UserField = ""
-				bundle := x9.NewBundle(bh)
+				bundle := imagecashletter.NewBundle(bh)
 
 				for z := 0; z < 100; z++ {
 					cdCount := strconv.Itoa(z + 1)
 
 					// Create Check Detail
-					cd := x9.NewCheckDetail()
+					cd := imagecashletter.NewCheckDetail()
 					cd.AuxiliaryOnUs = "123456789"
 					cd.ExternalProcessingCode = ""
 					cd.PayorBankRoutingNumber = "03130001"
@@ -129,7 +129,7 @@ func write(path string) {
 					cd.CorrectionIndicator = 0
 					cd.ArchiveTypeIndicator = "B"
 
-					cdAddendumA := x9.NewCheckDetailAddendumA()
+					cdAddendumA := imagecashletter.NewCheckDetailAddendumA()
 					cdAddendumA.RecordNumber = 1
 					cdAddendumA.ReturnLocationRoutingNumber = "121042882"
 					cdAddendumA.BOFDEndorsementDate = time.Now()
@@ -142,7 +142,7 @@ func write(path string) {
 					cdAddendumA.BOFDCorrectionIndicator = 0
 					cdAddendumA.UserField = ""
 
-					cdAddendumB := x9.NewCheckDetailAddendumB()
+					cdAddendumB := imagecashletter.NewCheckDetailAddendumB()
 					cdAddendumB.ImageReferenceKeyIndicator = 1
 					cdAddendumB.MicrofilmArchiveSequenceNumber = "1A             "
 					cdAddendumB.LengthImageReferenceKey = "0034"
@@ -150,7 +150,7 @@ func write(path string) {
 					cdAddendumB.Description = "CD Addendum B"
 					cdAddendumB.UserField = ""
 
-					cdAddendumC := x9.NewCheckDetailAddendumC()
+					cdAddendumC := imagecashletter.NewCheckDetailAddendumC()
 					cdAddendumC.RecordNumber = 1
 					cdAddendumC.EndorsingBankRoutingNumber = "121042882"
 					cdAddendumC.BOFDEndorsementBusinessDate = time.Now()
@@ -162,7 +162,7 @@ func write(path string) {
 					cdAddendumC.UserField = ""
 					cdAddendumC.EndorsingBankIdentifier = 0
 
-					ivDetail := x9.NewImageViewDetail()
+					ivDetail := imagecashletter.NewImageViewDetail()
 					ivDetail.ImageIndicator = 1
 					ivDetail.ImageCreatorRoutingNumber = "031300012"
 					ivDetail.ImageCreatorDate = time.Now()
@@ -181,7 +181,7 @@ func write(path string) {
 					ivDetail.UserField = ""
 					ivDetail.OverrideIndicator = "0"
 
-					ivData := x9.NewImageViewData()
+					ivData := imagecashletter.NewImageViewData()
 					ivData.EceInstitutionRoutingNumber = "121042882"
 					ivData.BundleBusinessDate = time.Now()
 					ivData.CycleNumber = "1"
@@ -201,7 +201,7 @@ func write(path string) {
 					ivData.LengthImageData = "0000001"
 					ivData.ImageData = []byte("")
 
-					ivAnalysis := x9.NewImageViewAnalysis()
+					ivAnalysis := imagecashletter.NewImageViewAnalysis()
 					ivAnalysis.GlobalImageQuality = 2
 					ivAnalysis.GlobalImageUsability = 2
 					ivAnalysis.ImagingBankSpecificTest = 0
@@ -265,7 +265,7 @@ func write(path string) {
 		}
 	} else {
 		// Write in X9 plain text format
-		w := x9.NewWriter(f)
+		w := imagecashletter.NewWriter(f)
 		if err := w.Write(file); err != nil {
 			fmt.Printf("%T: %s", err, err)
 		}

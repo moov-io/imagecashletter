@@ -2,7 +2,7 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package x9
+package imagecashletter
 
 import (
 	"bufio"
@@ -88,7 +88,6 @@ func (r *Reader) Read() (File, error) {
 
 		lineLength := len(line)
 
-		// ToDo: Adjust below stump code
 		if lineLength < 80 {
 			msg := fmt.Sprintf(msgRecordLength, lineLength)
 			err := &FileError{FieldName: "RecordLength", Value: strconv.Itoa(lineLength), Msg: msg}
