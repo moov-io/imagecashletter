@@ -24,7 +24,7 @@ var (
 	msgInvalid = "is invalid"
 )
 
-// validator is common validation and formatting of golang types to x9 type strings
+// validator is common validation and formatting of golang types to imagecashletter type strings
 type validator struct{}
 
 // FieldError is returned for errors at a field level in a record

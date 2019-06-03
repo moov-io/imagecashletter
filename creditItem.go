@@ -110,7 +110,7 @@ type CreditItem struct {
 	// reserved is a field reserved for future use.  Reserved should be blank.
 	reserved string
 	validator
-	// converters is composed for x9 to golang Converters
+	// converters is composed for imagecashletter to golang Converters
 	converters
 }
 
@@ -169,7 +169,7 @@ func (ci *CreditItem) String() string {
 	return buf.String()
 }
 
-// Validate performs X9 format rule checks on the record and returns an error if not Validated
+// Validate performs imagecashletter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (ci *CreditItem) Validate() error {
 	if err := ci.fieldInclusion(); err != nil {

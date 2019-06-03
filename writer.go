@@ -9,10 +9,10 @@ import (
 	"io"
 )
 
-// A Writer writes an x9.file to an encoded file.
+// A Writer writes an imagecashletter.file to an encoded file.
 //
-// As returned by NewWriter, a Writer writes x9file structs into
-// x9 formatted files.
+// As returned by NewWriter, a Writer writes imagecashletterfile structs into
+// imagecashletter formatted files.
 
 // Writer struct
 type Writer struct {
@@ -27,7 +27,7 @@ func NewWriter(w io.Writer) *Writer {
 	}
 }
 
-// Writer writes a single x9.file record to w
+// Writer writes a single imagecashletter.file record to w
 func (w *Writer) Write(file *File) error {
 	if err := file.Validate(); err != nil {
 		return err

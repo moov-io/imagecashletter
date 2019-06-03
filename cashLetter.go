@@ -37,7 +37,7 @@ type CashLetter struct {
 	RoutingNumberSummary []*RoutingNumberSummary `json:"routingNumberSummary,omitempty"`
 	// currentBundle is the currentBundle being parsed
 	currentBundle *Bundle
-	// RoutingNumberSummary is an X9 RoutingNumberSummary
+	// RoutingNumberSummary is an imagecashletter RoutingNumberSummary
 	currentRoutingNumberSummary *RoutingNumberSummary
 	// CashLetterControl is a Cash Letter Control Record
 	CashLetterControl *CashLetterControl `json:"cashLetterControl,omitempty"`
@@ -51,7 +51,7 @@ func NewCashLetter(clh *CashLetterHeader) CashLetter {
 	return cl
 }
 
-// Validate performs X9 validations and format rule checks and returns an error if not Validated
+// Validate performs imagecashletter validations and format rule checks and returns an error if not Validated
 func (cl *CashLetter) Validate() error {
 	if cl.CashLetterHeader.RecordTypeIndicator == "N" {
 		if cl.GetBundles() != nil {

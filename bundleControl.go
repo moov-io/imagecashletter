@@ -38,7 +38,7 @@ type BundleControl struct {
 	CreditTotalIndicator int `json:"creditTotalIndicator"`
 	// reserved is a field reserved for future use.  Reserved should be blank.
 	reserved string
-	// validator is composed for x9 data validation
+	// validator is composed for imagecashletter data validation
 	validator
 	// converters is composed for x9 to golang Converters
 	converters

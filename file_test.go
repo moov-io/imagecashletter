@@ -6,7 +6,7 @@ package imagecashletter
 
 import "testing"
 
-// mockFile creates an X9 file
+// mockFile creates an imagecashletter file
 func mockFile() *File {
 	mockFile := NewFile()
 	mockFile.SetHeader(mockFileHeader())

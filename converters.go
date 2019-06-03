@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// converters handles golang to x9 type Converters
+// converters handles golang to imagecashletter type Converters
 type converters struct{}
 
 func (c *converters) parseNumField(r string) (s int) {

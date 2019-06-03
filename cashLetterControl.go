@@ -43,9 +43,9 @@ type CashLetterControl struct {
 	CreditTotalIndicator int `json:"creditTotalIndicator"`
 	// reserved is a field reserved for future use.  Reserved should be blank.
 	reserved string
-	// validator is composed for x9 data validation
+	// validator is composed for imagecashletter data validation
 	validator
-	// converters is composed for x9 to golang Converters
+	// converters is composed for imagecashletter to golang Converters
 	converters
 }
 
@@ -97,7 +97,7 @@ func (clc *CashLetterControl) String() string {
 	return buf.String()
 }
 
-// Validate performs X9 format rule checks on the record and returns an error if not Validated
+// Validate performs imagecashletter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (clc *CashLetterControl) Validate() error {
 	if err := clc.fieldInclusion(); err != nil {

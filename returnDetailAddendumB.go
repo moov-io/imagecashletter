@@ -33,9 +33,9 @@ type ReturnDetailAddendumB struct {
 	PayorBankBusinessDate time.Time `json:"payorBankBusinessDate"`
 	// PayorAccountName is the account name from payor bank records.
 	PayorAccountName string `json:"payorAccountName"`
-	// validator is composed for x9 data validation
+	// validator is composed for imagecashletter data validation
 	validator
-	// converters is composed for x9 to golang Converters
+	// converters is composed for imagecashletter to golang Converters
 	converters
 }
 
@@ -77,7 +77,7 @@ func (rdAddendumB *ReturnDetailAddendumB) String() string {
 	return buf.String()
 }
 
-// Validate performs X9 format rule checks on the record and returns an error if not Validated
+// Validate performs imagecashletter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (rdAddendumB *ReturnDetailAddendumB) Validate() error {
 	if err := rdAddendumB.fieldInclusion(); err != nil {

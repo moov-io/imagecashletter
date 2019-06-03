@@ -74,17 +74,17 @@ func (e *FileError) Error() string {
 	return fmt.Sprintf("%s %s", e.FieldName, e.Msg)
 }
 
-// File is an X9 file
+// File is an imagecashletter file
 type File struct {
 	// ID is a client defined string used as a reference to this record
 	ID string `json:"id"`
-	// FileHeader is an X9 FileHeader
+	// FileHeader is an imagecashletter FileHeader
 	Header FileHeader `json:"fileHeader"`
-	// CashLetters are X9 Cash Letters
+	// CashLetters are imagecashletter Cash Letters
 	CashLetters []CashLetter `json:"cashLetters,omitempty"`
-	// Bundles are X9 Bundles
+	// Bundles are imagecashletter Bundles
 	Bundles []Bundle `json:"bundle,omitempty"`
-	// FileControl is an X9 FileControl
+	// FileControl is an imagecashletter FileControl
 	Control FileControl `json:"fileControl"`
 }
 
@@ -96,7 +96,7 @@ func NewFile() *File {
 	}
 }
 
-// Create creates a valid X9 File
+// Create creates a valid imagecashletter File
 func (f *File) Create() error {
 	// Requires a valid FileHeader to build FileControl
 	if err := f.Header.Validate(); err != nil {
@@ -192,7 +192,7 @@ func (f *File) SetHeader(h FileHeader) *File {
 	return f
 }
 
-// AddCashLetter appends a CashLetter to the x9.File
+// AddCashLetter appends a CashLetter to the imagecashletter.File
 func (f *File) AddCashLetter(cashLetter CashLetter) []CashLetter {
 	f.CashLetters = append(f.CashLetters, cashLetter)
 	return f.CashLetters
