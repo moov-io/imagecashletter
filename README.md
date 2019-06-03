@@ -1,4 +1,4 @@
-moov-io/x9
+moov-io/imagecashletter
 ===
 [![GoDoc](https://godoc.org/github.com/moov-io/x9?status.svg)](https://godoc.org/github.com/moov-io/x9)
 [![Build Status](https://travis-ci.com/moov-io/x9.svg?branch=master)](https://travis-ci.com/moov-io/x9)
@@ -14,7 +14,7 @@ Docs: [docs.moov.io](http://docs.moov.io/en/latest/) | [api docs](https://api.mo
 
 ## Project Status
 
-x9 is under active development, and should not be used in Production.  Please star the project if you are interested in its progress.
+Image Cash Letter (ICL) a RESTful or #GoLang library supporting ANSI X9.100-187–2016 specification. Compose & Decompose ICL files from check images, MICR line data, and dollar amounts. Perfect for Treasury Management, Remote Deposit Capture, and other Check Truncation functions. Please star the project if you are interested in its progress.
 
 * The Library currently supports the reading and writing
 	* Cash Letters
@@ -38,12 +38,14 @@ The following is a high level example of reading and writing an X9 file.
 ### Read a file
 
 ```go
+import icl "github.com/moov-io/imagecashletter
+
 // open a file for reading or pass any io.Reader NewReader()
 f, err := os.Open("name-of-your-x9-file.x9")
 if err != nil {
 	log.Panicf("Can not open local file: %s: \n", err)
 }
-r := x9.NewReader(f)
+r := icl.NewReader(f)
 x9File, err := r.Read()
 if err != nil {
 	fmt.Printf("Issue reading file: %+v \n", err)
