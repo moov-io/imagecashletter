@@ -1,5 +1,4 @@
 language: go
-dist: xenial
 sudo: false
 env:
   matrix:
