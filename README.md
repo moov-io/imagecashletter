@@ -4,7 +4,7 @@ moov-io/imagecashletter
 [![Build Status](https://travis-ci.com/moov-io/imagecashletter.svg?branch=master)](https://travis-ci.com/moov-io/imagecashletter)
 [![Coverage Status](https://codecov.io/gh/moov-io/imagecashletter/branch/master/graph/badge.svg)](https://codecov.io/gh/moov-io/imagecashletter)
 [![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/imagecashletter)](https://goreportcard.com/report/github.com/moov-io/imagecashletter)
-[![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/x9/master/LICENSE)
+[![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/imagecashletter/master/LICENSE)
 
 X9’s Specifications for ICL (Image Cash ledger) to provide Check 21 services
 
