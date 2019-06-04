@@ -64,8 +64,7 @@ A good quality PR will have the following characteristics:
 
 A good PR should be able to flow through a peer review system easily and quickly.
 
-Our Build pipeline utilizes [Travis-CI](https://travis-ci.org/moov-io/x9) to enforce many tools that you should add to your editor before issuing a pull request. Learn more about these tools on our [Go Report card](https://goreportcard.com/report/github.com/moov-io/ach)
-
+Our Build pipeline utilizes [Travis-CI](https://travis-ci.com/moov-io/x9) to enforce many tools that you should add to your editor before issuing a pull request. Learn more about these tools on our [Go Report card](https://goreportcard.com/report/github.com/moov-io/imagecashletter)
 
 ## Benchmarks and Profiling 
 
@@ -73,7 +72,7 @@ To Be Done
 
 **Write:**
 
-github.com/moov-io/ach/cmd/writeX9
+github.com/moov-io/ach/cmd/writeImageCashLetter
 
 main.go will create an X9 file with 4 cash letters each containing 4 bundles with 1250 check detail records 
 
@@ -119,6 +118,6 @@ Profiling
 
 ## Format Specification
 
-* [X9 File Formatting](https://www.frbservices.org/assets/financial-services/check/setup/frb-x937-standards-reference.pdf)
+* [ImageCAshLetter File Formatting](https://www.frbservices.org/assets/financial-services/check/setup/frb-x937-standards-reference.pdf)
 
 ## Inspiration 

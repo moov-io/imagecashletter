@@ -37,16 +37,18 @@ Image Cash Letter (ICL) a RESTful or #GoLang library supporting ANSI X9.100-187â
 Go library
 github.com/moov-io/imagecashletter offers a Go based cash image cash letter (ICL) file reader and writer.
 
-Supported Business Function Codes
-From Source
-This project uses Go Modules and thus requires Go 1.11+. You can download the source code and we offer tagged and released versions as well. We highly recommend you use a tagged release for production.
+### From Source
 
-$ git@github.com:moov-io/wire.git
+This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and thus requires Go 1.11+. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io/ach/releases) as well. We highly recommend you use a tagged release for production.
+
+```
+$ git@github.com:moov-io/imagecashletter.git
 
 # Pull down into the Go Module cache
-$ go get -u github.com/moov-io/wire
+$ go get -u github.com/moov-io/imagecashletter
 
-$ go doc github.com/moov-io/wire fedWireMessage
+$ go doc github.com/moov-io/imagecashletter CashLetter
+```
 
 ## Tests
 The following is a high level example of reading and writing an Image Cash Letter (ICL) file. 
