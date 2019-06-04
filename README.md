@@ -24,6 +24,7 @@ Image Cash Letter (ICL) a RESTful or #GoLang library supporting ANSI X9.100-187â
 	* Image Views
 
 * Future Development
+    * Add examples
     * Add additional property validations as necessary based on testing
     * Add User Record Functionality
     * Benchmarking and Profiling Tests
@@ -32,8 +33,23 @@ Image Cash Letter (ICL) a RESTful or #GoLang library supporting ANSI X9.100-187â
 * Please open an issue with a valid test file.
 * Review the project issues for more detailed information
 
-## Usage and tests
-The following is a high level example of reading and writing an X9 file. 
+## Usage
+Go library
+github.com/moov-io/imagecashletter offers a Go based cash image cash letter (ICL) file reader and writer.
+
+Supported Business Function Codes
+From Source
+This project uses Go Modules and thus requires Go 1.11+. You can download the source code and we offer tagged and released versions as well. We highly recommend you use a tagged release for production.
+
+$ git@github.com:moov-io/wire.git
+
+# Pull down into the Go Module cache
+$ go get -u github.com/moov-io/wire
+
+$ go doc github.com/moov-io/wire fedWireMessage
+
+## Tests
+The following is a high level example of reading and writing an Image Cash Letter (ICL) file. 
 
 ### Read a file
 
@@ -41,7 +57,7 @@ The following is a high level example of reading and writing an X9 file.
 import icl "github.com/moov-io/imagecashletter
 
 // open a file for reading or pass any io.Reader NewReader()
-f, err := os.Open("name-of-your-x9-file.x9")
+f, err := os.Open("name-of-your-icl-file.x9")
 if err != nil {
 	log.Panicf("Can not open local file: %s: \n", err)
 }
@@ -145,7 +161,7 @@ Which will generate a well formed X9 flat file.
  channel | info
  ------- | -------
 [Project Documentation](http://docs.moov.io/en/latest/) | Our project documentation available online.
- Google Group [moov-users](https://groups.google.com/forum/#!forum/moov-users)| The Moov users Google group is for contributors other people contributing to the Moov project. You can join them without a google account by sending an email to [moov-users+subscribe@googlegroups.com](mailto:moov-users+subscribe@googlegroups.com). After receiving the join-request message, you can simply reply to that to confirm the subscription.
+Google Group [moov-users](https://groups.google.com/forum/#!forum/moov-users)| The Moov users Google group is for contributors other people contributing to the Moov project. You can join them without a google account by sending an email to [moov-users+subscribe@googlegroups.com](mailto:moov-users+subscribe@googlegroups.com). After receiving the join-request message, you can simply reply to that to confirm the subscription.
 Twitter [@moov_io](https://twitter.com/moov_io)	| You can follow Moov.IO's Twitter feed to get updates on our project(s). You can also tweet us questions or just share blogs or stories.
 [GitHub Issue](https://github.com/moov-io) | If you are able to reproduce an problem please open a GitHub Issue under the specific project that caused the error.
 [moov-io slack](http://moov-io.slack.com/) | Join our slack channel to have an interactive discussion about the development of the project. [Request an invite to the slack channel](https://join.slack.com/t/moov-io/shared_invite/enQtNDE5NzIwNTYxODEwLTRkYTcyZDI5ZTlkZWRjMzlhMWVhMGZlOTZiOTk4MmM3MmRhZDY4OTJiMDVjOTE2MGEyNWYzYzY1MGMyMThiZjg)
