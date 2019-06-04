@@ -74,7 +74,7 @@ To Be Done
 
 github.com/moov-io/ach/cmd/writeImageCashLetter
 
-main.go will create an X9 file with 4 cash letters each containing 4 bundles with 1250 check detail records 
+main.go will create an Image Cash Letter file with 4 cash letters each containing 4 bundles with 1250 check detail records 
 
 A custom path can be used by defining fPath ( e.g. -fPath=github.com/moov-io/_directory_ )
 

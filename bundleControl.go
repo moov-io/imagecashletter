@@ -38,9 +38,9 @@ type BundleControl struct {
 	CreditTotalIndicator int `json:"creditTotalIndicator"`
 	// reserved is a field reserved for future use.  Reserved should be blank.
 	reserved string
-	// validator is composed for imagecashletter data validation
+	// validator is composed for image cash letter data validation
 	validator
-	// converters is composed for x9 to golang Converters
+	// converters is composed for image cash letter to golang Converters
 	converters
 }
 
@@ -92,7 +92,7 @@ func (bc *BundleControl) String() string {
 	return buf.String()
 }
 
-// Validate performs X9 format rule checks on the record and returns an error if not Validated
+// Validate performs image cash letter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (bc *BundleControl) Validate() error {
 	if err := bc.fieldInclusion(); err != nil {

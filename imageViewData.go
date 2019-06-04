@@ -135,9 +135,9 @@ type ImageViewData struct {
 	// Shall be present when ImageViewDetail.ImageIndicator Record is NOT 0.
 	// Size: 0-9999999
 	ImageData []byte `json:"imageData"`
-	// validator is composed for x9 data validation
+	// validator is composed for image cash letter data validation
 	validator
-	// converters is composed for x9 to golang Converters
+	// converters is composed for image cash letter to golang Converters
 	converters
 }
 
@@ -223,7 +223,7 @@ func (ivData *ImageViewData) String() string {
 	return buf.String()
 }
 
-// Validate performs X9 format rule checks on the record and returns an error if not Validated
+// Validate performs image cash letter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (ivData *ImageViewData) Validate() error {
 	if err := ivData.fieldInclusion(); err != nil {

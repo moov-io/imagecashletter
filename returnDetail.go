@@ -126,9 +126,9 @@ type ReturnDetail struct {
 	ImageViewData []ImageViewData `json:"imageViewData"`
 	// ImageViewAnalysis
 	ImageViewAnalysis []ImageViewAnalysis `json:"imageViewAnalysis"`
-	// validator is composed for x9 data validation
+	// validator is composed for image cash letter data validation
 	validator
-	// converters is composed for x9 to golang Converters
+	// converters is composed for image cash letter to golang Converters
 	converters
 }
 
@@ -196,7 +196,7 @@ func (rd *ReturnDetail) String() string {
 	return buf.String()
 }
 
-// Validate performs X9 format rule checks on the record and returns an error if not Validated
+// Validate performs image cash letter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (rd *ReturnDetail) Validate() error {
 	if err := rd.fieldInclusion(); err != nil {

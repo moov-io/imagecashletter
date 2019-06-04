@@ -59,12 +59,12 @@ The following is a high level example of reading and writing an Image Cash Lette
 import icl "github.com/moov-io/imagecashletter
 
 // open a file for reading or pass any io.Reader NewReader()
-f, err := os.Open("name-of-your-icl-file.x9")
+f, err := os.Open("name-of-your-icl-file.icl")
 if err != nil {
 	log.Panicf("Can not open local file: %s: \n", err)
 }
 r := icl.NewReader(f)
-x9File, err := r.Read()
+image cash letterFile, err := r.Read()
 if err != nil {
 	fmt.Printf("Issue reading file: %+v \n", err)
 }
@@ -77,7 +77,7 @@ if x9File.Validate(); err != nil {
 
 ### Create a file
 
-Explicitly create an X9 file with a Bundle of Forward Presentment Items and a Bundle of Return Items
+Explicitly create an Image Cash Letter file with a Bundle of Forward Presentment Items and a Bundle of Return Items
 
  ```go
 // Create a File
@@ -130,7 +130,7 @@ if err := file.Validate(); err != nil {
 }
 
 ````
-Which will generate a well formed X9 flat file.
+Which will generate a well formed ICL flat file.
 
 ```text
 0135T231380104121042882201810032226NCitadel           Wells Fargo        US     

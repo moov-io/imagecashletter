@@ -80,9 +80,9 @@ type ReturnDetailAddendumA struct {
 	UserField string `json:"userField"`
 	// reserved is a field reserved for future use.  Reserved should be blank.
 	reserved string
-	// validator is composed for x9 data validation
+	// validator is composed for image cash letter data validation
 	validator
-	// converters is composed for x9 to golang Converters
+	// converters is composed for image cash letter to golang Converters
 	converters
 }
 
@@ -145,7 +145,7 @@ func (rdAddendumA *ReturnDetailAddendumA) String() string {
 	return buf.String()
 }
 
-// Validate performs X9 format rule checks on the record and returns an error if not Validated
+// Validate performs image cash letter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (rdAddendumA *ReturnDetailAddendumA) Validate() error {
 	if err := rdAddendumA.fieldInclusion(); err != nil {

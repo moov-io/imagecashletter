@@ -6,7 +6,7 @@ func TestFileRead(t *testing.T) {
 	testFileRead(t)
 }
 
-/*//BenchmarkTestFileCreate benchmarks creating an X9 File
+/*//BenchmarkTestFileCreate benchmarks creating an ICL File
 func BenchmarkTestFileRead(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
@@ -14,7 +14,7 @@ func BenchmarkTestFileRead(b *testing.B) {
 	}
 }*/
 
-// FileCreate creates an X9 File
+// FileCreate creates an ICL File
 func testFileRead(t testing.TB) {
 	main()
 }

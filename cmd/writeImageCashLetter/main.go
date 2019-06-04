@@ -21,7 +21,7 @@ var (
 	flagJson = flag.Bool("json", false, "Output file in json")
 )
 
-// main creates an X9 File with 2 CashLetters
+// main creates an ICL File with 2 CashLetters
 // Each CashLetter contains 2 Bundles, with 100 CheckDetails
 func main() {
 	flag.Parse()
@@ -30,7 +30,7 @@ func main() {
 	if *flagJson {
 		filename += ".json"
 	} else {
-		filename += ".x9"
+		filename += ".icl"
 	}
 
 	path := filepath.Join(*fPath, filename)
@@ -264,7 +264,7 @@ func write(path string) {
 			fmt.Printf("%T: %s", err, err)
 		}
 	} else {
-		// Write in X9 plain text format
+		// Write in ICL plain text format
 		w := imagecashletter.NewWriter(f)
 		if err := w.Write(file); err != nil {
 			fmt.Printf("%T: %s", err, err)

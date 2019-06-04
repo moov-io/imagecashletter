@@ -11,8 +11,8 @@ import (
 	"testing"
 )
 
-// TestX9Write writes an x9 File
-func TestX9Write(t *testing.T) {
+// TestICLWrite writes an ICL File
+func TestICLWrite(t *testing.T) {
 	file := NewFile().SetHeader(mockFileHeader())
 
 	// Create CheckDetail
@@ -105,8 +105,8 @@ func TestX9Write(t *testing.T) {
 	}
 }
 
-// TestX9WriteCreditItem writes an X9 file with a CreditItem
-func TestX9WriteCreditItem(t *testing.T) {
+// TestICLWriteCreditItem writes an ICL file with a CreditItem
+func TestICLWriteCreditItem(t *testing.T) {
 	file := NewFile().SetHeader(mockFileHeader())
 
 	// CreditItem
@@ -179,8 +179,8 @@ func TestX9WriteCreditItem(t *testing.T) {
 	}
 }
 
-// TestX9WriteRoutingNumberSummary writes an X9 file with a RoutingNumberSummary
-func TestX9WriteRoutingNumber(t *testing.T) {
+// TestICLWriteRoutingNumberSummary writes an ICL file with a RoutingNumberSummary
+func TestICLWriteRoutingNumber(t *testing.T) {
 	file := NewFile().SetHeader(mockFileHeader())
 
 	// RoutingNumberSummary

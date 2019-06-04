@@ -11,10 +11,10 @@ import (
 )
 
 var (
-	fPath      = flag.String("fPath", "BNK20181015-A.x9", "File Path")
+	fPath      = flag.String("fPath", "BNK20181015-A.icl", "File Path")
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 
-	flagJson = flag.Bool("json", false, "Output X9 File in JSON to stdout")
+	flagJson = flag.Bool("json", false, "Output ICL File in JSON to stdout")
 )
 
 func main() {
@@ -39,31 +39,31 @@ func main() {
 	}
 
 	r := imagecashletter.NewReader(f)
-	x9File, err := r.Read()
+	ICLFile, err := r.Read()
 	if err != nil {
 		fmt.Printf("Issue reading file: %+v \n", err)
 	}
 
 	// ensure we have a validated file structure
-	if x9File.Validate(); err != nil {
+	if ICLFile.Validate(); err != nil {
 		fmt.Printf("Could not validate entire read file: %v", err)
 	}
 
 	// If you trust the file but it's formating is off building will probably resolve the malformed file.
-	if x9File.Create(); err != nil {
+	if ICLFile.Create(); err != nil {
 		fmt.Printf("Could not build file with read properties: %v", err)
 	}
 
 	// Output file contents
 	if *flagJson {
-		if err := json.NewEncoder(os.Stdout).Encode(x9File); err != nil {
-			fmt.Printf("ERROR: problem writing X9 File to stdout: %v\n", err)
+		if err := json.NewEncoder(os.Stdout).Encode(ICLFile); err != nil {
+			fmt.Printf("ERROR: problem writing ICL File to stdout: %v\n", err)
 			os.Exit(1)
 		}
 	} else {
-		fmt.Printf("Total record count: %v \n", x9File.Control.TotalRecordCount)
-		fmt.Printf("Cash Letter count: %v \n", x9File.Control.CashLetterCount)
-		fmt.Printf("File total Item count: %v \n", x9File.Control.TotalItemCount)
-		fmt.Printf("File total amount: %v \n", x9File.Control.FileTotalAmount)
+		fmt.Printf("Total record count: %v \n", ICLFile.Control.TotalRecordCount)
+		fmt.Printf("Cash Letter count: %v \n", ICLFile.Control.CashLetterCount)
+		fmt.Printf("File total Item count: %v \n", ICLFile.Control.TotalItemCount)
+		fmt.Printf("File total amount: %v \n", ICLFile.Control.FileTotalAmount)
 	}
 }

@@ -6,12 +6,12 @@ import (
 	"testing"
 )
 
-// TestFileCreate tests creating an X9 File
+// TestFileCreate tests creating an ICL File
 func TestFileWrite(t *testing.T) {
 	testFileWrite(t)
 }
 
-/*//BenchmarkTestFileCreate benchmarks creating an X9 File
+/*//BenchmarkTestFileCreate benchmarks creating an ICL File
 func BenchmarkTestFileWrite(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
@@ -19,9 +19,10 @@ func BenchmarkTestFileWrite(b *testing.B) {
 	}
 }*/
 
-// testFileWrite creates an X9 File
+// testFileWrite creates an ICL File
 func testFileWrite(t testing.TB) {
-	tmp, err := ioutil.TempFile("", "x9-writeX9-test")
+	// tmp, err := ioutil.TempFile("", "x9-writeX9-test")
+	tmp, err := ioutil.TempFile("", "icl-writeICL-test")
 	if err != nil {
 		t.Fatal(err.Error())
 	}
