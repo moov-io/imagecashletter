@@ -610,7 +610,6 @@ components:
           type: string
           maxLength: 1
           enum:
-            - " "
             - 0
             - 1
           description: |
@@ -793,7 +792,6 @@ components:
           type: string
           maxLength: 1
           enum:
-            - " "
             - E
             - R
             - J
@@ -845,7 +843,6 @@ components:
         creditTotalIndicator:
           maxLength: 1
           enum:
-            - " "
             - 0
             - 1
           description: |
@@ -984,7 +981,6 @@ components:
         creditTotalIndicator:
           maxLength: 1
           enum:
-            - " "
             - 0
             - 1
           description: |
@@ -2066,7 +2062,6 @@ components:
           type: string
           maxLength: 1
           enum:
-            - " "
             - 0
             - 1
             - A
