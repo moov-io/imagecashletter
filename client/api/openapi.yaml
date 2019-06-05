@@ -2,7 +2,8 @@ openapi: 3.0.2
 info:
   contact:
     url: https://github.com/moov-io/imagecashletter
-  description: Moov ImageCashLetter () implements an HTTP API for creating, parsing and validating ImageCashLetter files.
+  description: Moov ImageCashLetter () implements an HTTP API for creating, parsing
+    and validating ImageCashLetter files.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -29,7 +30,8 @@ paths:
     get:
       operationId: getFiles
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -50,7 +52,6 @@ paths:
               description: The total number of Originators
               explode: false
               schema:
-                format: int32
                 type: integer
               style: simple
       security:
@@ -63,7 +64,8 @@ paths:
     post:
       operationId: createFile
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -72,7 +74,9 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+      - description: Idempotent key in the header which expires after 24 hours. These
+          strings should contain enough entropy for to not collide with each other
+          in your requests.
         example: a4f88150
         explode: false
         in: header
@@ -89,7 +93,8 @@ paths:
           text/plain:
             schema:
               description: A plaintext ImageCashLetter file
-              example: 0135T231380104121042882201809051523NCitadel           Wells Fargo        US
+              example: 0135T231380104121042882201809051523NCitadel           Wells
+                Fargo        US
               type: string
         description: Content of the ImageCashLetter file (in json or raw text)
         required: true
@@ -133,7 +138,8 @@ paths:
           example: 3f2d23ee214
           type: string
         style: simple
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -150,13 +156,15 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
+      summary: Permanently deletes a File and associated CashLetters and Bundles.
+        It cannot be undone.
       tags:
       - Image Cash Letter Files
     get:
       operationId: getFileByID
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -186,13 +194,15 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+      summary: Retrieves the details of an existing File. You need only supply the
+        unique File identifier that was returned upon creation.
       tags:
       - Image Cash Letter Files
     post:
       operationId: updateFile
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -201,7 +211,9 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+      - description: Idempotent key in the header which expires after 24 hours. These
+          strings should contain enough entropy for to not collide with each other
+          in your requests.
         example: a4f88150
         explode: false
         in: header
@@ -249,14 +261,16 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      summary: Updates the specified File Header by setting the values of the parameters
+        passed. Any parameters not provided will be left unchanged.
       tags:
       - Image Cash Letter Files
   /files/{file_id}/contents:
     get:
       operationId: getFileContents
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -284,14 +298,16 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
+      summary: Assembles the existing file (Cash Letters, Bundles and Controls) records,
+        computes sequence numbers and totals. Returns plaintext file.
       tags:
       - Image Cash Letter Files
   /files/{file_id}/validate:
     get:
       operationId: validateFile
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -321,14 +337,16 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+      summary: Validates the existing file. You need only supply the unique File identifier
+        that was returned upon creation.
       tags:
       - Image Cash Letter Files
   /files/{file_id}/cashLetters:
     get:
       operationId: getFileCashLetters
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -358,7 +376,6 @@ paths:
               description: The total number of CashLetters on the File.
               explode: false
               schema:
-                format: int32
                 type: integer
               style: simple
       security:
@@ -370,7 +387,8 @@ paths:
     post:
       operationId: addCashLetterToFile
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -379,7 +397,9 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+      - description: Idempotent key in the header which expires after 24 hours. These
+          strings should contain enough entropy for to not collide with each other
+          in your requests.
         example: a4f88150
         explode: false
         in: header
@@ -416,7 +436,8 @@ paths:
     delete:
       operationId: deleteFileCashLetter
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -457,7 +478,8 @@ paths:
     get:
       operationId: getFileCashLetter
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -531,7 +553,7 @@ components:
             collectionTypeIndicator: "00"
             destinationRoutingNumber: "999282654"
             originatorContactPhoneNumber: "5685551212"
-            returnsIndicator: null
+            returnsIndicator: ' '
             cashLetterID: "1"
             recordTypeIndicator: N
             fedWorkType: V
@@ -1561,7 +1583,7 @@ components:
             collectionTypeIndicator: "00"
             destinationRoutingNumber: "999282654"
             originatorContactPhoneNumber: "5685551212"
-            returnsIndicator: null
+            returnsIndicator: ' '
             cashLetterID: "1"
             recordTypeIndicator: N
             fedWorkType: V
@@ -3609,7 +3631,7 @@ components:
             collectionTypeIndicator: "00"
             destinationRoutingNumber: "999282654"
             originatorContactPhoneNumber: "5685551212"
-            returnsIndicator: null
+            returnsIndicator: ' '
             cashLetterID: "1"
             recordTypeIndicator: N
             fedWorkType: V
@@ -4639,7 +4661,7 @@ components:
             collectionTypeIndicator: "00"
             destinationRoutingNumber: "999282654"
             originatorContactPhoneNumber: "5685551212"
-            returnsIndicator: null
+            returnsIndicator: ' '
             cashLetterID: "1"
             recordTypeIndicator: N
             fedWorkType: V
@@ -6717,7 +6739,8 @@ components:
           maxLength: 9
           type: string
         fileCreationDate:
-          description: FileCreationDate is the date that the immediate origin institution creates the file.
+          description: FileCreationDate is the date that the immediate origin institution
+            creates the file.
           format: date-time
           type: string
         fileCreationTime:
@@ -6728,17 +6751,20 @@ components:
           maxLength: 4
           type: string
         resendIndicator:
-          description: ResendIndicator Indicates whether the file has been previously transmitted. (Y - Yes, N - No)
+          description: ResendIndicator Indicates whether the file has been previously
+            transmitted. (Y - Yes, N - No)
           example: Y
           maxLength: 1
           type: string
         immediateDestinationName:
-          description: ImmediateDestinationName Identifies the short name of the institution that receives the file.
+          description: ImmediateDestinationName Identifies the short name of the institution
+            that receives the file.
           example: ABC Bank
           maxLength: 18
           type: string
         immediateOriginName:
-          description: immediateOriginName identifies the short name of the institution that sends the file.
+          description: immediateOriginName identifies the short name of the institution
+            that sends the file.
           example: Bank One
           maxLength: 18
           type: string
@@ -6759,7 +6785,8 @@ components:
           maxLength: 2
           type: string
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: ZZZZ
           maxLength: 4
           type: string
@@ -6799,32 +6826,34 @@ components:
           example: d1e26288
           type: string
         cashLetterCount:
-          description: CashLetterCount identifies the total number of cash letters within the file.
+          description: CashLetterCount identifies the total number of cash letters
+            within the file.
           example: 1
-          format: int32
           type: integer
         totalRecordCount:
-          description: TotalRecordCount identifies the total number of records of all types sent in the file, including the FileControl.
+          description: TotalRecordCount identifies the total number of records of
+            all types sent in the file, including the FileControl.
           example: 1
-          format: int32
           type: integer
         totalItemCount:
-          description: totalItemCount identifies the total number of Items sent within the file.
+          description: totalItemCount identifies the total number of Items sent within
+            the file.
           example: 5
-          format: int32
           type: integer
         fileTotalAmount:
-          description: FileTotalAmount identifies the total Item amount of the complete file.
+          description: FileTotalAmount identifies the total Item amount of the complete
+            file.
           example: 100
-          format: int32
           type: integer
         immediateOriginContactName:
-          description: immediateOriginContactName identifies contact at the institution that creates the file.
+          description: immediateOriginContactName identifies contact at the institution
+            that creates the file.
           example: John Smith
           maxLength: 14
           type: string
         immediateOriginContactPhoneNumber:
-          description: ImmediateOriginContactPhoneNumber identifies the phone number of the contact at the institution that creates the file.
+          description: ImmediateOriginContactPhoneNumber identifies the phone number
+            of the contact at the institution that creates the file.
           example: 555-555-1212
           maxLength: 10
           type: string
@@ -6836,7 +6865,7 @@ components:
             * `0` - Credit Items are not included in totals
             * `1` - Credit Items are included in totals
           enum:
-          - null
+          - ' '
           - "0"
           - "1"
           example: "1"
@@ -6884,7 +6913,7 @@ components:
           collectionTypeIndicator: "00"
           destinationRoutingNumber: "999282654"
           originatorContactPhoneNumber: "5685551212"
-          returnsIndicator: null
+          returnsIndicator: ' '
           cashLetterID: "1"
           recordTypeIndicator: N
           fedWorkType: V
@@ -7909,7 +7938,7 @@ components:
         collectionTypeIndicator: "00"
         destinationRoutingNumber: "999282654"
         originatorContactPhoneNumber: "5685551212"
-        returnsIndicator: null
+        returnsIndicator: ' '
         cashLetterID: "1"
         recordTypeIndicator: N
         fedWorkType: V
@@ -7953,26 +7982,32 @@ components:
           maxLength: 2
           type: string
         destinationRoutingNumber:
-          description: DestinationRoutingNumber is the routing and transit number of the institution that receives and processes the cash letter or the bundle.
+          description: DestinationRoutingNumber is the routing and transit number
+            of the institution that receives and processes the cash letter or the
+            bundle.
           example: "999282654"
           maxLength: 9
           type: string
         eCEInstitutionRoutingNumber:
-          description: ECEInstitutionRoutingNumber is the routing and transit number of the institution that creates the Cash Letter Header record
+          description: ECEInstitutionRoutingNumber is the routing and transit number
+            of the institution that creates the Cash Letter Header record
           example: "217876527"
           maxLength: 9
           type: string
         cashLetterBusinessDate:
-          description: cashLetterBusinessDate is the business date of the cash letter. (Format YYYYMMDD, where - YYYY year, MM month, DD day)
+          description: cashLetterBusinessDate is the business date of the cash letter.
+            (Format YYYYMMDD, where - YYYY year, MM month, DD day)
           example: 2006-01-02T15:04:05Z07:00
           maxLength: 8
           type: string
         cashLetterCreationDate:
-          description: cashLetterCreationDate is the date that the cash letter is created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
+          description: cashLetterCreationDate is the date that the cash letter is
+            created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
           format: date-time
           type: string
         cashLetterCreationTime:
-          description: CashLetterCreationTime is the time that the cash letter is created. (Format - hhmm, where - hh hour, mm minute)
+          description: CashLetterCreationTime is the time that the cash letter is
+            created. (Format - hhmm, where - hh hour, mm minute)
           example: "1310"
           maxLength: 4
           type: string
@@ -8033,22 +8068,27 @@ components:
           maxLength: 1
           type: string
         cashLetterID:
-          description: CashLetterID uniquely identifies the cash letter. It is assigned by the institution that creates the cash letter and must be unique within a Cash Letter Business Date.
+          description: CashLetterID uniquely identifies the cash letter. It is assigned
+            by the institution that creates the cash letter and must be unique within
+            a Cash Letter Business Date.
           example: "1"
           maxLength: 8
           type: string
         originatorContactName:
-          description: OriginatorContactName is the name of contact at the institution that creates the cash letter.
+          description: OriginatorContactName is the name of contact at the institution
+            that creates the cash letter.
           example: John Smith
           maxLength: 14
           type: string
         originatorContactPhoneNumber:
-          description: OriginatorContactPhoneNumber is the phone number of the contact at the institution that creates the cash letter.
+          description: OriginatorContactPhoneNumber is the phone number of the contact
+            at the institution that creates the cash letter.
           example: "5685551212"
           maxLength: 10
           type: string
         fedWorkType:
-          description: fedWorkType is any valid codes specified by the Federal Reserve Bank
+          description: fedWorkType is any valid codes specified by the Federal Reserve
+            Bank
           example: V
           maxLength: 1
           type: string
@@ -8062,14 +8102,15 @@ components:
             * `R` - Customer–items being returned that directly affect a customer’s account.
             * `J` - Reject Return
           enum:
-          - null
+          - ' '
           - E
           - R
           - J
           maxLength: 1
           type: string
         userField:
-          description: UserField is a field used at the discretion of users of the standard
+          description: UserField is a field used at the discretion of users of the
+            standard
           example: V
           maxLength: 1
           type: string
@@ -8089,32 +8130,34 @@ components:
           example: d1e26288
           type: string
         cashLetterBundleCount:
-          description: CashLetterBundleCount identifies the total number of bundles within the cash letter.
+          description: CashLetterBundleCount identifies the total number of bundles
+            within the cash letter.
           example: 1
-          format: int32
           type: integer
         cashLetterItemsCount:
-          description: CashLetterItemsCount identifies the total number of items within the cash letter.
+          description: CashLetterItemsCount identifies the total number of items within
+            the cash letter.
           example: 1
-          format: int32
           type: integer
         cashLetterTotalAmount:
-          description: CashLetterTotalAmount identifies the total dollar value of all item amounts within the cash letter.
+          description: CashLetterTotalAmount identifies the total dollar value of
+            all item amounts within the cash letter.
           example: 100
-          format: int32
           type: integer
         cashLetterImagesCount:
-          description: CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter.
+          description: CashLetterImagesCount identifies the total number of ImageViewDetail(s)
+            within the CashLetter.
           example: 1
-          format: int32
           type: integer
         eCEInstitutionName:
-          description: ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl.
+          description: ECEInstitutionName identifies the short name of the institution
+            that creates the CashLetterControl.
           example: Citadel
           maxLength: 18
           type: string
         settlementDate:
-          description: SettlementDate identifies the date that the institution that creates the cash letter expects settlement.
+          description: SettlementDate identifies the date that the institution that
+            creates the cash letter expects settlement.
           format: date-time
           type: string
         creditTotalIndicator:
@@ -8126,7 +8169,7 @@ components:
             * `0` - Credit Items are not included in totals
             * `1` - Credit Items are included in totals
           enum:
-          - null
+          - ' '
           - 0
           - 1
           example: 1
@@ -8682,12 +8725,15 @@ components:
           maxLength: 2
           type: string
         destinationRoutingNumber:
-          description: DestinationRoutingNumber contains the routing and transit number of the institution that receives and processes the cash letter or the bundle.
+          description: DestinationRoutingNumber contains the routing and transit number
+            of the institution that receives and processes the cash letter or the
+            bundle.
           example: "231987654"
           maxLength: 9
           type: string
         eCEInstitutionRoutingNumber:
-          description: ECEInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the bundle header.
+          description: ECEInstitutionRoutingNumber contains the routing and transit
+            number of the institution that that creates the bundle header.
           example: "233431587"
           maxLength: 9
           type: string
@@ -8700,22 +8746,27 @@ components:
           format: date-time
           type: string
         bundleID:
-          description: BundleID is number that identifies the bundle, assigned by the institution that creates the bundle.
+          description: BundleID is number that identifies the bundle, assigned by
+            the institution that creates the bundle.
           example: "9999"
           maxLength: 10
           type: string
         bundleSequenceNumber:
-          description: BundleSequenceNumber is a number assigned by the institution that creates the bundle. Usually denotes the relative position of the bundle within the cash letter.
+          description: BundleSequenceNumber is a number assigned by the institution
+            that creates the bundle. Usually denotes the relative position of the
+            bundle within the cash letter.
           example: "1"
           maxLength: 4
           type: string
         cycleNumber:
-          description: CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which the bundle is created.
+          description: CycleNumber is a code assigned by the institution that creates
+            the bundle.  Denotes the cycle under which the bundle is created.
           example: "01"
           maxLength: 2
           type: string
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: B1234
           maxLength: 5
           type: string
@@ -8734,27 +8785,28 @@ components:
           example: d1e26288
           type: string
         bundleItemsCount:
-          description: BundleItemsCount identifies the total number of items within the bundle.
+          description: BundleItemsCount identifies the total number of items within
+            the bundle.
           example: 1
-          format: int32
           type: integer
         bundleTotalAmount:
-          description: BundleTotalAmount identifies the total amount of item amounts within the bundle.
+          description: BundleTotalAmount identifies the total amount of item amounts
+            within the bundle.
           example: 100
-          format: int32
           type: integer
         micrValidTotalAmount:
-          description: MICRValidTotalAmount identifies the total amount of all CheckDetail Records within the bundle which contains 1 in the MICRValidIndicator.
+          description: MICRValidTotalAmount identifies the total amount of all CheckDetail
+            Records within the bundle which contains 1 in the MICRValidIndicator.
           example: 100
-          format: int32
           type: integer
         bundleImagesCount:
-          description: BundleImagesCount identifies the total number of Image ViewDetail Records  within the bundle.
+          description: BundleImagesCount identifies the total number of Image ViewDetail
+            Records  within the bundle.
           example: 1
-          format: int32
           type: integer
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: B12345678
           maxLength: 20
           type: string
@@ -8767,7 +8819,7 @@ components:
             * `0` - Credit Items are not included in totals
             * `1` - Credit Items are included in totals
           enum:
-          - null
+          - ' '
           - 0
           - 1
           example: 1
@@ -9138,12 +9190,15 @@ components:
           example: d1e26288
           type: string
         auxiliaryOnUs:
-          description: AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+          description: AuxiliaryOnUs identifies a code used on commercial checks at
+            the discretion of the payor bank.
           example: '*'
           maxLength: 15
           type: string
         externalProcessingCode:
-          description: ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.
+          description: ExternalProcessingCode identifies a code used for special purposes
+            as authorized by the Accredited Standards Committee X9. Also known as
+            Position 44.
           example: "1"
           maxLength: 1
           type: string
@@ -9166,17 +9221,21 @@ components:
           maxLength: 1
           type: string
         onUs:
-          description: OnUs identifies data specified by the payor bank. On-Us data usually consists of the payor’s account number, a serial number or transaction code, or both.
+          description: OnUs identifies data specified by the payor bank. On-Us data
+            usually consists of the payor’s account number, a serial number or transaction
+            code, or both.
           example: "5558881"
           maxLength: 20
           type: string
         itemAmount:
-          description: Amount identifies the amount of the check.  All amounts fields have two implied decimal points. e.g., 100000 is $1,000.00
+          description: Amount identifies the amount of the check.  All amounts fields
+            have two implied decimal points. e.g., 100000 is $1,000.00
           example: 100000
-          format: int32
           type: integer
         eCEInstitutionItemSequenceNumber:
-          description: ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail. Field must contain a numeric value. It cannot be all blanks.
+          description: ECEInstitutionItemSequenceNumber identifies a number assigned
+            by the institution that creates the CheckDetail. Field must contain a
+            numeric value. It cannot be all blanks.
           example: "24531"
           maxLength: 15
           type: string
@@ -9291,9 +9350,12 @@ components:
           maxLength: 1
           type: string
         addendumCount:
-          description: AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number of addendum records associated with this item. The standard supports up to 99 addendum records.
+          description: AddendumCount is a number of Check Detail Record Addenda to
+            follow. This represents the number of CheckDetailAddendumA, CheckDetailAddendumB
+            and CheckDetailAddendumC types.  It matches the total number of addendum
+            records associated with this item. The standard supports up to 99 addendum
+            records.
           example: 1
-          format: int32
           maximum: 99
           minimum: 0
           type: integer
@@ -9495,22 +9557,27 @@ components:
           maxLength: 1
           type: string
         onUs:
-          description: OnUs identifies data specified by the payor bank. On-Us data usually consists of the payor’s account number, a serial number or transaction code, or both.
+          description: OnUs identifies data specified by the payor bank. On-Us data
+            usually consists of the payor’s account number, a serial number or transaction
+            code, or both.
           example: "5558881"
           maxLength: 20
           type: string
         itemAmount:
-          description: Amount identifies the amount of the check.  All amounts fields have two implied decimal points. e.g., 100000 is $1,000.00
+          description: Amount identifies the amount of the check.  All amounts fields
+            have two implied decimal points. e.g., 100000 is $1,000.00
           example: 100000
-          format: int32
           type: integer
         returnReason:
           description: ReturnReason is a code that indicates the reason for non-payment.
           type: string
         addendumCount:
-          description: AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number of addendum records associated with this item. The standard supports up to 99 addendum records.
+          description: AddendumCount is a number of Check Detail Record Addenda to
+            follow. This represents the number of CheckDetailAddendumA, CheckDetailAddendumB
+            and CheckDetailAddendumC types.  It matches the total number of addendum
+            records associated with this item. The standard supports up to 99 addendum
+            records.
           example: 1
-          format: int32
           maximum: 99
           minimum: 0
           type: integer
@@ -9555,16 +9622,24 @@ components:
           maxLength: 1
           type: string
         forwardBundleDate:
-          description: ForwardBundleDate represents for electronic check exchange items, the year, month, and day that designates the business date of the original forward bundle. This data is transferred from the BundleHeader BundleBusinessDate.  For items presented in paper cash letters, the year, month, and day that the cash letter was created.
+          description: ForwardBundleDate represents for electronic check exchange
+            items, the year, month, and day that designates the business date of the
+            original forward bundle. This data is transferred from the BundleHeader
+            BundleBusinessDate.  For items presented in paper cash letters, the year,
+            month, and day that the cash letter was created.
           format: date-time
           type: string
         eCEInstitutionItemSequenceNumber:
-          description: ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail. Field must contain a numeric value. It cannot be all blanks.
+          description: ECEInstitutionItemSequenceNumber identifies a number assigned
+            by the institution that creates the CheckDetail. Field must contain a
+            numeric value. It cannot be all blanks.
           example: "24531"
           maxLength: 15
           type: string
         externalProcessingCode:
-          description: ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.
+          description: ExternalProcessingCode identifies a code used for special purposes
+            as authorized by the Accredited Standards Committee X9. Also known as
+            Position 44.
           example: "9"
           maxLength: 1
           type: string
@@ -9620,7 +9695,6 @@ components:
           - 2
           - 3
           - 4
-          format: int32
           type: integer
         returnDetailAddendumA:
           $ref: '#/components/schemas/ReturnDetailAddendumA'
@@ -9655,32 +9729,40 @@ components:
           example: d1e26288
           type: string
         auxiliaryOnUs:
-          description: AuxiliaryOnUs identifies a code used at the discretion of the creating bank. The handling of dashes and spaces shall be determined between the exchange partners.
+          description: AuxiliaryOnUs identifies a code used at the discretion of the
+            creating bank. The handling of dashes and spaces shall be determined between
+            the exchange partners.
           example: '*'
           maxLength: 15
           type: string
         externalProcessingCode:
-          description: ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.
+          description: ExternalProcessingCode identifies a code used for special purposes
+            as authorized by the Accredited Standards Committee X9. Also known as
+            Position 44.
           example: "9"
           maxLength: 1
           type: string
         postingBankRoutingNumber:
-          description: PostingBankRoutingNumber is a routing number assigned by the posting bank to identify this credit.
+          description: PostingBankRoutingNumber is a routing number assigned by the
+            posting bank to identify this credit.
           example: "231986436"
           maxLength: 9
           type: string
         onUs:
-          description: OnUs identifies data specified by the payor bank. On-Us data usually consists of the payor’s account number, a serial number or transaction code, or both.
+          description: OnUs identifies data specified by the payor bank. On-Us data
+            usually consists of the payor’s account number, a serial number or transaction
+            code, or both.
           example: "5558881"
           maxLength: 20
           type: string
         itemAmount:
-          description: Amount identifies the amount of the check.  All amounts fields have two implied decimal points. e.g., 100000 is $1,000.00
+          description: Amount identifies the amount of the check.  All amounts fields
+            have two implied decimal points. e.g., 100000 is $1,000.00
           example: 100000
-          format: int32
           type: integer
         creditItemSequenceNumber:
-          description: CreditItemSequenceNumber identifies a number assigned by the institution that creates the CreditItem.
+          description: CreditItemSequenceNumber identifies a number assigned by the
+            institution that creates the CreditItem.
           example: "1"
           type: string
         documentationTypeIndicator:
@@ -9734,7 +9816,6 @@ components:
           - "3"
           - "4"
           - "5"
-          - null
           example: "1"
           maxLength: 1
           type: string
@@ -9772,7 +9853,8 @@ components:
           maxLength: 2
           type: string
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: B12345678
           maxLength: 16
           type: string
@@ -9792,22 +9874,26 @@ components:
           example: d1e26288
           type: string
         cashLetterRoutingNumber:
-          description: CashLetterRoutingNumber is a number that identifies a given payor bank within a cash letter containing one or more payor banks.
+          description: CashLetterRoutingNumber is a number that identifies a given
+            payor bank within a cash letter containing one or more payor banks.
           example: "231380104"
           maxLength: 9
           type: string
         routingNumberTotalAmount:
-          description: RoutingNumberTotalAmount is the total amount for all Check Detail Records associated with the Payor bank routing number designated in the Routing Number within Cash Letter.
+          description: RoutingNumberTotalAmount is the total amount for all Check
+            Detail Records associated with the Payor bank routing number designated
+            in the Routing Number within Cash Letter.
           example: 10000
-          format: int32
           type: integer
         routingNumberItemCount:
-          description: RoutingNumberItemCount is the the total number of all Check Detail Records associated with the payor bank routing number designated in the Routing Number within Cash Letter.
+          description: RoutingNumberItemCount is the the total number of all Check
+            Detail Records associated with the payor bank routing number designated
+            in the Routing Number within Cash Letter.
           example: 10
-          format: int32
           type: integer
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: B1234567891012345
           maxLength: 24
           type: string
@@ -9833,14 +9919,17 @@ components:
           example: d1e26288
           type: string
         recordNumber:
-          description: RecordNumber is a number representing the order in which each CheckDetailAddendumA was created. CheckDetailAddendumA shall be in sequential order starting with 1.
+          description: RecordNumber is a number representing the order in which each
+            CheckDetailAddendumA was created. CheckDetailAddendumA shall be in sequential
+            order starting with 1.
           example: 1
-          format: int32
           maximum: 99
           minimum: 1
           type: integer
         returnLocationRoutingNumber:
-          description: ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns, final return notifications, and preliminary return notifications are sent, usually the BOFD.
+          description: ReturnLocationRoutingNumber is a valid routing and transit
+            number indicating where returns, final return notifications, and preliminary
+            return notifications are sent, usually the BOFD.
           example: "231486745"
           maxLength: 9
           type: string
@@ -9849,17 +9938,20 @@ components:
           format: date-time
           type: string
         bOFDItemSequenceNumber:
-          description: BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
+          description: BOFDItemSequenceNumber is a number that identifies the item
+            in the CheckDetailAddendumA.
           example: "1"
           maxLength: 15
           type: string
         bOFDAccountNumber:
-          description: BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
+          description: BOFDAccountNumber is a number that identifies the depository
+            account at the Bank of First Deposit.
           example: "938383"
           maxLength: 18
           type: string
         bOFDBranchCode:
-          description: BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
+          description: BOFDBranchCode is a code that identifies the branch at the
+            Bank of First Deposit.
           example: "01"
           maxLength: 5
           type: string
@@ -9869,7 +9961,8 @@ components:
           maxLength: 15
           type: string
         truncationIndicator:
-          description: TruncationIndicator identifies if the institution truncated the original check item.
+          description: TruncationIndicator identifies if the institution truncated
+            the original check item.
           enum:
           - Y
           - N
@@ -9923,7 +10016,8 @@ components:
           maxLength: 1
           type: string
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: Z
           maxLength: 4
           type: string
@@ -9965,7 +10059,9 @@ components:
           maxLength: 1
           type: string
         microfilmArchiveSequenceNumber:
-          description: microfilmArchiveSequenceNumber is a number that identifies the item in the microfilm archive system; it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+          description: microfilmArchiveSequenceNumber is a number that identifies
+            the item in the microfilm archive system; it may be different than the
+            Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
           example: "1"
           maxLength: 15
           type: string
@@ -9988,12 +10084,14 @@ components:
           example: "0"
           type: string
         descript:
-          description: Descript describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
+          description: Descript describes the transaction.  The position within the
+            file is variable based on the lengthImageReferenceKey.
           example: Payment
           maxLength: 15
           type: string
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: ZZZZ
           maxLength: 4
           type: string
@@ -10018,14 +10116,16 @@ components:
           example: d1e26288
           type: string
         recordNumber:
-          description: RecordNumber is a number representing the order in which each CheckDetailAddendumC was created. CheckDetailAddendumA shall be in sequential order starting with 1.
+          description: RecordNumber is a number representing the order in which each
+            CheckDetailAddendumC was created. CheckDetailAddendumA shall be in sequential
+            order starting with 1.
           example: 1
-          format: int32
           maximum: 99
           minimum: 1
           type: integer
         endorsingBankRoutingNumber:
-          description: EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that endorsed the check.
+          description: EndorsingBankRoutingNumber is a valid routing and transit number
+            indicating the bank that endorsed the check.
           example: "231486745"
           maxLength: 9
           type: string
@@ -10034,12 +10134,14 @@ components:
           format: date-time
           type: string
         endorsingBankSequenceNumber:
-          description: EndorsingItemSequenceNumber is a number that identifies the item at the endorsing bank.
+          description: EndorsingItemSequenceNumber is a number that identifies the
+            item at the endorsing bank.
           example: "1"
           maxLength: 15
           type: string
         truncationIndicator:
-          description: TruncationIndicator identifies if the institution truncated the original check item.
+          description: TruncationIndicator identifies if the institution truncated
+            the original check item.
           enum:
           - Y
           - N
@@ -10097,7 +10199,8 @@ components:
           description: ReturnReason is a code that indicates the reason for non-payment.
           type: string
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: Z
           maxLength: 19
           type: string
@@ -10161,12 +10264,12 @@ components:
           - 2
           - 3
           example: 1
-          format: int32
           maximum: 3
           minimum: 0
           type: integer
         imageCreatorRoutingNumber:
-          description: ImageCreatorRoutingNumber identifies the financial institution that created the image view.
+          description: ImageCreatorRoutingNumber identifies the financial institution
+            that created the image view.
           example: "2139876354"
           maxLength: 9
           type: string
@@ -10302,9 +10405,9 @@ components:
           maxLength: 2
           type: string
         securityKeySize:
-          description: SecurityKeySize is the length in bits of the cryptographic algorithm key used to create the Digital Signature. Valid values 0–99999
+          description: SecurityKeySize is the length in bits of the cryptographic
+            algorithm key used to create the Digital Signature. Valid values 0–99999
           example: 1
-          format: int32
           maximum: 99999
           minimum: 0
           type: integer
@@ -10313,7 +10416,6 @@ components:
             ProtectedDataStart is a number that represents the offset in bytes from the first byte (counted as byte 1) of the image data in ImageViewData.ImageData to the first byte of the image data protected by the digital signature.
             Valid values - 0000000 - Digital Signature is applied to entire image data 000001–9999999 - Valid offset values
           example: 0
-          format: int32
           maximum: 9999999
           minimum: 0
           type: integer
@@ -10324,7 +10426,7 @@ components:
           example: 0
           maximum: 9999999
           minimum: 0
-          type: int
+          type: integer
         imageRecreateIndicator:
           description: |
             ImageRecreateIndicator is a code that indicates whether the sender has the ability to recreate the image view
@@ -10336,10 +10438,10 @@ components:
           - 0
           - 1
           example: 0
-          format: int32
           type: integer
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: Z
           maxLength: 8
           type: string
@@ -10368,7 +10470,7 @@ components:
             * `N` -  IQA Fail–Image view not reviewed–alternate format included in this file
             * `O` -  IQA Fail–Image view not reviewed–alternate format included in this file and original
           enum:
-          - null
+          - ' '
           - "0"
           - "1"
           - A
@@ -10416,7 +10518,10 @@ components:
           example: d1e26288
           type: string
         eCEInstitutionRoutingNumber:
-          description: ECEInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the bundle header.  This number is imported from the Bundle Header Record (Clause 9.4) associated with the image view conveyed in this Image View Data Property.
+          description: ECEInstitutionRoutingNumber contains the routing and transit
+            number of the institution that that creates the bundle header.  This number
+            is imported from the Bundle Header Record (Clause 9.4) associated with
+            the image view conveyed in this Image View Data Property.
           example: "2318769876"
           maxLength: 9
           type: string
@@ -10425,27 +10530,47 @@ components:
           format: date-time
           type: string
         cycleNumber:
-          description: CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which the bundle is created.
+          description: CycleNumber is a code assigned by the institution that creates
+            the bundle.  Denotes the cycle under which the bundle is created.
           example: "1"
           maxLength: 2
           type: string
         ivData.ECEInstitutionItemSequenceNumber:
-          description: ECEInstitutionItemSequenceNumber is a number assigned by the institution that creates the CheckDetail or Return.  This number is imported from the CheckDetail.ECEInstitutionItemSequenceNumber or Return.ECEInstitutionItemSequenceNumber associated with the image view conveyed in this Image View Data Record. The ECE institution must construct the sequence number to guarantee uniqueness for a given routing number, business day, and cycle number. Must contain a numeric value.
+          description: ECEInstitutionItemSequenceNumber is a number assigned by the
+            institution that creates the CheckDetail or Return.  This number is imported
+            from the CheckDetail.ECEInstitutionItemSequenceNumber or Return.ECEInstitutionItemSequenceNumber
+            associated with the image view conveyed in this Image View Data Record.
+            The ECE institution must construct the sequence number to guarantee uniqueness
+            for a given routing number, business day, and cycle number. Must contain
+            a numeric value.
           example: "1"
           maxLength: 15
           type: string
         ivData.SecurityOriginatorName:
-          description: SecurityOriginatorName is a unique name that creates the Digital Signature for data to be exchanged. Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1 Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          description: SecurityOriginatorName is a unique name that creates the Digital
+            Signature for data to be exchanged. Shall be present only under clearing
+            arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1 Shall
+            not be present when ImageViewDetail.ImageIndicator is 0.
           example: Name
           maxLength: 16
           type: string
         ivData.SecurityAuthenticatorName:
-          description: SecurityAuthenticatorName is the unique name that performs authentication on received data. Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1 Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          description: SecurityAuthenticatorName is the unique name that performs
+            authentication on received data. Shall be present only under clearing
+            arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1 Shall
+            not be present when ImageViewDetail.ImageIndicator is 0.
           example: Name
           maxLength: 16
           type: string
         ivData.SecurityKeyName:
-          description: SecurityKeyName is a name or character sequence used by the signer (originator) to communicate a key identifierto the recipient (authenticator) so the recipient can obtain the key needed to validate the signature. The name is typically used as an identifier related to the key pair used to sign the image. The name is mutually known to the security originator and the security authenticator and is unique to this relationship. Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1 Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          description: SecurityKeyName is a name or character sequence used by the
+            signer (originator) to communicate a key identifierto the recipient (authenticator)
+            so the recipient can obtain the key needed to validate the signature.
+            The name is typically used as an identifier related to the key pair used
+            to sign the image. The name is mutually known to the security originator
+            and the security authenticator and is unique to this relationship. Shall
+            be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator
+            is 1 Shall not be present when ImageViewDetail.ImageIndicator is 0.
           example: SECURE
           maxLength: 16
           type: string
@@ -10469,25 +10594,47 @@ components:
           - 3
           - 4
           example: 1
-          format: int32
           type: integer
         ivData.ClippingCoordinateH1:
-          description: ClippingCoordinateH1 is a number that represents the horizontal offset in pixels from the clipping origin to the nearest vertical side of the clipping rectangle. The clipping coordinates (h1, h2, v1, v2) convey the clipping rectangle’s offsets in both horizontal (h) and vertical (v) directions. The offset values collectively establish the boundary sides of the clipping rectangle. Pixels on the boundary of the clipping rectangle are included in the selected array of pixels. That is, the first pixel of the selected array is at offset (h1, v1) and the last pixel of the selected array is at offset (h2, v2). The corner pixel at the origin of the image view is assumed to have the offset value (0, 0). Shall be present if Image View Data.ClippingOrigin is present and non-zero. Shall not be present when ImageViewDetail.ImageIndicator is 0. Valid values - 0000–9999
+          description: ClippingCoordinateH1 is a number that represents the horizontal
+            offset in pixels from the clipping origin to the nearest vertical side
+            of the clipping rectangle. The clipping coordinates (h1, h2, v1, v2) convey
+            the clipping rectangle’s offsets in both horizontal (h) and vertical (v)
+            directions. The offset values collectively establish the boundary sides
+            of the clipping rectangle. Pixels on the boundary of the clipping rectangle
+            are included in the selected array of pixels. That is, the first pixel
+            of the selected array is at offset (h1, v1) and the last pixel of the
+            selected array is at offset (h2, v2). The corner pixel at the origin of
+            the image view is assumed to have the offset value (0, 0). Shall be present
+            if Image View Data.ClippingOrigin is present and non-zero. Shall not be
+            present when ImageViewDetail.ImageIndicator is 0. Valid values - 0000–9999
           example: "0001"
           maxLength: 4
           type: string
         ivData.ClippingCoordinateH2:
-          description: ClippingCoordinateH2 is a number that represents the horizontal offset in pixels from the clipping origin to the furthermost vertical side of the clipping rectangle. Shall be present if Image View Data.ClippingOrigin is present and non-zero. Shall not be present when ImageViewDetail.ImageIndicator is 0. Valid values - 0000–9999
+          description: ClippingCoordinateH2 is a number that represents the horizontal
+            offset in pixels from the clipping origin to the furthermost vertical
+            side of the clipping rectangle. Shall be present if Image View Data.ClippingOrigin
+            is present and non-zero. Shall not be present when ImageViewDetail.ImageIndicator
+            is 0. Valid values - 0000–9999
           example: "0001"
           maxLength: 4
           type: string
         ivData.ClippingCoordinateV1:
-          description: ClippingCoordinateV1 is a number that represents the vertical offset in pixels from the clipping origin to the nearest horizontal side of the clipping rectangle. Shall be present if Image View Data.ClippingOrigin is present and non-zero. Shall not be present when ImageViewDetail.ImageIndicator is 0. Valid values - 0000–9999
+          description: ClippingCoordinateV1 is a number that represents the vertical
+            offset in pixels from the clipping origin to the nearest horizontal side
+            of the clipping rectangle. Shall be present if Image View Data.ClippingOrigin
+            is present and non-zero. Shall not be present when ImageViewDetail.ImageIndicator
+            is 0. Valid values - 0000–9999
           example: "0001"
           maxLength: 4
           type: string
         ivData.ClippingCoordinateV2:
-          description: ClippingCoordinateV2 is number that represents the vertical offset in pixels from the clipping origin to the furthermost horizontal side of the clipping rectangle. Shall be present if Image View Data.ClippingOrigin is present and non-zero. Shall not be present when ImageViewDetail.ImageIndicator is 0. Valid values - 0000–9999
+          description: ClippingCoordinateV2 is number that represents the vertical
+            offset in pixels from the clipping origin to the furthermost horizontal
+            side of the clipping rectangle. Shall be present if Image View Data.ClippingOrigin
+            is present and non-zero. Shall not be present when ImageViewDetail.ImageIndicator
+            is 0. Valid values - 0000–9999
           example: "0001"
           maxLength: 4
           type: string
@@ -10500,25 +10647,55 @@ components:
           maxLength: 4
           type: string
         ivData.ImageReferenceKey:
-          description: ImageReferenceKey is assigned by the ECE institution that creates the CheckDetail or Return, and the related Image View Records. This designator, when used, shall uniquely identify the item image to the ECE institution. This designator is a special key with significance to the creating institution. It is intended to be used to locate within an archive the unique image associated with the item. The designator could be a full access path and name that would allow direct look up and access to the image, for example a URL. This shall match CheckDetailAddendumB.ImageReferenceKey, or ReturnAddendumCImageReferenceKey Record, if used. Valid size - 0 – 9999
+          description: ImageReferenceKey is assigned by the ECE institution that creates
+            the CheckDetail or Return, and the related Image View Records. This designator,
+            when used, shall uniquely identify the item image to the ECE institution.
+            This designator is a special key with significance to the creating institution.
+            It is intended to be used to locate within an archive the unique image
+            associated with the item. The designator could be a full access path and
+            name that would allow direct look up and access to the image, for example
+            a URL. This shall match CheckDetailAddendumB.ImageReferenceKey, or ReturnAddendumCImageReferenceKey
+            Record, if used. Valid size - 0 – 9999
           example: "0"
           type: string
         ivData.LengthDigitalSignature:
-          description: LengthDigitalSignature is the number of bytes in the Image View Data.DigitalSignature. Shall not be present when ImageViewDetail.ImageIndicator is 0.
+          description: LengthDigitalSignature is the number of bytes in the Image
+            View Data.DigitalSignature. Shall not be present when ImageViewDetail.ImageIndicator
+            is 0.
           example: '0    '
           maxLength: 4
           type: string
         ivData.DigitalSignature:
-          description: DigitalSignature is created by applying the cryptographic algorithm and private/secret key against the data to be protected. The Digital Signature provides user authentication and data integrity. Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1 Shall not be present when ImageViewDetail.ImageIndicator is 0. Valid size - 0-99999
+          description: DigitalSignature is created by applying the cryptographic algorithm
+            and private/secret key against the data to be protected. The Digital Signature
+            provides user authentication and data integrity. Shall be present only
+            under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator
+            is 1 Shall not be present when ImageViewDetail.ImageIndicator is 0. Valid
+            size - 0-99999
           example: "0101"
           type: string
         ivData.LengthImageData:
-          description: LengthImageData is the number of bytes in the ImageViewData.ImageData. Shall be present when ImageViewDetail.ImageIndicator is NOT 0 Valid values - 0000001–99999999
+          description: LengthImageData is the number of bytes in the ImageViewData.ImageData.
+            Shall be present when ImageViewDetail.ImageIndicator is NOT 0 Valid values
+            - 0000001–99999999
           example: "0000001"
           maxLength: 4
           type: string
         ivData.ImageData:
-          description: ImageData contains the image view. The Image Data generally consists of an image header and the image raster data. The image header provides information that is required to interpret the image raster data. The image raster data contains the scanned image of the physical item in raster (line by line) format. Each scan line comprises a set of concatenated pixels. The image comprises a set of scan lines. The image raster data is typically compressed to reduce the number of bytes needed to transmit and store the image. The header/image format type is defined by the ImageViewDetail.ImageViewFormatIndicator . The syntax and semantics of the image header/image format are understood by referring to the appropriate image format specification. The compression scheme used to compress the image raster data is specified in the ImageViewCompressionAlgorithmIdentifier and in the image header portion of the Image Data or by association with the selected image format. Shall be present when ImageViewDetail.ImageIndicator Record is NOT 0. Valid size - 0-9999999
+          description: ImageData contains the image view. The Image Data generally
+            consists of an image header and the image raster data. The image header
+            provides information that is required to interpret the image raster data.
+            The image raster data contains the scanned image of the physical item
+            in raster (line by line) format. Each scan line comprises a set of concatenated
+            pixels. The image comprises a set of scan lines. The image raster data
+            is typically compressed to reduce the number of bytes needed to transmit
+            and store the image. The header/image format type is defined by the ImageViewDetail.ImageViewFormatIndicator
+            . The syntax and semantics of the image header/image format are understood
+            by referring to the appropriate image format specification. The compression
+            scheme used to compress the image raster data is specified in the ImageViewCompressionAlgorithmIdentifier
+            and in the image header portion of the Image Data or by association with
+            the selected image format. Shall be present when ImageViewDetail.ImageIndicator
+            Record is NOT 0. Valid size - 0-9999999
           example: "0101"
           type: string
     ImageViewAnalysis:
@@ -10928,7 +11105,8 @@ components:
           maxLength: 1
           type: string
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: ZZZZZ
           maxLength: 20
           type: string
@@ -10952,14 +11130,17 @@ components:
           example: d1e26288
           type: string
         recordNumber:
-          description: RecordNumber is a number representing the order in which each ReturnDetailAddendumA was created. ReturnDetailAddendumA shall be in sequential order starting with 1.
+          description: RecordNumber is a number representing the order in which each
+            ReturnDetailAddendumA was created. ReturnDetailAddendumA shall be in sequential
+            order starting with 1.
           example: 1
-          format: int32
           maximum: 9
           minimum: 1
           type: integer
         returnLocationRoutingNumber:
-          description: ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns, final return notifications, and preliminary return notifications are sent, usually the BOFD.
+          description: ReturnLocationRoutingNumber is a valid routing and transit
+            number indicating where returns, final return notifications, and preliminary
+            return notifications are sent, usually the BOFD.
           example: "231486745"
           maxLength: 9
           type: string
@@ -10968,17 +11149,20 @@ components:
           format: date-time
           type: string
         bOFDItemSequenceNumber:
-          description: BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
+          description: BOFDItemSequenceNumber is a number that identifies the item
+            in the CheckDetailAddendumA.
           example: "1"
           maxLength: 15
           type: string
         bOFDAccountNumber:
-          description: BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
+          description: BOFDAccountNumber is a number that identifies the depository
+            account at the Bank of First Deposit.
           example: "938383"
           maxLength: 18
           type: string
         bOFDBranchCode:
-          description: BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
+          description: BOFDBranchCode is a code that identifies the branch at the
+            Bank of First Deposit.
           example: "01"
           maxLength: 5
           type: string
@@ -10988,7 +11172,8 @@ components:
           maxLength: 15
           type: string
         truncationIndicator:
-          description: TruncationIndicator identifies if the institution truncated the original check item.
+          description: TruncationIndicator identifies if the institution truncated
+            the original check item.
           enum:
           - Y
           - N
@@ -11042,7 +11227,8 @@ components:
           maxLength: 1
           type: string
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: Z
           maxLength: 1
           type: string
@@ -11066,22 +11252,26 @@ components:
           example: d1e26288
           type: string
         payorBankName:
-          description: PayorBankName is short name of the institution by or through which the item is payable.
+          description: PayorBankName is short name of the institution by or through
+            which the item is payable.
           example: Bank Short Name
           maxLength: 18
           type: string
         auxiliaryOnUs:
-          description: AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
+          description: AuxiliaryOnUs identifies a code used on commercial checks at
+            the discretion of the payor bank.
           example: "012349"
           maxLength: 15
           type: string
         payorBankSequenceNumber:
-          description: PayorBankSequenceNumber is a number that identifies the item at the payor bank.
+          description: PayorBankSequenceNumber is a number that identifies the item
+            at the payor bank.
           example: "1"
           maxLength: 15
           type: string
         payorBankBusinessDate:
-          description: PayorBankBusinessDate is the year, month, and day the payor bank processed the Return Record.
+          description: PayorBankBusinessDate is the year, month, and day the payor
+            bank processed the Return Record.
           format: date-time
           type: string
         payorAccountName:
@@ -11122,7 +11312,9 @@ components:
           - "1"
           type: string
         microfilmArchiveSequenceNumber:
-          description: microfilmArchiveSequenceNumber is a number that identifies the item in the microfilm archive system; it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+          description: microfilmArchiveSequenceNumber is a number that identifies
+            the item in the microfilm archive system; it may be different than the
+            Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
           example: "1"
           maxLength: 15
           type: string
@@ -11145,12 +11337,14 @@ components:
           example: "0"
           type: string
         descript:
-          description: Descript describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
+          description: Descript describes the transaction.  The position within the
+            file is variable based on the lengthImageReferenceKey.
           example: Payment
           maxLength: 15
           type: string
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: ZZZZ
           maxLength: 4
           type: string
@@ -11180,7 +11374,8 @@ components:
           minimum: 1
           type: string
         endorsingBankRoutingNumber:
-          description: EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that endorsed the check.
+          description: EndorsingBankRoutingNumber is a valid routing and transit number
+            indicating the bank that endorsed the check.
           example: "231486745"
           maxLength: 9
           type: string
@@ -11189,12 +11384,14 @@ components:
           format: date-time
           type: string
         endorsingBankSequenceNumber:
-          description: EndorsingItemSequenceNumber is a number that identifies the item at the endorsing bank.
+          description: EndorsingItemSequenceNumber is a number that identifies the
+            item at the endorsing bank.
           example: "1"
           maxLength: 15
           type: string
         truncationIndicator:
-          description: TruncationIndicator identifies if the institution truncated the original check item.
+          description: TruncationIndicator identifies if the institution truncated
+            the original check item.
           enum:
           - Y
           - N
@@ -11252,7 +11449,8 @@ components:
           description: ReturnReason is a code that indicates the reason for non-payment.
           type: string
         userField:
-          description: UserField identifies a field used at the discretion of users of the standard.
+          description: UserField identifies a field used at the discretion of users
+            of the standard.
           example: Z
           maxLength: 19
           type: string

@@ -13,7 +13,8 @@ For more information, please visit [https://github.com/moov-io/imagecashletter](
 ## Installation
 
 Install the following dependencies:
-```
+
+```shell
 go get github.com/stretchr/testify/assert
 go get golang.org/x/oauth2
 go get golang.org/x/net/context
@@ -21,6 +22,7 @@ go get github.com/antihax/optional
 ```
 
 Put the package under your project folder and add the following in import:
+
 ```golang
 import "./openapi"
 ```
@@ -77,6 +79,7 @@ Class | Method | HTTP request | Description
 
 
 ## Documentation For Authorization
+
  Endpoints do not require authorization.
 
 

@@ -1,6 +1,7 @@
 # CheckDetail
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | **string** | CheckDetail ID | [optional] 

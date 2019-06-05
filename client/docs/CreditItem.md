@@ -1,6 +1,7 @@
 # CreditItem
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | **string** | CreditItem ID | [optional] 

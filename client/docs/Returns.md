@@ -1,6 +1,7 @@
 # Returns
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ReturnDetail** | [**ReturnDetail**](ReturnDetail.md) |  | [optional] 

@@ -7,11 +7,14 @@ Method | HTTP request | Description
 [**Ping**](FilesApi.md#Ping) | **Get** /ping | Ping the ImageCashLetter service to check if running
 
 
-# **Ping**
+
+## Ping
+
 > Ping(ctx, )
 Ping the ImageCashLetter service to check if running
 
 ### Required Parameters
+
 This endpoint does not need any parameter.
 
 ### Return type
@@ -24,8 +27,10 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: Not defined
+- **Content-Type**: Not defined
+- **Accept**: Not defined
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 

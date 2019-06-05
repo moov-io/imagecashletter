@@ -1,6 +1,7 @@
 # CashLetter
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CashLetterHeader** | [**CashLetterHeader**](CashLetterHeader.md) |  | [optional] 

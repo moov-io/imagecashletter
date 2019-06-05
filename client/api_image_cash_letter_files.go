@@ -14,8 +14,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
 	"fmt"
+	"strings"
 	"github.com/antihax/optional"
 )
 
@@ -43,7 +43,7 @@ type AddCashLetterToFileOpts struct {
 
 func (a *ImageCashLetterFilesApiService) AddCashLetterToFile(ctx context.Context, fileId string, cashLetter CashLetter, localVarOptionals *AddCashLetterToFileOpts) (*http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Post")
+		localVarHttpMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -127,7 +127,7 @@ type CreateFileOpts struct {
 
 func (a *ImageCashLetterFilesApiService) CreateFile(ctx context.Context, createFile CreateFile, localVarOptionals *CreateFileOpts) (File, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Post")
+		localVarHttpMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -238,7 +238,7 @@ type DeleteFileCashLetterOpts struct {
 
 func (a *ImageCashLetterFilesApiService) DeleteFileCashLetter(ctx context.Context, fileId string, cashLetterId string, localVarOptionals *DeleteFileCashLetterOpts) (*http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Delete")
+		localVarHttpMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -315,7 +315,7 @@ type DeleteImageCashLetterFileOpts struct {
 
 func (a *ImageCashLetterFilesApiService) DeleteImageCashLetterFile(ctx context.Context, fileId string, localVarOptionals *DeleteImageCashLetterFileOpts) (*http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Delete")
+		localVarHttpMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -392,7 +392,7 @@ type GetFileByIDOpts struct {
 
 func (a *ImageCashLetterFilesApiService) GetFileByID(ctx context.Context, fileId string, localVarOptionals *GetFileByIDOpts) (File, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -490,7 +490,7 @@ type GetFileCashLetterOpts struct {
 
 func (a *ImageCashLetterFilesApiService) GetFileCashLetter(ctx context.Context, fileId string, cashLetterId string, localVarOptionals *GetFileCashLetterOpts) (CashLetter, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -588,7 +588,7 @@ type GetFileCashLettersOpts struct {
 
 func (a *ImageCashLetterFilesApiService) GetFileCashLetters(ctx context.Context, fileId string, localVarOptionals *GetFileCashLettersOpts) ([]CashLetter, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -685,7 +685,7 @@ type GetFileContentsOpts struct {
 
 func (a *ImageCashLetterFilesApiService) GetFileContents(ctx context.Context, fileId string, localVarOptionals *GetFileContentsOpts) (string, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -781,7 +781,7 @@ type GetFilesOpts struct {
 
 func (a *ImageCashLetterFilesApiService) GetFiles(ctx context.Context, localVarOptionals *GetFilesOpts) ([]File, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -880,7 +880,7 @@ type UpdateFileOpts struct {
 
 func (a *ImageCashLetterFilesApiService) UpdateFile(ctx context.Context, fileId string, createFile CreateFile, localVarOptionals *UpdateFileOpts) (File, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Post")
+		localVarHttpMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -992,7 +992,7 @@ type ValidateFileOpts struct {
 
 func (a *ImageCashLetterFilesApiService) ValidateFile(ctx context.Context, fileId string, localVarOptionals *ValidateFileOpts) (File, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string

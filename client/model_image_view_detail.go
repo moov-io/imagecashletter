@@ -38,7 +38,7 @@ type ImageViewDetail struct {
 	// ProtectedDataStart is a number that represents the offset in bytes from the first byte (counted as byte 1) of the image data in ImageViewData.ImageData to the first byte of the image data protected by the digital signature. Valid values - 0000000 - Digital Signature is applied to entire image data 000001–9999999 - Valid offset values
 	ProtectedDataStart int32 `json:"protectedDataStart,omitempty"`
 	// ProtectedDataLength is number of contiguous bytes of image data in the related ImageViewData.ImageData protected by the digital signature starting with the byte indicated by the value of the ProtectedDataStart in this ImageViewDetail. The ProtectedDataLength value shall not exceed the ImageViewData.ImageDataLength. Valid values - 0000000 - Digital Signature is applied to entire image data 000001–9999999 - Valid length values
-	ProtectedDataLength int `json:"protectedDataLength,omitempty"`
+	ProtectedDataLength int32 `json:"protectedDataLength,omitempty"`
 	// ImageRecreateIndicator is a code that indicates whether the sender has the ability to recreate the image view conveyed in the related ImageViewData.ImageData.  * `0` - Sender can recreate the image view for the duration of the agreed upon retention time frames. * `1` - Sender cannot recreate image view. 
 	ImageRecreateIndicator int32 `json:"imageRecreateIndicator,omitempty"`
 	// UserField identifies a field used at the discretion of users of the standard.

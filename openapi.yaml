@@ -610,7 +610,7 @@ components:
           type: string
           maxLength: 1
           enum:
-            -
+            - " "
             - 0
             - 1
           description: |
@@ -793,7 +793,7 @@ components:
           type: string
           maxLength: 1
           enum:
-            -
+            - " "
             - E
             - R
             - J
@@ -845,7 +845,7 @@ components:
         creditTotalIndicator:
           maxLength: 1
           enum:
-            -
+            - " "
             - 0
             - 1
           description: |
@@ -984,7 +984,7 @@ components:
         creditTotalIndicator:
           maxLength: 1
           enum:
-            -
+            - " "
             - 0
             - 1
           description: |
@@ -1487,7 +1487,6 @@ components:
             - 3
             - 4
             - 5
-            -
           description: |
             AccountTypeCode is a code that indicates the type of account to which this CreditItem is associated.
 
@@ -1514,36 +1513,7 @@ components:
             - 09
             - 10
             - 11
-#            - 21
-#            - 22
-#            - 23
-#            - 24
-#            - 25
-#            - 26
-#            - 27
-#            - 28
-#            - 29
-#            - 30
-#            - 31
-#            - 32
-#            - 33
-#            - 34
-#            - 35
-#            - 36
-#            - 37
-#            - 38
-#            - 39
-#            - 40
-#            - 41
-#            - 42
-#            - 43
-#            - 44
-#            - 45
-#            - 46
-#            - 47
-#            - 48
-#            - 49
-#            - 50
+#            21 - 50
           description: |
             AccountTypeCode is a code that indicates the type of account to which this CreditItem is associated.
 
@@ -2064,7 +2034,7 @@ components:
             000001–9999999 - Valid offset values
           example: 0
         protectedDataLength:
-          type: int
+          type: integer
           minimum: 0
           maximum: 9999999
           description: ProtectedDataLength is number of contiguous bytes of image data in the related ImageViewData.ImageData
@@ -2096,7 +2066,7 @@ components:
           type: string
           maxLength: 1
           enum:
-            -
+            - " "
             - 0
             - 1
             - A

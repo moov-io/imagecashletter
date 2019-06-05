@@ -1,6 +1,7 @@
 # RoutingNumberSummary
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | **string** | RoutingNumberSummary ID | [optional] 
