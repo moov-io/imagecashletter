@@ -21,7 +21,7 @@ paths:
   /ping:
     get:
       tags:
-        - Files
+        - ICLFiles
       summary: Ping the ImageCashLetter service to check if running
       operationId: ping
       responses:
@@ -31,7 +31,7 @@ paths:
     get:
       tags: ['Image Cash Letter Files']
       summary: Gets a list of Files
-      operationId: getFiles
+      operationId: getICLFiles
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -58,7 +58,7 @@ paths:
     post:
       tags: ['Image Cash Letter Files']
       summary: Create a new File object
-      operationId: createFile
+      operationId: createICLFile
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -111,7 +111,7 @@ paths:
     get:
       tags: ['Image Cash Letter Files']
       summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
-      operationId: getFileByID
+      operationId: getICLFileByID
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -141,7 +141,7 @@ paths:
     post:
       tags: ['Image Cash Letter Files']
       summary: Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-      operationId: updateFile
+      operationId: updateICLFile
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -194,7 +194,7 @@ paths:
     delete:
       tags: ['Image Cash Letter Files']
       summary: Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
-      operationId: deleteImageCashLetterFile
+      operationId: deleteICLFile
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -221,7 +221,7 @@ paths:
     get:
       tags: ['Image Cash Letter Files']
       summary: Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
-      operationId: getFileContents
+      operationId: getICLFileContents
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -250,7 +250,7 @@ paths:
     get:
       tags: ['Image Cash Letter Files']
       summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
-      operationId: validateFile
+      operationId: validateICLFile
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -314,7 +314,7 @@ paths:
     post:
       tags: ['Image Cash Letter Files']
       summary: Add CashLetter to File
-      operationId: addCashLetterToFile
+      operationId: addICLToFile
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -351,8 +351,8 @@ paths:
   /files/{file_id}/cashLetters/{cashLetter_id}:
     get:
       tags: ['Image Cash Letter Files']
-      summary: Get a specific CashLetter on a FIle
-      operationId: getFileCashLetter
+      summary: Get a specific CashLetter on a File
+      operationId: getICLFromFile
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -389,7 +389,7 @@ paths:
     delete:
       tags: ['Image Cash Letter Files']
       summary: Delete a CashLetter from a File
-      operationId: deleteFileCashLetter
+      operationId: deleteICLFromFile
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -610,7 +610,6 @@ components:
           type: string
           maxLength: 1
           enum:
-            - " "
             - 0
             - 1
           description: |
@@ -793,7 +792,6 @@ components:
           type: string
           maxLength: 1
           enum:
-            - " "
             - E
             - R
             - J
@@ -845,7 +843,6 @@ components:
         creditTotalIndicator:
           maxLength: 1
           enum:
-            - " "
             - 0
             - 1
           description: |
@@ -984,7 +981,6 @@ components:
         creditTotalIndicator:
           maxLength: 1
           enum:
-            - " "
             - 0
             - 1
           description: |
@@ -2003,7 +1999,6 @@ components:
             - 02
             - 03
             - 04
-#            - 05 - 99
           description: |
             DigitalSignatureMethod is a code that identifies the cryptographic algorithm used to generate and validate the
             Digital Signature in ImageViewData.DigitalSignature.
@@ -2066,7 +2061,6 @@ components:
           type: string
           maxLength: 1
           enum:
-            - " "
             - 0
             - 1
             - A
