@@ -198,30 +198,175 @@ func main() {
 	cdTwo.AddImageViewAnalysis(ivAnalysis)
 	bundle.AddCheckDetail(cdTwo)
 
-	/*
-		// Create ReturnDetail
-		rd := imagecashletter.NewReturnDetail()
-		rd.AddReturnDetailAddendumA(imagecashletter.NewReturnDetailAddendumA())
-		rd.AddReturnDetailAddendumB(imagecashletter.NewReturnDetailAddendumB())
-		rd.AddReturnDetailAddendumC(imagecashletter.NewReturnDetailAddendumC())
-		rd.AddReturnDetailAddendumD(imagecashletter.NewReturnDetailAddendumD())
-		rd.AddImageViewDetail(imagecashletter.NewImageViewDetail())
-		rd.AddImageViewData(imagecashletter.NewImageViewData())
-		rd.AddImageViewAnalysis(imagecashletter.NewImageViewAnalysis())
-		returnBundle := imagecashletter.NewBundle(imagecashletter.NewBundleHeader())
-		returnBundle.BundleHeader.BundleSequenceNumber = "2"
-		returnBundle.AddReturnDetail(rd)
+	// Create ReturnDetail
+	rd := imagecashletter.NewReturnDetail()
+	rd.PayorBankRoutingNumber = "03130001"
+	rd.PayorBankCheckDigit = "2"
+	rd.OnUs = "5558881"
+	rd.ItemAmount = 100000
+	rd.ReturnReason = "A"
+	rd.AddendumCount = 4
+	rd.DocumentationTypeIndicator = "G"
+	rd.ForwardBundleDate = time.Now()
+	rd.EceInstitutionItemSequenceNumber = "1              "
+	rd.ExternalProcessingCode = ""
+	rd.ReturnNotificationIndicator = 2
+	rd.ArchiveTypeIndicator = "B"
+	rd.TimesReturned = 0
 
-		rdTwo := imagecashletter.NewReturnDetail()
-		rdTwo.AddReturnDetailAddendumA(imagecashletter.NewReturnDetailAddendumA())
-		rdTwo.AddReturnDetailAddendumB(imagecashletter.NewReturnDetailAddendumB())
-		rdTwo.AddReturnDetailAddendumC(imagecashletter.NewReturnDetailAddendumC())
-		rdTwo.AddReturnDetailAddendumD(imagecashletter.NewReturnDetailAddendumD())
-		rdTwo.AddImageViewDetail(imagecashletter.NewImageViewDetail())
-		rdTwo.AddImageViewData(imagecashletter.NewImageViewData())
-		rdTwo.AddImageViewAnalysis(imagecashletter.NewImageViewAnalysis())
-		returnBundle.AddReturnDetail(rdTwo)
-	*/
+	rdAddendumA := imagecashletter.NewReturnDetailAddendumA()
+	rdAddendumA.RecordNumber = 1
+	rdAddendumA.ReturnLocationRoutingNumber = "121042882"
+	rdAddendumA.BOFDEndorsementDate = time.Now()
+	rdAddendumA.BOFDItemSequenceNumber = "1              "
+	rdAddendumA.BOFDAccountNumber = "938383"
+	rdAddendumA.BOFDBranchCode = "01"
+	rdAddendumA.PayeeName = "Test Payee"
+	rdAddendumA.TruncationIndicator = "Y"
+	rdAddendumA.BOFDConversionIndicator = "1"
+	rdAddendumA.BOFDCorrectionIndicator = 0
+	rdAddendumA.UserField = ""
+
+	rdAddendumB := imagecashletter.NewReturnDetailAddendumB()
+	rdAddendumB.PayorBankName = "Payor Bank Name"
+	rdAddendumB.AuxiliaryOnUs = "123456789"
+	rdAddendumB.PayorBankSequenceNumber = "1              "
+	rdAddendumB.PayorBankBusinessDate = time.Now()
+	rdAddendumB.PayorAccountName = "Payor Account Name"
+
+	rdAddendumC := imagecashletter.NewReturnDetailAddendumC()
+	rdAddendumC.ImageReferenceKeyIndicator = 1
+	rdAddendumC.MicrofilmArchiveSequenceNumber = "1A"
+	rdAddendumC.LengthImageReferenceKey = "0034"
+	rdAddendumC.ImageReferenceKey = "0"
+	rdAddendumC.Description = "RD Addendum C"
+	rdAddendumC.UserField = ""
+
+	rdAddendumD := imagecashletter.NewReturnDetailAddendumD()
+	rdAddendumD.RecordNumber = 1
+	rdAddendumD.EndorsingBankRoutingNumber = "121042882"
+	rdAddendumD.BOFDEndorsementBusinessDate = time.Now()
+	rdAddendumD.EndorsingBankItemSequenceNumber = "1              "
+	rdAddendumD.TruncationIndicator = "Y"
+	rdAddendumD.EndorsingBankConversionIndicator = "1"
+	rdAddendumD.EndorsingBankCorrectionIndicator = 0
+	rdAddendumD.ReturnReason = "A"
+	rdAddendumD.UserField = ""
+	rdAddendumD.EndorsingBankIdentifier = 0
+
+	rdivDetail := imagecashletter.NewImageViewDetail()
+	rdivDetail.ImageIndicator = 1
+	rdivDetail.ImageCreatorRoutingNumber = "031300012"
+	rdivDetail.ImageCreatorDate = time.Now()
+	rdivDetail.ImageViewFormatIndicator = "00"
+	rdivDetail.ImageViewCompressionAlgorithm = "00"
+	// use of ivDetail.ImageViewDataSize is not recommended
+	rdivDetail.ImageViewDataSize = "0000000"
+	rdivDetail.ViewSideIndicator = 0
+	rdivDetail.ViewDescriptor = "00"
+	rdivDetail.DigitalSignatureIndicator = 0
+	rdivDetail.DigitalSignatureMethod = "00"
+	rdivDetail.SecurityKeySize = 00000
+	rdivDetail.ProtectedDataStart = 0000000
+	rdivDetail.ProtectedDataLength = 0000000
+	rdivDetail.ImageRecreateIndicator = 0
+	rdivDetail.UserField = ""
+	rdivDetail.OverrideIndicator = "0"
+
+	rdivData := imagecashletter.NewImageViewData()
+	rdivData.EceInstitutionRoutingNumber = "121042882"
+	rdivData.BundleBusinessDate = time.Now()
+	rdivData.CycleNumber = "1"
+	rdivData.EceInstitutionItemSequenceNumber = "1             "
+	rdivData.SecurityOriginatorName = "Sec Orig Name"
+	rdivData.SecurityAuthenticatorName = "Sec Auth Name"
+	rdivData.SecurityKeyName = "SECURE"
+	rdivData.ClippingOrigin = 0
+	rdivData.ClippingCoordinateH1 = ""
+	rdivData.ClippingCoordinateH2 = ""
+	rdivData.ClippingCoordinateV1 = ""
+	rdivData.ClippingCoordinateV2 = ""
+	rdivData.LengthImageReferenceKey = "0000"
+	rdivData.ImageReferenceKey = ""
+	rdivData.LengthDigitalSignature = "0    "
+	rdivData.DigitalSignature = []byte("")
+	rdivData.LengthImageData = "0000001"
+	rdivData.ImageData = []byte("")
+
+	rdivAnalysis := imagecashletter.NewImageViewAnalysis()
+	rdivAnalysis.GlobalImageQuality = 2
+	rdivAnalysis.GlobalImageUsability = 2
+	rdivAnalysis.ImagingBankSpecificTest = 0
+	rdivAnalysis.PartialImage = 2
+	rdivAnalysis.ExcessiveImageSkew = 2
+	rdivAnalysis.PiggybackImage = 2
+	rdivAnalysis.TooLightOrTooDark = 2
+	rdivAnalysis.StreaksAndOrBands = 2
+	rdivAnalysis.BelowMinimumImageSize = 2
+	rdivAnalysis.ExceedsMaximumImageSize = 2
+	rdivAnalysis.ImageEnabledPOD = 1
+	rdivAnalysis.SourceDocumentBad = 0
+	rdivAnalysis.DateUsability = 2
+	rdivAnalysis.PayeeUsability = 2
+	rdivAnalysis.ConvenienceAmountUsability = 2
+	rdivAnalysis.AmountInWordsUsability = 2
+	rdivAnalysis.SignatureUsability = 2
+	rdivAnalysis.PayorNameAddressUsability = 2
+	rdivAnalysis.MICRLineUsability = 2
+	rdivAnalysis.MemoLineUsability = 2
+	rdivAnalysis.PayorBankNameAddressUsability = 2
+	rdivAnalysis.PayeeEndorsementUsability = 2
+	rdivAnalysis.BOFDEndorsementUsability = 2
+	rdivAnalysis.TransitEndorsementUsability = 2
+
+	rd.AddReturnDetailAddendumA(rdAddendumA)
+	rd.AddReturnDetailAddendumB(rdAddendumB)
+	rd.AddReturnDetailAddendumC(rdAddendumC)
+	rd.AddReturnDetailAddendumD(rdAddendumD)
+	rd.AddImageViewDetail(rdivDetail)
+	rd.AddImageViewData(rdivData)
+	rd.AddImageViewAnalysis(rdivAnalysis)
+
+	rdbh := imagecashletter.NewBundleHeader()
+	rdbh.CollectionTypeIndicator = "01"
+	rdbh.DestinationRoutingNumber = "231380104"
+	rdbh.ECEInstitutionRoutingNumber = "121042882"
+	rdbh.BundleBusinessDate = time.Now()
+	rdbh.BundleCreationDate = time.Now()
+	rdbh.BundleID = "9999"
+	rdbh.BundleSequenceNumber = "1"
+	rdbh.CycleNumber = "01"
+	rdbh.UserField = ""
+
+	returnBundle := imagecashletter.NewBundle(rdbh)
+	returnBundle.BundleHeader.BundleSequenceNumber = "2"
+	returnBundle.AddReturnDetail(rd)
+
+	// Create ReturnDetail
+	rdTwo := imagecashletter.NewReturnDetail()
+	rdTwo.PayorBankRoutingNumber = "03130001"
+	rdTwo.PayorBankCheckDigit = "2"
+	rdTwo.OnUs = "5558881"
+	rdTwo.ItemAmount = 100000
+	rdTwo.ReturnReason = "A"
+	rdTwo.AddendumCount = 4
+	rdTwo.DocumentationTypeIndicator = "G"
+	rdTwo.ForwardBundleDate = time.Now()
+	rdTwo.EceInstitutionItemSequenceNumber = "1              "
+	rdTwo.ExternalProcessingCode = ""
+	rdTwo.ReturnNotificationIndicator = 2
+	rdTwo.ArchiveTypeIndicator = "B"
+	rdTwo.TimesReturned = 0
+
+	rdTwo.AddReturnDetailAddendumA(rdAddendumA)
+	rdTwo.AddReturnDetailAddendumB(rdAddendumB)
+	rdTwo.AddReturnDetailAddendumC(rdAddendumC)
+	rdTwo.AddReturnDetailAddendumD(rdAddendumD)
+	rdTwo.AddImageViewDetail(rdivDetail)
+	rdTwo.AddImageViewData(rdivData)
+	rdTwo.AddImageViewAnalysis(rdivAnalysis)
+	returnBundle.AddReturnDetail(rdTwo)
+
 	// Create CashLetter
 
 	// create CashLetterHeader
@@ -242,14 +387,14 @@ func main() {
 	clh.UserField = ""
 	cl := imagecashletter.NewCashLetter(clh)
 	cl.AddBundle(bundle)
-	//cl.AddBundle(returnBundle)
+	cl.AddBundle(returnBundle)
 	cl.Create()
 	file.AddCashLetter(cl)
 
 	clTwo := imagecashletter.NewCashLetter(imagecashletter.NewCashLetterHeader())
 	clTwo.CashLetterHeader.CashLetterID = "A2"
 	clTwo.AddBundle(bundle)
-	//clTwo.AddBundle(returnBundle)
+	clTwo.AddBundle(returnBundle)
 	clTwo.Create()
 	file.AddCashLetter(clTwo)
 
