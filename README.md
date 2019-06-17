@@ -43,7 +43,7 @@ Image Cash Letter (ICL) a RESTful or #GoLang library supporting ANSI X9.100-187â
 
  Example | Read | Write |
 |---------|------|-------|
-| [Link](examples/imagecashletter-read/bankDrawDownRequest.txt) | [Link](examples/imagecashletter-read/main.go) | [Link](examples/imagecashletter-write/main.go) | 
+| [Link](examples/imagecashletter-read/bankDrawDownRequest.txt) | [Link](examples/imagecashletter-read/main.go) | [Link](examples/imagecashletter-write/main.go) |
 </details>
 
 ### From Source
@@ -81,6 +81,10 @@ Note: 32-bit platforms have known issues and is not supported.
 Yes please! Please review our [Contributing guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) to get started!
 
 Note: This project uses Go Modules, which requires Go 1.11 or higher, but we ship the vendor directory in our repository.
+
+### Fuzzing
+
+We currently run fuzzing over ACH in the form of a [`moov/imagecashletterfuzz`](https://hub.docker.com/r/moov/imagecashletterfuzz) Docker image. You can [read more](./test/fuzz-reader/README.md) or run the image and report crasher examples to [`security@moov.io`](mailto:security@moov.io). Thanks!
 
 ## License
 

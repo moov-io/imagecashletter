@@ -39,6 +39,9 @@ docker:
 # Main imagecashletter server Docker image
 	docker build --pull -t moov/imagecashletter:$(VERSION) -f Dockerfile .
 	docker tag moov/imagecashletter:$(VERSION) moov/imagecashletter:latest
+# ICL Fuzzing docker image
+	docker build --pull -t moov/imagecashletterfuzz:$(VERSION) . -f Dockerfile-fuzz
+	docker tag moov/imagecashletterfuzz:$(VERSION) moov/imagecashletterfuzz:latest
 
 release: docker AUTHORS
 	go vet ./...
@@ -47,6 +50,7 @@ release: docker AUTHORS
 
 release-push:
 	docker push moov/imagecashletter:$(VERSION)
+	docker push moov/imagecashletterfuzz:$(VERSION)
 
 .PHONY: cover-test cover-web
 cover-test:
