@@ -8,13 +8,13 @@ moov-io/imagecashletter
 
 X9â€™s Specifications for ICL (Image Cash ledger) to provide Check 21 services
 
-Package `github.com/moov-io/imagecashletter` implements a file reader and writer for parsing [imagecashletter](https://en.wikipedia.org/wiki/Check_21_Act) files.
+Package `github.com/moov-io/imagecashletter` implements a file reader and writer for parsing [Image Cash Letter](https://en.wikipedia.org/wiki/Check_21_Act) (ICL) files.
 
-Docs: [docs.moov.io](http://docs.moov.io/en/latest/) | [api docs](https://api.moov.io/)
+Docs: [docs.moov.io](https://docs.moov.io/en/latest/icl/)
 
 ## Project Status
 
-Image Cash Letter (ICL) a RESTful or #GoLang library supporting ANSI X9.100-187â€“2016 specification. Compose & Decompose ICL files from check images, MICR line data, and dollar amounts. Perfect for Treasury Management, Remote Deposit Capture, and other Check Truncation functions. Please star the project if you are interested in its progress.
+Image Cash Letter (ICL) is a Go library supporting ANSI X9.100-187â€“2016 specification for Compose & Decompose ICL files from check images, MICR line data, and dollar amounts. The library supports for Treasury Management, Remote Deposit Capture, and other Check Truncation functions. Please star the project if you are interested in its progress.
 
 * The Library currently supports the reading and writing
 	* Cash Letters
@@ -29,11 +29,8 @@ Image Cash Letter (ICL) a RESTful or #GoLang library supporting ANSI X9.100-187â
     * Add User Record Functionality
     * Benchmarking and Profiling Tests
 
-## Project Roadmap
-* Please open an issue with a valid test file.
-* Review the project issues for more detailed information
-
 ## Usage
+
 ### Go library
 
 `github.com/moov-io/imagecashletter` offers a Go based Image Cash Letter file reader and writer. To get started checkout a specific example:
@@ -43,7 +40,7 @@ Image Cash Letter (ICL) a RESTful or #GoLang library supporting ANSI X9.100-187â
 
  Example | Read | Write |
 |---------|------|-------|
-| [Link](examples/imagecashletter-read/bankDrawDownRequest.txt) | [Link](examples/imagecashletter-read/main.go) | [Link](examples/imagecashletter-write/main.go) | 
+| [Link](examples/imagecashletter-read/bankDrawDownRequest.txt) | [Link](examples/imagecashletter-read/main.go) | [Link](examples/imagecashletter-write/main.go) |
 </details>
 
 ### From Source
