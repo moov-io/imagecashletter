@@ -57,6 +57,14 @@ func TestMockBundleReturns(t *testing.T) {
 	}
 }
 
+func TestBundleValidate(t *testing.T) {
+	header := mockBundleHeader()
+	bundle := NewBundle(header)
+	if err := bundle.Validate(); err == nil {
+		t.Error("expected error, but got nothing")
+	}
+}
+
 // TestCheckDetailAddendumCount validates CheckDetail AddendumCount
 func TestCheckDetailAddendumCount(t *testing.T) {
 	cd := mockCheckDetail()
