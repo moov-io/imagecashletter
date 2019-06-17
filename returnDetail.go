@@ -13,6 +13,22 @@ import (
 
 // Errors specific to a ReturnDetail Record
 
+var (
+	msgCustomerReturnCode = "is invalid"
+	msgReturnCode         = "is invalid"
+)
+
+var (
+	CustomerReturnCodeDict       = map[string]*CustomerReturnCode{}
+	AdministrativeReturnCodeDict = map[string]*AdministrativeReturnCode{}
+)
+
+func init() {
+	// populate the ReturnCode map with lookup values
+	CustomerReturnCodeDict = makeCustomerReturnCodeDict()
+	AdministrativeReturnCodeDict = makeAdministrativeReturnCodeDict()
+}
+
 // ReturnDetail Record
 type ReturnDetail struct {
 	// ID is a client defined string used as a reference to this record.
@@ -132,6 +148,18 @@ type ReturnDetail struct {
 	converters
 }
 
+// CustomerReturnCode are customer return reason codes as defined in Part 6.2 of the ANSI X9.100-188-2018 Return
+// Reasons for Check Image Exchange and IRDs
+type CustomerReturnCode struct {
+	Code, Abbreviation, Description string
+}
+
+// AdministrativeReturnCode are customer return reason codes as defined in Part 6.3 of the ANSI X9.100-188-2018 Return
+// Reasons for Check Image Exchange and IRDs
+type AdministrativeReturnCode struct {
+	Code, Abbreviation, Description string
+}
+
 // NewReturnDetail returns a new ReturnDetail with default values for non exported fields
 func NewReturnDetail() *ReturnDetail {
 	rd := &ReturnDetail{
@@ -230,6 +258,15 @@ func (rd *ReturnDetail) Validate() error {
 		if err := rd.isTimesReturned(rd.TimesReturned); err != nil {
 			return &FieldError{FieldName: "TimesReturned", Value: rd.TimesReturnedField(), Msg: err.Error()}
 		}
+	}
+
+	_, crc := CustomerReturnCodeDict[rd.ReturnReason]
+
+	_, arc := AdministrativeReturnCodeDict[rd.ReturnReason]
+	if !crc || arc {
+		// Return ErrCustomer
+		msg := fmt.Sprint(msgReturnCode)
+		return &FieldError{FieldName: "ReturnCode", Value: rd.ReturnReason, Msg: msg}
 	}
 	return nil
 }
@@ -422,4 +459,76 @@ func (rd *ReturnDetail) SetEceInstitutionItemSequenceNumber(seq int) string {
 	itemSequence := strconv.Itoa(seq)
 	rd.EceInstitutionItemSequenceNumber = itemSequence
 	return rd.EceInstitutionItemSequenceNumber
+}
+
+// makeCustomerReturnCodeDict makes a customer return code dictionary
+func makeCustomerReturnCodeDict() map[string]*CustomerReturnCode {
+	dict := make(map[string]*CustomerReturnCode)
+
+	codes := []CustomerReturnCode{
+		{"A", "NSF", "NSF - Not Sufficient Funds"},
+		{"B", "UNCOLLECT HOLD", "UCF - Uncollected Funds Hold"},
+		{"C", "STOP PAYMENT", "Stop Payment"},
+		{"D", "CLOSED ACCOUNT", "Closed Account"},
+		{"E", "UN LOCATE ACCT", "UTLA - Unable to Locate Account"},
+		{"F", "FROZ/BLOCK ACC", "Frozen/Blocked Account–Account has Restrictions placed on it by either customer or bank"},
+		{"G", "STALE DATED", "Stale Dated"},
+		{"H", "POST DATED", "Post Dated"},
+		{"I", "ENDORSE MISS", "Endorsement Missing"},
+		{"J", "ENDORSE IRR", "Endorsement Irregular"},
+		{"K", "SIG MISS", "Signature(s) Missing"},
+		{"L", "SIG IRR", "Signature(s) Irregular, Suspected Forgery"},
+		{"M", "NON CASH ITEM", "Non-Cash Item (Non-Negotiable)"},
+		{"N", "ALTER/FICT", "Altered/Fictitious Item/Suspected Counterfeit/Counterfeit"},
+		{"O", "UN PROCESSABLE", "Unable to Process (e.g. Unable to process physical item/Mutilated such that critical payment information is missing). This code shall not be used for unusable images or system problems (see code ‘U’"},
+		{"P", "OUTSIDE LIMITS", "Item outside of stated dollar amount limit"},
+		{"Q", "NOT AUTHORIZED", "Not Authorized (Includes Drafts)–Unauthorized item such as a draft"},
+		{"R", "BRCH/ACCT SOLD", "Branch/Account Sold (Wrong Bank)–Divested Account, Not Our Item"},
+		{"S", "REFER TO MAKER", "Refer to Maker"},
+		{"T", "NOT RE-PRESENT", "Item cannot be re-presented (Exceeds number of allowable times the item can be presented)"},
+		{"U", "UNUSABLE IMAGE", "Unusable Image (Image could not be used for required business purpose, e.g. gross image defects, illegible, etc.)"},
+		{"W", "CANT DET AMT", "Cannot Determine Amount–Amount cannot be verified"},
+		{"X", "REFER TO IMAGE", "Refer to Image–Return Reason information is contained within the image of the item"},
+		{"Y", "DUPLICATE", "Duplicate Presentment (Supporting documentation shall be readily available)"},
+		{"Z", "FORGERY", "Forgery–An affidavit shall be available upon request"},
+		{"3", "WARRANTY BREAC", "Warranty Breach (Includes Rule 8 & 9 claims)"},
+		{"4", "RCC BREACH", "RCC Warranty Breach (Rule 8)"},
+		{"5", "FORGED BREACH", "Forged and Counterfeit Warranty Breach (Rule 9)"},
+		{"6", "RETIRED RT", "Retired/Ineligible/Failed Institution Routing Number"},
+		{"7", "UNDEFINED RR", "Reserved for Future Use by X9"},
+		{"8", "UNDEFINED RR", "Reserved for Future Use by X9"},
+		{"9", "UNDEFINED RR", "Reserved for Future Use by X9"},
+		{"0", "UNDEFINED RR", "Reserved for Future Use by X9"},
+	}
+	// populate the map
+	for i := range codes {
+		dict[codes[i].Code] = &codes[i]
+	}
+	return dict
+}
+
+// Create a administrative return code dictionary
+func makeAdministrativeReturnCodeDict() map[string]*AdministrativeReturnCode {
+	dict := make(map[string]*AdministrativeReturnCode)
+
+	codes := []AdministrativeReturnCode{
+		{"I", "IMAGE MISSING", "Image Missing"},
+		{"Q", "INELIGIBLE", "Ineligible"},
+		{"T", "NOT RE-PRESENT", "Item cannot be re-presented (Exceeds number of allowed times the item can be presented)"},
+		{"U", "UNUSABLE IMAGE", "Unusable Image (Image could not be used for required business purpose e.g. gross image defects, illegible, etc.)"},
+		{"V", "FAIL SEC CK", "Image Fails Security Check"},
+		{"Y", "DUPLICATE", "Duplicate Presentment (Supporting documentation shall be readily available)"},
+		{"1", "NONCOM TIFF", "Does not conform with ANSI X9.100-181 Specification for TIFF Image Format for Image Exchange standard"},
+		{"2", "NONCON UCD", "Does not conform to the Industry’s Universal Companion Document, TR 47"},
+		{"3", "WARRANTY BREAC", "Warranty Breach (Includes Rule 8 & 9 claims)"},
+		{"4", "RCC BREACH", "RCC Warranty Breach (Rule 8)"},
+		{"5", "FORGED BREACH", "Forged and Counterfeit Warranty Breach (Rule 9)"},
+		{"6", "RETIRED RT", "Retired/Ineligible/Failed Institution Routing Number"},
+	}
+
+	// populate the map
+	for i := range codes {
+		dict[codes[i].Code] = &codes[i]
+	}
+	return dict
 }
