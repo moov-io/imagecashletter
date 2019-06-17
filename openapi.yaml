@@ -277,39 +277,6 @@ paths:
         '400':
           description: Validation failed. Check response for errors
   /files/{file_id}/cashLetters:
-    get:
-      tags: ['Image Cash Letter Files']
-      summary: Get the cashLetters on a File.
-      operationId: getFileCashLetters
-      security:
-        - bearerAuth: []
-        - cookieAuth: []
-      parameters:
-        - name: X-Request-Id
-          in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
-          example: rs4f9915
-          schema:
-            type: string
-        - name: file_id
-          in: path
-          description: File ID
-          required: true
-          schema:
-            type: string
-            example: 3f2d23ee214
-      responses:
-        '200':
-          description: A list of CashLetter objects
-          headers:
-            X-Total-Count:
-              description: The total number of CashLetters on the File.
-              schema:
-                type: integer
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CashLetters'
     post:
       tags: ['Image Cash Letter Files']
       summary: Add CashLetter to File
@@ -348,43 +315,6 @@ paths:
         '200':
           description: CashLetter added to File
   /files/{file_id}/cashLetters/{cashLetter_id}:
-    get:
-      tags: ['Image Cash Letter Files']
-      summary: Get a specific CashLetter on a File
-      operationId: getICLFromFile
-      security:
-        - bearerAuth: []
-        - cookieAuth: []
-      parameters:
-        - name: X-Request-Id
-          in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
-          example: rs4f9915
-          schema:
-            type: string
-        - name: file_id
-          in: path
-          description: File ID
-          required: true
-          schema:
-            type: string
-            example: 3f2d23ee214
-        - name: cashLetter_id
-          in: path
-          description: CashLetter ID
-          required: true
-          schema:
-            type: string
-            example: 45758063
-      responses:
-        '200':
-          description: CashLetter object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CashLetter'
-        '404':
-          description: CashLetter or File not found
     delete:
       tags: ['Image Cash Letter Files']
       summary: Delete a CashLetter from a File

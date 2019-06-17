@@ -8,11 +8,9 @@ Method | HTTP request | Description
 [**CreateICLFile**](ImageCashLetterFilesApi.md#CreateICLFile) | **Post** /files/create | Create a new File object
 [**DeleteICLFile**](ImageCashLetterFilesApi.md#DeleteICLFile) | **Delete** /files/{file_id} | Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
 [**DeleteICLFromFile**](ImageCashLetterFilesApi.md#DeleteICLFromFile) | **Delete** /files/{file_id}/cashLetters/{cashLetter_id} | Delete a CashLetter from a File
-[**GetFileCashLetters**](ImageCashLetterFilesApi.md#GetFileCashLetters) | **Get** /files/{file_id}/cashLetters | Get the cashLetters on a File.
 [**GetICLFileByID**](ImageCashLetterFilesApi.md#GetICLFileByID) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 [**GetICLFileContents**](ImageCashLetterFilesApi.md#GetICLFileContents) | **Get** /files/{file_id}/contents | Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
 [**GetICLFiles**](ImageCashLetterFilesApi.md#GetICLFiles) | **Get** /files | Gets a list of Files
-[**GetICLFromFile**](ImageCashLetterFilesApi.md#GetICLFromFile) | **Get** /files/{file_id}/cashLetters/{cashLetter_id} | Get a specific CashLetter on a File
 [**UpdateICLFile**](ImageCashLetterFilesApi.md#UpdateICLFile) | **Post** /files/{file_id} | Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 [**ValidateICLFile**](ImageCashLetterFilesApi.md#ValidateICLFile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
@@ -192,48 +190,6 @@ No authorization required
 [[Back to README]](../README.md)
 
 
-## GetFileCashLetters
-
-> []CashLetter GetFileCashLetters(ctx, fileId, optional)
-Get the cashLetters on a File.
-
-### Required Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**fileId** | **string**| File ID | 
- **optional** | ***GetFileCashLettersOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a GetFileCashLettersOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **xRequestId** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
-
-### Return type
-
-[**[]CashLetter**](CashLetter.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
 ## GetICLFileByID
 
 > File GetICLFileByID(ctx, fileId, optional)
@@ -343,50 +299,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**[]File**](File.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## GetICLFromFile
-
-> CashLetter GetICLFromFile(ctx, fileId, cashLetterId, optional)
-Get a specific CashLetter on a File
-
-### Required Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**fileId** | **string**| File ID | 
-**cashLetterId** | **string**| CashLetter ID | 
- **optional** | ***GetICLFromFileOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a GetICLFromFileOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
-
- **xRequestId** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
-
-### Return type
-
-[**CashLetter**](CashLetter.md)
 
 ### Authorization
 
