@@ -94,6 +94,30 @@ func TestParseBundleControl(t *testing.T) {
 	}
 }
 
+func TestParseBundleControlError(t *testing.T) {
+	bc := NewBundleControl()
+	bc.Parse(" invalid line ")
+
+	if bc.BundleItemsCount != 0 {
+		t.Errorf("unexpcted BundleItemsCount=%d", bc.BundleItemsCount)
+	}
+	if bc.BundleTotalAmount != 0 {
+		t.Errorf("unexpcted BundleTotalAmount=%d", bc.BundleTotalAmount)
+	}
+	if bc.MICRValidTotalAmount != 0 {
+		t.Errorf("unexpcted MICRValidTotalAmount=%d", bc.MICRValidTotalAmount)
+	}
+	if bc.BundleImagesCount != 0 {
+		t.Errorf("unexpcted BundleImagesCount=%d", bc.BundleImagesCount)
+	}
+	if bc.UserField != "" {
+		t.Errorf("unexpcted UserField=%s", bc.UserField)
+	}
+	if bc.CreditTotalIndicator != 0 {
+		t.Errorf("unexpcted CreditTotalIndicator=%d", bc.CreditTotalIndicator)
+	}
+}
+
 // testBCString validates that a known parsed BundleControl can be return to a string of the same value
 func testBCString(t testing.TB) {
 	var line = "70000100000010000000000000000000000                    0                        "
