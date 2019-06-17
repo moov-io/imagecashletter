@@ -2,7 +2,7 @@ openapi: 3.0.2
 info:
   contact:
     url: https://github.com/moov-io/imagecashletter
-  description: Moov ImageCashLetter () implements an HTTP API for creating, parsing
+  description: Moov Image Cash Letter (ICL) implements an HTTP API for creating, parsing
     and validating ImageCashLetter files.
   license:
     name: Apache 2.0

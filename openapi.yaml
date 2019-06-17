@@ -1,7 +1,6 @@
 openapi: 3.0.2
-# ImageViewDataSize is the total number of bytes in ImageViewData.ImageData.  Use of this field is NOT recommended, so it has not been included in the openapi.yaml
 info:
-  description: Moov ImageCashLetter () implements an HTTP API for creating, parsing and validating ImageCashLetter files.
+  description: Moov Image Cash Letter (ICL) implements an HTTP API for creating, parsing and validating ImageCashLetter files.
   version: v1
   title: ImageCashLetter API
   contact:
@@ -1509,7 +1508,7 @@ components:
             - 09
             - 10
             - 11
-#            21 - 50
+          # 21 - 50 # reserved for future use
           description: |
             AccountTypeCode is a code that indicates the type of account to which this CreditItem is associated.
 
@@ -1958,7 +1957,7 @@ components:
             - 11
             - 12
             - 13
-#            - 14 - 99
+#            - 14 - 99 # reserved for future use
           description: |
             ViewDescriptor is a code that indicates the nature of the image view based on ImageViewData.ImageData.
 
