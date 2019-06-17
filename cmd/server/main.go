@@ -67,10 +67,15 @@ func main() {
 	}()
 	defer adminServer.Shutdown()
 
+	repo := &memoryICLFileRepository{
+		files: make(map[string]*imagecashletter.File),
+	}
+
 	// Setup business HTTP routes
 	router := mux.NewRouter()
 	moovhttp.AddCORSHandler(router)
 	addPingRoute(router)
+	addFileRoutes(logger, router, repo)
 
 	// Start business HTTP server
 	readTimeout, _ := time.ParseDuration("30s")
