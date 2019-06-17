@@ -11,9 +11,9 @@ package openapi
 
 type CreateFile struct {
 	// File ID
-	Id string `json:"id,omitempty"`
-	FileHeader FileHeader `json:"fileHeader"`
+	Id          string       `json:"id,omitempty"`
+	FileHeader  FileHeader   `json:"fileHeader"`
 	CashLetters []CashLetter `json:"cashLetters,omitempty"`
-	Bundles []Bundle `json:"bundles,omitempty"`
-	FileControl FileControl `json:"fileControl,omitempty"`
+	Bundles     []Bundle     `json:"bundles,omitempty"`
+	FileControl FileControl  `json:"fileControl,omitempty"`
 }

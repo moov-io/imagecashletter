@@ -33,18 +33,18 @@ All URIs are relative to *http://localhost:8083*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*FilesApi* | [**Ping**](docs/FilesApi.md#ping) | **Get** /ping | Ping the ImageCashLetter service to check if running
-*ImageCashLetterFilesApi* | [**AddCashLetterToFile**](docs/ImageCashLetterFilesApi.md#addcashlettertofile) | **Post** /files/{file_id}/cashLetters | Add CashLetter to File
-*ImageCashLetterFilesApi* | [**CreateFile**](docs/ImageCashLetterFilesApi.md#createfile) | **Post** /files/create | Create a new File object
-*ImageCashLetterFilesApi* | [**DeleteFileCashLetter**](docs/ImageCashLetterFilesApi.md#deletefilecashletter) | **Delete** /files/{file_id}/cashLetters/{cashLetter_id} | Delete a CashLetter from a File
-*ImageCashLetterFilesApi* | [**DeleteImageCashLetterFile**](docs/ImageCashLetterFilesApi.md#deleteimagecashletterfile) | **Delete** /files/{file_id} | Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
-*ImageCashLetterFilesApi* | [**GetFileByID**](docs/ImageCashLetterFilesApi.md#getfilebyid) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
-*ImageCashLetterFilesApi* | [**GetFileCashLetter**](docs/ImageCashLetterFilesApi.md#getfilecashletter) | **Get** /files/{file_id}/cashLetters/{cashLetter_id} | Get a specific CashLetter on a FIle
+*ICLFilesApi* | [**Ping**](docs/ICLFilesApi.md#ping) | **Get** /ping | Ping the ImageCashLetter service to check if running
+*ImageCashLetterFilesApi* | [**AddICLToFile**](docs/ImageCashLetterFilesApi.md#addicltofile) | **Post** /files/{file_id}/cashLetters | Add CashLetter to File
+*ImageCashLetterFilesApi* | [**CreateICLFile**](docs/ImageCashLetterFilesApi.md#createiclfile) | **Post** /files/create | Create a new File object
+*ImageCashLetterFilesApi* | [**DeleteICLFile**](docs/ImageCashLetterFilesApi.md#deleteiclfile) | **Delete** /files/{file_id} | Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
+*ImageCashLetterFilesApi* | [**DeleteICLFromFile**](docs/ImageCashLetterFilesApi.md#deleteiclfromfile) | **Delete** /files/{file_id}/cashLetters/{cashLetter_id} | Delete a CashLetter from a File
 *ImageCashLetterFilesApi* | [**GetFileCashLetters**](docs/ImageCashLetterFilesApi.md#getfilecashletters) | **Get** /files/{file_id}/cashLetters | Get the cashLetters on a File.
-*ImageCashLetterFilesApi* | [**GetFileContents**](docs/ImageCashLetterFilesApi.md#getfilecontents) | **Get** /files/{file_id}/contents | Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
-*ImageCashLetterFilesApi* | [**GetFiles**](docs/ImageCashLetterFilesApi.md#getfiles) | **Get** /files | Gets a list of Files
-*ImageCashLetterFilesApi* | [**UpdateFile**](docs/ImageCashLetterFilesApi.md#updatefile) | **Post** /files/{file_id} | Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-*ImageCashLetterFilesApi* | [**ValidateFile**](docs/ImageCashLetterFilesApi.md#validatefile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+*ImageCashLetterFilesApi* | [**GetICLFileByID**](docs/ImageCashLetterFilesApi.md#geticlfilebyid) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+*ImageCashLetterFilesApi* | [**GetICLFileContents**](docs/ImageCashLetterFilesApi.md#geticlfilecontents) | **Get** /files/{file_id}/contents | Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
+*ImageCashLetterFilesApi* | [**GetICLFiles**](docs/ImageCashLetterFilesApi.md#geticlfiles) | **Get** /files | Gets a list of Files
+*ImageCashLetterFilesApi* | [**GetICLFromFile**](docs/ImageCashLetterFilesApi.md#geticlfromfile) | **Get** /files/{file_id}/cashLetters/{cashLetter_id} | Get a specific CashLetter on a File
+*ImageCashLetterFilesApi* | [**UpdateICLFile**](docs/ImageCashLetterFilesApi.md#updateiclfile) | **Post** /files/{file_id} | Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+*ImageCashLetterFilesApi* | [**ValidateICLFile**](docs/ImageCashLetterFilesApi.md#validateiclfile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
 
 ## Documentation For Models

@@ -10,8 +10,8 @@
 package openapi
 
 type Bundle struct {
-	BundleHeader BundleHeader `json:"bundleHeader,omitempty"`
-	Checks []Checks `json:"checks,omitempty"`
-	Returns []Returns `json:"returns,omitempty"`
+	BundleHeader  BundleHeader  `json:"bundleHeader,omitempty"`
+	Checks        []Checks      `json:"checks,omitempty"`
+	Returns       []Returns     `json:"returns,omitempty"`
 	BundleControl BundleControl `json:"bundleControl,omitempty"`
 }

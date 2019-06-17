@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 // Linger please
@@ -21,15 +22,15 @@ var (
 	_ context.Context
 )
 
-type FilesApiService service
+type ICLFilesApiService service
 
 /*
-FilesApiService Ping the ImageCashLetter service to check if running
+ICLFilesApiService Ping the ImageCashLetter service to check if running
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 */
-func (a *FilesApiService) Ping(ctx context.Context) (*http.Response, error) {
+func (a *ICLFilesApiService) Ping(ctx context.Context) (*http.Response, error) {
 	var (
-		localVarHttpMethod   = http.MethodGet
+		localVarHttpMethod   = strings.ToUpper("Get")
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string

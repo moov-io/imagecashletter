@@ -8,6 +8,7 @@
  */
 
 package openapi
+
 import (
 	"time"
 )
@@ -31,9 +32,9 @@ type ReturnDetailAddendumA struct {
 	PayeeName string `json:"payeeName,omitempty"`
 	// TruncationIndicator identifies if the institution truncated the original check item.
 	TruncationIndicator string `json:"truncationIndicator"`
-	// BOFDConversionIndicator is a code that indicates the conversion within the processing institution between original paper check, image and IRD. The indicator is specific to the action of institution that created this record.  * `0` - Did not convert physical document * `1` - Original paper converted to IRD * `2` - Original paper converted to image * `3` - IRD converted to another IRD * `4` - IRD converted to image of IRD * `5` - Image converted to an IRD * `6` - Image converted to another image (e.g., transcoded) * `7` - Did not convert image (e.g., same as source) * `8` - Undetermined 
+	// BOFDConversionIndicator is a code that indicates the conversion within the processing institution between original paper check, image and IRD. The indicator is specific to the action of institution that created this record.  * `0` - Did not convert physical document * `1` - Original paper converted to IRD * `2` - Original paper converted to image * `3` - IRD converted to another IRD * `4` - IRD converted to image of IRD * `5` - Image converted to an IRD * `6` - Image converted to another image (e.g., transcoded) * `7` - Did not convert image (e.g., same as source) * `8` - Undetermined
 	BOFDConversionIndicator string `json:"bOFDConversionIndicator,omitempty"`
-	// BOFDCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount. * `0` - No Repair * `1` - Repaired (form of repair unknown) * `2` - Repaired without Operator intervention * `3` - Repaired with Operator intervention * `4` - Undetermined if repair has been done or not 
+	// BOFDCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount. * `0` - No Repair * `1` - Repaired (form of repair unknown) * `2` - Repaired without Operator intervention * `3` - Repaired with Operator intervention * `4` - Undetermined if repair has been done or not
 	BOFDBOFDCorrectionIndicator string `json:"bOFDBOFDCorrectionIndicator,omitempty"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField,omitempty"`

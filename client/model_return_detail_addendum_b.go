@@ -8,6 +8,7 @@
  */
 
 package openapi
+
 import (
 	"time"
 )

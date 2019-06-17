@@ -25,10 +25,10 @@ paths:
           description: Service is running properly
       summary: Ping the ImageCashLetter service to check if running
       tags:
-      - Files
+      - ICLFiles
   /files:
     get:
-      operationId: getFiles
+      operationId: getICLFiles
       parameters:
       - description: Optional Request ID allows application developer to trace requests
           through the systems logs
@@ -62,7 +62,7 @@ paths:
       - Image Cash Letter Files
   /files/create:
     post:
-      operationId: createFile
+      operationId: createICLFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
           through the systems logs
@@ -127,7 +127,7 @@ paths:
       - Image Cash Letter Files
   /files/{file_id}:
     delete:
-      operationId: deleteImageCashLetterFile
+      operationId: deleteICLFile
       parameters:
       - description: File ID
         explode: false
@@ -161,7 +161,7 @@ paths:
       tags:
       - Image Cash Letter Files
     get:
-      operationId: getFileByID
+      operationId: getICLFileByID
       parameters:
       - description: Optional Request ID allows application developer to trace requests
           through the systems logs
@@ -199,7 +199,7 @@ paths:
       tags:
       - Image Cash Letter Files
     post:
-      operationId: updateFile
+      operationId: updateICLFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
           through the systems logs
@@ -267,7 +267,7 @@ paths:
       - Image Cash Letter Files
   /files/{file_id}/contents:
     get:
-      operationId: getFileContents
+      operationId: getICLFileContents
       parameters:
       - description: Optional Request ID allows application developer to trace requests
           through the systems logs
@@ -304,7 +304,7 @@ paths:
       - Image Cash Letter Files
   /files/{file_id}/validate:
     get:
-      operationId: validateFile
+      operationId: validateICLFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
           through the systems logs
@@ -385,7 +385,7 @@ paths:
       tags:
       - Image Cash Letter Files
     post:
-      operationId: addCashLetterToFile
+      operationId: addICLToFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
           through the systems logs
@@ -434,7 +434,7 @@ paths:
       - Image Cash Letter Files
   /files/{file_id}/cashLetters/{cashLetter_id}:
     delete:
-      operationId: deleteFileCashLetter
+      operationId: deleteICLFromFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
           through the systems logs
@@ -476,7 +476,7 @@ paths:
       tags:
       - Image Cash Letter Files
     get:
-      operationId: getFileCashLetter
+      operationId: getICLFromFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
           through the systems logs
@@ -518,7 +518,7 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Get a specific CashLetter on a FIle
+      summary: Get a specific CashLetter on a File
       tags:
       - Image Cash Letter Files
 components:
@@ -553,7 +553,7 @@ components:
             collectionTypeIndicator: "00"
             destinationRoutingNumber: "999282654"
             originatorContactPhoneNumber: "5685551212"
-            returnsIndicator: ' '
+            returnsIndicator: E
             cashLetterID: "1"
             recordTypeIndicator: N
             fedWorkType: V
@@ -1583,7 +1583,7 @@ components:
             collectionTypeIndicator: "00"
             destinationRoutingNumber: "999282654"
             originatorContactPhoneNumber: "5685551212"
-            returnsIndicator: ' '
+            returnsIndicator: E
             cashLetterID: "1"
             recordTypeIndicator: N
             fedWorkType: V
@@ -3631,7 +3631,7 @@ components:
             collectionTypeIndicator: "00"
             destinationRoutingNumber: "999282654"
             originatorContactPhoneNumber: "5685551212"
-            returnsIndicator: ' '
+            returnsIndicator: E
             cashLetterID: "1"
             recordTypeIndicator: N
             fedWorkType: V
@@ -4661,7 +4661,7 @@ components:
             collectionTypeIndicator: "00"
             destinationRoutingNumber: "999282654"
             originatorContactPhoneNumber: "5685551212"
-            returnsIndicator: ' '
+            returnsIndicator: E
             cashLetterID: "1"
             recordTypeIndicator: N
             fedWorkType: V
@@ -6865,7 +6865,6 @@ components:
             * `0` - Credit Items are not included in totals
             * `1` - Credit Items are included in totals
           enum:
-          - ' '
           - "0"
           - "1"
           example: "1"
@@ -6913,7 +6912,7 @@ components:
           collectionTypeIndicator: "00"
           destinationRoutingNumber: "999282654"
           originatorContactPhoneNumber: "5685551212"
-          returnsIndicator: ' '
+          returnsIndicator: E
           cashLetterID: "1"
           recordTypeIndicator: N
           fedWorkType: V
@@ -7938,7 +7937,7 @@ components:
         collectionTypeIndicator: "00"
         destinationRoutingNumber: "999282654"
         originatorContactPhoneNumber: "5685551212"
-        returnsIndicator: ' '
+        returnsIndicator: E
         cashLetterID: "1"
         recordTypeIndicator: N
         fedWorkType: V
@@ -8102,7 +8101,6 @@ components:
             * `R` - Customer–items being returned that directly affect a customer’s account.
             * `J` - Reject Return
           enum:
-          - ' '
           - E
           - R
           - J
@@ -8169,12 +8167,11 @@ components:
             * `0` - Credit Items are not included in totals
             * `1` - Credit Items are included in totals
           enum:
-          - ' '
           - 0
           - 1
           example: 1
           maxLength: 1
-          type: string
+          type: number
       required:
       - cashLetterItemsCount
       - cashLetterTotalAmount
@@ -8819,12 +8816,11 @@ components:
             * `0` - Credit Items are not included in totals
             * `1` - Credit Items are included in totals
           enum:
-          - ' '
           - 0
           - 1
           example: 1
           maxLength: 1
-          type: string
+          type: number
       required:
       - bundleItemsCount
       - bundleTotalAmount
@@ -10470,7 +10466,6 @@ components:
             * `N` -  IQA Fail–Image view not reviewed–alternate format included in this file
             * `O` -  IQA Fail–Image view not reviewed–alternate format included in this file and original
           enum:
-          - ' '
           - "0"
           - "1"
           - A

@@ -22,6 +22,6 @@ type BundleControl struct {
 	BundleImagesCount int32 `json:"bundleImagesCount,omitempty"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField,omitempty"`
-	// CreditTotalIndicator is a code that indicates whether Credits Items are included in the totals. If so they  they will be included in this record’s: Items Within Bundle Count, Bundle Total Amount and, Images Within Bundle Count * ` ` - No Credit Items * `0` - Credit Items are not included in totals * `1` - Credit Items are included in totals 
-	CreditTotalIndicator string `json:"creditTotalIndicator,omitempty"`
+	// CreditTotalIndicator is a code that indicates whether Credits Items are included in the totals. If so they  they will be included in this record’s: Items Within Bundle Count, Bundle Total Amount and, Images Within Bundle Count * ` ` - No Credit Items * `0` - Credit Items are not included in totals * `1` - Credit Items are included in totals
+	CreditTotalIndicator float32 `json:"creditTotalIndicator,omitempty"`
 }

@@ -1,10 +1,10 @@
-# \FilesApi
+# \ICLFilesApi
 
 All URIs are relative to *http://localhost:8083*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**Ping**](FilesApi.md#Ping) | **Get** /ping | Ping the ImageCashLetter service to check if running
+[**Ping**](ICLFilesApi.md#Ping) | **Get** /ping | Ping the ImageCashLetter service to check if running
 
 
 

@@ -8,6 +8,7 @@
  */
 
 package openapi
+
 import (
 	"time"
 )
@@ -27,6 +28,6 @@ type CashLetterControl struct {
 	ECEInstitutionName string `json:"eCEInstitutionName,omitempty"`
 	// SettlementDate identifies the date that the institution that creates the cash letter expects settlement.
 	SettlementDate time.Time `json:"settlementDate"`
-	// CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of all types regardless of the value of this field. * ` ` - No Credit Items * `0` - Credit Items are not included in totals * `1` - Credit Items are included in totals 
-	CreditTotalIndicator string `json:"creditTotalIndicator,omitempty"`
+	// CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of all types regardless of the value of this field. * ` ` - No Credit Items * `0` - Credit Items are not included in totals * `1` - Credit Items are included in totals
+	CreditTotalIndicator float32 `json:"creditTotalIndicator,omitempty"`
 }
