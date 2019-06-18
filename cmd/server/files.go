@@ -92,7 +92,7 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(req)
 	}
 }

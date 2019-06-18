@@ -115,7 +115,7 @@ func TestFiles__createFile(t *testing.T) {
 	router.ServeHTTP(w, req)
 	w.Flush()
 
-	if w.Code != http.StatusOK {
+	if w.Code != http.StatusCreated {
 		t.Errorf("bogus HTTP status: %d", w.Code)
 	}
 	var resp imagecashletter.File

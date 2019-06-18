@@ -670,7 +670,7 @@ func (a *ImageCashLetterFilesApiService) GetICLFiles(ctx context.Context, localV
 ImageCashLetterFilesApiService Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileId File ID
- * @param createFile
+ * @param fileHeader
  * @param optional nil or *UpdateICLFileOpts - Optional Parameters:
  * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
  * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
@@ -682,7 +682,7 @@ type UpdateICLFileOpts struct {
 	XIdempotencyKey optional.String
 }
 
-func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx context.Context, fileId string, createFile CreateFile, localVarOptionals *UpdateICLFileOpts) (File, *http.Response, error) {
+func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx context.Context, fileId string, fileHeader FileHeader, localVarOptionals *UpdateICLFileOpts) (File, *http.Response, error) {
 	var (
 		localVarHttpMethod   = strings.ToUpper("Post")
 		localVarPostBody     interface{}
@@ -724,7 +724,7 @@ func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx context.Context, file
 		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
 	}
 	// body params
-	localVarPostBody = &createFile
+	localVarPostBody = &fileHeader
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err

@@ -316,7 +316,7 @@ No authorization required
 
 ## UpdateICLFile
 
-> File UpdateICLFile(ctx, fileId, createFile, optional)
+> File UpdateICLFile(ctx, fileId, fileHeader, optional)
 Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
 ### Required Parameters
@@ -326,7 +326,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
 **fileId** | **string**| File ID | 
-**createFile** | [**CreateFile**](CreateFile.md)|  | 
+**fileHeader** | [**FileHeader**](FileHeader.md)|  | 
  **optional** | ***UpdateICLFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
