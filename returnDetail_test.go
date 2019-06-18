@@ -253,6 +253,19 @@ func TestRDTimesReturned(t *testing.T) {
 	}
 }
 
+// TestReturnReasonInvalid validation
+func TestReturnReasonInvalid(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.ReturnReason = "88"
+	if err := rd.Validate(); err != nil {
+		if e, ok := err.(*FieldError); ok {
+			if e.FieldName != "ReturnReason" {
+				t.Errorf("%T: %s", err, err)
+			}
+		}
+	}
+}
+
 // Field Inclusion
 
 // TestRDFIRecordType validation
