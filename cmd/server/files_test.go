@@ -128,6 +128,9 @@ func TestFiles__createFile(t *testing.T) {
 
 	// error case
 	repo.err = errors.New("bad error")
+	if err := json.NewEncoder(&buf).Encode(f); err != nil {
+		t.Fatal(err)
+	}
 
 	w = httptest.NewRecorder()
 	router.ServeHTTP(w, req)
@@ -304,6 +307,20 @@ func TestFiles__addCashLetterToFile(t *testing.T) {
 	if len(out.CashLetters) != 1 {
 		t.Errorf("CashLetters: %#v", out.CashLetters)
 	}
+
+	// error case
+	repo.err = errors.New("bad error")
+	if err := json.NewEncoder(&buf).Encode(cashLetter); err != nil {
+		t.Fatal(err)
+	}
+
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	if w.Code != http.StatusBadRequest {
+		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
+	}
 }
 
 func TestFiles__removeCashLetterFromFile(t *testing.T) {
@@ -325,6 +342,17 @@ func TestFiles__removeCashLetterFromFile(t *testing.T) {
 	w.Flush()
 
 	if w.Code != http.StatusOK {
+		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
+	}
+
+	// error case
+	repo.err = errors.New("bad error")
+
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
 	}
 }
