@@ -263,10 +263,10 @@ func (rd *ReturnDetail) Validate() error {
 	_, crc := CustomerReturnCodeDict[rd.ReturnReason]
 
 	_, arc := AdministrativeReturnCodeDict[rd.ReturnReason]
-	if !crc || arc {
-		// Return ErrCustomer
+	if !crc && !arc {
+		// Return msgReturnCode
 		msg := fmt.Sprint(msgReturnCode)
-		return &FieldError{FieldName: "ReturnCode", Value: rd.ReturnReason, Msg: msg}
+		return &FieldError{FieldName: "ReturnReason", Value: rd.ReturnReason, Msg: msg}
 	}
 	return nil
 }
