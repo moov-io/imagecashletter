@@ -179,6 +179,40 @@ func TestFiles__getFile(t *testing.T) {
 	}
 }
 
+func TestFiles__updateFileHeader(t *testing.T) {
+	f, err := readFile("BNK20180905121042882-A.icl")
+	if err != nil {
+		t.Fatal(err)
+	}
+	f.ID = base.ID()
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(f.Header); err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest("POST", fmt.Sprintf("/files/%s", f.ID), &buf)
+
+	repo := &testICLFileRepository{
+		file: &imagecashletter.File{
+			ID: f.ID, // create a file without FileHeader so it's updated
+		},
+	}
+
+	router := mux.NewRouter()
+	addFileRoutes(log.NewNopLogger(), router, repo)
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	if w.Code != http.StatusCreated {
+		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
+	}
+	if repo.file.Header.CountryCode != f.Header.CountryCode {
+		t.Errorf("repo.file.Header.CountryCode=%s expected=%s", repo.file.Header.CountryCode, f.Header.CountryCode)
+	}
+}
+
 func TestFiles__deleteFile(t *testing.T) {
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("DELETE", "/files/foo", nil)

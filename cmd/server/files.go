@@ -27,6 +27,7 @@ func addFileRoutes(logger log.Logger, r *mux.Router, repo ICLFileRepository) {
 	r.Methods("GET").Path("/files").HandlerFunc(getFiles(logger, repo))
 	r.Methods("POST").Path("/files/create").HandlerFunc(createFile(logger, repo))
 	r.Methods("GET").Path("/files/{fileId}").HandlerFunc(getFile(logger, repo))
+	r.Methods("POST").Path("/files/{fileId}").HandlerFunc(updateFileHeader(logger, repo))
 	r.Methods("DELETE").Path("/files/{fileId}").HandlerFunc(deleteFile(logger, repo))
 
 	r.Methods("GET").Path("/files/{fileId}/contents").HandlerFunc(getFileContents(logger, repo))
@@ -116,7 +117,39 @@ func getFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	}
 }
 
-// POST /files/:fileId (repalce Header) // TODO(adam): impl
+func updateFileHeader(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w = wrapResponseWriter(logger, w, r)
+
+		var req imagecashletter.FileHeader
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			moovhttp.Problem(w, err)
+			return
+		}
+
+		fileId := getFileId(w, r)
+		if fileId == "" {
+			return
+		}
+		file, err := repo.getFile(fileId)
+		if err != nil {
+			moovhttp.Problem(w, err)
+			return
+		}
+		file.Header = req
+		if err := repo.saveFile(file); err != nil {
+			moovhttp.Problem(w, err)
+			return
+		}
+		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+			logger.Log("files", fmt.Sprintf("updating FileHeader for file=%s", fileId), "requestId", requestId)
+		}
+
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(file)
+	}
+}
 
 func deleteFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
