@@ -39,7 +39,7 @@ script:
   - staticcheck ./cmd/*/*.go *.go # TODO(brooke): later add ./pkg/*/*.go
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install -y mingw; export PATH=/c/tools/mingw64/bin:"$PATH";fi
 after_success:
-  # - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
   - make
   - make client
   - make docker
