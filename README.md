@@ -34,7 +34,7 @@ Image Cash Letter (ICL) is a Go library supporting ANSI X9.100-187–2016 specif
 
  Example | Read | Write |
 |---------|------|-------|
-| [Link](examples/imagecashletter-read/bankDrawDownRequest.txt) | [Link](examples/imagecashletter-read/main.go) | [Link](examples/imagecashletter-write/main.go) |
+| [Link](examples/imagecashletter-read/iclFile.txt) | [Link](examples/imagecashletter-read/main.go) | [Link](examples/imagecashletter-write/main.go) |
 </details>
 
 ### From Source
