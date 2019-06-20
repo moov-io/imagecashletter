@@ -66,6 +66,14 @@ func TestMockCreditItem(t *testing.T) {
 	}
 }
 
+func TestCreditItemCrash(t *testing.T) {
+	ci := &CreditItem{}
+	ci.Parse(`100000000000400000000200001010000010100000IG000000000000000000000000000000000 00`)
+	if ci.UserField != "" {
+		t.Errorf("expected empty ci.UserField=%s", ci.UserField)
+	}
+}
+
 // TestParseCreditItem validates parsing a CreditItem
 func TestParseCreditItem(t *testing.T) {
 	var line = "62      123456789 031300012             5558881000000001000001              G101                    "

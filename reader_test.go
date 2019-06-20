@@ -97,6 +97,13 @@ func TestFileLineShort(t *testing.T) {
 	}
 }
 
+func TestReaderCrash__parseBundleControl(t *testing.T) {
+	r := &Reader{}
+	if err := r.parseBundleControl(); err == nil {
+		t.Error("expected error")
+	}
+}
+
 // TestFileFileHeaderErr validates error flows back from the parser
 func TestFileFileHeaderErr(t *testing.T) {
 	fh := mockFileHeader()

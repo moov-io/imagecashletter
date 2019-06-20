@@ -7,6 +7,7 @@ package imagecashletter
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 // Errors specific to a CreditItem Record
@@ -124,6 +125,9 @@ func NewCreditItem() *CreditItem {
 
 // Parse takes the input record string and parses the CreditItem values
 func (ci *CreditItem) Parse(record string) {
+	if utf8.RuneCountInString(record) < 96 {
+		return // line is too short
+	}
 	// Character position 1-2, Always "62"
 	ci.recordType = "62"
 	// 03-17

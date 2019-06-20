@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // Errors specific to a ImageViewData Record
@@ -151,6 +152,9 @@ func NewImageViewData() ImageViewData {
 
 // Parse takes the input record string and parses the ImageViewData values
 func (ivData *ImageViewData) Parse(record string) {
+	if utf8.RuneCountInString(record) < 105 {
+		return // line too short
+	}
 	// Character position 1-2, Always "52"
 	ivData.recordType = "52"
 	// 03-11
@@ -179,17 +183,29 @@ func (ivData *ImageViewData) Parse(record string) {
 	ivData.ClippingCoordinateV2 = ivData.parseStringField(record[97:101])
 	// 102-105
 	ivData.LengthImageReferenceKey = ivData.parseStringField(record[101:105])
+
 	lirk := ivData.parseNumField(ivData.LengthImageReferenceKey)
+	if utf8.RuneCountInString(record) < 110+lirk {
+		return // line too short
+	}
 	// 106 - (105+X)
 	ivData.ImageReferenceKey = ivData.parseStringField(record[105 : 105+lirk])
 	// (106 + lirk) – (110 + lirk)
 	ivData.LengthDigitalSignature = ivData.parseStringField(record[105+lirk : 110+lirk])
+
 	lds := ivData.parseNumField(ivData.LengthDigitalSignature)
+	if utf8.RuneCountInString(record) < 117+lirk+lds {
+		return // line too short
+	}
 	// (111 + lirk) – (110 + lirk + lds)
 	ivData.DigitalSignature = ivData.stringToBytesField(record[110+lirk : 110+lirk+lds])
 	// (111 + lirk + lds) – (117 + lirk + lds)
 	ivData.LengthImageData = ivData.parseStringField(record[110+lirk+lds : 117+lirk+lds])
+
 	lid := ivData.parseNumField(ivData.LengthImageData)
+	if utf8.RuneCountInString(record) < 117+lirk+lds+lid {
+		return // line too short
+	}
 	// (118 + lirk + lds) – (117+lirk + lds + lid)
 	ivData.ImageData = ivData.stringToBytesField(record[117+lirk+lds : 117+lirk+lds+lid])
 }

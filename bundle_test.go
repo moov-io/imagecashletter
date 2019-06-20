@@ -47,6 +47,11 @@ func TestMockBundleChecks(t *testing.T) {
 	if err := bundle.Validate(); err != nil {
 		t.Error("Bundle does not validate and will break other tests: ", err)
 	}
+
+	bundle = nil // ensure we don't panic
+	if v := bundle.GetChecks(); v != nil {
+		t.Errorf("unexpected %v", v)
+	}
 }
 
 // TestMockBundleReturns creates a Bundle of returns
@@ -54,6 +59,11 @@ func TestMockBundleReturns(t *testing.T) {
 	bundle := mockBundleReturns()
 	if err := bundle.Validate(); err != nil {
 		t.Error("Bundle does not validate and will break other tests: ", err)
+	}
+
+	bundle = nil // ensure we don't panic
+	if v := bundle.GetReturns(); v != nil {
+		t.Errorf("unexpected %v", v)
 	}
 }
 

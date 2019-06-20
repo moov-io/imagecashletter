@@ -124,6 +124,32 @@ func testIVDataString(t testing.TB) {
 	}
 }
 
+func TestIVDParseCrash(t *testing.T) {
+	iv := &ImageViewData{}
+	iv.Parse(`20000000000040000000020000100300001003000000000000000000000000000000000000000000`)
+	if iv.ImageReferenceKey != "" {
+		t.Errorf("unexpected iv.ImageReferenceKey=%s", iv.ImageReferenceKey)
+	}
+
+	prefix := "20000000000040000000020000100300001003"
+
+	iv.Parse(prefix + strings.Repeat("0", 110-len(prefix)-1))
+	if iv.ImageReferenceKey != "" {
+		t.Errorf("unexpected iv.ImageReferenceKey=%s", iv.ImageReferenceKey)
+	}
+
+	iv.Parse(prefix + strings.Repeat("0", 117-len(prefix)-1))
+	if iv.LengthDigitalSignature == "" {
+		t.Errorf("expected iv.LengthDigitalSignature=%s", iv.LengthDigitalSignature)
+	}
+
+	d := mockImageViewData()
+	iv.Parse(d.String()[:117])
+	if len(iv.ImageData) > 0 {
+		t.Errorf("unexpected iv.ImageData=%v", iv.ImageData)
+	}
+}
+
 // TestIVDataString tests validating that a known parsed ImageViewData an return to a string of the
 // same value
 func TestIVDataString(t *testing.T) {

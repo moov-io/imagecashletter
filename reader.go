@@ -562,7 +562,7 @@ func (r *Reader) parseCreditItem() error {
 func (r *Reader) parseBundleControl() error {
 	r.recordName = "BundleControl"
 
-	if r.currentCashLetter.currentBundle.BundleControl == nil {
+	if r.currentCashLetter.currentBundle == nil || r.currentCashLetter.currentBundle.BundleControl == nil {
 		return r.error(&FileError{Msg: msgFileBundleControl})
 	}
 	r.currentCashLetter.currentBundle.GetControl().Parse(r.line)
