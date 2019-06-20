@@ -6,7 +6,7 @@ moov-io/imagecashletter
 [![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/imagecashletter)](https://goreportcard.com/report/github.com/moov-io/imagecashletter)
 [![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/imagecashletter/master/LICENSE)
 
-X9’s Specifications for ICL (Image Cash ledger) to provide Check 21 services
+X9’s Specifications for ICL (Image Cash Letter) to provide Check 21 services
 
 Package `github.com/moov-io/imagecashletter` implements a file reader and writer for parsing [Image Cash Letter](https://en.wikipedia.org/wiki/Check_21_Act) (ICL) files.
 
@@ -14,14 +14,7 @@ Docs: [docs.moov.io](https://docs.moov.io/en/latest/icl/) | [api docs](https://a
 
 ## Project Status
 
-Image Cash Letter (ICL) is a Go library supporting ANSI X9.100-187–2016 specification for Compose & Decompose ICL files from check images, MICR line data, and dollar amounts. The library supports for Treasury Management, Remote Deposit Capture, and other Check Truncation functions. Please star the project if you are interested in its progress.
-
-* The Library currently supports the reading and writing
-	* Cash Letters
-	* Bundles
-	* Check Detail
-	* Return Detail
-	* Image Views
+Moov IMAGECASHLETTER is under active development and in production for multiple companies.  Please star the project if you are interested in its progress.
 
 ## Usage
 
