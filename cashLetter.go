@@ -240,6 +240,9 @@ func (cl *CashLetter) AddBundle(bundle *Bundle) []*Bundle {
 
 // GetBundles returns a slice of Bundle for the CashLetter
 func (cl *CashLetter) GetBundles() []*Bundle {
+	if cl == nil {
+		return nil
+	}
 	return cl.Bundles
 }
 
@@ -251,6 +254,9 @@ func (cl *CashLetter) AddRoutingNumberSummary(rns *RoutingNumberSummary) []*Rout
 
 // GetRoutingNumberSummary returns a slice of RoutingNumberSummary for the CashLetter
 func (cl *CashLetter) GetRoutingNumberSummary() []*RoutingNumberSummary {
+	if cl == nil {
+		return nil
+	}
 	return cl.RoutingNumberSummary
 }
 
@@ -262,5 +268,8 @@ func (cl *CashLetter) AddCreditItem(ci *CreditItem) []*CreditItem {
 
 // GetCreditItems returns a slice of CreditItem for the CashLetter
 func (cl *CashLetter) GetCreditItems() []*CreditItem {
+	if cl == nil {
+		return nil
+	}
 	return cl.CreditItems
 }

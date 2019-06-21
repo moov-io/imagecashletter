@@ -4,6 +4,20 @@ import (
 	"testing"
 )
 
+func TestCashLetterPanics(t *testing.T) {
+	var cl *CashLetter
+
+	if v := cl.GetBundles(); v != nil {
+		t.Errorf("unexpected GetBundles: %v", v)
+	}
+	if v := cl.GetRoutingNumberSummary(); v != nil {
+		t.Errorf("unexpected GetRoutingNumberSummary: %v", v)
+	}
+	if v := cl.GetCreditItems(); v != nil {
+		t.Errorf("unexpected GetCreditItems: %v", v)
+	}
+}
+
 // TestCashLetterNoBundle validates no Bundle when CashLetterHeader.RecordTypeIndicator = "N"
 func TestCashLetterNoBundle(t *testing.T) {
 	// Create CheckDetail

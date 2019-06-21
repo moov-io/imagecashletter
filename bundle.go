@@ -166,6 +166,9 @@ func (b *Bundle) AddCheckDetail(cd *CheckDetail) {
 
 // GetChecks returns a slice of check details for the Bundle
 func (b *Bundle) GetChecks() []*CheckDetail {
+	if b == nil {
+		return nil
+	}
 	return b.Checks
 }
 
@@ -176,6 +179,9 @@ func (b *Bundle) AddReturnDetail(rd *ReturnDetail) {
 
 // GetReturns returns a slice of return details for the Bundle
 func (b *Bundle) GetReturns() []*ReturnDetail {
+	if b == nil {
+		return nil
+	}
 	return b.Returns
 }
 
