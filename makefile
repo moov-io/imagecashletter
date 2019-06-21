@@ -50,6 +50,7 @@ release: docker AUTHORS
 
 release-push:
 	docker push moov/imagecashletter:$(VERSION)
+	docker push moov/imagecashletter:latest
 	docker push moov/imagecashletterfuzz:$(VERSION)
 
 .PHONY: cover-test cover-web
