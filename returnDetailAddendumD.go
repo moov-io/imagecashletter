@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // Errors specific to a ReturnDetailAddendumD Record
@@ -98,6 +99,10 @@ func NewReturnDetailAddendumD() ReturnDetailAddendumD {
 
 // Parse takes the input record string and parses the ReturnDetailAddendumD values
 func (rdAddendumD *ReturnDetailAddendumD) Parse(record string) {
+	if utf8.RuneCountInString(record) < 60 {
+		return // line too short
+	}
+
 	// Character position 1-2, Always "35"
 	rdAddendumD.recordType = "35"
 	// 03-04

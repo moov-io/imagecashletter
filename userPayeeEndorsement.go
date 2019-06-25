@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // The User Payee Endorsement Format Record is conditional, and contains a user controlled number of fields.  The
@@ -117,6 +118,10 @@ func NewUserPayeeEndorsement() *UserPayeeEndorsement {
 
 // Parse takes the input record string and parses the UserPayeeEndorsement values
 func (upe *UserPayeeEndorsement) Parse(record string) {
+	if utf8.RuneCountInString(record) < 335 {
+		return
+	}
+
 	// Character position 1-2, Always "68"
 	upe.recordType = "68"
 	// 03-03

@@ -7,6 +7,7 @@ package imagecashletter
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 // Errors specific to a UserGeneral Record
@@ -88,6 +89,10 @@ func NewUserGeneral() *UserGeneral {
 
 // Parse takes the input record string and parses the UserGeneral values
 func (ug *UserGeneral) Parse(record string) {
+	if utf8.RuneCountInString(record) < 45 {
+		return // line too short
+	}
+
 	// Character position 1-2, Always "68"
 	ug.recordType = "68"
 	// 03-03

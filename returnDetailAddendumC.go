@@ -7,6 +7,7 @@ package imagecashletter
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 // Errors specific to a ReturnDetailAddendumC Record
@@ -61,6 +62,10 @@ func NewReturnDetailAddendumC() ReturnDetailAddendumC {
 
 // Parse takes the input record string and parses the ReturnDetailAddendumC values
 func (rdAddendumC *ReturnDetailAddendumC) Parse(record string) {
+	if utf8.RuneCountInString(record) < 22 {
+		return // line too short
+	}
+
 	// Character position 1-2, Always "34"
 	rdAddendumC.recordType = "34"
 	// 03-03
@@ -69,14 +74,20 @@ func (rdAddendumC *ReturnDetailAddendumC) Parse(record string) {
 	rdAddendumC.MicrofilmArchiveSequenceNumber = rdAddendumC.parseStringField(record[3:18])
 	// 19-22
 	rdAddendumC.LengthImageReferenceKey = rdAddendumC.parseStringField(record[18:22])
+
+	imageRefKeyLength := rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)
+	if utf8.RuneCountInString(record) < 46+imageRefKeyLength {
+		return // line too short
+	}
+
 	// 23 (22+X)
-	rdAddendumC.ImageReferenceKey = rdAddendumC.parseStringField(record[22:rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)])
+	rdAddendumC.ImageReferenceKey = rdAddendumC.parseStringField(record[22:imageRefKeyLength])
 	// 23+X - 37+X
-	rdAddendumC.Description = rdAddendumC.parseStringField(record[22+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey) : 37+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)])
+	rdAddendumC.Description = rdAddendumC.parseStringField(record[22+imageRefKeyLength : 37+imageRefKeyLength])
 	// 38+X - 41+X
-	rdAddendumC.UserField = rdAddendumC.parseStringField(record[37+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey) : 41+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)])
+	rdAddendumC.UserField = rdAddendumC.parseStringField(record[37+imageRefKeyLength : 41+imageRefKeyLength])
 	// 42+X - 46+X
-	rdAddendumC.reserved = rdAddendumC.parseStringField(record[41+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey) : 46+rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)])
+	rdAddendumC.reserved = rdAddendumC.parseStringField(record[41+imageRefKeyLength : 46+imageRefKeyLength])
 
 }
 

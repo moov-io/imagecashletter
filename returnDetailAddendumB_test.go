@@ -22,6 +22,14 @@ func mockReturnDetailAddendumB() ReturnDetailAddendumB {
 	return rdAddendumB
 }
 
+func TestReturnDetailAddendumBParseErr(t *testing.T) {
+	var r ReturnDetailAddendumB
+	r.Parse("Asdjashfakjfa")
+	if r.PayorBankName != "" {
+		t.Errorf("r.PayorBankName=%s", r.PayorBankName)
+	}
+}
+
 // TestMockReturnDetailAddendumB creates a ReturnDetailAddendumB
 func TestMockReturnDetailAddendumB(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()

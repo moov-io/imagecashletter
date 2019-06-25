@@ -65,6 +65,14 @@ func TestMockCheckDetailAddendumC(t *testing.T) {
 	}
 }
 
+func TestParseCheckDetailAddendumCErr(t *testing.T) {
+	var c CheckDetailAddendumC
+	c.Parse("asdsakjahsfa")
+	if c.RecordNumber != 0 {
+		t.Errorf("c.RecordNumber=%d", c.RecordNumber)
+	}
+}
+
 // TestParseCheckDetailAddendumC validates parsing a CheckDetailAddendumC
 func TestParseCheckDetailAddendumC(t *testing.T) {
 	var line = "2801121042882201809051              Y10A                   0                    "

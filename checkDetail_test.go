@@ -29,6 +29,14 @@ func mockCheckDetail() *CheckDetail {
 	return cd
 }
 
+func TestCheckDetailParseErr(t *testing.T) {
+	var c CheckDetail
+	c.Parse("jakjsakjfas")
+	if c.AuxiliaryOnUs != "" {
+		t.Errorf("c.AuxiliaryOnUs=%s", c.AuxiliaryOnUs)
+	}
+}
+
 // TestMockCheckDetail creates a CheckDetail
 func TestMockCheckDetail(t *testing.T) {
 	cd := mockCheckDetail()

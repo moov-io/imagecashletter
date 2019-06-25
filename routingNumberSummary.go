@@ -7,6 +7,7 @@ package imagecashletter
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 // RoutingNumberSummary Record
@@ -40,6 +41,10 @@ func NewRoutingNumberSummary() *RoutingNumberSummary {
 
 // Parse takes the input record string and parses the ImageViewDetail values
 func (rns *RoutingNumberSummary) Parse(record string) {
+	if utf8.RuneCountInString(record) < 55 {
+		return // line too short
+	}
+
 	// Character position 1-2, Always "85"
 	rns.recordType = "85"
 	// 03-11
