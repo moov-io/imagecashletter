@@ -22,6 +22,21 @@ func mockCheckDetailAddendumB() CheckDetailAddendumB {
 	return cdAddendumB
 }
 
+func TestCheckDetailAddendumBParseErr(t *testing.T) {
+	var c CheckDetailAddendumB
+	c.Parse("asdhfakjfsa")
+	if c.ImageReferenceKeyIndicator != 0 {
+		t.Errorf("c.ImageReferenceKeyIndicator=%d", c.ImageReferenceKeyIndicator)
+	}
+	c.Parse("2711A             00340                                 CD Addendum B")
+	if c.ImageReferenceKeyIndicator != 1 {
+		t.Errorf("c.ImageReferenceKeyIndicator=%d", c.ImageReferenceKeyIndicator)
+	}
+	if c.ImageReferenceKey != "" {
+		t.Errorf("c.ImageReferenceKey=%s", c.ImageReferenceKey)
+	}
+}
+
 // TestMockCheckDetailAddendumB creates a CheckDetailAddendumB
 func TestMockCheckDetailAddendumB(t *testing.T) {
 	cdAddendumB := mockCheckDetailAddendumB()

@@ -39,6 +39,14 @@ func mockUserPayeeEndorsement() *UserPayeeEndorsement {
 	return upe
 }
 
+func TestUserPayeeEndorsementParseErr(t *testing.T) {
+	var upe UserPayeeEndorsement
+	upe.Parse("asjsahfakja")
+	if upe.OwnerIdentifierIndicator != 0 {
+		t.Errorf("upe.OwnerIdentifierIndicator=%d", upe.OwnerIdentifierIndicator)
+	}
+}
+
 // TestMockUserPayeeEndorsement creates a UserPayeeEndorsement
 func TestMockUserPayeeEndorsement(t *testing.T) {
 	upe := mockUserPayeeEndorsement()

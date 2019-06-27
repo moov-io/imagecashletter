@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // Errors specific to a CheckDetailAddendumC Record
@@ -98,6 +99,10 @@ func NewCheckDetailAddendumC() CheckDetailAddendumC {
 
 // Parse takes the input record string and parses the CheckDetailAddendumC values
 func (cdAddendumC *CheckDetailAddendumC) Parse(record string) {
+	if utf8.RuneCountInString(record) < 60 {
+		return // line too short
+	}
+
 	// Character position 1-2, Always "28"
 	cdAddendumC.recordType = "28"
 	// 03-04

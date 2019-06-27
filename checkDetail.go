@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 // Errors specific to a CheckDetail Record
@@ -162,6 +163,10 @@ func NewCheckDetail() *CheckDetail {
 
 // Parse takes the input record string and parses the CheckDetail values
 func (cd *CheckDetail) Parse(record string) {
+	if utf8.RuneCountInString(record) < 80 {
+		return // line too short
+	}
+
 	// Character position 1-2, Always "25"
 	cd.recordType = "25"
 	// 03-17

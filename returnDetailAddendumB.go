@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // Errors specific to a ReturnDetailAddendumB Record
@@ -49,6 +50,10 @@ func NewReturnDetailAddendumB() ReturnDetailAddendumB {
 
 // Parse takes the input record string and parses the ReturnDetailAddendumB values
 func (rdAddendumB *ReturnDetailAddendumB) Parse(record string) {
+	if utf8.RuneCountInString(record) < 80 {
+		return // line too short
+	}
+
 	// Character position 1-2, Always "33"
 	rdAddendumB.recordType = "33"
 	// 03-20
@@ -61,7 +66,6 @@ func (rdAddendumB *ReturnDetailAddendumB) Parse(record string) {
 	rdAddendumB.PayorBankBusinessDate = rdAddendumB.parseYYYYMMDDDate(record[50:58])
 	// 59-80
 	rdAddendumB.PayorAccountName = rdAddendumB.parseStringField(record[58:80])
-
 }
 
 // String writes the ReturnDetailAddendumB struct to a string.

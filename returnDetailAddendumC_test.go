@@ -22,6 +22,21 @@ func mockReturnDetailAddendumC() ReturnDetailAddendumC {
 	return rdAddendumC
 }
 
+func TestReturnDetailAddendumCParseErr(t *testing.T) {
+	var r ReturnDetailAddendumC
+	r.Parse("ASdsadasda")
+	if r.ImageReferenceKeyIndicator != 0 {
+		t.Errorf("r.ImageReferenceKeyIndicator=%d", r.ImageReferenceKeyIndicator)
+	}
+	r.Parse("3411A             00340                                 RD Addendum C")
+	if r.ImageReferenceKeyIndicator != 1 {
+		t.Errorf("r.ImageReferenceKeyIndicator=%d", r.ImageReferenceKeyIndicator)
+	}
+	if r.ImageReferenceKey != "" {
+		t.Errorf("r.ImageReferenceKey=%s", r.ImageReferenceKey)
+	}
+}
+
 // TestMockReturnDetailAddendumCcreates a ReturnDetailAddendumC
 func TestMockReturnDetailAddendumC(t *testing.T) {
 	rdAddendumC := mockReturnDetailAddendumC()

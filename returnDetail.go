@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // Errors specific to a ReturnDetail Record
@@ -170,6 +171,10 @@ func NewReturnDetail() *ReturnDetail {
 
 // Parse takes the input record string and parses the ReturnDetail values
 func (rd *ReturnDetail) Parse(record string) {
+	if utf8.RuneCountInString(record) < 72 {
+		return // line too short
+	}
+
 	// Character position 1-2, Always "31"
 	rd.recordType = "31"
 	// 03-10

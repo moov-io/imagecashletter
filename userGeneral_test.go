@@ -22,6 +22,14 @@ func mockUserGeneral() *UserGeneral {
 	return ug
 }
 
+func TestUserGeneralParseErr(t *testing.T) {
+	var ug UserGeneral
+	ug.Parse("askdhfaskjas")
+	if ug.OwnerIdentifierIndicator != 0 {
+		t.Errorf("ug.OwnerIdentifierIndicator=%d", ug.OwnerIdentifierIndicator)
+	}
+}
+
 // TestMockUserGeneral creates a UserGeneral
 func TestMockUserGeneral(t *testing.T) {
 	ug := mockUserGeneral()

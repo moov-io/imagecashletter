@@ -7,6 +7,7 @@ package imagecashletter
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 // Errors specific to a CheckDetailAddendumB Record
@@ -60,6 +61,10 @@ func NewCheckDetailAddendumB() CheckDetailAddendumB {
 
 // Parse takes the input record string and parses the CheckDetailAddendumB values
 func (cdAddendumB *CheckDetailAddendumB) Parse(record string) {
+	if utf8.RuneCountInString(record) < 22 {
+		return // line too short
+	}
+
 	// Character position 1-2, Always "27"
 	cdAddendumB.recordType = "27"
 	// 03-03
@@ -68,14 +73,20 @@ func (cdAddendumB *CheckDetailAddendumB) Parse(record string) {
 	cdAddendumB.MicrofilmArchiveSequenceNumber = cdAddendumB.parseStringField(record[3:18])
 	// 19-22
 	cdAddendumB.LengthImageReferenceKey = cdAddendumB.parseStringField(record[18:22])
+
+	imageRefLength := cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey)
+	if utf8.RuneCountInString(record) < 46+imageRefLength {
+		return // line too short
+	}
+
 	// 23 (22+X)
-	cdAddendumB.ImageReferenceKey = cdAddendumB.parseStringField(record[22:cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey)])
+	cdAddendumB.ImageReferenceKey = cdAddendumB.parseStringField(record[22:imageRefLength])
 	// 23+X - 37+X
-	cdAddendumB.Description = cdAddendumB.parseStringField(record[22+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey) : 37+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey)])
+	cdAddendumB.Description = cdAddendumB.parseStringField(record[22+imageRefLength : 37+imageRefLength])
 	// 38+X - 41+X
-	cdAddendumB.UserField = cdAddendumB.parseStringField(record[37+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey) : 41+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey)])
+	cdAddendumB.UserField = cdAddendumB.parseStringField(record[37+imageRefLength : 41+imageRefLength])
 	// 42+X - 46+X
-	cdAddendumB.reserved = cdAddendumB.parseStringField(record[41+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey) : 46+cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey)])
+	cdAddendumB.reserved = cdAddendumB.parseStringField(record[41+imageRefLength : 46+imageRefLength])
 }
 
 // String writes the CheckDetailAddendumB struct to a string.

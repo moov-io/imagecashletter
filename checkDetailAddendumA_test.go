@@ -28,6 +28,14 @@ func mockCheckDetailAddendumA() CheckDetailAddendumA {
 	return cdAddendumA
 }
 
+func TestCheckDetailAddendumParseErr(t *testing.T) {
+	var c CheckDetailAddendumA
+	c.Parse("asdshfaksjs")
+	if c.RecordNumber != 0 {
+		t.Errorf("c.RecordNumber=%d", c.RecordNumber)
+	}
+}
+
 // TestMockCheckDetailAddendumA creates a CheckDetailAddendumA
 func TestMockCheckDetailAddendumA(t *testing.T) {
 	cdAddendumA := mockCheckDetailAddendumA()

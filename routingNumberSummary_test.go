@@ -20,6 +20,14 @@ func mockRoutingNumberSummary() *RoutingNumberSummary {
 	return rns
 }
 
+func TestRoutingNumberSummaryParseErr(t *testing.T) {
+	var r RoutingNumberSummary
+	r.Parse("asdlahsakjajf")
+	if r.CashLetterRoutingNumber != "" {
+		t.Errorf("r.CashLetterRoutingNumber=%s", r.CashLetterRoutingNumber)
+	}
+}
+
 // TestRoutingNumberSummary creates a ReturnRoutingNumberSummary
 func TestRoutingNumberSummary(t *testing.T) {
 	rns := mockRoutingNumberSummary()

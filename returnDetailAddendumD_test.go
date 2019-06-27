@@ -27,6 +27,14 @@ func mockReturnDetailAddendumD() ReturnDetailAddendumD {
 	return rdAddendumD
 }
 
+func TestReturnDetailAddendumDParseErr(t *testing.T) {
+	var r ReturnDetailAddendumD
+	r.Parse("ASdasdas")
+	if r.RecordNumber != 0 {
+		t.Errorf("r.RecordNumber=%d", r.RecordNumber)
+	}
+}
+
 // TestMockReturnDetailAddendumD creates a ReturnDetailAddendumD
 func TestMockReturnDetailAddendumD(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()

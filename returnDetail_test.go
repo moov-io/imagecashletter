@@ -30,6 +30,14 @@ func mockReturnDetail() *ReturnDetail {
 	return rd
 }
 
+func TestReturnDetailParse(t *testing.T) {
+	var r ReturnDetail
+	r.Parse("asshafaksjfas")
+	if r.PayorBankRoutingNumber != "" {
+		t.Errorf("r.PayorBankRoutingNumber=%s", r.PayorBankRoutingNumber)
+	}
+}
+
 // TestMockReturnDetail creates a ReturnDetail
 func TestMockReturnDetail(t *testing.T) {
 	rd := mockReturnDetail()
