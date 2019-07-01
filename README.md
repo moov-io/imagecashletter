@@ -10,7 +10,7 @@ X9’s Specifications for ICL (Image Cash Letter) to provide Check 21 services
 
 Package `github.com/moov-io/imagecashletter` implements a file reader and writer for parsing [Image Cash Letter](https://en.wikipedia.org/wiki/Check_21_Act) (ICL) files.
 
-Docs: [docs.moov.io](https://docs.moov.io/en/latest/icl/) | [api docs](https://api.moov.io/apps/imagecashletter/)
+Docs: [docs.moov.io](https://docs.moov.io/icl/) | [api docs](https://api.moov.io/apps/imagecashletter/)
 
 ## Project Status
 
@@ -47,7 +47,7 @@ $ go doc github.com/moov-io/imagecashletter CashLetter
 
  channel | info
  ------- | -------
-[Project Documentation](http://docs.moov.io/en/latest/) | Our project documentation available online.
+[Project Documentation](http://docs.moov.io/) | Our project documentation available online.
 Google Group [moov-users](https://groups.google.com/forum/#!forum/moov-users)| The Moov users Google group is for contributors other people contributing to the Moov project. You can join them without a google account by sending an email to [moov-users+subscribe@googlegroups.com](mailto:moov-users+subscribe@googlegroups.com). After receiving the join-request message, you can simply reply to that to confirm the subscription.
 Twitter [@moov_io](https://twitter.com/moov_io)	| You can follow Moov.IO's Twitter feed to get updates on our project(s). You can also tweet us questions or just share blogs or stories.
 [GitHub Issue](https://github.com/moov-io) | If you are able to reproduce an problem please open a GitHub Issue under the specific project that caused the error.
