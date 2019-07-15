@@ -15,7 +15,7 @@ import (
 // Errors specific to a ReturnDetail Record
 
 var (
-	msgReturnCode         = "is invalid"
+	msgReturnCode = "is invalid"
 )
 
 var (
