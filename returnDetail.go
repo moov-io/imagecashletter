@@ -15,7 +15,6 @@ import (
 // Errors specific to a ReturnDetail Record
 
 var (
-	msgCustomerReturnCode = "is invalid"
 	msgReturnCode         = "is invalid"
 )
 
@@ -121,7 +120,7 @@ type ReturnDetail struct {
 	// I: None
 	ArchiveTypeIndicator string `json:"archiveTypeIndicator"`
 	// TimesReturned is code used to indicate the number of times the paying bank has returned this item.
-	//Values:
+	// Values:
 	// 0: The item has been returned an unknown number of times
 	// 1: The item has been returned once
 	// 2: The item has been returned twice

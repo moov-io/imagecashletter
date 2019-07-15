@@ -86,9 +86,9 @@ type FileHeader struct {
 	// A–J Reserved for Canadian use
 	// Other - as defined by clearing arrangements.
 	CompanionDocumentIndicator string `json:"companionDocumentIndicator"`
-	// validator is composed for imagecashletter data validation
+	// validator is composed for ImageCashLetter data validation
 	validator
-	// converters is composed for imagecashletter to golang Converters
+	// converters is composed for ImageCashLetter to golang Converters
 	converters
 }
 

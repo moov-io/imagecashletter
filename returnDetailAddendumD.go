@@ -73,7 +73,7 @@ type ReturnDetailAddendumD struct {
 	ReturnReason string `json:"returnReason"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`
-	//EndorsingBankIdentifier
+	// EndorsingBankIdentifier
 	// Values:
 	// 0: Depository Bank (BOFD) - this value is used when the ReturnDetailAddendumD Record reflects the Return
 	// Processing Bank in lieu of BOFD.

@@ -101,9 +101,9 @@ type UserPayeeEndorsement struct {
 	EndorsementIndicator int `json:"endorsementIndicator"`
 	// UserField is a field used at the discretion of users of this record.
 	UserField string `json:"userField"`
-	// validator is composed for imagecashletter data validation
+	// validator is composed for ImageCashLetter data validation
 	validator
-	// converters is composed for imagecashletter to golang Converters
+	// converters is composed for  to golang Converters
 	converters
 }
 

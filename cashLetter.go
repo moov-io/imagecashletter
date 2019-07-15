@@ -51,7 +51,7 @@ func NewCashLetter(clh *CashLetterHeader) CashLetter {
 	return cl
 }
 
-// Validate performs imagecashletter validations and format rule checks and returns an error if not Validated
+// Validate performs ImageCashLetter validations and format rule checks and returns an error if not Validated
 func (cl *CashLetter) Validate() error {
 	if cl.CashLetterHeader.RecordTypeIndicator == "N" {
 		if cl.GetBundles() != nil {

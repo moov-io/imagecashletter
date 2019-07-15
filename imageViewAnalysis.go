@@ -7,6 +7,7 @@ package imagecashletter
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 // Errors specific to a ImageViewAnalysis Record
@@ -212,9 +213,9 @@ type ImageViewAnalysis struct {
 	UserField string `json:"userField"`
 	// reservedThree is a field reserved for future use.  Reserved should be blank.
 	reservedThree string
-	// validator is composed for imagecashletter data validation
+	// validator is composed for ImageCashLetter data validation
 	validator
-	// converters is composed for imagecashletter to golang Converters
+	// converters is composed for ImageCashLetter to golang Converters
 	converters
 }
 
@@ -228,6 +229,10 @@ func NewImageViewAnalysis() ImageViewAnalysis {
 
 // Parse takes the input record string and parses the ImageViewAnalysis values
 func (ivAnalysis *ImageViewAnalysis) Parse(record string) {
+	if utf8.RuneCountInString(record) < 65 {
+		return // line too short
+	}
+
 	// Character position 1-2, Always "54"
 	ivAnalysis.recordType = "54"
 	// 03-03
@@ -324,7 +329,7 @@ func (ivAnalysis *ImageViewAnalysis) String() string {
 	return buf.String()
 }
 
-// Validate performs imagecashletter format rule checks on the record and returns an error if not Validated
+// Validate performs ImageCashLetterformat rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (ivAnalysis *ImageViewAnalysis) Validate() error {
 	if err := ivAnalysis.fieldInclusion(); err != nil {
