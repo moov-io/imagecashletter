@@ -368,3 +368,14 @@ func TestRDAddendumDFITruncationIndicator(t *testing.T) {
 		}
 	}
 }
+
+// TestRDAddendumDRuneCountInString validates RuneCountInString
+func TestRDAddendumDRuneCountInString(t *testing.T) {
+	rdAddendumD := NewReturnDetailAddendumD()
+	var line = "35"
+	rdAddendumD.Parse(line)
+
+	if rdAddendumD.EndorsingBankRoutingNumber != "" {
+		t.Error("Parsed with an invalid RuneCountInString")
+	}
+}

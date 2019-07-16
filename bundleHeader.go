@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // Errors specific to a BundleHeader Record
@@ -99,6 +100,10 @@ func NewBundleHeader() *BundleHeader {
 
 // Parse takes the input record string and parses the BundleHeader values
 func (bh *BundleHeader) Parse(record string) {
+	if utf8.RuneCountInString(record) < 68 {
+		return
+	}
+
 	// Character position 1-2, Always "20"
 	bh.recordType = "20"
 	// 03-04

@@ -229,3 +229,14 @@ func TestFieldInclusionBundleTotalAmount(t *testing.T) {
 		}
 	}
 }
+
+// TestBundleControlRuneCountInString validates RuneCountInString
+func TestBundleControlRuneCountInString(t *testing.T) {
+	bc := NewBundleControl()
+	var line = "70"
+	bc.Parse(line)
+
+	if bc.BundleItemsCount != 0 {
+		t.Error("Parsed with an invalid RuneCountInString")
+	}
+}

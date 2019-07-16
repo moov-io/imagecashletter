@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // FileHeader Record is mandatory
@@ -86,9 +87,9 @@ type FileHeader struct {
 	// A–J Reserved for Canadian use
 	// Other - as defined by clearing arrangements.
 	CompanionDocumentIndicator string `json:"companionDocumentIndicator"`
-	// validator is composed for imagecashletter data validation
+	// validator is composed for ImageCashLetter data validation
 	validator
-	// converters is composed for imagecashletter to golang Converters
+	// converters is composed for ImageCashLetter to golang Converters
 	converters
 }
 
@@ -103,6 +104,9 @@ func NewFileHeader() FileHeader {
 
 // Parse takes the input record string and parses the FileHeader values
 func (fh *FileHeader) Parse(record string) {
+	if utf8.RuneCountInString(record) != 80 {
+		return
+	}
 	// Character position 1-2, Always "01"
 	fh.recordType = "01"
 	// 03-04

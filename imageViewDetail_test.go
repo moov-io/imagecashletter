@@ -421,3 +421,14 @@ func TestIVDetailFIViewDescriptor(t *testing.T) {
 		}
 	}
 }
+
+// TestIVDetailRuneCountInString validates RuneCountInString
+func TestIVDetailRuneCountInString(t *testing.T) {
+	ivDetail := NewImageViewDetail()
+	var line = "50"
+	ivDetail.Parse(line)
+
+	if ivDetail.ImageCreatorRoutingNumber != "" {
+		t.Error("Parsed with an invalid RuneCountInString")
+	}
+}

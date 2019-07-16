@@ -522,3 +522,14 @@ func TestUPEFILengthUserData(t *testing.T) {
 		}
 	}
 }
+
+// TestUPERuneCountInString validates RuneCountInString
+func TestUPERuneCountInString(t *testing.T) {
+	upe := NewUserPayeeEndorsement()
+	var line = "68"
+	upe.Parse(line)
+
+	if upe.BankAccountNumber != "" {
+		t.Error("Parsed with an invalid RuneCountInString")
+	}
+}

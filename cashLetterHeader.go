@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // Errors specific to a CashLetterHeader Record
@@ -154,6 +155,10 @@ func NewCashLetterHeader() *CashLetterHeader {
 
 // Parse takes the input record string and parses the CashLetterHeader values
 func (clh *CashLetterHeader) Parse(record string) {
+	if utf8.RuneCountInString(record) != 80 {
+		return
+	}
+
 	// Character position 1-2, Always "10"
 	clh.recordType = "10"
 	// 03-04

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // Errors specific to a CashLetterControl Record
@@ -61,6 +62,10 @@ func NewCashLetterControl() *CashLetterControl {
 
 // Parse takes the input record string and parses the CashLetterControl values
 func (clc *CashLetterControl) Parse(record string) {
+	if utf8.RuneCountInString(record) != 80 {
+		return
+	}
+
 	// Character position 1-2, Always "90"
 	clc.recordType = "90"
 	// 03-08

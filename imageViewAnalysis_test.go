@@ -518,3 +518,14 @@ func TestIVAnalysisFIRecordType(t *testing.T) {
 		}
 	}
 }
+
+// TestIVAnalysisRuneCountInString validates RuneCountInString
+func TestIVAnalysisRuneCountInString(t *testing.T) {
+	ivAnalysis := NewImageViewAnalysis()
+	var line = "54"
+	ivAnalysis.Parse(line)
+
+	if ivAnalysis.AmountInWordsUsability != 0 {
+		t.Error("Parsed with an invalid RuneCountInString")
+	}
+}

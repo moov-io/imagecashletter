@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // Errors specific to a ImageViewDetail Record
@@ -89,7 +90,7 @@ type ImageViewDetail struct {
 	// 11: Partial view–payee endorsement Area of Interest
 	// 12: Partial view–Bank Of First Deposit (BOFD) endorsement Area of Interest
 	// 13: Partial view–transit endorsement Area of Interest
-	// 14 - 99: Reserved for imagecashletter
+	// 14 - 99: Reserved for ImageCashLetter
 	ViewDescriptor string `json:"viewDescriptor"`
 	// DigitalSignatureIndicator is a code that indicates the presence or absence of a digital signature for the image
 	// view contained in ImageViewData.ImageData. If present, the Digital Signature is conveyed in the related
@@ -164,9 +165,9 @@ type ImageViewDetail struct {
 	OverrideIndicator string `json:"overrideIndicator"`
 	// reservedTwo is a field reserved for future use.  Reserved should be blank.
 	reservedTwo string
-	// validator is composed for imagecashletter data validation
+	// validator is composed for ImageCashLetter data validation
 	validator
-	// converters is composed for imagecashletter to golang Converters
+	// converters is composed for ImageCashLetter to golang Converters
 	converters
 }
 
@@ -180,6 +181,10 @@ func NewImageViewDetail() ImageViewDetail {
 
 // Parse takes the input record string and parses the ImageViewDetail values
 func (ivDetail *ImageViewDetail) Parse(record string) {
+	if utf8.RuneCountInString(record) < 67 {
+		return // line too short
+	}
+
 	// Character position 1-2, Always "50"
 	ivDetail.recordType = "50"
 	// 03-03
@@ -246,7 +251,7 @@ func (ivDetail *ImageViewDetail) String() string {
 	return buf.String()
 }
 
-// Validate performs imagecashletter format rule checks on the record and returns an error if not Validated
+// Validate performs ImageCashLetter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (ivDetail *ImageViewDetail) Validate() error {
 	if err := ivDetail.fieldInclusion(); err != nil {
