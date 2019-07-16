@@ -55,7 +55,7 @@ func NewBundleControl() *BundleControl {
 
 // Parse takes the input record string and parses the BundleControl values
 func (bc *BundleControl) Parse(record string) {
-	if utf8.RuneCountInString(record) != 80 {
+	if utf8.RuneCountInString(record) < 56 {
 		return
 	}
 

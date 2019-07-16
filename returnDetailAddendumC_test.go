@@ -246,3 +246,14 @@ func TestRDAddendumCFIMicrofilmArchiveSequenceNumber(t *testing.T) {
 		}
 	}
 }
+
+// TestRDAddendumCRuneCountInString validates RuneCountInString
+func TestRDAddendumCRuneCountInString(t *testing.T) {
+	rdAddendumC := NewReturnDetailAddendumC()
+	var line = "34"
+	rdAddendumC.Parse(line)
+
+	if rdAddendumC.Description != "" {
+		t.Error("Parsed with an invalid RuneCountInString")
+	}
+}

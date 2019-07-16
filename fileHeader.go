@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // FileHeader Record is mandatory
@@ -103,6 +104,9 @@ func NewFileHeader() FileHeader {
 
 // Parse takes the input record string and parses the FileHeader values
 func (fh *FileHeader) Parse(record string) {
+	if utf8.RuneCountInString(record) != 80 {
+		return
+	}
 	// Character position 1-2, Always "01"
 	fh.recordType = "01"
 	// 03-04

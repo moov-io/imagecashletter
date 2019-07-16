@@ -445,3 +445,14 @@ func TestFHFieldInclusionCreationTime(t *testing.T) {
 		}
 	}
 }
+
+// TestFileHeaderRuneCountInString validates RuneCountInString
+func TestFileHeaderRuneCountInString(t *testing.T) {
+	fh := NewFileHeader()
+	var line = "01"
+	fh.Parse(line)
+
+	if fh.ImmediateOrigin != "" {
+		t.Error("Parsed with an invalid RuneCountInString")
+	}
+}

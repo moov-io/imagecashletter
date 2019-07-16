@@ -217,3 +217,14 @@ func TestFieldInclusionRecordTypeSettlementDate(t *testing.T) {
 		}
 	}
 }
+
+// TestCashLetterControlRuneCountInString validates RuneCountInString
+func TestCashLetterControlRuneCountInString(t *testing.T) {
+	clc := NewCashLetterControl()
+	var line = "90"
+	clc.Parse(line)
+
+	if clc.CashLetterBundleCount != 0 {
+		t.Error("Parsed with an invalid RuneCountInString")
+	}
+}

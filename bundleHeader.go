@@ -100,7 +100,7 @@ func NewBundleHeader() *BundleHeader {
 
 // Parse takes the input record string and parses the BundleHeader values
 func (bh *BundleHeader) Parse(record string) {
-	if utf8.RuneCountInString(record) != 80 {
+	if utf8.RuneCountInString(record) < 68 {
 		return
 	}
 

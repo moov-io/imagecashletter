@@ -254,3 +254,14 @@ func TestFieldInclusionFileTotalAmount(t *testing.T) {
 		}
 	}
 }
+
+// TestFileControlRuneCountInString validates RuneCountInString
+func TestFileControlRuneCountInString(t *testing.T) {
+	fc := NewFileControl()
+	var line = "99"
+	fc.Parse(line)
+
+	if fc.CashLetterCount != 0 {
+		t.Error("Parsed with an invalid RuneCountInString")
+	}
+}

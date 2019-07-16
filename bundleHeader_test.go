@@ -352,3 +352,14 @@ func TestBHFieldInclusionBundleSequenceNumber(t *testing.T) {
 		}
 	}
 }
+
+// TestBundleHeaderRuneCountInString validates RuneCountInString
+func TestBundleHeaderRuneCountInString(t *testing.T) {
+	bh := NewBundleHeader()
+	var line = "20"
+	bh.Parse(line)
+
+	if bh.CycleNumber != "" {
+		t.Error("Parsed with an invalid RuneCountInString")
+	}
+}

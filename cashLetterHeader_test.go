@@ -440,3 +440,14 @@ func TestFieldInclusionCashLetterID(t *testing.T) {
 		}
 	}
 }
+
+// TestCashLetterHeaderRuneCountInString validates RuneCountInString
+func TestCashLetterHeaderRuneCountInString(t *testing.T) {
+	clh := NewCashLetterHeader()
+	var line = "10"
+	clh.Parse(line)
+
+	if clh.CollectionTypeIndicator != "" {
+		t.Error("Parsed with an invalid RuneCountInString")
+	}
+}

@@ -7,6 +7,7 @@ package imagecashletter
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 // FileControl Record
@@ -54,6 +55,9 @@ func NewFileControl() FileControl {
 
 // Parse takes the input record string and parses the FileControl values
 func (fc *FileControl) Parse(record string) {
+	if utf8.RuneCountInString(record) < 65 {
+		return
+	}
 	// Character position 1-2, Always "99"
 	fc.recordType = "99"
 	// 03-08

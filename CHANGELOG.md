@@ -1,3 +1,9 @@
+## v0.2.1 (Unreleased)
+
+ADDITIONS
+
+- Add RuneCountInString check to Parse(record string) functions
+
 ## v0.1.1 (Released 2019-06-25)
 
 BUG FIXES
