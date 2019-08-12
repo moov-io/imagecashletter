@@ -15,7 +15,7 @@ import (
 
 type CashLetterControl struct {
 	// CashLetterControl ID
-	Id string `json:"id,omitempty"`
+	ID string `json:"ID,omitempty"`
 	// CashLetterBundleCount identifies the total number of bundles within the cash letter.
 	CashLetterBundleCount int32 `json:"cashLetterBundleCount,omitempty"`
 	// CashLetterItemsCount identifies the total number of items within the cash letter.

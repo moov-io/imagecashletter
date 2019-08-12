@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | ReturnDetailAddendumB ID | [optional] 
+**ID** | **string** | ReturnDetailAddendumB ID | [optional] 
 **PayorBankName** | **string** | PayorBankName is short name of the institution by or through which the item is payable. | [optional] 
 **AuxiliaryOnUs** | **string** | AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank. | [optional] 
 **PayorBankSequenceNumber** | **string** | PayorBankSequenceNumber is a number that identifies the item at the payor bank. | [optional] 

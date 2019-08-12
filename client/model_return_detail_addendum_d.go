@@ -15,7 +15,7 @@ import (
 
 type ReturnDetailAddendumD struct {
 	// ReturnDetailAddendumD ID
-	Id string `json:"id,omitempty"`
+	ID string `json:"ID,omitempty"`
 	// RecordNumber is a number representing the order in which each ReturnDetailAddendumD was created. ReturnDetailAddendumD shall be in sequential order starting with 1.  Maximum 99.
 	RecordNumber string `json:"recordNumber,omitempty"`
 	// EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that endorsed the check.

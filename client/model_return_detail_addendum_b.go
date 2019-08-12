@@ -15,7 +15,7 @@ import (
 
 type ReturnDetailAddendumB struct {
 	// ReturnDetailAddendumB ID
-	Id string `json:"id,omitempty"`
+	ID string `json:"ID,omitempty"`
 	// PayorBankName is short name of the institution by or through which the item is payable.
 	PayorBankName string `json:"payorBankName,omitempty"`
 	// AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.

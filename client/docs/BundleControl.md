@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | BundleControl ID | [optional] 
+**ID** | **string** | BundleControl ID | [optional] 
 **BundleItemsCount** | **int32** | BundleItemsCount identifies the total number of items within the bundle. | 
 **BundleTotalAmount** | **int32** | BundleTotalAmount identifies the total amount of item amounts within the bundle. | 
 **MicrValidTotalAmount** | **int32** | MICRValidTotalAmount identifies the total amount of all CheckDetail Records within the bundle which contains 1 in the MICRValidIndicator. | [optional] 

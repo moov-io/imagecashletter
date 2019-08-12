@@ -15,7 +15,7 @@ import (
 
 type ReturnDetailAddendumA struct {
 	// ReturnDetailAddendumA ID
-	Id string `json:"id,omitempty"`
+	ID string `json:"ID,omitempty"`
 	// RecordNumber is a number representing the order in which each ReturnDetailAddendumA was created. ReturnDetailAddendumA shall be in sequential order starting with 1.
 	RecordNumber int32 `json:"recordNumber"`
 	// ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns, final return notifications, and preliminary return notifications are sent, usually the BOFD.

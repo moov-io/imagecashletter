@@ -11,7 +11,7 @@ package openapi
 
 type ImageViewAnalysis struct {
 	// ImageViewAnalysis ID
-	Id string `json:"id,omitempty"`
+	ID string `json:"ID,omitempty"`
 	// GlobalImageQuality is a code that indicates whether the image view was tested for any of the conditions related to image quality defined in the Image Quality Information.  * `0` -  The image was not tested for any of the image quality conditions * `1` -  The image was tested and one or more image quality conditions were reported * `2` -  The image was tested and no image quality conditions were reported
 	GlobalImageQuality string `json:"globalImageQuality,omitempty"`
 	// GlobalImageUsability is a code that indicates whether the image view was tested for any of the conditions related to image usability defined in the Image Usability Information.  * `0` -  The image was not tested for any of the image quality conditions * `1` -  The image was tested and one or more image quality conditions were reported * `2` -  The image was tested and no image quality conditions were reported

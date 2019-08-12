@@ -15,7 +15,7 @@ import (
 
 type CheckDetailAddendumC struct {
 	// CheckDetailAddendumC ID
-	Id string `json:"id,omitempty"`
+	ID string `json:"ID,omitempty"`
 	// RecordNumber is a number representing the order in which each CheckDetailAddendumC was created. CheckDetailAddendumA shall be in sequential order starting with 1.
 	RecordNumber int32 `json:"recordNumber"`
 	// EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that endorsed the check.

@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | CheckDetailAddendumC ID | [optional] 
+**ID** | **string** | CheckDetailAddendumC ID | [optional] 
 **RecordNumber** | **int32** | RecordNumber is a number representing the order in which each CheckDetailAddendumC was created. CheckDetailAddendumA shall be in sequential order starting with 1. | 
 **EndorsingBankRoutingNumber** | **string** | EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that endorsed the check. | 
 **BOFDEndorsementBusinessDate** | [**time.Time**](time.Time.md) | BOFDEndorsementBusinessDate is the date of endorsement. | [optional] 

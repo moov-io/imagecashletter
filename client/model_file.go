@@ -11,7 +11,7 @@ package openapi
 
 type File struct {
 	// File ID
-	Id          string       `json:"id,omitempty"`
+	ID          string       `json:"ID,omitempty"`
 	FileHeader  FileHeader   `json:"fileHeader,omitempty"`
 	CashLetters []CashLetter `json:"cashLetters,omitempty"`
 	Bundles     []Bundle     `json:"bundles,omitempty"`

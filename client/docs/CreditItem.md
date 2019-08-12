@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | CreditItem ID | [optional] 
+**ID** | **string** | CreditItem ID | [optional] 
 **AuxiliaryOnUs** | **string** | AuxiliaryOnUs identifies a code used at the discretion of the creating bank. The handling of dashes and spaces shall be determined between the exchange partners. | [optional] 
 **ExternalProcessingCode** | **string** | ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44. | [optional] 
 **PostingBankRoutingNumber** | **string** | PostingBankRoutingNumber is a routing number assigned by the posting bank to identify this credit. | [optional] 

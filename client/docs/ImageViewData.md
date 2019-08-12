@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | ImageViewData ID | [optional] 
+**ID** | **string** | ImageViewData ID | [optional] 
 **ECEInstitutionRoutingNumber** | **string** | ECEInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the bundle header.  This number is imported from the Bundle Header Record (Clause 9.4) associated with the image view conveyed in this Image View Data Property. | [optional] 
 **BundleBusinessDate** | [**time.Time**](time.Time.md) | BundleBusinessDate is the business date of the bundle. | [optional] 
 **CycleNumber** | **string** | CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which the bundle is created. | [optional] 

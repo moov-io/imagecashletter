@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | ReturnDetailAddendumD ID | [optional] 
+**ID** | **string** | ReturnDetailAddendumD ID | [optional] 
 **RecordNumber** | **string** | RecordNumber is a number representing the order in which each ReturnDetailAddendumD was created. ReturnDetailAddendumD shall be in sequential order starting with 1.  Maximum 99.  | [optional] 
 **EndorsingBankRoutingNumber** | **string** | EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that endorsed the check. | 
 **BOFDEndorsementBusinessDate** | [**time.Time**](time.Time.md) | BOFDEndorsementBusinessDate is the date of endorsement | 

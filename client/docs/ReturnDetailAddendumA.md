@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | ReturnDetailAddendumA ID | [optional] 
+**ID** | **string** | ReturnDetailAddendumA ID | [optional] 
 **RecordNumber** | **int32** | RecordNumber is a number representing the order in which each ReturnDetailAddendumA was created. ReturnDetailAddendumA shall be in sequential order starting with 1. | 
 **ReturnLocationRoutingNumber** | **string** | ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns, final return notifications, and preliminary return notifications are sent, usually the BOFD. | 
 **BOFDEndorsementDate** | [**time.Time**](time.Time.md) | BOFDEndorsementDate is the date of endorsement | [optional] 

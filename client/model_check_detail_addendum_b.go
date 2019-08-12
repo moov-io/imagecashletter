@@ -11,7 +11,7 @@ package openapi
 
 type CheckDetailAddendumB struct {
 	// CheckDetailAddendumB ID
-	Id string `json:"id,omitempty"`
+	ID string `json:"ID,omitempty"`
 	// ImageReferenceKeyIndicator identifies whether ImageReferenceKeyLength contains a variable value within the allowable range, or contains a defined value and the content is ItemReferenceKey.  * `0` - ImageReferenceKeyIndicator has Defined Value of 0034 and ImageReferenceKey contains the Image Reference Key. * `1`- ImageReferenceKeyIndicator contains a value other than Value 0034; or ImageReferenceKeyIndicator contains Value 0034, which is not a Defined Value, and the content of ImageReferenceKey has no special significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the ImageReferenceKey is not present.
 	ImageReferenceKeyIndicator string `json:"imageReferenceKeyIndicator,omitempty"`
 	// microfilmArchiveSequenceNumber is a number that identifies the item in the microfilm archive system; it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.

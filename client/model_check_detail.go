@@ -11,7 +11,7 @@ package openapi
 
 type CheckDetail struct {
 	// CheckDetail ID
-	Id string `json:"id,omitempty"`
+	ID string `json:"ID,omitempty"`
 	// AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
 	AuxiliaryOnUs string `json:"auxiliaryOnUs,omitempty"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.

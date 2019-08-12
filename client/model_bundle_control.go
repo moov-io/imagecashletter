@@ -11,7 +11,7 @@ package openapi
 
 type BundleControl struct {
 	// BundleControl ID
-	Id string `json:"id,omitempty"`
+	ID string `json:"ID,omitempty"`
 	// BundleItemsCount identifies the total number of items within the bundle.
 	BundleItemsCount int32 `json:"bundleItemsCount"`
 	// BundleTotalAmount identifies the total amount of item amounts within the bundle.
