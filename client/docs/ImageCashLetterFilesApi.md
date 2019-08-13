@@ -4,21 +4,21 @@ All URIs are relative to *http://localhost:8083*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AddICLToFile**](ImageCashLetterFilesApi.md#AddICLToFile) | **Post** /files/{file_id}/cashLetters | Add CashLetter to File
+[**AddICLToFile**](ImageCashLetterFilesApi.md#AddICLToFile) | **Post** /files/{fileID}/cashLetters | Add CashLetter to File
 [**CreateICLFile**](ImageCashLetterFilesApi.md#CreateICLFile) | **Post** /files/create | Create a new File object
-[**DeleteICLFile**](ImageCashLetterFilesApi.md#DeleteICLFile) | **Delete** /files/{file_id} | Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
-[**DeleteICLFromFile**](ImageCashLetterFilesApi.md#DeleteICLFromFile) | **Delete** /files/{file_id}/cashLetters/{cashLetter_id} | Delete a CashLetter from a File
-[**GetICLFileByID**](ImageCashLetterFilesApi.md#GetICLFileByID) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
-[**GetICLFileContents**](ImageCashLetterFilesApi.md#GetICLFileContents) | **Get** /files/{file_id}/contents | Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
+[**DeleteICLFile**](ImageCashLetterFilesApi.md#DeleteICLFile) | **Delete** /files/{fileID} | Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
+[**DeleteICLFromFile**](ImageCashLetterFilesApi.md#DeleteICLFromFile) | **Delete** /files/{fileID}/cashLetters/{cashLetterID} | Delete a CashLetter from a File
+[**GetICLFileByID**](ImageCashLetterFilesApi.md#GetICLFileByID) | **Get** /files/{fileID} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+[**GetICLFileContents**](ImageCashLetterFilesApi.md#GetICLFileContents) | **Get** /files/{fileID}/contents | Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
 [**GetICLFiles**](ImageCashLetterFilesApi.md#GetICLFiles) | **Get** /files | Gets a list of Files
-[**UpdateICLFile**](ImageCashLetterFilesApi.md#UpdateICLFile) | **Post** /files/{file_id} | Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-[**ValidateICLFile**](ImageCashLetterFilesApi.md#ValidateICLFile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+[**UpdateICLFile**](ImageCashLetterFilesApi.md#UpdateICLFile) | **Post** /files/{fileID} | Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+[**ValidateICLFile**](ImageCashLetterFilesApi.md#ValidateICLFile) | **Get** /files/{fileID}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
 
 
 ## AddICLToFile
 
-> AddICLToFile(ctx, fileId, cashLetter, optional)
+> AddICLToFile(ctx, fileID, cashLetter, optional)
 Add CashLetter to File
 
 ### Required Parameters
@@ -27,7 +27,7 @@ Add CashLetter to File
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**fileId** | **string**| File ID | 
+**fileID** | **string**| File ID | 
 **cashLetter** | [**CashLetter**](CashLetter.md)|  | 
  **optional** | ***AddICLToFileOpts** | optional parameters | nil if no parameters
 
@@ -106,7 +106,7 @@ No authorization required
 
 ## DeleteICLFile
 
-> DeleteICLFile(ctx, fileId, optional)
+> DeleteICLFile(ctx, fileID, optional)
 Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
 
 ### Required Parameters
@@ -115,7 +115,7 @@ Permanently deletes a File and associated CashLetters and Bundles. It cannot be 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**fileId** | **string**| File ID | 
+**fileID** | **string**| File ID | 
  **optional** | ***DeleteICLFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
@@ -148,7 +148,7 @@ No authorization required
 
 ## DeleteICLFromFile
 
-> DeleteICLFromFile(ctx, fileId, cashLetterId, optional)
+> DeleteICLFromFile(ctx, fileID, cashLetterID, optional)
 Delete a CashLetter from a File
 
 ### Required Parameters
@@ -157,8 +157,8 @@ Delete a CashLetter from a File
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**fileId** | **string**| File ID | 
-**cashLetterId** | **string**| CashLetter ID | 
+**fileID** | **string**| File ID | 
+**cashLetterID** | **string**| CashLetter ID | 
  **optional** | ***DeleteICLFromFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
@@ -192,7 +192,7 @@ No authorization required
 
 ## GetICLFileByID
 
-> File GetICLFileByID(ctx, fileId, optional)
+> File GetICLFileByID(ctx, fileID, optional)
 Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 
 ### Required Parameters
@@ -201,7 +201,7 @@ Retrieves the details of an existing File. You need only supply the unique File 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**fileId** | **string**| File ID | 
+**fileID** | **string**| File ID | 
  **optional** | ***GetICLFileByIDOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
@@ -234,7 +234,7 @@ No authorization required
 
 ## GetICLFileContents
 
-> string GetICLFileContents(ctx, fileId, optional)
+> string GetICLFileContents(ctx, fileID, optional)
 Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
 
 ### Required Parameters
@@ -243,7 +243,7 @@ Assembles the existing file (Cash Letters, Bundles and Controls) records, comput
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**fileId** | **string**| File ID | 
+**fileID** | **string**| File ID | 
  **optional** | ***GetICLFileContentsOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
@@ -316,7 +316,7 @@ No authorization required
 
 ## UpdateICLFile
 
-> File UpdateICLFile(ctx, fileId, fileHeader, optional)
+> File UpdateICLFile(ctx, fileID, fileHeader, optional)
 Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
 ### Required Parameters
@@ -325,7 +325,7 @@ Updates the specified File Header by setting the values of the parameters passed
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**fileId** | **string**| File ID | 
+**fileID** | **string**| File ID | 
 **fileHeader** | [**FileHeader**](FileHeader.md)|  | 
  **optional** | ***UpdateICLFileOpts** | optional parameters | nil if no parameters
 
@@ -361,7 +361,7 @@ No authorization required
 
 ## ValidateICLFile
 
-> File ValidateICLFile(ctx, fileId, optional)
+> File ValidateICLFile(ctx, fileID, optional)
 Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
 ### Required Parameters
@@ -370,7 +370,7 @@ Validates the existing file. You need only supply the unique File identifier tha
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**fileId** | **string**| File ID | 
+**fileID** | **string**| File ID | 
  **optional** | ***ValidateICLFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters

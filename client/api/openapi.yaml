@@ -125,14 +125,14 @@ paths:
       summary: Create a new File object
       tags:
       - Image Cash Letter Files
-  /files/{file_id}:
+  /files/{fileID}:
     delete:
       operationId: deleteICLFile
       parameters:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -176,7 +176,7 @@ paths:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -225,7 +225,7 @@ paths:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -265,7 +265,7 @@ paths:
         passed. Any parameters not provided will be left unchanged.
       tags:
       - Image Cash Letter Files
-  /files/{file_id}/contents:
+  /files/{fileID}/contents:
     get:
       operationId: getICLFileContents
       parameters:
@@ -282,7 +282,7 @@ paths:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -302,7 +302,7 @@ paths:
         computes sequence numbers and totals. Returns plaintext file.
       tags:
       - Image Cash Letter Files
-  /files/{file_id}/validate:
+  /files/{fileID}/validate:
     get:
       operationId: validateICLFile
       parameters:
@@ -319,7 +319,7 @@ paths:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -341,7 +341,7 @@ paths:
         that was returned upon creation.
       tags:
       - Image Cash Letter Files
-  /files/{file_id}/cashLetters:
+  /files/{fileID}/cashLetters:
     post:
       operationId: addICLToFile
       parameters:
@@ -369,7 +369,7 @@ paths:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -390,7 +390,7 @@ paths:
       summary: Add CashLetter to File
       tags:
       - Image Cash Letter Files
-  /files/{file_id}/cashLetters/{cashLetter_id}:
+  /files/{fileID}/cashLetters/{cashLetterID}:
     delete:
       operationId: deleteICLFromFile
       parameters:
@@ -407,7 +407,7 @@ paths:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -416,7 +416,7 @@ paths:
       - description: CashLetter ID
         explode: false
         in: path
-        name: cashLetter_id
+        name: cashLetterID
         required: true
         schema:
           example: "45758063"
