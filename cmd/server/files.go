@@ -57,7 +57,10 @@ func getCashLetterId(w http.ResponseWriter, r *http.Request) string {
 
 func getFiles(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w = wrapResponseWriter(logger, w, r)
+		w, err := wrapResponseWriter(logger, w, r)
+		if err != nil {
+			return
+		}
 
 		files, err := repo.getFiles() // TODO(adam): implement soft and hard limits
 		if err != nil {
@@ -78,7 +81,10 @@ func getFiles(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 
 func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w = wrapResponseWriter(logger, w, r)
+		w, err := wrapResponseWriter(logger, w, r)
+		if err != nil {
+			return
+		}
 
 		var req imagecashletter.File
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -105,7 +111,10 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 
 func getFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w = wrapResponseWriter(logger, w, r)
+		w, err := wrapResponseWriter(logger, w, r)
+		if err != nil {
+			return
+		}
 
 		fileId := getFileId(w, r)
 		if fileId == "" {
@@ -128,7 +137,10 @@ func getFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 
 func updateFileHeader(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w = wrapResponseWriter(logger, w, r)
+		w, err := wrapResponseWriter(logger, w, r)
+		if err != nil {
+			return
+		}
 
 		var req imagecashletter.FileHeader
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -162,7 +174,10 @@ func updateFileHeader(logger log.Logger, repo ICLFileRepository) http.HandlerFun
 
 func deleteFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w = wrapResponseWriter(logger, w, r)
+		w, err := wrapResponseWriter(logger, w, r)
+		if err != nil {
+			return
+		}
 
 		fileId := getFileId(w, r)
 		if fileId == "" {
@@ -183,7 +198,10 @@ func deleteFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 
 func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w = wrapResponseWriter(logger, w, r)
+		w, err := wrapResponseWriter(logger, w, r)
+		if err != nil {
+			return
+		}
 
 		fileId := getFileId(w, r)
 		if fileId == "" {
@@ -209,7 +227,10 @@ func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc
 
 func validateFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w = wrapResponseWriter(logger, w, r)
+		w, err := wrapResponseWriter(logger, w, r)
+		if err != nil {
+			return
+		}
 
 		fileId := getFileId(w, r)
 		if fileId == "" {
@@ -238,7 +259,10 @@ func validateFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 
 func addCashLetterToFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w = wrapResponseWriter(logger, w, r)
+		w, err := wrapResponseWriter(logger, w, r)
+		if err != nil {
+			return
+		}
 
 		var req imagecashletter.CashLetter
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -271,7 +295,10 @@ func addCashLetterToFile(logger log.Logger, repo ICLFileRepository) http.Handler
 
 func removeCashLetterFromFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w = wrapResponseWriter(logger, w, r)
+		w, err := wrapResponseWriter(logger, w, r)
+		if err != nil {
+			return
+		}
 
 		fileId, cashLetterId := getFileId(w, r), getCashLetterId(w, r)
 		if fileId == "" || cashLetterId == "" {

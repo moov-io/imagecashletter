@@ -7,12 +7,13 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
 
 	moovhttp "github.com/moov-io/base/http"
-	// "github.com/moov-io/base/idempotent/lru"
+	"github.com/moov-io/base/idempotent/lru"
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/metrics/prometheus"
@@ -25,12 +26,19 @@ var (
 		Help: "Histogram representing the http response durations",
 	}, []string{"route"})
 
-	// inmemIdempotentRecorder = lru.New()
+	inmemIdempotentRecorder = lru.New()
 )
 
-func wrapResponseWriter(logger log.Logger, w http.ResponseWriter, r *http.Request) http.ResponseWriter {
+func wrapResponseWriter(logger log.Logger, w http.ResponseWriter, r *http.Request) (http.ResponseWriter, error) {
 	route := fmt.Sprintf("%s-%s", strings.ToLower(r.Method), cleanMetricsPath(r.URL.Path))
-	return moovhttp.Wrap(logger, routeHistogram.With("route", route), w, r)
+	hist := routeHistogram.With("route", route)
+
+	switch strings.ToLower(os.Getenv("HTTP_REQUIRE_USER_ID")) {
+	case "true", "yes":
+		return moovhttp.EnsureHeaders(logger, hist, inmemIdempotentRecorder, w, r)
+	default:
+		return moovhttp.Wrap(logger, hist, w, r), nil
+	}
 }
 
 var baseIdRegex = regexp.MustCompile(`([a-f0-9]{40})`)
