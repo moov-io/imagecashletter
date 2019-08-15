@@ -20,7 +20,7 @@ import (
 
 var (
 	errNoFileId       = errors.New("no File ID found")
-	errNoCashLetterId = errors.New("No CashLetter ID found")
+	errNoCashLetterId = errors.New("no CashLetter ID found")
 )
 
 func addFileRoutes(logger log.Logger, r *mux.Router, repo ICLFileRepository) {
