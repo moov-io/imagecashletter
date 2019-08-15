@@ -49,6 +49,7 @@ The following environmental variables can be set to configure behavior in paygat
 
 | Environmental Variable | Description | Default |
 |-----|-----|-----|
+| `HTTP_REQUIRE_USER_ID` | Boolean value to require `x-user-id` HTTP header on all requests. (Use `true` or `yes`) | False |
 | `HTTPS_CERT_FILE` | Filepath containing a certificate (or intermediate chain) to be served by the HTTP server. Requires all traffic be over secure HTTP. | Empty |
 | `HTTPS_KEY_FILE`  | Filepath of a private key matching the leaf certificate from `HTTPS_CERT_FILE`. | Empty |
 
