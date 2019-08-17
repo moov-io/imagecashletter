@@ -76,12 +76,12 @@ func (rdAddendumC *ReturnDetailAddendumC) Parse(record string) {
 	rdAddendumC.LengthImageReferenceKey = rdAddendumC.parseStringField(record[18:22])
 
 	imageRefKeyLength := rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)
-	if utf8.RuneCountInString(record) < 46+imageRefKeyLength {
+	if imageRefKeyLength <= 0 || utf8.RuneCountInString(record) < 46+imageRefKeyLength {
 		return // line too short
 	}
 
 	// 23 (22+X)
-	rdAddendumC.ImageReferenceKey = rdAddendumC.parseStringField(record[22:imageRefKeyLength])
+	rdAddendumC.ImageReferenceKey = rdAddendumC.parseStringField(record[22 : 22+imageRefKeyLength])
 	// 23+X - 37+X
 	rdAddendumC.Description = rdAddendumC.parseStringField(record[22+imageRefKeyLength : 37+imageRefKeyLength])
 	// 38+X - 41+X
