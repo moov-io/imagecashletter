@@ -10,6 +10,7 @@ import (
 	"strings"
 	"testing"
 	"time"
+	"unicode/utf8"
 )
 
 // mockImageViewData crates an imageViewData
@@ -116,11 +117,10 @@ func testIVDataString(t testing.TB) {
 	}
 	record := r.currentCashLetter.currentBundle.GetChecks()[0].ImageViewData[0]
 
-	/*	fmt.Printf("Lineee: %v \n", line)
-		fmt.Printf("String: %v \n", record.String())*/
-
-	if record.String() != line {
-		t.Errorf("Strings do not match")
+	if r := record.String(); r != line {
+		rn := utf8.RuneCountInString(r)
+		linen := utf8.RuneCountInString(line)
+		t.Errorf("strings do not match:\n  record=%q (length=%d)\n    line=%q (length=%d)", r, rn, line, linen)
 	}
 }
 

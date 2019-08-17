@@ -75,12 +75,12 @@ func (cdAddendumB *CheckDetailAddendumB) Parse(record string) {
 	cdAddendumB.LengthImageReferenceKey = cdAddendumB.parseStringField(record[18:22])
 
 	imageRefLength := cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey)
-	if utf8.RuneCountInString(record) < 46+imageRefLength {
+	if imageRefLength <= 0 || utf8.RuneCountInString(record) < 46+imageRefLength {
 		return // line too short
 	}
 
 	// 23 (22+X)
-	cdAddendumB.ImageReferenceKey = cdAddendumB.parseStringField(record[22:imageRefLength])
+	cdAddendumB.ImageReferenceKey = cdAddendumB.parseStringField(record[22 : 22+imageRefLength])
 	// 23+X - 37+X
 	cdAddendumB.Description = cdAddendumB.parseStringField(record[22+imageRefLength : 37+imageRefLength])
 	// 38+X - 41+X
