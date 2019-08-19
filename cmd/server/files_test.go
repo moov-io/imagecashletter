@@ -296,9 +296,18 @@ func TestFiles__validateFile(t *testing.T) {
 		t.Errorf("unexpected body: %v", w.Body.String())
 	}
 
-	// error case
-	repo.err = errors.New("bad error")
+	// make the file invalid
+	repo.file.Header = imagecashletter.NewFileHeader()
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	w.Flush()
 
+	if w.Code != http.StatusBadRequest {
+		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
+	}
+
+	// repository error case
+	repo.err = errors.New("bad error")
 	w = httptest.NewRecorder()
 	router.ServeHTTP(w, req)
 	w.Flush()
