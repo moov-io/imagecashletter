@@ -9,6 +9,7 @@
 
 package openapi
 
+// BundleControl struct for BundleControl
 type BundleControl struct {
 	// BundleControl ID
 	ID string `json:"ID,omitempty"`

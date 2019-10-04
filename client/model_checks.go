@@ -9,6 +9,7 @@
 
 package openapi
 
+// Checks struct for Checks
 type Checks struct {
 	CheckDetail CheckDetail `json:"checkDetail,omitempty"`
 }

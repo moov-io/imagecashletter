@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// BundleHeader struct for BundleHeader
 type BundleHeader struct {
 	// BundleHeader ID
 	ID string `json:"ID,omitempty"`

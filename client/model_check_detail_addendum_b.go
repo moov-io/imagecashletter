@@ -9,6 +9,7 @@
 
 package openapi
 
+// CheckDetailAddendumB struct for CheckDetailAddendumB
 type CheckDetailAddendumB struct {
 	// CheckDetailAddendumB ID
 	ID string `json:"ID,omitempty"`

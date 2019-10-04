@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// ReturnDetailAddendumA struct for ReturnDetailAddendumA
 type ReturnDetailAddendumA struct {
 	// ReturnDetailAddendumA ID
 	ID string `json:"ID,omitempty"`

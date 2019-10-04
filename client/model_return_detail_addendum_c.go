@@ -9,6 +9,7 @@
 
 package openapi
 
+// ReturnDetailAddendumC struct for ReturnDetailAddendumC
 type ReturnDetailAddendumC struct {
 	// ReturnDetailAddendumC ID
 	ID string `json:"ID,omitempty"`

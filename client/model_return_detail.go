@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// ReturnDetail struct for ReturnDetail
 type ReturnDetail struct {
 	// CheckDetail ID
 	ID string `json:"ID,omitempty"`

@@ -9,6 +9,7 @@
 
 package openapi
 
+// Returns struct for Returns
 type Returns struct {
 	ReturnDetail ReturnDetail `json:"returnDetail,omitempty"`
 }

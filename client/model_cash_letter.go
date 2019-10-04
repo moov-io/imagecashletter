@@ -9,6 +9,7 @@
 
 package openapi
 
+// CashLetter struct for CashLetter
 type CashLetter struct {
 	CashLetterHeader     CashLetterHeader       `json:"cashLetterHeader,omitempty"`
 	CreditItems          []CreditItem           `json:"creditItems,omitempty"`

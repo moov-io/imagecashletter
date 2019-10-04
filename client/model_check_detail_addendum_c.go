@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// CheckDetailAddendumC struct for CheckDetailAddendumC
 type CheckDetailAddendumC struct {
 	// CheckDetailAddendumC ID
 	ID string `json:"ID,omitempty"`

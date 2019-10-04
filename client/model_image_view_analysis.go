@@ -9,6 +9,7 @@
 
 package openapi
 
+// ImageViewAnalysis struct for ImageViewAnalysis
 type ImageViewAnalysis struct {
 	// ImageViewAnalysis ID
 	ID string `json:"ID,omitempty"`

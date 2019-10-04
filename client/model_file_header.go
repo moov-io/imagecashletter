@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// FileHeader struct for FileHeader
 type FileHeader struct {
 	// FileHeader ID
 	ID string `json:"ID,omitempty"`
