@@ -5,10 +5,13 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/moov-io/base"
 	moovhttp "github.com/moov-io/base/http"
@@ -79,15 +82,34 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w = wrapResponseWriter(logger, w, r)
 
-		var req imagecashletter.File
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		req := imagecashletter.NewFile()
+
+		bs, err := ioutil.ReadAll(r.Body)
+		if err != nil {
 			moovhttp.Problem(w, err)
 			return
+		}
+
+		h := r.Header.Get("Content-Type")
+		if strings.Contains(h, "application/json") {
+			file, err := imagecashletter.FileFromJSON(bs)
+			if err != nil {
+				moovhttp.Problem(w, err)
+				return
+			}
+			req = file
+		} else {
+			f, err := imagecashletter.NewReader(bytes.NewReader(bs)).Read()
+			if err != nil {
+				moovhttp.Problem(w, err)
+				return
+			}
+			req = &f
 		}
 		if req.ID == "" {
 			req.ID = base.ID()
 		}
-		if err := repo.saveFile(&req); err != nil {
+		if err := repo.saveFile(req); err != nil {
 			logger.Log("files", fmt.Sprintf("problem saving file %s: %v", req.ID, err), "requestID", moovhttp.GetRequestID(r))
 			moovhttp.Problem(w, err)
 			return
