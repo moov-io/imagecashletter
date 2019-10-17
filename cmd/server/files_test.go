@@ -154,6 +154,19 @@ func TestFiles__createFileJSON(t *testing.T) {
 	if resp.Header.CountryCode != "US" {
 		t.Errorf("CountryCode=%s", resp.Header.CountryCode)
 	}
+
+	// error case
+
+	w = httptest.NewRecorder()
+	req = httptest.NewRequest("POST", "/files/create", strings.NewReader("{invalid-json"))
+	req.Header.Set("content-type", "application/json")
+
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	if w.Code != http.StatusBadRequest {
+		t.Errorf("bogus HTTP status: %d: %s", w.Code, w.Body.String())
+	}
 }
 
 func TestFiles__getFile(t *testing.T) {

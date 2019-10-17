@@ -44,4 +44,14 @@ func TestFile__FileFromJSON(t *testing.T) {
 	if err := file.Validate(); err != nil {
 		t.Fatal(err)
 	}
+
+	// error conditions
+
+	if _, err := FileFromJSON(nil); err == nil {
+		t.Error("expected error")
+	}
+
+	if _, err := FileFromJSON([]byte(`{invalid-json`)); err == nil {
+		t.Error("expected error")
+	}
 }
