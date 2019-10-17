@@ -83,6 +83,9 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 		w = wrapResponseWriter(logger, w, r)
 
 		req := imagecashletter.NewFile()
+		if req.ID == "" {
+			req.ID = base.ID()
+		}
 
 		bs, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -96,15 +99,17 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 			if err != nil {
 				moovhttp.Problem(w, err)
 				return
+			} else {
+				req = file
 			}
-			req = file
 		} else {
 			f, err := imagecashletter.NewReader(bytes.NewReader(bs)).Read()
 			if err != nil {
 				moovhttp.Problem(w, err)
 				return
+			} else {
+				req = &f
 			}
-			req = &f
 		}
 		if req.ID == "" {
 			req.ID = base.ID()
