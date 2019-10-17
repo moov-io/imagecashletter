@@ -5,6 +5,9 @@
 package imagecashletter
 
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -94,6 +97,62 @@ func NewFile() *File {
 		Header:  NewFileHeader(),
 		Control: NewFileControl(),
 	}
+}
+
+type fileHeader struct {
+	Header FileHeader `json:"fileHeader"`
+}
+
+type fileControl struct {
+	Control FileControl `json:"fileControl"`
+}
+
+// FileFromJSON attempts to return a *File object assuming the input is valid JSON.
+//
+// Callers should always check for a nil-error before using the returned file.
+//
+// The File returned may not be valid and callers should confirm with Validate().
+// Invalid files may be rejected by other Financial Institutions or ICL tools.
+func FileFromJSON(bs []byte) (*File, error) {
+	if len(bs) == 0 {
+		return nil, errors.New("no JSON data provided")
+	}
+
+	// read any root level fields
+	var f File
+	file := NewFile()
+	if err := json.NewDecoder(bytes.NewReader(bs)).Decode(&f); err != nil {
+		return nil, fmt.Errorf("problem reading file: %v", err)
+	}
+	file.ID = f.ID
+	file.CashLetters = f.CashLetters
+	file.Bundles = f.Bundles
+
+	// read the FileHeader
+	header := fileHeader{
+		Header: file.Header,
+	}
+	if err := json.NewDecoder(bytes.NewReader(bs)).Decode(&header); err != nil {
+		return nil, fmt.Errorf("problem reading FileHeader: %v", err)
+	}
+	file.Header = header.Header
+
+	// read file control
+	control := fileControl{
+		Control: NewFileControl(),
+	}
+	if err := json.NewDecoder(bytes.NewReader(bs)).Decode(&control); err != nil {
+		return nil, fmt.Errorf("problem reading FileControl: %v", err)
+	}
+	file.Control = control.Control
+
+	if err := file.Create(); err != nil {
+		return file, err
+	}
+	if err := file.Validate(); err != nil {
+		return file, err
+	}
+	return file, nil
 }
 
 // Create creates a valid imagecashletter File

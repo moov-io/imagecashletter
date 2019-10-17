@@ -95,18 +95,10 @@ func readFile(filename string) (*imagecashletter.File, error) {
 }
 
 func TestFiles__createFile(t *testing.T) {
-	f, err := readFile("BNK20180905121042882-A.icl")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var buf bytes.Buffer
-	if err := json.NewEncoder(&buf).Encode(f); err != nil {
-		t.Fatal(err)
-	}
+	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "BNK20180905121042882-A.icl"))
 
 	w := httptest.NewRecorder()
-	req := httptest.NewRequest("POST", "/files/create", &buf)
+	req := httptest.NewRequest("POST", "/files/create", fd)
 
 	repo := &testICLFileRepository{}
 
@@ -116,7 +108,7 @@ func TestFiles__createFile(t *testing.T) {
 	w.Flush()
 
 	if w.Code != http.StatusCreated {
-		t.Errorf("bogus HTTP status: %d", w.Code)
+		t.Errorf("bogus HTTP status: %d: %s", w.Code, w.Body.String())
 	}
 	var resp imagecashletter.File
 	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
@@ -128,9 +120,6 @@ func TestFiles__createFile(t *testing.T) {
 
 	// error case
 	repo.err = errors.New("bad error")
-	if err := json.NewEncoder(&buf).Encode(f); err != nil {
-		t.Fatal(err)
-	}
 
 	w = httptest.NewRecorder()
 	router.ServeHTTP(w, req)
@@ -138,6 +127,45 @@ func TestFiles__createFile(t *testing.T) {
 
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
+	}
+}
+
+func TestFiles__createFileJSON(t *testing.T) {
+	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "icl-valid.json"))
+
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest("POST", "/files/create", fd)
+	req.Header.Set("Content-Type", "application/json")
+
+	repo := &testICLFileRepository{}
+
+	router := mux.NewRouter()
+	addFileRoutes(log.NewNopLogger(), router, repo)
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	if w.Code != http.StatusCreated {
+		t.Errorf("bogus HTTP status: %d: %s", w.Code, w.Body.String())
+	}
+	var resp imagecashletter.File
+	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.Header.CountryCode != "US" {
+		t.Errorf("CountryCode=%s", resp.Header.CountryCode)
+	}
+
+	// error case
+
+	w = httptest.NewRecorder()
+	req = httptest.NewRequest("POST", "/files/create", strings.NewReader("{invalid-json"))
+	req.Header.Set("content-type", "application/json")
+
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	if w.Code != http.StatusBadRequest {
+		t.Errorf("bogus HTTP status: %d: %s", w.Code, w.Body.String())
 	}
 }
 
