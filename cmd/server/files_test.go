@@ -130,6 +130,32 @@ func TestFiles__createFile(t *testing.T) {
 	}
 }
 
+func TestFiles__createFileJSON(t *testing.T) {
+	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "icl-valid.json"))
+
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest("POST", "/files/create", fd)
+	req.Header.Set("Content-Type", "application/json")
+
+	repo := &testICLFileRepository{}
+
+	router := mux.NewRouter()
+	addFileRoutes(log.NewNopLogger(), router, repo)
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	if w.Code != http.StatusCreated {
+		t.Errorf("bogus HTTP status: %d: %s", w.Code, w.Body.String())
+	}
+	var resp imagecashletter.File
+	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.Header.CountryCode != "US" {
+		t.Errorf("CountryCode=%s", resp.Header.CountryCode)
+	}
+}
+
 func TestFiles__getFile(t *testing.T) {
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "/files/foo", nil)
