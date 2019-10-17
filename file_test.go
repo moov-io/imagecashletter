@@ -4,7 +4,11 @@
 
 package imagecashletter
 
-import "testing"
+import (
+	"io/ioutil"
+	"path/filepath"
+	"testing"
+)
 
 // mockFile creates an imagecashletter file
 func mockFile() *File {
@@ -23,5 +27,21 @@ func TestFileCreate(t *testing.T) {
 	file := mockFile()
 	if err := file.Validate(); err != nil {
 		t.Error("File does not validate and will break other tests: ", err)
+	}
+}
+
+func TestFile__FileFromJSON(t *testing.T) {
+	bs, err := ioutil.ReadFile(filepath.Join("test", "testdata", "icl-valid.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	file, err := FileFromJSON(bs)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := file.Validate(); err != nil {
+		t.Fatal(err)
 	}
 }
