@@ -5,16 +5,15 @@
 package imagecashletter
 
 import (
-	"fmt"
-	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
 
 // TestICLFileRead validates reading an ICL file
 func TestICLFileRead(t *testing.T) {
-	f, err := os.Open("./test/testdata/BNK20180905121042882-A.icl")
+	f, err := os.Open(filepath.Join("test", "testdata", "BNK20180905121042882-A.icl"))
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
@@ -49,18 +48,20 @@ func TestICLFileRead(t *testing.T) {
 
 // TestICLFile validates reading an ICL file
 func TestICLFile(t *testing.T) {
-	f, err := os.Open("./test/testdata/BNK20180905121042882-A.icl")
+	f, err := os.Open(filepath.Join("test", "testdata", "BNK20180905121042882-A.icl"))
 	if err != nil {
-		log.Panicf("Can not open local file: %s: \n", err)
+		t.Fatalf("Can not open local file: %s: \n", err)
 	}
 	r := NewReader(f)
 	ICLFile, err := r.Read()
 	if err != nil {
-		fmt.Printf("Issue reading file: %+v \n", err)
+		t.Errorf("Issue reading file: %+v \n", err)
 	}
+	t.Logf("r.File.Header=%#v", r.File.Header)
+	t.Logf("r.File.Control=%#v", r.File.Control)
 	// ensure we have a validated file structure
 	if ICLFile.Validate(); err != nil {
-		fmt.Printf("Could not validate entire read file: %v", err)
+		t.Errorf("Could not validate entire read file: %v", err)
 	}
 }
 
@@ -977,17 +978,17 @@ func TestIVAnalysisBundleError(t *testing.T) {
 
 // TestICLCreditItemFile validates reading an ICL file with a CreditItem
 func TestICLCreditItemFile(t *testing.T) {
-	f, err := os.Open("./test/testdata/BNK20181010121042882-A.icl")
+	f, err := os.Open(filepath.Join("test", "testdata", "BNK20181010121042882-A.icl"))
 	if err != nil {
-		log.Panicf("Can not open local file: %s: \n", err)
+		t.Fatalf("Can not open local file: %s: \n", err)
 	}
 	r := NewReader(f)
 	ICLFile, err := r.Read()
 	if err != nil {
-		fmt.Printf("Issue reading file: %+v \n", err)
+		t.Errorf("Issue reading file: %+v \n", err)
 	}
 	// ensure we have a validated file structure
 	if ICLFile.Validate(); err != nil {
-		fmt.Printf("Could not validate entire read file: %v", err)
+		t.Errorf("Could not validate entire read file: %v", err)
 	}
 }

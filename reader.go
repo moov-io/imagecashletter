@@ -71,7 +71,10 @@ func (r *Reader) addCurrentRoutingNumberSummary(rns *RoutingNumberSummary) {
 
 // NewReader returns a new ACH Reader that reads from r.
 func NewReader(r io.Reader) *Reader {
+	f := NewFile()
+	f.Control = FileControl{}
 	return &Reader{
+		File:    *f,
 		scanner: bufio.NewScanner(r),
 	}
 }
