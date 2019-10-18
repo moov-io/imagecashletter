@@ -1,3 +1,19 @@
+## v0.3.0 (Released 2019-10-18)
+
+ADDITIONS
+
+- file: add FileFromJSON to decode ICL files
+- cmd/server: decode a file as JSON or plain text
+
+BUG FIXES
+
+- reader: setup a File internally before reading
+
+BUILD
+
+- build: upgrade to Go 1.13 and Debian 10
+- build: update openapi-generator to v4.1.3
+
 ## v0.2.0 (Released 2019-08-20)
 
 BREAKING CHANGE
