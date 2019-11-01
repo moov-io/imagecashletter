@@ -207,7 +207,6 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
 			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -555,7 +554,6 @@ func (a *ImageCashLetterFilesApiService) GetICLFileContents(ctx _context.Context
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
 			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -650,7 +648,6 @@ func (a *ImageCashLetterFilesApiService) GetICLFiles(ctx _context.Context, local
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
 			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -765,7 +762,6 @@ func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx _context.Context, fil
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
 			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

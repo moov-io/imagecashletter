@@ -19,6 +19,7 @@ Method | HTTP request | Description
 ## AddICLToFile
 
 > AddICLToFile(ctx, fileID, cashLetter, optional)
+
 Add CashLetter to File
 
 ### Required Parameters
@@ -64,6 +65,7 @@ No authorization required
 ## CreateICLFile
 
 > File CreateICLFile(ctx, createFile, optional)
+
 Create a new File object
 
 ### Required Parameters
@@ -107,6 +109,7 @@ No authorization required
 ## DeleteICLFile
 
 > DeleteICLFile(ctx, fileID, optional)
+
 Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
 
 ### Required Parameters
@@ -149,6 +152,7 @@ No authorization required
 ## DeleteICLFromFile
 
 > DeleteICLFromFile(ctx, fileID, cashLetterID, optional)
+
 Delete a CashLetter from a File
 
 ### Required Parameters
@@ -193,6 +197,7 @@ No authorization required
 ## GetICLFileByID
 
 > File GetICLFileByID(ctx, fileID, optional)
+
 Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 
 ### Required Parameters
@@ -235,6 +240,7 @@ No authorization required
 ## GetICLFileContents
 
 > string GetICLFileContents(ctx, fileID, optional)
+
 Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
 
 ### Required Parameters
@@ -277,6 +283,7 @@ No authorization required
 ## GetICLFiles
 
 > []File GetICLFiles(ctx, optional)
+
 Gets a list of Files
 
 ### Required Parameters
@@ -317,6 +324,7 @@ No authorization required
 ## UpdateICLFile
 
 > File UpdateICLFile(ctx, fileID, fileHeader, optional)
+
 Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
 ### Required Parameters
@@ -362,6 +370,7 @@ No authorization required
 ## ValidateICLFile
 
 > File ValidateICLFile(ctx, fileID, optional)
+
 Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
 ### Required Parameters

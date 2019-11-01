@@ -11,6 +11,7 @@ Method | HTTP request | Description
 ## Ping
 
 > Ping(ctx, )
+
 Ping the ImageCashLetter service to check if running
 
 ### Required Parameters
