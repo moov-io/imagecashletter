@@ -31,6 +31,7 @@ func TestImageCashLetter__ReadCrashers(t *testing.T) {
 
 		// Read out test file and ensure we don't panic
 		NewReader(fd).Read()
+		t.Logf("read and parsed %s", fd.Name())
 		return nil
 	})
 	if err != nil {
