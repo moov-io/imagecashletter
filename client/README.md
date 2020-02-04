@@ -60,7 +60,7 @@ Class | Method | HTTP request | Description
  - [Checks](docs/Checks.md)
  - [CreateIclFile](docs/CreateIclFile.md)
  - [CreditItem](docs/CreditItem.md)
- - [IclError](docs/IclError.md)
+ - [Error](docs/Error.md)
  - [IclFile](docs/IclFile.md)
  - [IclFileControl](docs/IclFileControl.md)
  - [IclFileHeader](docs/IclFileHeader.md)

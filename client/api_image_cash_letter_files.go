@@ -200,7 +200,7 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
-			var v IclError
+			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -819,7 +819,7 @@ func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx _context.Context, fil
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
-			var v IclError
+			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()

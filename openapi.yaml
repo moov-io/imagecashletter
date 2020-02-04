@@ -104,7 +104,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: 'https://raw.githubusercontent.com/moov-io/api/master/openapi-common.yaml#/components/schemas/Error'
   /files/{fileID}:
     get:
       tags: ['Image Cash Letter Files']
@@ -188,7 +188,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: 'https://raw.githubusercontent.com/moov-io/api/master/openapi-common.yaml#/components/schemas/Error'
     delete:
       tags: ['Image Cash Letter Files']
       summary: Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
@@ -2904,11 +2904,3 @@ components:
         - bOFDEndorsementBusinessDate
         - endorsingBankItemSequenceNumber
         - truncationIndicator
-    Error:
-      required:
-        - error
-      properties:
-        error:
-          type: string
-          description: An error message describing the problem intended for humans.
-          example: Validation error(s) present.

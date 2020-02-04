@@ -117,7 +117,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ICLError'
+                $ref: '#/components/schemas/Error'
           description: Invalid File Header Object
       security:
       - bearerAuth: []
@@ -256,7 +256,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ICLError'
+                $ref: '#/components/schemas/Error'
           description: Invalid File Header Object
       security:
       - bearerAuth: []
@@ -8323,7 +8323,7 @@ components:
       - endorsingBankItemSequenceNumber
       - endorsingBankRoutingNumber
       - truncationIndicator
-    ICLError:
+    Error:
       properties:
         error:
           description: An error message describing the problem intended for humans.
