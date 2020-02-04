@@ -13,8 +13,8 @@ import (
 	"time"
 )
 
-// FileHeader struct for FileHeader
-type FileHeader struct {
+// IclFileHeader struct for IclFileHeader
+type IclFileHeader struct {
 	// FileHeader ID
 	ID string `json:"ID,omitempty"`
 	// StandardLevel identifies the standard level of the file.  * `03` - DSTU X9.37 - 2003 * `30` - X9.100-187-2008 * `35` - X9.100-187-2013 and 2016

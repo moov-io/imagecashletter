@@ -19,8 +19,7 @@ tags:
 paths:
   /ping:
     get:
-      tags:
-        - ICLFiles
+      tags: ['Image Cash Letter Files']
       summary: Ping the ImageCashLetter service to check if running
       operationId: ping
       responses:
@@ -52,7 +51,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Files'
+                $ref: '#/components/schemas/ICLFiles'
   /files/create:
     post:
       tags: ['Image Cash Letter Files']
@@ -81,7 +80,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateFile'
+              $ref: '#/components/schemas/CreateICLFile'
           text/plain:
             schema:
               description: A plaintext ImageCashLetter file
@@ -99,13 +98,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/ICLFile'
         '400':
           description: "Invalid File Header Object"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ICLError'
   /files/{fileID}:
     get:
       tags: ['Image Cash Letter Files']
@@ -134,7 +133,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/ICLFile'
         '404':
           description: A resource with the specified ID was not found
     post:
@@ -170,7 +169,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FileHeader'
+              $ref: '#/components/schemas/ICLFileHeader'
       responses:
         '201':
           description: A JSON object containing a new File
@@ -183,13 +182,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/ICLFile'
         '400':
           description: "Invalid File Header Object"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ICLError'
     delete:
       tags: ['Image Cash Letter Files']
       summary: Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
@@ -244,7 +243,7 @@ paths:
           content:
             text/plain:
               schema:
-                $ref: '#/components/schemas/RawFile'
+                $ref: '#/components/schemas/RawICLFile'
   /files/{fileID}/validate:
     get:
       tags: ['Image Cash Letter Files']
@@ -273,7 +272,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/ICLFile'
         '400':
           description: Validation failed. Check response for errors
   /files/{fileID}/cashLetters:
@@ -351,14 +350,14 @@ paths:
 
 components:
   schemas:
-    CreateFile:
+    CreateICLFile:
       properties:
         ID:
           type: string
           description: File ID
           example: 3f2d23ee214
         fileHeader:
-          $ref: '#/components/schemas/FileHeader'
+          $ref: '#/components/schemas/ICLFileHeader'
         cashLetters:
           type: array
           items:
@@ -368,17 +367,17 @@ components:
           items:
             $ref: '#/components/schemas/Bundle'
         fileControl:
-          $ref: '#/components/schemas/FileControl'
+          $ref: '#/components/schemas/ICLFileControl'
       required:
         - fileHeader
-    File:
+    ICLFile:
       properties:
         ID:
           type: string
           description: File ID
           example: 3f2d23ee214
         fileHeader:
-          $ref: '#/components/schemas/FileHeader'
+          $ref: '#/components/schemas/ICLFileHeader'
         cashLetters:
           type: array
           items:
@@ -388,8 +387,8 @@ components:
           items:
             $ref: '#/components/schemas/Bundle'
         fileControl:
-          $ref: '#/components/schemas/FileControl'
-    FileHeader:
+          $ref: '#/components/schemas/ICLFileControl'
+    ICLFileHeader:
       properties:
         ID:
           description: FileHeader ID
@@ -503,7 +502,7 @@ components:
         - immediateOrigin
         - fileCreationDate
         - fileCreationTime
-    FileControl:
+    ICLFileControl:
       properties:
         ID:
           type: string
@@ -553,14 +552,14 @@ components:
         - totalRecordCount
         - totalItemCount
         - fileTotalAmount
-    RawFile:
+    RawICLFile:
       type: string
       description: Plaintext ImageCashLetter file
       example: "0135T231380104121042882201809051523NCitadel           Wells Fargo        US     "
-    Files:
+    ICLFiles:
       type: array
       items:
-        $ref: '#/components/schemas/File'
+        $ref: '#/components/schemas/ICLFile'
     CashLetter:
       properties:
         cashLetterHeader:
@@ -2905,7 +2904,7 @@ components:
         - bOFDEndorsementBusinessDate
         - endorsingBankItemSequenceNumber
         - truncationIndicator
-    Error:
+    ICLError:
       required:
         - error
       properties:

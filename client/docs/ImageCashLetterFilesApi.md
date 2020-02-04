@@ -11,6 +11,7 @@ Method | HTTP request | Description
 [**GetICLFileByID**](ImageCashLetterFilesApi.md#GetICLFileByID) | **Get** /files/{fileID} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 [**GetICLFileContents**](ImageCashLetterFilesApi.md#GetICLFileContents) | **Get** /files/{fileID}/contents | Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
 [**GetICLFiles**](ImageCashLetterFilesApi.md#GetICLFiles) | **Get** /files | Gets a list of Files
+[**Ping**](ImageCashLetterFilesApi.md#Ping) | **Get** /ping | Ping the ImageCashLetter service to check if running
 [**UpdateICLFile**](ImageCashLetterFilesApi.md#UpdateICLFile) | **Post** /files/{fileID} | Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 [**ValidateICLFile**](ImageCashLetterFilesApi.md#ValidateICLFile) | **Get** /files/{fileID}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
@@ -64,7 +65,7 @@ No authorization required
 
 ## CreateICLFile
 
-> File CreateICLFile(ctx, createFile, optional)
+> IclFile CreateICLFile(ctx, createIclFile, optional)
 
 Create a new File object
 
@@ -74,7 +75,7 @@ Create a new File object
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**createFile** | [**CreateFile**](CreateFile.md)| Content of the ImageCashLetter file (in json or raw text) | 
+**createIclFile** | [**CreateIclFile**](CreateIclFile.md)| Content of the ImageCashLetter file (in json or raw text) | 
  **optional** | ***CreateICLFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
@@ -90,7 +91,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**File**](File.md)
+[**IclFile**](ICLFile.md)
 
 ### Authorization
 
@@ -196,7 +197,7 @@ No authorization required
 
 ## GetICLFileByID
 
-> File GetICLFileByID(ctx, fileID, optional)
+> IclFile GetICLFileByID(ctx, fileID, optional)
 
 Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 
@@ -221,7 +222,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**File**](File.md)
+[**IclFile**](ICLFile.md)
 
 ### Authorization
 
@@ -282,7 +283,7 @@ No authorization required
 
 ## GetICLFiles
 
-> []File GetICLFiles(ctx, optional)
+> []IclFile GetICLFiles(ctx, optional)
 
 Gets a list of Files
 
@@ -305,7 +306,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**[]File**](File.md)
+[**[]IclFile**](ICLFile.md)
 
 ### Authorization
 
@@ -321,9 +322,37 @@ No authorization required
 [[Back to README]](../README.md)
 
 
+## Ping
+
+> Ping(ctx, )
+
+Ping the ImageCashLetter service to check if running
+
+### Required Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## UpdateICLFile
 
-> File UpdateICLFile(ctx, fileID, fileHeader, optional)
+> IclFile UpdateICLFile(ctx, fileID, iclFileHeader, optional)
 
 Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
@@ -334,7 +363,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
 **fileID** | **string**| File ID | 
-**fileHeader** | [**FileHeader**](FileHeader.md)|  | 
+**iclFileHeader** | [**IclFileHeader**](IclFileHeader.md)|  | 
  **optional** | ***UpdateICLFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
@@ -351,7 +380,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**File**](File.md)
+[**IclFile**](ICLFile.md)
 
 ### Authorization
 
@@ -369,7 +398,7 @@ No authorization required
 
 ## ValidateICLFile
 
-> File ValidateICLFile(ctx, fileID, optional)
+> IclFile ValidateICLFile(ctx, fileID, optional)
 
 Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
@@ -394,7 +423,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**File**](File.md)
+[**IclFile**](ICLFile.md)
 
 ### Authorization
 

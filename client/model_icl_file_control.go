@@ -9,8 +9,8 @@
 
 package openapi
 
-// FileControl struct for FileControl
-type FileControl struct {
+// IclFileControl struct for IclFileControl
+type IclFileControl struct {
 	// FileControl ID
 	ID string `json:"ID,omitempty"`
 	// CashLetterCount identifies the total number of cash letters within the file.

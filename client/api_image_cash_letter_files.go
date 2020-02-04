@@ -120,20 +120,20 @@ type CreateICLFileOpts struct {
 /*
 CreateICLFile Create a new File object
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param createFile Content of the ImageCashLetter file (in json or raw text)
+ * @param createIclFile Content of the ImageCashLetter file (in json or raw text)
  * @param optional nil or *CreateICLFileOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
  * @param "XIDempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
-@return File
+@return IclFile
 */
-func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, createFile CreateFile, localVarOptionals *CreateICLFileOpts) (File, *_nethttp.Response, error) {
+func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, createIclFile CreateIclFile, localVarOptionals *CreateICLFileOpts) (IclFile, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  File
+		localVarReturnValue  IclFile
 	)
 
 	// create path and map variables
@@ -167,7 +167,7 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 		localVarHeaderParams["X-IDempotency-Key"] = parameterToString(localVarOptionals.XIDempotencyKey.Value(), "")
 	}
 	// body params
-	localVarPostBody = &createFile
+	localVarPostBody = &createIclFile
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -190,7 +190,7 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 201 {
-			var v File
+			var v IclFile
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -200,7 +200,7 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
-			var v Error
+			var v IclError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -388,16 +388,16 @@ GetICLFileByID Retrieves the details of an existing File. You need only supply t
  * @param fileID File ID
  * @param optional nil or *GetICLFileByIDOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
-@return File
+@return IclFile
 */
-func (a *ImageCashLetterFilesApiService) GetICLFileByID(ctx _context.Context, fileID string, localVarOptionals *GetICLFileByIDOpts) (File, *_nethttp.Response, error) {
+func (a *ImageCashLetterFilesApiService) GetICLFileByID(ctx _context.Context, fileID string, localVarOptionals *GetICLFileByIDOpts) (IclFile, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  File
+		localVarReturnValue  IclFile
 	)
 
 	// create path and map variables
@@ -450,7 +450,7 @@ func (a *ImageCashLetterFilesApiService) GetICLFileByID(ctx _context.Context, fi
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 200 {
-			var v File
+			var v IclFile
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -580,16 +580,16 @@ GetICLFiles Gets a list of Files
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param optional nil or *GetICLFilesOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
-@return []File
+@return []IclFile
 */
-func (a *ImageCashLetterFilesApiService) GetICLFiles(ctx _context.Context, localVarOptionals *GetICLFilesOpts) ([]File, *_nethttp.Response, error) {
+func (a *ImageCashLetterFilesApiService) GetICLFiles(ctx _context.Context, localVarOptionals *GetICLFilesOpts) ([]IclFile, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  []File
+		localVarReturnValue  []IclFile
 	)
 
 	// create path and map variables
@@ -641,7 +641,7 @@ func (a *ImageCashLetterFilesApiService) GetICLFiles(ctx _context.Context, local
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 200 {
-			var v []File
+			var v []IclFile
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -664,6 +664,70 @@ func (a *ImageCashLetterFilesApiService) GetICLFiles(ctx _context.Context, local
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+/*
+Ping Ping the ImageCashLetter service to check if running
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+*/
+func (a *ImageCashLetterFilesApiService) Ping(ctx _context.Context) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodGet
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/ping"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
 // UpdateICLFileOpts Optional parameters for the method 'UpdateICLFile'
 type UpdateICLFileOpts struct {
 	XRequestID      optional.String
@@ -674,20 +738,20 @@ type UpdateICLFileOpts struct {
 UpdateICLFile Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileID File ID
- * @param fileHeader
+ * @param iclFileHeader
  * @param optional nil or *UpdateICLFileOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
  * @param "XIDempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
-@return File
+@return IclFile
 */
-func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx _context.Context, fileID string, fileHeader FileHeader, localVarOptionals *UpdateICLFileOpts) (File, *_nethttp.Response, error) {
+func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx _context.Context, fileID string, iclFileHeader IclFileHeader, localVarOptionals *UpdateICLFileOpts) (IclFile, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  File
+		localVarReturnValue  IclFile
 	)
 
 	// create path and map variables
@@ -722,7 +786,7 @@ func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx _context.Context, fil
 		localVarHeaderParams["X-IDempotency-Key"] = parameterToString(localVarOptionals.XIDempotencyKey.Value(), "")
 	}
 	// body params
-	localVarPostBody = &fileHeader
+	localVarPostBody = &iclFileHeader
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -745,7 +809,7 @@ func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx _context.Context, fil
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 201 {
-			var v File
+			var v IclFile
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -755,7 +819,7 @@ func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx _context.Context, fil
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
-			var v Error
+			var v IclError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -789,16 +853,16 @@ ValidateICLFile Validates the existing file. You need only supply the unique Fil
  * @param fileID File ID
  * @param optional nil or *ValidateICLFileOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
-@return File
+@return IclFile
 */
-func (a *ImageCashLetterFilesApiService) ValidateICLFile(ctx _context.Context, fileID string, localVarOptionals *ValidateICLFileOpts) (File, *_nethttp.Response, error) {
+func (a *ImageCashLetterFilesApiService) ValidateICLFile(ctx _context.Context, fileID string, localVarOptionals *ValidateICLFileOpts) (IclFile, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  File
+		localVarReturnValue  IclFile
 	)
 
 	// create path and map variables
@@ -851,7 +915,7 @@ func (a *ImageCashLetterFilesApiService) ValidateICLFile(ctx _context.Context, f
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 200 {
-			var v File
+			var v IclFile
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
