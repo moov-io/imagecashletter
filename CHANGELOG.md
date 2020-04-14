@@ -1,3 +1,21 @@
+## v0.4.0 (Released 2020-04-14)
+
+ADDITIONS
+
+- server: add version handler to admin HTTP server
+
+IMPROVEMENTS
+
+- icl: log crasher file after it's parsed
+- api,client: rename models whose names are duplicated across projects
+- api,client: use shared Error model
+
+BUILD
+
+- Update module prometheus/client_golang to v1.2.1
+- build: run sonatype-nexus-community/nancy in CI
+- build: upgrade to Go 1.14.x
+
 ## v0.3.0 (Released 2019-10-18)
 
 ADDITIONS
