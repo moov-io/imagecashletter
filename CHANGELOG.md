@@ -1,3 +1,9 @@
+## v0.4.2 (Released 2020-04-14)
+
+BUILD
+
+- build: fix windows install of 'make'
+
 ## v0.4.1 (Released 2020-04-14)
 
 IMPROVEMENTS
