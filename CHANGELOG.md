@@ -1,3 +1,14 @@
+## v0.4.1 (Released 2020-04-14)
+
+IMPROVEMENTS
+
+- api: use shorter summaries
+
+BUILD
+
+- build: upgrade to Go 1.14.x
+- build: upgrade staticcheck to 2020.1.3
+
 ## v0.4.0 (Released 2020-04-14)
 
 ADDITIONS
@@ -14,7 +25,6 @@ BUILD
 
 - Update module prometheus/client_golang to v1.2.1
 - build: run sonatype-nexus-community/nancy in CI
-- build: upgrade to Go 1.14.x
 
 ## v0.3.0 (Released 2019-10-18)
 
