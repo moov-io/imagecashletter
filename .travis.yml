@@ -1,5 +1,4 @@
 language: go
-dist: xenial
 sudo: false
 services:
   - docker
@@ -61,7 +60,7 @@ after_success:
   - make client
   - make docker
 before_deploy:
-  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install -y mingw; export PATH=/c/tools/mingw64/bin:"$PATH";fi
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install -y make; fi
   - make dist
 after_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
