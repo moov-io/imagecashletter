@@ -20,7 +20,7 @@ paths:
   /ping:
     get:
       tags: ['Image Cash Letter Files']
-      summary: Ping the ImageCashLetter service to check if running
+      summary: Ping ImageCashLetter service
       operationId: ping
       responses:
         '200':
@@ -28,7 +28,7 @@ paths:
   /files:
     get:
       tags: ['Image Cash Letter Files']
-      summary: Gets a list of Files
+      summary: Get ICL Files
       operationId: getICLFiles
       security:
         - bearerAuth: []
@@ -55,7 +55,7 @@ paths:
   /files/create:
     post:
       tags: ['Image Cash Letter Files']
-      summary: Create a new File object
+      summary: Create File
       operationId: createICLFile
       security:
         - bearerAuth: []
@@ -108,7 +108,8 @@ paths:
   /files/{fileID}:
     get:
       tags: ['Image Cash Letter Files']
-      summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+      summary: Retrieve a file
+      description: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
       operationId: getICLFileByID
       security:
         - bearerAuth: []
@@ -138,7 +139,8 @@ paths:
           description: A resource with the specified ID was not found
     post:
       tags: ['Image Cash Letter Files']
-      summary: Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      summary: Updates FileHeader
+      description: Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
       operationId: updateICLFile
       security:
         - bearerAuth: []
@@ -191,7 +193,8 @@ paths:
                 $ref: 'https://raw.githubusercontent.com/moov-io/api/master/openapi-common.yaml#/components/schemas/Error'
     delete:
       tags: ['Image Cash Letter Files']
-      summary: Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
+      summary: Delete file
+      description: Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
       operationId: deleteICLFile
       security:
         - bearerAuth: []
@@ -218,7 +221,8 @@ paths:
   /files/{fileID}/contents:
     get:
       tags: ['Image Cash Letter Files']
-      summary: Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
+      summary: Get file contents
+      description: Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
       operationId: getICLFileContents
       security:
         - bearerAuth: []
@@ -247,7 +251,8 @@ paths:
   /files/{fileID}/validate:
     get:
       tags: ['Image Cash Letter Files']
-      summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+      summary: Validate file
+      description: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
       operationId: validateICLFile
       security:
         - bearerAuth: []

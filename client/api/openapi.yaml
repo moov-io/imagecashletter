@@ -23,7 +23,7 @@ paths:
       responses:
         200:
           description: Service is running properly
-      summary: Ping the ImageCashLetter service to check if running
+      summary: Ping ImageCashLetter service
       tags:
       - Image Cash Letter Files
   /files:
@@ -57,7 +57,7 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Gets a list of Files
+      summary: Get ICL Files
       tags:
       - Image Cash Letter Files
   /files/create:
@@ -122,11 +122,13 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Create a new File object
+      summary: Create File
       tags:
       - Image Cash Letter Files
   /files/{fileID}:
     delete:
+      description: Permanently deletes a File and associated CashLetters and Bundles.
+        It cannot be undone.
       operationId: deleteICLFile
       parameters:
       - description: File ID
@@ -156,11 +158,12 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Permanently deletes a File and associated CashLetters and Bundles.
-        It cannot be undone.
+      summary: Delete file
       tags:
       - Image Cash Letter Files
     get:
+      description: Retrieves the details of an existing File. You need only supply
+        the unique File identifier that was returned upon creation.
       operationId: getICLFileByID
       parameters:
       - description: Optional Request ID allows application developer to trace requests
@@ -194,11 +197,12 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Retrieves the details of an existing File. You need only supply the
-        unique File identifier that was returned upon creation.
+      summary: Retrieve a file
       tags:
       - Image Cash Letter Files
     post:
+      description: Updates the specified File Header by setting the values of the
+        parameters passed. Any parameters not provided will be left unchanged.
       operationId: updateICLFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
@@ -261,12 +265,13 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Updates the specified File Header by setting the values of the parameters
-        passed. Any parameters not provided will be left unchanged.
+      summary: Updates FileHeader
       tags:
       - Image Cash Letter Files
   /files/{fileID}/contents:
     get:
+      description: Assembles the existing file (Cash Letters, Bundles and Controls)
+        records, computes sequence numbers and totals. Returns plaintext file.
       operationId: getICLFileContents
       parameters:
       - description: Optional Request ID allows application developer to trace requests
@@ -298,12 +303,13 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Assembles the existing file (Cash Letters, Bundles and Controls) records,
-        computes sequence numbers and totals. Returns plaintext file.
+      summary: Get file contents
       tags:
       - Image Cash Letter Files
   /files/{fileID}/validate:
     get:
+      description: Validates the existing file. You need only supply the unique File
+        identifier that was returned upon creation.
       operationId: validateICLFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
@@ -337,8 +343,7 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Validates the existing file. You need only supply the unique File identifier
-        that was returned upon creation.
+      summary: Validate file
       tags:
       - Image Cash Letter Files
   /files/{fileID}/cashLetters:
