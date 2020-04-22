@@ -10,7 +10,7 @@ X9’s Specifications for ICL (Image Cash Letter) to provide Check 21 services
 
 Package `github.com/moov-io/imagecashletter` implements a file reader and writer for parsing [Image Cash Letter](https://en.wikipedia.org/wiki/Check_21_Act) (ICL) files.
 
-Docs: [docs.moov.io](https://docs.moov.io/icl/) | [api docs](https://api.moov.io/apps/imagecashletter/)
+Docs: [docs.moov.io](https://docs.moov.io/fed/) | [api docs](https://moov-io.github.io/imagecashletter/)
 
 ## Project Status
 
