@@ -1,70 +1,20 @@
 language: go
 sudo: false
-services:
-  - docker
+services: [docker]
+
 matrix:
-  allow_failures:
   include:
     - os: linux
       go: 1.14.x
-      cache:
-        directories:
-          - "/home/travis/.cache/go-build"
-    - os: osx
-      go: 1.14.x
-      cache:
-        directories:
-          - "/Users/travis/Library/Caches/go-build"
-    - os: windows
-      go: 1.14.x
-      cache:
-        directories: ["C:\\Users\\travis\\AppData\\Local\\go-build"]
 
-before_install:
-  # Setup directory for binaries
-  - mkdir ./bin
-  - export PATH=$PATH:$PWD/bin
-  # Misspell
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_linux_64bit.tar.gz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_mac_64bit.tar.gz; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then tar xf misspell.tar.gz && cp ./misspell ./bin/misspell; fi
-  # staticcheck
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.3/staticcheck_linux_amd64.tar.gz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.3/staticcheck_darwin_amd64.tar.gz; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then tar xf staticcheck.tar.gz && cp ./staticcheck/staticcheck ./bin/staticcheck; fi
-  # nancy (vulnerable dependencies)
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L -o ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.1.17/nancy-linux.amd64-v0.1.17; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -L -o ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.1.17/nancy-darwin.amd64-v0.1.17; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then chmod +x ./bin/nancy; fi
-  # golint
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then go get -u golang.org/x/lint/golint; fi
-  # gocyclo
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-linux-amd64; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-darwin-amd64; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then chmod +x ./bin/gocyclo; fi
-before_script:
-  - GOFILES=$(find . -type f -name '*.go' | grep -v client)
-  - go mod graph
-script:
-  # Just check gofmt on linux, it's the fastest builder
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then test -z $(gofmt -s -l $GOFILES); fi
-  - go test ./... -race -coverprofile=coverage.txt -covermode=atomic
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then misspell -error -locale US $GOFILES; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then gocyclo -over 50 $GOFILES; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then golint -set_exit_status $GOFILES; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then staticcheck ./cmd/... .; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then go list -m all | ./bin/nancy -exclude-vulnerability CVE-2020-7219,CVE-2018-19653; fi # Consul Enterprise
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
-  - make
-  - make client
-  - make docker
 before_deploy:
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install -y make; fi
   - make dist
+
 after_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - make release-push
+
 deploy:
   provider: releases
   api_key:
@@ -78,6 +28,7 @@ deploy:
     tags: true
     go: 1.14.x
   skip_cleanup: true
+
 notifications:
   slack:
     secure: gZBYPH1MBi4D8Hq+knLt4NmaRwQwmyddVRX3/EVpg0teQuZr1pjuM8EV2EeKWZ4saurj4tAX4vEdEmAu+oT5vfqYiUxGbGqphtEx52wdpRHuRXHx58p04/hqg2M5iqMz2rFgkPtM2iNwC+fpzzyQ7DTYY4Iua/eF9cxb8NsshCBuVFWcg+z8vZfTzQvKnT2UkekoOL1VQ0bAc97//1a7cXkr/GPhyUGCzt9KUgCFnB5PE0je/fwWF27fV/FiuaQZ/cHFCFQkWdcp7zEwjPkDXrDx7gIAYYsje9OB5hNSRYE8UZiddKUjmb60YAQxmO7cms/9XnmCZKifsYZzeMCHujLzOT+Cy21yRghM5HfTHUxhm/MANPY5hxkrd511nXAs5IfyhS9ZmxhA+WPo5bzpcIimGbxv1Fc6cBh5zvIN4vPLGDpvZR9DaxqHJ0WfiHW85abqsPuiCW12oY4WZkD1Kbs0OsJLEeMWrIICgD4CoHkUJTeUQSnQDguNcK/yvtnih8E9BtcxjU9IrJ5sIQ+UJvptvLf30QIFDqeJ2di3L4vuop7fqDNGtI5L0V6YFoxME1ddguDRrn655qLnmWOXHO3vAXQIIdfidkG/kYZXASuQezfqCn1f9fRWjB/2RDdKPyYPJ1YQl7bCdAuyq36CRzt7Kb523f40K4XmaLsE13M=
