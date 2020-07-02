@@ -1,7 +1,7 @@
 moov-io/imagecashletter
 ===
 [![GoDoc](https://godoc.org/github.com/moov-io/imagecashletter?status.svg)](https://godoc.org/github.com/moov-io/imagecashletter)
-[![Build Status](https://travis-ci.com/moov-io/imagecashletter.svg?branch=master)](https://travis-ci.com/moov-io/imagecashletter)
+[![Build Status](https://github.com/moov-io/imagecashletter/workflows/Go/badge.svg)](https://github.com/moov-io/imagecashletter/actions)
 [![Coverage Status](https://codecov.io/gh/moov-io/imagecashletter/branch/master/graph/badge.svg)](https://codecov.io/gh/moov-io/imagecashletter)
 [![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/imagecashletter)](https://goreportcard.com/report/github.com/moov-io/imagecashletter)
 [![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/imagecashletter/master/LICENSE)
