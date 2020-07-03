@@ -18,6 +18,10 @@ This project is currently under development and could introduce breaking changes
 
 ## Usage
 
+### Docker Image
+
+You can download [our docker image `moov/imagecashletter`](https://hub.docker.com/r/moov/imagecashletter/) from Docker Hub or use this repository. No configuration is required to serve on `:8083` and metrics at `:9093/metrics` in Prometheus format. We also have docker images for [OpenShift](https://quay.io/repository/moov/imagecashletter?tab=tags).
+
 ### Go library
 
 `github.com/moov-io/imagecashletter` offers a Go based Image Cash Letter file reader and writer. To get started checkout a specific example:
