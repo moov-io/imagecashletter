@@ -1,3 +1,12 @@
+## v0.4.3 (Released 2020-07-07)
+
+BUILD
+
+- build: add OpenShift [`quay.io/moov/imagecashletter`](https://quay.io/repository/moov/imagecashletter) Docker image
+- build: convert to Actions from TravisCI
+- chore(deps): update module prometheus/client_golang to v1.6.0
+- chore(deps): upgrade github.com/gorilla/websocket to v1.4.2
+
 ## v0.4.2 (Released 2020-04-14)
 
 BUILD
