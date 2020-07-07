@@ -63,6 +63,10 @@ release-push:
 	docker push moov/imagecashletter:latest
 	docker push moov/imagecashletterfuzz:$(VERSION)
 
+quay-push:
+	docker push quay.io/moov/imagecashletter:$(VERSION)
+	docker push quay.io/moov/imagecashletter:latest
+
 .PHONY: cover-test cover-web
 cover-test:
 	go test -coverprofile=cover.out ./...
