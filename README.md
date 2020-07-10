@@ -6,21 +6,36 @@ moov-io/imagecashletter
 [![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/imagecashletter)](https://goreportcard.com/report/github.com/moov-io/imagecashletter)
 [![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/imagecashletter/master/LICENSE)
 
-X9’s Specifications for ICL (Image Cash Letter) to provide Check 21 services
-
-Package `github.com/moov-io/imagecashletter` implements a file reader and writer for parsing [Image Cash Letter](https://en.wikipedia.org/wiki/Check_21_Act) (ICL) files.
+ImageCashLetter implements a reader, writer, and validator for X9’s Specifications for [Image Cash Letter](https://en.wikipedia.org/wiki/Check_21_Act) (ICL) to provide Check 21 services in an HTTP server and Go library. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/imagecashletter` is available.
 
 Docs: [Project](https://moov-io.github.io/imagecashletter/) | [API Endpoints](https://moov-io.github.io/imagecashletter/api/)
 
-## Project Status
-
-This project is currently under development and could introduce breaking changes to reach a stable status. We are looking for community feedback so please try out our code or give us feedback!
-
 ## Usage
 
-### Docker Image
+### Docker
 
-You can download [our docker image `moov/imagecashletter`](https://hub.docker.com/r/moov/imagecashletter/) from Docker Hub or use this repository. No configuration is required to serve on `:8083` and metrics at `:9093/metrics` in Prometheus format. We also have docker images for [OpenShift](https://quay.io/repository/moov/imagecashletter?tab=tags).
+We publish a [public Docker image `moov/imagecashletter`](https://hub.docker.com/r/moov/imagecashletter/) from Docker Hub or use this repository. No configuration is required to serve on `:8083` and metrics at `:9093/metrics` in Prometheus format. We also have docker images for [OpenShift](https://quay.io/repository/moov/imagecashletter?tab=tags).
+
+Start the Docker image:
+```
+docker run -p 8083:8083 -p 9093:9093 moov/imagecashletter:latest
+```
+
+List files stored in-memory
+```
+curl localhost:8083/files
+```
+```
+{"files":[],"error":null}
+```
+
+Create a file on the HTTP server
+```
+curl -XPOST --data-binary "@./test/testdata/BNK20180905121042882-A.icl" http://localhost:8083/files/create
+```
+```
+{"id":"71ae3f5bc5527cdb1efc88e1814333fd9d6d2edb","fileHeader":{"id":"","standardLevel":"35","testIndicator":"T","immediateDestination":"231380104","immediateOrigin":"121042882", ...
+```
 
 ### Go library
 
