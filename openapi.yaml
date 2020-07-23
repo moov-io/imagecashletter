@@ -1859,6 +1859,11 @@ components:
             * `22` - JBIG (ITU-T Rec. T.82/ISO/IEC 11544:1993)
             * `23` - JPEG 2000 (ISO/IEC 15444–1:2000)
           example: '02'
+        imageViewDataSize:
+          type: string
+          description: |
+              ImageViewDataSize is the total number of bytes in ImageViewData.ImageData.  Use of this field is NOT recommended. If data is present it shall be ignored, and ImageViewData.ImageDataLength shall take precedence.
+          example: "1024"
         viewSideIndicator:
           type: string
           maxLength: 1
