@@ -443,7 +443,7 @@ components:
           type: string
           format: 'date-time'
           description: FileCreationDate is the date that the immediate origin institution creates the file.
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         fileCreationTime:
           type: string
           maxLength: 4
@@ -633,12 +633,12 @@ components:
           type: string
           maxLength: 8
           description: cashLetterBusinessDate is the business date of the cash letter. (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         cashLetterCreationDate:
           type: string
           format: 'date-time'
           description: cashLetterCreationDate is the date that the cash letter is created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         cashLetterCreationTime:
           type: string
           maxLength: 4
@@ -772,7 +772,7 @@ components:
           type: string
           format: 'date-time'
           description: SettlementDate identifies the date that the institution that creates the cash letter expects settlement.
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         creditTotalIndicator:
           maxLength: 1
           enum:
@@ -855,12 +855,12 @@ components:
           type: string
           format: 'date-time'
           description: BundleBusinessDate is the business date of the bundle.
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         bundleCreationDate:
           type: string
           format: 'date-time'
           description: BundleCreationDate is the date that the bundle is created.
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         bundleID:
           type: string
           maxLength: 10
@@ -1254,7 +1254,7 @@ components:
             designates the business date of the original forward bundle. This data is transferred from the BundleHeader
             BundleBusinessDate.  For items presented in paper cash letters, the year, month, and day that the cash
             letter was created.
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         eCEInstitutionItemSequenceNumber:
           type: string
           maxLength: 15
@@ -1520,7 +1520,7 @@ components:
           type: string
           format: 'date-time'
           description: BOFDEndorsementDate is the date of endorsement
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         bOFDItemSequenceNumber:
           type: string
           maxLength: 15
@@ -1688,7 +1688,7 @@ components:
           type: string
           format: 'date-time'
           description: BOFDEndorsementBusinessDate is the date of endorsement.
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         endorsingBankSequenceNumber:
           type: string
           maxLength: 15
@@ -1813,7 +1813,7 @@ components:
           format: 'date-time'
           description: |
             ImageCreatorDate is the date assigned by the image creator for the image view conveyed in the related ImageData.
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         imageViewFormatIndicator:
           type: string
           maxLength: 2
@@ -2057,7 +2057,7 @@ components:
           type: string
           format: 'date-time'
           description: BundleBusinessDate is the business date of the bundle.
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         cycleNumber:
           type: string
           maxLength: 2
@@ -2627,7 +2627,7 @@ components:
           type: string
           format: 'date-time'
           description: BOFDEndorsementDate is the date of endorsement
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         bOFDItemSequenceNumber:
           type: string
           maxLength: 15
@@ -2738,7 +2738,7 @@ components:
           type: string
           format: 'date-time'
           description: PayorBankBusinessDate is the year, month, and day the payor bank processed the Return Record.
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         payorAccountName:
           type: string
           maxLength: 22
@@ -2825,7 +2825,7 @@ components:
           type: string
           format: 'date-time'
           description: BOFDEndorsementBusinessDate is the date of endorsement
-          example: 2006-01-02T15:04:05Z07:00
+          example: 2018-10-03T00:00:00Z
         endorsingBankSequenceNumber:
           type: string
           maxLength: 15
