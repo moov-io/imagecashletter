@@ -878,6 +878,11 @@ components:
           description: CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which
             the bundle is created.
           example: "01"
+        returnLocationRoutingNumber:
+          type: string
+          maxLength: 9
+          description: ReturnLocationRoutingNumber is a bank routing number used by some processors. This will be blank in the resulting file if it is empty.
+          example: "987654320"
         userField:
           type: string
           maxLength: 5
