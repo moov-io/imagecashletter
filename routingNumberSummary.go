@@ -34,9 +34,16 @@ type RoutingNumberSummary struct {
 
 // NewRoutingNumberSummary returns a new RoutingNumberSummary with default values for non exported fields
 func NewRoutingNumberSummary() *RoutingNumberSummary {
-	rns := new(RoutingNumberSummary)
-	rns.recordType = "85"
+	rns := &RoutingNumberSummary{}
+	rns.setRecordType()
 	return rns
+}
+
+func (rns *RoutingNumberSummary) setRecordType() {
+	if rns == nil {
+		return
+	}
+	rns.recordType = "85"
 }
 
 // Parse takes the input record string and parses the ImageViewDetail values

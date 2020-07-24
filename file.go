@@ -146,6 +146,8 @@ func FileFromJSON(bs []byte) (*File, error) {
 	}
 	file.Control = control.Control
 
+	file.setRecordTypes()
+
 	if err := file.Create(); err != nil {
 		return file, err
 	}
@@ -268,4 +270,19 @@ func (f *File) CashLetterIDUnique() error {
 		cashLetterID = cl.CashLetterHeader.CashLetterID
 	}
 	return nil
+}
+
+func (f *File) setRecordTypes() {
+	if f == nil {
+		return
+	}
+
+	f.Header.setRecordType()
+	for i := range f.CashLetters {
+		f.CashLetters[i].setRecordType()
+	}
+	for i := range f.Bundles {
+		f.Bundles[i].setRecordType()
+	}
+	f.Control.setRecordType()
 }

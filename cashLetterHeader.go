@@ -147,10 +147,16 @@ type CashLetterHeader struct {
 
 // NewCashLetterHeader returns a new CashLetterHeader with default values for non exported fields
 func NewCashLetterHeader() *CashLetterHeader {
-	clh := &CashLetterHeader{
-		recordType: "10",
-	}
+	clh := &CashLetterHeader{}
+	clh.setRecordType()
 	return clh
+}
+
+func (clh *CashLetterHeader) setRecordType() {
+	if clh == nil {
+		return
+	}
+	clh.recordType = "10"
 }
 
 // Parse takes the input record string and parses the CashLetterHeader values

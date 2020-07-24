@@ -117,10 +117,16 @@ type CreditItem struct {
 
 // NewCreditItem returns a new CreditItem with default values for non exported fields
 func NewCreditItem() *CreditItem {
-	ci := &CreditItem{
-		recordType: "62",
-	}
+	ci := &CreditItem{}
+	ci.setRecordType()
 	return ci
+}
+
+func (ci *CreditItem) setRecordType() {
+	if ci == nil {
+		return
+	}
+	ci.recordType = "62"
 }
 
 // Parse takes the input record string and parses the CreditItem values

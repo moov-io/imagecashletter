@@ -78,12 +78,13 @@ type BundleHeader struct {
 	// CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which
 	// the bundle is created.
 	CycleNumber string `json:"cycleNumber"`
-	// reserved is a field reserved for future use.  Reserved should be blank.
-	reserved string
+	// ReturnLocationRoutingNumber is a bank routing number used by some processors.
+	// This will be blank in the resulting file if it is empty.
+	ReturnLocationRoutingNumber string `json:"returnLocationRoutingNumber,omitempty"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`
-	// reservedTwo is a field reserved for future use.  Reserved should be blank.
-	reservedTwo string
+	// reserved is a field reserved for future use.  Reserved should be blank.
+	reserved string
 	// validator is composed for imagecashletter data validation
 	validator
 	// converters is composed for imagecashletter to golang Converters
@@ -92,10 +93,16 @@ type BundleHeader struct {
 
 // NewBundleHeader returns a new BundleHeader with default values for non exported fields
 func NewBundleHeader() *BundleHeader {
-	bh := &BundleHeader{
-		recordType: "20",
-	}
+	bh := &BundleHeader{}
+	bh.setRecordType()
 	return bh
+}
+
+func (bh *BundleHeader) setRecordType() {
+	if bh == nil {
+		return
+	}
+	bh.recordType = "20"
 }
 
 // Parse takes the input record string and parses the BundleHeader values
@@ -123,11 +130,11 @@ func (bh *BundleHeader) Parse(record string) {
 	// 53-54
 	bh.CycleNumber = bh.parseStringField(record[52:54])
 	// 55-63
-	bh.reserved = "         "
+	bh.ReturnLocationRoutingNumber = bh.parseStringField(record[54:63])
 	// 64-68
 	bh.UserField = bh.parseStringField(record[63:68])
 	// 69-80
-	bh.reservedTwo = "            "
+	bh.reserved = "            "
 }
 
 // String writes the BundleHeader struct to a string.
@@ -143,9 +150,9 @@ func (bh *BundleHeader) String() string {
 	buf.WriteString(bh.BundleIDField())
 	buf.WriteString(bh.BundleSequenceNumberField())
 	buf.WriteString(bh.CycleNumberField())
-	buf.WriteString(bh.reservedField())
+	buf.WriteString(bh.ReturnLocationRoutingNumberField())
 	buf.WriteString(bh.UserFieldField())
-	buf.WriteString(bh.reservedTwoField())
+	buf.WriteString(bh.reservedField())
 	return buf.String()
 }
 
@@ -266,9 +273,10 @@ func (bh *BundleHeader) CycleNumberField() string {
 	return bh.alphaField(bh.CycleNumber, 2)
 }
 
-// reservedField gets reserved - blank space
-func (bh *BundleHeader) reservedField() string {
-	return bh.alphaField(bh.reserved, 9)
+// ReturnLocationRoutingNumberField gets the ReturnLocationRoutingNumber field
+// or spaces if blank
+func (bh *BundleHeader) ReturnLocationRoutingNumberField() string {
+	return bh.alphaField(bh.ReturnLocationRoutingNumber, 9)
 }
 
 // UserFieldField gets the UserField field
@@ -276,9 +284,9 @@ func (bh *BundleHeader) UserFieldField() string {
 	return bh.alphaField(bh.UserField, 5)
 }
 
-// reservedTwoField gets reservedTwo - blank space
-func (bh *BundleHeader) reservedTwoField() string {
-	return bh.alphaField(bh.reservedTwo, 12)
+// reservedField returns blank spaces for paddding
+func (bh *BundleHeader) reservedField() string {
+	return bh.alphaField(bh.reserved, 12)
 }
 
 // SetBundleSequenceNumber sets BundleSequenceNumber

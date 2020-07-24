@@ -155,10 +155,16 @@ type CheckDetail struct {
 
 // NewCheckDetail returns a new CheckDetail with default values for non exported fields
 func NewCheckDetail() *CheckDetail {
-	cd := &CheckDetail{
-		recordType: "25",
-	}
+	cd := &CheckDetail{}
+	cd.setRecordType()
 	return cd
+}
+
+func (cd *CheckDetail) setRecordType() {
+	if cd == nil {
+		return
+	}
+	cd.recordType = "25"
 }
 
 // Parse takes the input record string and parses the CheckDetail values

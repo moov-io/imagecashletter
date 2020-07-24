@@ -114,14 +114,14 @@ func parseBundleHeader(t testing.TB) {
 	if record.CycleNumberField() != "01" {
 		t.Errorf("CycleNumber Expected '01' got:'%v'", record.CycleNumberField())
 	}
-	if record.reservedField() != "         " {
-		t.Errorf("reserved Expected '         ' got:'%v'", record.reservedField())
+	if record.ReturnLocationRoutingNumberField() != "         " {
+		t.Errorf("reserved Expected '         ' got:'%v'", record.ReturnLocationRoutingNumberField())
 	}
 	if record.UserFieldField() != "     " {
 		t.Errorf("UserField Expected '     ' got:'%v'", record.UserFieldField())
 	}
-	if record.reservedTwoField() != "            " {
-		t.Errorf("reservedTwo Expected '            ' got:'%v'", record.reservedTwoField())
+	if record.reservedField() != "            " {
+		t.Errorf("reservedTwo Expected '            ' got:'%v'", record.reservedField())
 	}
 }
 

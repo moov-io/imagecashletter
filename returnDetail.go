@@ -162,10 +162,16 @@ type AdministrativeReturnCode struct {
 
 // NewReturnDetail returns a new ReturnDetail with default values for non exported fields
 func NewReturnDetail() *ReturnDetail {
-	rd := &ReturnDetail{
-		recordType: "31",
-	}
+	rd := &ReturnDetail{}
+	rd.setRecordType()
 	return rd
+}
+
+func (rd *ReturnDetail) setRecordType() {
+	if rd == nil {
+		return
+	}
+	rd.recordType = "31"
 }
 
 // Parse takes the input record string and parses the ReturnDetail values

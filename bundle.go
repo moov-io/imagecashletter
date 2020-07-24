@@ -59,6 +59,20 @@ func NewBundle(bh *BundleHeader) *Bundle {
 	return b
 }
 
+func (b *Bundle) setRecordType() {
+	if b == nil {
+		return
+	}
+	b.BundleHeader.setRecordType()
+	for i := range b.Checks {
+		b.Checks[i].setRecordType()
+	}
+	for i := range b.Returns {
+		b.Returns[i].setRecordType()
+	}
+	b.BundleControl.setRecordType()
+}
+
 // Validate performs imagecashletter validations and format rule checks and returns an error if not Validated
 func (b *Bundle) Validate() error {
 	if (len(b.Checks) <= 0) && (len(b.Returns) <= 0) {
