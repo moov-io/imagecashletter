@@ -46,11 +46,18 @@ type FileControl struct {
 
 // NewFileControl returns a new FileControl with default values for non exported fields
 func NewFileControl() FileControl {
-	fc := FileControl{
-		recordType: "99",
-		reserved:   "               ",
-	}
+	fc := FileControl{}
+	fc.setRecordType()
 	return fc
+}
+
+func (fc *FileControl) setRecordType() {
+	if fc == nil {
+		return
+	}
+
+	fc.recordType = "99"
+	fc.reserved = "               "
 }
 
 // Parse takes the input record string and parses the FileControl values

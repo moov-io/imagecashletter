@@ -46,11 +46,17 @@ type BundleControl struct {
 
 // NewBundleControl returns a new BundleControl with default values for non exported fields
 func NewBundleControl() *BundleControl {
-	bc := &BundleControl{
-		recordType: "70",
-		reserved:   "                        ",
-	}
+	bc := &BundleControl{}
+	bc.setRecordType()
 	return bc
+}
+
+func (bc *BundleControl) setRecordType() {
+	if bc == nil {
+		return
+	}
+	bc.recordType = "70"
+	bc.reserved = "                        "
 }
 
 // Parse takes the input record string and parses the BundleControl values

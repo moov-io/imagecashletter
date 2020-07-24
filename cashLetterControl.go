@@ -52,12 +52,19 @@ type CashLetterControl struct {
 
 // NewCashLetterControl returns a new CashLetterControl with default values for non exported fields
 func NewCashLetterControl() *CashLetterControl {
-	clc := &CashLetterControl{
-		recordType:     "90",
-		SettlementDate: time.Now(),
-		reserved:       "              ",
-	}
+	clc := &CashLetterControl{}
+	clc.setRecordType()
 	return clc
+}
+
+func (clc *CashLetterControl) setRecordType() {
+	if clc == nil {
+		return
+	}
+
+	clc.recordType = "90"
+	clc.SettlementDate = time.Now()
+	clc.reserved = "              "
 }
 
 // Parse takes the input record string and parses the CashLetterControl values

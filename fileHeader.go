@@ -95,11 +95,17 @@ type FileHeader struct {
 
 // NewFileHeader returns a new FileHeader with default values for non exported fields
 func NewFileHeader() FileHeader {
-	fh := FileHeader{
-		recordType:    "01",
-		StandardLevel: "35",
-	}
+	fh := FileHeader{}
+	fh.setRecordType()
 	return fh
+}
+
+func (fh *FileHeader) setRecordType() {
+	if fh == nil {
+		return
+	}
+	fh.recordType = "01"
+	fh.StandardLevel = "35"
 }
 
 // Parse takes the input record string and parses the FileHeader values

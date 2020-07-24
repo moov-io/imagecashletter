@@ -51,6 +51,24 @@ func NewCashLetter(clh *CashLetterHeader) CashLetter {
 	return cl
 }
 
+func (cl *CashLetter) setRecordType() {
+	if cl == nil {
+		return
+	}
+
+	cl.CashLetterHeader.setRecordType()
+	for i := range cl.Bundles {
+		cl.Bundles[i].setRecordType()
+	}
+	for i := range cl.CreditItems {
+		cl.CreditItems[i].setRecordType()
+	}
+	for i := range cl.RoutingNumberSummary {
+		cl.RoutingNumberSummary[i].setRecordType()
+	}
+	cl.CashLetterControl.setRecordType()
+}
+
 // Validate performs ImageCashLetter validations and format rule checks and returns an error if not Validated
 func (cl *CashLetter) Validate() error {
 	if cl.CashLetterHeader.RecordTypeIndicator == "N" {
