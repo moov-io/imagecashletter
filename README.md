@@ -37,6 +37,27 @@ curl -XPOST --data-binary "@./test/testdata/BNK20180905121042882-A.icl" http://l
 {"id":"71ae3f5bc5527cdb1efc88e1814333fd9d6d2edb","fileHeader":{"id":"","standardLevel":"35","testIndicator":"T","immediateDestination":"231380104","immediateOrigin":"121042882", ...
 ```
 
+Create a file with the JSON format on the HTTP server
+```
+curl -XPOST -H "content-type: application/json" localhost:8083/files/create --data @./test/testdata/icl-valid.json
+```
+```
+{"id":"8afcde4fc2cf4023e92a7a96be9dbbe44e1e9508","fileHeader":{"id":"","standardLevel":"35","testIndicator":"T","immediateDestination":"231380104","immediateOrigin":"121042882", ...
+```
+
+Get the formatted file
+```
+curl localhost:8083/files/8afcde4fc2cf4023e92a7a96be9dbbe44e1e9508/contents
+```
+```
+0135T231380104121042882201810032219NCitadel           Wells Fargo        US
+0123138010412104288220181003201810032219IGA1      Contact Name  5558675552
+0123138010412104288220181003201810039999      1   01
+      123456789 031300012             555888100001000001              GD1Y030B
+1121042882201810031              938383            01   Test Payee     Y10
+...
+```
+
 ### Go library
 
 `github.com/moov-io/imagecashletter` offers a Go based Image Cash Letter file reader and writer. To get started checkout a specific example:
