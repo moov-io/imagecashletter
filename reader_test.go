@@ -5,6 +5,8 @@
 package imagecashletter
 
 import (
+	"bytes"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,12 +15,12 @@ import (
 
 // TestICLFileRead validates reading an ICL file
 func TestICLFileRead(t *testing.T) {
-	f, err := os.Open(filepath.Join("test", "testdata", "BNK20180905121042882-A.icl"))
+	fd, err := os.Open(filepath.Join("test", "testdata", "BNK20180905121042882-A.icl"))
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
-	defer f.Close()
-	r := NewReader(f)
+	defer fd.Close()
+	r := NewReader(fd)
 	_, err = r.Read()
 
 	if err != nil {
@@ -48,11 +50,13 @@ func TestICLFileRead(t *testing.T) {
 
 // TestICLFile validates reading an ICL file
 func TestICLFile(t *testing.T) {
-	f, err := os.Open(filepath.Join("test", "testdata", "BNK20180905121042882-A.icl"))
+	fd, err := os.Open(filepath.Join("test", "testdata", "BNK20180905121042882-A.icl"))
 	if err != nil {
 		t.Fatalf("Can not open local file: %s: \n", err)
 	}
-	r := NewReader(f)
+	defer fd.Close()
+
+	r := NewReader(fd)
 	ICLFile, err := r.Read()
 	if err != nil {
 		t.Errorf("Issue reading file: %+v \n", err)
@@ -978,17 +982,39 @@ func TestIVAnalysisBundleError(t *testing.T) {
 
 // TestICLCreditItemFile validates reading an ICL file with a CreditItem
 func TestICLCreditItemFile(t *testing.T) {
-	f, err := os.Open(filepath.Join("test", "testdata", "BNK20181010121042882-A.icl"))
+	fd, err := os.Open(filepath.Join("test", "testdata", "BNK20181010121042882-A.icl"))
 	if err != nil {
 		t.Fatalf("Can not open local file: %s: \n", err)
 	}
-	r := NewReader(f)
-	ICLFile, err := r.Read()
+	defer fd.Close()
+
+	ICLFile, err := NewReader(fd).Read()
 	if err != nil {
 		t.Errorf("Issue reading file: %+v \n", err)
 	}
 	// ensure we have a validated file structure
 	if ICLFile.Validate(); err != nil {
 		t.Errorf("Could not validate entire read file: %v", err)
+	}
+}
+
+func TestICLBase64ImageData(t *testing.T) {
+	bs, err := ioutil.ReadFile(filepath.Join("test", "testdata", "base64-encoded-images.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	file, err := FileFromJSON(bs)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var buf bytes.Buffer
+	if err := NewWriter(&buf).Write(file); err != nil {
+		t.Fatal(err)
+	}
+
+	if !bytes.Contains(buf.Bytes(), []byte("hello, world")) {
+		t.Fatalf("unexpected ICL file:\n%s", buf.String())
 	}
 }
