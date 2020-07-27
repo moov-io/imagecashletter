@@ -285,6 +285,18 @@ func TestIVDataFIBundleBusinessDate(t *testing.T) {
 	}
 }
 
+func TestImageViewData__Base64String(t *testing.T) {
+	data := base64Encode("hello, world")
+
+	ivData := mockImageViewData()
+	ivData.ImageData = data
+
+	output := ivData.String()
+	if !strings.Contains(output, "hello, world") {
+		t.Errorf("unexpected output=%q", output)
+	}
+}
+
 func TestDecodeImageData(t *testing.T) {
 	data := base64Encode("hello, world")
 

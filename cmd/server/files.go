@@ -114,6 +114,8 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 		if req.ID == "" {
 			req.ID = base.ID()
 		}
+
+		// Save the ICL file
 		if err := repo.saveFile(req); err != nil {
 			logger.Log("files", fmt.Sprintf("problem saving file %s: %v", req.ID, err), "requestID", moovhttp.GetRequestID(r))
 			moovhttp.Problem(w, err)

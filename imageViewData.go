@@ -384,6 +384,12 @@ func (ivData *ImageViewData) LengthImageDataField() string {
 
 // ImageDataField gets the ImageData field []byte to string
 func (ivData *ImageViewData) ImageDataField() string {
+	// Try and decode our image data, otherwise use the raw bytes.
+	if decoded, err := ivData.DecodeImageData(); len(decoded) > 0 && err == nil {
+		return ivData.alphaField(string(decoded[:]), uint(len(decoded)))
+	}
+
+	// Return the untouched image data padded according to the spec
 	s := string(ivData.ImageData[:])
 	return ivData.alphaField(s, uint(ivData.parseNumField(ivData.LengthImageData)))
 }
