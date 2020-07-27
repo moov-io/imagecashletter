@@ -33,6 +33,8 @@ type BundleHeader struct {
 	BundleSequenceNumber string `json:"bundleSequenceNumber,omitempty"`
 	// CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which the bundle is created.
 	CycleNumber string `json:"cycleNumber,omitempty"`
+	// ReturnLocationRoutingNumber is a bank routing number used by some processors. This will be blank in the resulting file if it is empty.
+	ReturnLocationRoutingNumber string `json:"returnLocationRoutingNumber,omitempty"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField,omitempty"`
 }

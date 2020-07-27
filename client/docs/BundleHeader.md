@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **BundleID** | **string** | BundleID is number that identifies the bundle, assigned by the institution that creates the bundle. | [optional] 
 **BundleSequenceNumber** | **string** | BundleSequenceNumber is a number assigned by the institution that creates the bundle. Usually denotes the relative position of the bundle within the cash letter. | [optional] 
 **CycleNumber** | **string** | CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which the bundle is created. | [optional] 
+**ReturnLocationRoutingNumber** | **string** | ReturnLocationRoutingNumber is a bank routing number used by some processors. This will be blank in the resulting file if it is empty. | [optional] 
 **UserField** | **string** | UserField identifies a field used at the discretion of users of the standard. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
