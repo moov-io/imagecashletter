@@ -6,6 +6,7 @@ package imagecashletter
 
 import (
 	"bytes"
+	"encoding/base64"
 	"log"
 	"strings"
 	"testing"
@@ -282,4 +283,27 @@ func TestIVDataFIBundleBusinessDate(t *testing.T) {
 			}
 		}
 	}
+}
+
+func TestDecodeImageData(t *testing.T) {
+	data := base64Encode("hello, world")
+
+	ivData := &ImageViewData{
+		ImageData: data,
+	}
+
+	decoded, err := ivData.DecodeImageData()
+	if len(decoded) == 0 || err != nil {
+		t.Fatalf("nothing decoded: %v", err)
+	}
+	if string(decoded) != "hello, world" {
+		t.Errorf("got %q", string(decoded))
+	}
+}
+
+func base64Encode(in string) []byte {
+	input := []byte(in)
+	out := make([]byte, base64.StdEncoding.EncodedLen(len(input)))
+	base64.StdEncoding.Encode(out, input)
+	return out
 }
