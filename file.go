@@ -159,6 +159,9 @@ func FileFromJSON(bs []byte) (*File, error) {
 
 // Create creates a valid imagecashletter File
 func (f *File) Create() error {
+	if f == nil {
+		return ErrNilFile
+	}
 	// Requires a valid FileHeader to build FileControl
 	if err := f.Header.Validate(); err != nil {
 		return err
@@ -239,11 +242,12 @@ func (f *File) Create() error {
 
 // Validate validates an ICL File
 func (f *File) Validate() error {
-
+	if f == nil {
+		return ErrNilFile
+	}
 	if err := f.CashLetterIDUnique(); err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -261,6 +265,9 @@ func (f *File) AddCashLetter(cashLetter CashLetter) []CashLetter {
 
 // CashLetterIDUnique verifies multiple CashLetters in a file have a unique CashLetterID
 func (f *File) CashLetterIDUnique() error {
+	if f == nil || len(f.CashLetters) == 0 {
+		return ErrNilFile
+	}
 	cashLetterID := ""
 	for _, cl := range f.CashLetters {
 		if cashLetterID == cl.CashLetterHeader.CashLetterID {

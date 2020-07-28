@@ -29,6 +29,9 @@ func NewWriter(w io.Writer) *Writer {
 
 // Writer writes a single imagecashletter.file record to w
 func (w *Writer) Write(file *File) error {
+	if file == nil {
+		return ErrNilFile
+	}
 	if err := file.Validate(); err != nil {
 		return err
 	}
