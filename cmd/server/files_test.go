@@ -272,11 +272,11 @@ func TestFiles__getFileContents(t *testing.T) {
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "/files/foo/contents", nil)
 
-	repo := &testICLFileRepository{
-		file: &imagecashletter.File{
-			ID: base.ID(),
-		},
+	f, err := readFile("BNK20180905121042882-A.icl")
+	if err != nil {
+		t.Fatal(err)
 	}
+	repo := &testICLFileRepository{file: f}
 
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
