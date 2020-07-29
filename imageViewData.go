@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/base64"
 	"fmt"
 	"strings"
 	"time"
@@ -383,6 +384,30 @@ func (ivData *ImageViewData) LengthImageDataField() string {
 
 // ImageDataField gets the ImageData field []byte to string
 func (ivData *ImageViewData) ImageDataField() string {
+	// Try and decode our image data, otherwise use the raw bytes.
+	if decoded, err := ivData.DecodeImageData(); len(decoded) > 0 && err == nil {
+		return ivData.alphaField(string(decoded[:]), uint(len(decoded)))
+	}
+
+	// Return the untouched image data padded according to the spec
 	s := string(ivData.ImageData[:])
 	return ivData.alphaField(s, uint(ivData.parseNumField(ivData.LengthImageData)))
+}
+
+// DecodeImageData attempts to read ImageData as a base64 blob. Other formats may be
+// supported in the future.
+func (ivData *ImageViewData) DecodeImageData() ([]byte, error) {
+	if ivData == nil || len(ivData.ImageData) == 0 {
+		return nil, nil
+	}
+
+	// Setup output buffer
+	out := make([]byte, base64.StdEncoding.DecodedLen(len(ivData.ImageData)))
+
+	// Decode the image data
+	n, err := base64.StdEncoding.Decode(out, ivData.ImageData)
+	if n == 0 || err != nil {
+		return nil, err
+	}
+	return out, nil
 }
