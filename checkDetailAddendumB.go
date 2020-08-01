@@ -53,10 +53,16 @@ type CheckDetailAddendumB struct {
 
 // NewCheckDetailAddendumB returns a new CheckDetailAddendumB with default values for non exported fields
 func NewCheckDetailAddendumB() CheckDetailAddendumB {
-	cdAddendumB := CheckDetailAddendumB{
-		recordType: "27",
-	}
+	cdAddendumB := CheckDetailAddendumB{}
+	cdAddendumB.setRecordType()
 	return cdAddendumB
+}
+
+func (cdAddendumB *CheckDetailAddendumB) setRecordType() {
+	if cdAddendumB == nil {
+		return
+	}
+	cdAddendumB.recordType = "27"
 }
 
 // Parse takes the input record string and parses the CheckDetailAddendumB values
@@ -66,7 +72,7 @@ func (cdAddendumB *CheckDetailAddendumB) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "27"
-	cdAddendumB.recordType = "27"
+	cdAddendumB.setRecordType()
 	// 03-03
 	cdAddendumB.ImageReferenceKeyIndicator = cdAddendumB.parseNumField(record[2:3])
 	// 04-18

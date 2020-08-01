@@ -87,10 +87,16 @@ type CheckDetailAddendumA struct {
 
 // NewCheckDetailAddendumA returns a new CheckDetailAddendumA with default values for non exported fields
 func NewCheckDetailAddendumA() CheckDetailAddendumA {
-	cdAddendumA := CheckDetailAddendumA{
-		recordType: "26",
-	}
+	cdAddendumA := CheckDetailAddendumA{}
+	cdAddendumA.setRecordType()
 	return cdAddendumA
+}
+
+func (cdAddendumA *CheckDetailAddendumA) setRecordType() {
+	if cdAddendumA == nil {
+		return
+	}
+	cdAddendumA.recordType = "26"
 }
 
 // Parse takes the input record string and parses the CheckDetailAddendumA values
@@ -100,7 +106,7 @@ func (cdAddendumA *CheckDetailAddendumA) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "26"
-	cdAddendumA.recordType = "26"
+	cdAddendumA.setRecordType()
 	// 03-03
 	cdAddendumA.RecordNumber = cdAddendumA.parseNumField(record[2:3])
 	// 04-12

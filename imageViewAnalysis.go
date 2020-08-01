@@ -221,10 +221,16 @@ type ImageViewAnalysis struct {
 
 // NewImageViewAnalysis returns a new ImageViewAnalysis with default values for non exported fields
 func NewImageViewAnalysis() ImageViewAnalysis {
-	ivAnalysis := ImageViewAnalysis{
-		recordType: "54",
-	}
+	ivAnalysis := ImageViewAnalysis{}
+	ivAnalysis.setRecordType()
 	return ivAnalysis
+}
+
+func (ivAnalysis *ImageViewAnalysis) setRecordType() {
+	if ivAnalysis == nil {
+		return
+	}
+	ivAnalysis.recordType = "54"
 }
 
 // Parse takes the input record string and parses the ImageViewAnalysis values
@@ -234,7 +240,7 @@ func (ivAnalysis *ImageViewAnalysis) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "54"
-	ivAnalysis.recordType = "54"
+	ivAnalysis.setRecordType()
 	// 03-03
 	ivAnalysis.GlobalImageQuality = ivAnalysis.parseNumField(record[2:3])
 	// 04-04

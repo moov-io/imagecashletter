@@ -54,10 +54,16 @@ type ReturnDetailAddendumC struct {
 
 // NewReturnDetailAddendumC returns a new ReturnDetailAddendumC with default values for non exported fields
 func NewReturnDetailAddendumC() ReturnDetailAddendumC {
-	rdAddendumC := ReturnDetailAddendumC{
-		recordType: "34",
-	}
+	rdAddendumC := ReturnDetailAddendumC{}
+	rdAddendumC.setRecordType()
 	return rdAddendumC
+}
+
+func (rdAddendumC *ReturnDetailAddendumC) setRecordType() {
+	if rdAddendumC == nil {
+		return
+	}
+	rdAddendumC.recordType = "34"
 }
 
 // Parse takes the input record string and parses the ReturnDetailAddendumC values
@@ -67,7 +73,7 @@ func (rdAddendumC *ReturnDetailAddendumC) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "34"
-	rdAddendumC.recordType = "34"
+	rdAddendumC.setRecordType()
 	// 03-03
 	rdAddendumC.ImageReferenceKeyIndicator = rdAddendumC.parseNumField(record[2:3])
 	// 04-18

@@ -91,10 +91,16 @@ type ReturnDetailAddendumD struct {
 
 // NewReturnDetailAddendumD returns a new ReturnDetailAddendumD with default values for non exported fields
 func NewReturnDetailAddendumD() ReturnDetailAddendumD {
-	rdAddendumD := ReturnDetailAddendumD{
-		recordType: "35",
-	}
+	rdAddendumD := ReturnDetailAddendumD{}
+	rdAddendumD.setRecordType()
 	return rdAddendumD
+}
+
+func (rdAddendumD *ReturnDetailAddendumD) setRecordType() {
+	if rdAddendumD == nil {
+		return
+	}
+	rdAddendumD.recordType = "35"
 }
 
 // Parse takes the input record string and parses the ReturnDetailAddendumD values
@@ -104,7 +110,7 @@ func (rdAddendumD *ReturnDetailAddendumD) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "35"
-	rdAddendumD.recordType = "35"
+	rdAddendumD.setRecordType()
 	// 03-04
 	rdAddendumD.RecordNumber = rdAddendumD.parseNumField(record[2:4])
 	// 05-13

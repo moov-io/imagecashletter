@@ -112,7 +112,7 @@ func (bh *BundleHeader) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "20"
-	bh.recordType = "20"
+	bh.setRecordType()
 	// 03-04
 	bh.CollectionTypeIndicator = record[2:4]
 	// 05-13

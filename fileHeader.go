@@ -114,7 +114,7 @@ func (fh *FileHeader) Parse(record string) {
 		return
 	}
 	// Character position 1-2, Always "01"
-	fh.recordType = "01"
+	fh.setRecordType()
 	// 03-04
 	fh.StandardLevel = fh.parseStringField(record[2:4])
 	// 05-05

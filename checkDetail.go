@@ -174,7 +174,7 @@ func (cd *CheckDetail) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "25"
-	cd.recordType = "25"
+	cd.setRecordType()
 	// 03-17
 	cd.AuxiliaryOnUs = cd.parseStringField(record[2:17])
 	// 18-18

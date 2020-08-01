@@ -74,7 +74,7 @@ func (clc *CashLetterControl) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "90"
-	clc.recordType = "90"
+	clc.setRecordType()
 	// 03-08
 	clc.CashLetterBundleCount = clc.parseNumField(record[2:8])
 	// 09-16

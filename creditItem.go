@@ -135,7 +135,7 @@ func (ci *CreditItem) Parse(record string) {
 		return // line is too short
 	}
 	// Character position 1-2, Always "62"
-	ci.recordType = "62"
+	ci.setRecordType()
 	// 03-17
 	ci.AuxiliaryOnUs = ci.parseStringField(record[2:17])
 	// 18-18
