@@ -66,7 +66,7 @@ func (bc *BundleControl) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "70"
-	bc.recordType = "70"
+	bc.setRecordType()
 	// 03-06
 	bc.BundleItemsCount = bc.parseNumField(record[2:6])
 	// 07-18

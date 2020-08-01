@@ -181,7 +181,7 @@ func (rd *ReturnDetail) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "31"
-	rd.recordType = "31"
+	rd.setRecordType()
 	// 03-10
 	rd.PayorBankRoutingNumber = rd.parseStringField(record[2:10])
 	// 11-11

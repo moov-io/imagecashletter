@@ -42,10 +42,16 @@ type ReturnDetailAddendumB struct {
 
 // NewReturnDetailAddendumB returns a new ReturnDetailAddendumB with default values for non exported fields
 func NewReturnDetailAddendumB() ReturnDetailAddendumB {
-	rdAddendumB := ReturnDetailAddendumB{
-		recordType: "33",
-	}
+	rdAddendumB := ReturnDetailAddendumB{}
+	rdAddendumB.setRecordType()
 	return rdAddendumB
+}
+
+func (rdAddendumB *ReturnDetailAddendumB) setRecordType() {
+	if rdAddendumB == nil {
+		return
+	}
+	rdAddendumB.recordType = "33"
 }
 
 // Parse takes the input record string and parses the ReturnDetailAddendumB values
@@ -55,7 +61,7 @@ func (rdAddendumB *ReturnDetailAddendumB) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "33"
-	rdAddendumB.recordType = "33"
+	rdAddendumB.setRecordType()
 	// 03-20
 	rdAddendumB.PayorBankName = rdAddendumB.parseStringField(record[2:20])
 	// 21-35

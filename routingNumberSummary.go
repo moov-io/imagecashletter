@@ -53,7 +53,7 @@ func (rns *RoutingNumberSummary) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "85"
-	rns.recordType = "85"
+	rns.setRecordType()
 	// 03-11
 	rns.CashLetterRoutingNumber = rns.parseStringField(record[2:11])
 	// 12-25

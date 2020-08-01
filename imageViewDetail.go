@@ -173,10 +173,16 @@ type ImageViewDetail struct {
 
 // NewImageViewDetail returns a new ImageViewDetail with default values for non exported fields
 func NewImageViewDetail() ImageViewDetail {
-	ivDetail := ImageViewDetail{
-		recordType: "50",
-	}
+	ivDetail := ImageViewDetail{}
+	ivDetail.setRecordType()
 	return ivDetail
+}
+
+func (ivDetail *ImageViewDetail) setRecordType() {
+	if ivDetail == nil {
+		return
+	}
+	ivDetail.recordType = "50"
 }
 
 // Parse takes the input record string and parses the ImageViewDetail values
@@ -186,7 +192,7 @@ func (ivDetail *ImageViewDetail) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "50"
-	ivDetail.recordType = "50"
+	ivDetail.setRecordType()
 	// 03-03
 	ivDetail.ImageIndicator = ivDetail.parseNumField(record[2:3])
 	// 04-12

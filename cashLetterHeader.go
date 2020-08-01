@@ -166,7 +166,7 @@ func (clh *CashLetterHeader) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "10"
-	clh.recordType = "10"
+	clh.setRecordType()
 	// 03-04
 	clh.CollectionTypeIndicator = clh.parseStringField(record[2:4])
 	// 05-13

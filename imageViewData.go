@@ -145,10 +145,16 @@ type ImageViewData struct {
 
 // NewImageViewData returns a new ImageViewData with default values for non exported fields
 func NewImageViewData() ImageViewData {
-	ivData := ImageViewData{
-		recordType: "52",
-	}
+	ivData := ImageViewData{}
+	ivData.setRecordType()
 	return ivData
+}
+
+func (ivData *ImageViewData) setRecordType() {
+	if ivData == nil {
+		return
+	}
+	ivData.recordType = "52"
 }
 
 // Parse takes the input record string and parses the ImageViewData values
@@ -157,7 +163,7 @@ func (ivData *ImageViewData) Parse(record string) {
 		return // line too short
 	}
 	// Character position 1-2, Always "52"
-	ivData.recordType = "52"
+	ivData.setRecordType()
 	// 03-11
 	ivData.EceInstitutionRoutingNumber = ivData.parseStringField(record[2:11])
 	// 12-19

@@ -66,7 +66,7 @@ func (fc *FileControl) Parse(record string) {
 		return
 	}
 	// Character position 1-2, Always "99"
-	fc.recordType = "99"
+	fc.setRecordType()
 	// 03-08
 	fc.CashLetterCount = fc.parseNumField(record[2:8])
 	// 09-16

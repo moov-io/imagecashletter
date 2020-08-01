@@ -110,10 +110,17 @@ type UserPayeeEndorsement struct {
 // NewUserPayeeEndorsement returns a new UserPayeeEndorsement with default values for non exported fields
 func NewUserPayeeEndorsement() *UserPayeeEndorsement {
 	upe := &UserPayeeEndorsement{
-		recordType:           "68",
 		UserRecordFormatType: "001",
 	}
+	upe.setRecordType()
 	return upe
+}
+
+func (upe *UserPayeeEndorsement) setRecordType() {
+	if upe == nil {
+		return
+	}
+	upe.recordType = "68"
 }
 
 // Parse takes the input record string and parses the UserPayeeEndorsement values
@@ -123,7 +130,7 @@ func (upe *UserPayeeEndorsement) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "68"
-	upe.recordType = "68"
+	upe.setRecordType()
 	// 03-03
 	upe.OwnerIdentifierIndicator = upe.parseNumField(record[2:3])
 	// 04-12

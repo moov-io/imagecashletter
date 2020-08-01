@@ -81,10 +81,13 @@ type UserGeneral struct {
 
 // NewUserGeneral returns a new UserGeneral with default values for non exported fields
 func NewUserGeneral() *UserGeneral {
-	ug := &UserGeneral{
-		recordType: "68",
-	}
+	ug := &UserGeneral{}
+	ug.setRecordType()
 	return ug
+}
+
+func (ug *UserGeneral) setRecordType() {
+	ug.recordType = "68"
 }
 
 // Parse takes the input record string and parses the UserGeneral values
@@ -94,7 +97,7 @@ func (ug *UserGeneral) Parse(record string) {
 	}
 
 	// Character position 1-2, Always "68"
-	ug.recordType = "68"
+	ug.setRecordType()
 	// 03-03
 	ug.OwnerIdentifierIndicator = ug.parseNumField(record[2:3])
 	// 04-12
