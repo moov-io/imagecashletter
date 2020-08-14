@@ -8,6 +8,11 @@ build: check build-server
 build-server:
 	CGO_ENABLED=1 go build -o ./bin/server github.com/moov-io/imagecashletter/cmd/server
 
+build-webui:
+	cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./cmd/webui/assets/wasm_exec.js
+	GOOS=js GOARCH=wasm go build -o ./cmd/webui/assets/imagecashletter.wasm github.com/moov-io/imagecashletter/cmd/webui/icl/
+	CGO_ENABLED=0 go build -o ./bin/webui ./cmd/webui
+
 check:
 	go fmt ./...
 	@mkdir -p ./bin/

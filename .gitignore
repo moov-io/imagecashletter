@@ -22,6 +22,9 @@ openapi-generator-cli-*.jar
 # macOS
 .DS_Store
 
+# WASM UI
+/cmd/webui/assets/imagecashletter.wasm
+
 # fuzzing
 test/fuzz-reader/fuzzreader-fuzz.zip
 test/fuzz-reader/corpus/*.tar.gz
