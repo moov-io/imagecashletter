@@ -10,13 +10,14 @@
     </script>
   </head>
   <body>
-    <textarea id="jsoninput" name="jsoninput" cols="80" rows="20"></textarea>
-    <input id="button" type="submit" name="button" value="pretty json" onclick="json(jsoninput.value)"/>
-    <textarea id="jsonoutput" name="jsonoutput" cols="80" rows="20"></textarea>
+    <textarea id="jsoninput" name="jsoninput" cols="80" rows="40"></textarea>
+    <textarea id="jsonoutput" name="jsonoutput" cols="80" rows="40"></textarea>
+    <br />
+    <input id="button" type="submit" name="button" value="parse ICL file" onclick="json(jsoninput.value)"/>
   </body>
   <script>
     var json = function(input) {
-      jsonoutput.value = formatJSON(input)
+      jsonoutput.value = parseContents(input)
     }
   </script>
 </html>
