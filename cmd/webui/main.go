@@ -20,6 +20,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/moov-io/base/admin"
 	"github.com/moov-io/base/http/bind"
+	"github.com/moov-io/paygate/pkg/util"
 
 	"github.com/moov-io/imagecashletter"
 )
@@ -34,7 +35,7 @@ var (
 func main() {
 	flag.Parse()
 
-	log.Printf("Starting moov-io/imagecashletter server version %s", imagecashletter.Version)
+	log.Printf("Starting moov-io/imagecashletter webui version %s", imagecashletter.Version)
 
 	// Channel for errors
 	errs := make(chan error)
@@ -61,7 +62,11 @@ func main() {
 	// Setup business HTTP routes
 	router := mux.NewRouter()
 	addPingRoute(router)
-	addAssetsPath(router, http.FileServer(http.Dir(filepath.Join("cmd", "webui", "assets"))))
+
+	// Register our assets route
+	assetsPath := util.Or(os.Getenv("ASSETS_PATH"), filepath.Join("cmd", "webui", "assets"))
+	log.Printf("serving assets from %s", assetsPath)
+	addAssetsPath(router, http.FileServer(http.Dir(assetsPath)))
 
 	serve := &http.Server{
 		Addr:    *httpAddr,

@@ -51,6 +51,9 @@ docker: clean
 # Main imagecashletter server Docker image
 	docker build --pull -t moov/imagecashletter:$(VERSION) -f Dockerfile .
 	docker tag moov/imagecashletter:$(VERSION) moov/imagecashletter:latest
+# webui Docker image
+	docker build --pull -t moov/imagecashletter-webui:$(VERSION) -f Dockerfile-webui .
+	docker tag moov/imagecashletter-webui:$(VERSION) moov/imagecashletter-webui:latest
 # OpenShift Docker image
 	docker build --pull -t quay.io/moov/imagecashletter:$(VERSION) -f Dockerfile-openshift --build-arg VERSION=$(VERSION) .
 	docker tag quay.io/moov/imagecashletter:$(VERSION) quay.io/moov/imagecashletter:latest
