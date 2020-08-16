@@ -1,6 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ICL | Moov</title>
     <script src="wasm_exec.js"></script>
     <script>
       const go = new Go();
@@ -8,16 +11,73 @@
         go.run(result.instance);
       });
     </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        height: 100%;
+        font-size: 16px;
+        font-family: system-ui, sans-serif;
+      }
+      body {
+        margin: 0;
+        padding: 1rem;
+      }
+      [id="iclform"] {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr auto;
+        grid-template-areas: "input output" "button output";
+        gap: 1rem;
+        height: 100%;
+      }
+      [id="jsoninput"] {
+        grid-area: input;
+      }
+      [id="jsonoutput"] {
+        grid-area: output;
+      }
+      button {
+        grid-area: button;
+        appearance: none;
+        padding: .75rem;
+        font-size: 1rem;
+        font-weight: 500;
+        background-color: #121212;
+        color: #fff;
+        border-radius: .4375rem;
+        border: 0;
+      }
+      textarea {
+        resize: none;
+        font-family: system-mono, monospace;
+        border: 1px solid #ddd;
+        border-radius: .4375rem;
+        padding: 1rem;
+      }
+      :focus {
+        outline: 0;
+        border-color: hsl(210, 90%, 50%);
+        box-shadow: 0 0 0 .25rem hsla(210, 90%, 50%, 0.3);
+      }
+    </style>
   </head>
   <body>
-    <textarea id="jsoninput" name="jsoninput" cols="80" rows="40"></textarea>
-    <textarea id="jsonoutput" name="jsonoutput" cols="80" rows="40"></textarea>
-    <br />
-    <input id="button" type="submit" name="button" value="parse ICL file" onclick="json(jsoninput.value)"/>
+    <form id="iclform">
+      <textarea id="jsoninput" name="jsoninput" cols="80" rows="40" placeholder="Paste your ICL file contents here..."></textarea>
+      <textarea id="jsonoutput" name="jsonoutput" cols="80" rows="40" readonly></textarea>
+      <button type="submit" onclick="json(jsoninput.value)">Parse ICL file</button>
+    </form>
   </body>
   <script>
-    var json = function(input) {
+    const json = function(input) {
       jsonoutput.value = parseContents(input)
+      jsonoutput.setSelectionRange(0,0)
+      jsonoutput.focus()
     }
+    iclform.addEventListener('submit', (event) => {
+      json(jsoninput.value)
+    })
   </script>
 </html>
