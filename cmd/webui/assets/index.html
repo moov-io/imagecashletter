@@ -77,6 +77,7 @@
       jsonoutput.focus()
     }
     iclform.addEventListener('submit', (event) => {
+      event.preventDefault();
       json(jsoninput.value)
     })
   </script>
