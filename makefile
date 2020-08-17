@@ -8,6 +8,11 @@ build: check build-server
 build-server:
 	CGO_ENABLED=1 go build -o ./bin/server github.com/moov-io/imagecashletter/cmd/server
 
+build-webui:
+	cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./cmd/webui/assets/wasm_exec.js
+	GOOS=js GOARCH=wasm go build -o ./cmd/webui/assets/imagecashletter.wasm github.com/moov-io/imagecashletter/cmd/webui/icl/
+	CGO_ENABLED=0 go build -o ./bin/webui ./cmd/webui
+
 check:
 	go fmt ./...
 	@mkdir -p ./bin/
@@ -46,6 +51,9 @@ docker: clean
 # Main imagecashletter server Docker image
 	docker build --pull -t moov/imagecashletter:$(VERSION) -f Dockerfile .
 	docker tag moov/imagecashletter:$(VERSION) moov/imagecashletter:latest
+# webui Docker image
+	docker build --pull -t moov/imagecashletter-webui:$(VERSION) -f Dockerfile-webui .
+	docker tag moov/imagecashletter-webui:$(VERSION) moov/imagecashletter-webui:latest
 # OpenShift Docker image
 	docker build --pull -t quay.io/moov/imagecashletter:$(VERSION) -f Dockerfile-openshift --build-arg VERSION=$(VERSION) .
 	docker tag quay.io/moov/imagecashletter:$(VERSION) quay.io/moov/imagecashletter:latest
