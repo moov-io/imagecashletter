@@ -3,7 +3,7 @@ VERSION := $(shell grep -Eo '(v[0-9]+[\.][0-9]+[\.][0-9]+(-[a-zA-Z0-9]*)?)' vers
 
 .PHONY: build build-server docker release check
 
-build: check build-server
+build: check build-server build-webui
 
 build-server:
 	CGO_ENABLED=1 go build -o ./bin/server github.com/moov-io/imagecashletter/cmd/server
