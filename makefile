@@ -69,6 +69,8 @@ release: docker AUTHORS
 release-push:
 	docker push moov/imagecashletter:$(VERSION)
 	docker push moov/imagecashletter:latest
+	docker push moov/imagecashletter-webui:$(VERSION)
+	docker push moov/imagecashletter-webui:latest
 	docker push moov/imagecashletterfuzz:$(VERSION)
 
 quay-push:
