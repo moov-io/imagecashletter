@@ -54,9 +54,9 @@ docker: clean
 # webui Docker image
 	docker build --pull -t moov/imagecashletter-webui:$(VERSION) -f Dockerfile-webui .
 	docker tag moov/imagecashletter-webui:$(VERSION) moov/imagecashletter-webui:latest
-# OpenShift Docker image
-	docker build --pull -t quay.io/moov/imagecashletter:$(VERSION) -f Dockerfile-openshift --build-arg VERSION=$(VERSION) .
-	docker tag quay.io/moov/imagecashletter:$(VERSION) quay.io/moov/imagecashletter:latest
+# # OpenShift Docker image
+# 	docker build --pull -t quay.io/moov/imagecashletter:$(VERSION) -f Dockerfile-openshift --build-arg VERSION=$(VERSION) .
+# 	docker tag quay.io/moov/imagecashletter:$(VERSION) quay.io/moov/imagecashletter:latest
 # ICL Fuzzing docker image
 	docker build --pull -t moov/imagecashletterfuzz:$(VERSION) . -f Dockerfile-fuzz
 	docker tag moov/imagecashletterfuzz:$(VERSION) moov/imagecashletterfuzz:latest
