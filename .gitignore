@@ -28,3 +28,6 @@ openapi-generator-cli-*.jar
 # fuzzing
 test/fuzz-reader/fuzzreader-fuzz.zip
 test/fuzz-reader/corpus/*.tar.gz
+
+# GoLand
+/.idea/*
