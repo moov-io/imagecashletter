@@ -29,6 +29,7 @@ var (
 	httpAddr  = flag.String("http.addr", bind.HTTP("ICL"), "HTTP listen address")
 	adminAddr = flag.String("admin.addr", bind.Admin("ICL"), "Admin HTTP listen address")
 
+	flagBasePath  = flag.String("base-path", "/", "Base path to serve HTTP routes and webui from")
 	flagLogFormat = flag.String("log.format", "", "Format for log lines (Options: json, plain")
 )
 
@@ -60,13 +61,13 @@ func main() {
 	defer adminServer.Shutdown()
 
 	// Setup business HTTP routes
-	router := mux.NewRouter()
+	router := mux.NewRouter().PathPrefix(*flagBasePath).Subrouter()
 	addPingRoute(router)
 
 	// Register our assets route
 	assetsPath := util.Or(os.Getenv("ASSETS_PATH"), filepath.Join("cmd", "webui", "assets"))
 	log.Printf("serving assets from %s", assetsPath)
-	addAssetsPath(router, http.FileServer(http.Dir(assetsPath)))
+	addAssetsPath(router, assetsPath)
 
 	serve := &http.Server{
 		Addr:    *httpAddr,
@@ -116,8 +117,9 @@ func addPingRoute(r *mux.Router) {
 	})
 }
 
-func addAssetsPath(r *mux.Router, handler http.Handler) {
-	r.Methods("GET").PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handler.ServeHTTP(w, r)
-	})
+func addAssetsPath(r *mux.Router, assetPath string) {
+	if _, err := os.Stat(assetPath); err != nil {
+		panic(fmt.Sprintf("ERROR: unable to stat %s: %v", assetPath, err))
+	}
+	r.Methods("GET").PathPrefix("/").Handler(http.StripPrefix(*flagBasePath, http.FileServer(http.Dir(assetPath))))
 }
