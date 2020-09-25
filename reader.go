@@ -6,6 +6,7 @@ package imagecashletter
 
 import (
 	"bufio"
+	"encoding/binary"
 	"fmt"
 	"io"
 	"strconv"
@@ -32,6 +33,8 @@ type Reader struct {
 	scanner *bufio.Scanner
 	// file is ach.file model being built as r is parsed.
 	File File
+	// format in which to read file with
+	format Format
 	// line is the current line being parsed from the input r
 	line string
 	// currentCashLetter is the current CashLetter being parsed
@@ -69,6 +72,16 @@ func (r *Reader) addCurrentRoutingNumberSummary(rns *RoutingNumberSummary) {
 	r.currentCashLetter.currentRoutingNumberSummary = rns
 }
 
+// Format standard of X9.37 specification used to parse file
+type Format uint32
+
+const (
+	// Discover format
+	Discover Format = iota
+	//X9100ascii X9.100 microformat in ASCII
+	X9100ascii
+)
+
 // NewReader returns a new ACH Reader that reads from r.
 func NewReader(r io.Reader) *Reader {
 	f := NewFile()
@@ -77,6 +90,45 @@ func NewReader(r io.Reader) *Reader {
 		File:    *f,
 		scanner: bufio.NewScanner(r),
 	}
+}
+
+// SetFormat of imagecashletter file
+func (r *Reader) SetFormat(format Format) {
+	switch format {
+	case Discover:
+		r.format = format
+	case X9100ascii:
+		r.format = format
+		r.scanner.Split(scanVariableLengthLines)
+	}
+}
+
+// ScanVariableLengthLines will return lines from imagecashletter file based on encoded line length
+// This implements bufio.SplitFunc
+func scanVariableLengthLines(data []byte, atEOF bool) (advance int, token []byte, err error) {
+	// nothing to scan
+	if atEOF && len(data) == 0 {
+		return 0, nil, nil
+	}
+
+	// line length can be variable
+	// use the 4 control bytes at the beginning of a line to determine its length
+	ctrl := data[0:4]
+	dataLen := int(binary.BigEndian.Uint32(ctrl))
+	lineLen := 4 + dataLen
+
+	// the last calculated line is expected to match the remaining bytes
+	if atEOF && lineLen != len(data) {
+		return len(data), data, io.ErrUnexpectedEOF
+	}
+
+	// return line while accounting for control bytes
+	if lineLen <= len(data) {
+		return lineLen, data[4:lineLen], nil
+	}
+
+	// request more data.
+	return 0, nil, nil
 }
 
 // Read reads each line of the imagecashletter file and defines which parser to use based
