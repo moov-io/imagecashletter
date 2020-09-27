@@ -33,7 +33,7 @@ type Reader struct {
 	scanner *bufio.Scanner
 	// file is ach.file model being built as r is parsed.
 	File File
-	// format in which to read file with
+	// format in which to read file
 	format Format
 	// line is the current line being parsed from the input r
 	line string
@@ -72,16 +72,6 @@ func (r *Reader) addCurrentRoutingNumberSummary(rns *RoutingNumberSummary) {
 	r.currentCashLetter.currentRoutingNumberSummary = rns
 }
 
-// Format standard of X9.37 specification used to parse file
-type Format uint32
-
-const (
-	// Discover format
-	Discover Format = iota
-	//X9100ascii X9.100 microformat in ASCII
-	X9100ascii
-)
-
 // NewReader returns a new ACH Reader that reads from r.
 func NewReader(r io.Reader) *Reader {
 	f := NewFile()
@@ -97,7 +87,7 @@ func (r *Reader) SetFormat(format Format) {
 	switch format {
 	case Discover:
 		r.format = format
-	case X9100ascii:
+	case DSTU:
 		r.format = format
 		r.scanner.Split(scanVariableLengthLines)
 	}
@@ -133,7 +123,7 @@ func scanVariableLengthLines(data []byte, atEOF bool) (advance int, token []byte
 
 // Read reads each line of the imagecashletter file and defines which parser to use based
 // on the first character of each line. It also enforces imagecashletter formatting rules and returns
-// the appropriate error if issues are found.  It supports EBCDIC and ASCII
+// the appropriate error if issues are found.
 func (r *Reader) Read() (File, error) {
 	r.lineNum = 0
 	// read through the entire file

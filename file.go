@@ -77,6 +77,16 @@ func (e *FileError) Error() string {
 	return fmt.Sprintf("%s %s", e.FieldName, e.Msg)
 }
 
+// Format standard of X9.37 specification used to parse file
+type Format uint32
+
+const (
+	// Discover format
+	Discover Format = iota
+	//DSTU microformat as defined https://www.frbservices.org/assets/financial-services/check/setup/frb-x937-standards-reference.pdf
+	DSTU
+)
+
 // File is an imagecashletter file
 type File struct {
 	// ID is a client defined string used as a reference to this record
