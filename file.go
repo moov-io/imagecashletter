@@ -187,8 +187,6 @@ func (f *File) Create() error {
 	fileTotalRecordCount := 2
 	fileTotalItemCount := 0
 	fileTotalAmount := 0
-	cashLetterRecordCount := 0
-	bundleRecordCount := 0
 	creditIndicator := 0
 
 	// CashLetters
@@ -197,12 +195,11 @@ func (f *File) Create() error {
 		if err := cl.Validate(); err != nil {
 			return err
 		}
-		cashLetterRecordCount = cashLetterRecordCount + 2
-
-		fileTotalItemCount = fileTotalItemCount + len(cl.GetCreditItems())
+		// add 2 for each cashletter header/control
+		fileTotalRecordCount = fileTotalRecordCount + 2
 
 		if len(cl.GetCreditItems()) > 0 {
-			fileTotalItemCount = fileTotalItemCount + len(cl.GetCreditItems())
+			fileTotalRecordCount = fileTotalRecordCount + len(cl.GetCreditItems())
 			creditIndicator = 1
 		}
 
@@ -213,28 +210,31 @@ func (f *File) Create() error {
 				return err
 			}
 
-			bundleRecordCount = bundleRecordCount + 2
+			// add 2 for each bundle header/control
+			fileTotalRecordCount = fileTotalRecordCount + 2
 
 			// Check Items
 			for _, cd := range b.Checks {
-
 				fileTotalItemCount = fileTotalItemCount + 1
-				fileTotalItemCount = fileTotalItemCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
-				fileTotalItemCount = fileTotalItemCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
+
+				fileTotalRecordCount = fileTotalRecordCount + 1
+				fileTotalRecordCount = fileTotalRecordCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
+				fileTotalRecordCount = fileTotalRecordCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
+
 				fileTotalAmount = fileTotalAmount + cd.ItemAmount
 			}
 			// Returns Items
 			for _, rd := range b.Returns {
-
 				fileTotalItemCount = fileTotalItemCount + 1
-				fileTotalItemCount = fileTotalItemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC) + len(rd.ReturnDetailAddendumD)
-				fileTotalItemCount = fileTotalItemCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
+
+				fileTotalRecordCount = fileTotalRecordCount + 1
+				fileTotalRecordCount = fileTotalRecordCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC) + len(rd.ReturnDetailAddendumD)
+				fileTotalRecordCount = fileTotalRecordCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
+
 				fileTotalAmount = fileTotalAmount + rd.ItemAmount
 			}
 		}
 	}
-
-	fileTotalRecordCount = fileTotalRecordCount + cashLetterRecordCount + bundleRecordCount + fileTotalItemCount
 
 	// create FileControl from calculated values
 	fc := NewFileControl()

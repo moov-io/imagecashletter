@@ -154,8 +154,6 @@ func (cl *CashLetter) build() error {
 			cdSequenceNumber++
 
 			cashLetterItemsCount = cashLetterItemsCount + 1
-			cashLetterItemsCount = cashLetterItemsCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
-			cashLetterItemsCount = cashLetterItemsCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
 			cashLetterTotalAmount = cashLetterTotalAmount + cd.ItemAmount
 			cashLetterImagesCount = cashLetterImagesCount + len(cd.ImageViewDetail)
 		}
@@ -193,8 +191,6 @@ func (cl *CashLetter) build() error {
 			rdSequenceNumber++
 
 			cashLetterItemsCount = cashLetterItemsCount + 1
-			cashLetterItemsCount = cashLetterItemsCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC) + len(rd.ReturnDetailAddendumD)
-			cashLetterItemsCount = cashLetterItemsCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
 			cashLetterTotalAmount = cashLetterTotalAmount + rd.ItemAmount
 			cashLetterImagesCount = cashLetterImagesCount + len(rd.ImageViewDetail)
 		}
