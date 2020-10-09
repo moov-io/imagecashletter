@@ -6,7 +6,6 @@ package imagecashletter
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -291,7 +290,6 @@ func (bh *BundleHeader) reservedField() string {
 
 // SetBundleSequenceNumber sets BundleSequenceNumber
 func (bh *BundleHeader) SetBundleSequenceNumber(seq int) string {
-	bundleSequence := strconv.Itoa(seq)
-	bh.BundleSequenceNumber = bundleSequence
+	bh.BundleSequenceNumber = bh.numericField(seq, 4)
 	return bh.BundleSequenceNumber
 }

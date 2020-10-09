@@ -6,7 +6,6 @@ package imagecashletter
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"unicode/utf8"
 )
@@ -452,7 +451,6 @@ func (cd *CheckDetail) GetImageViewAnalysis() []ImageViewAnalysis {
 
 // SetEceInstitutionItemSequenceNumber sets EceInstitutionItemSequenceNumber
 func (cd *CheckDetail) SetEceInstitutionItemSequenceNumber(seq int) string {
-	itemSequence := strconv.Itoa(seq)
-	cd.EceInstitutionItemSequenceNumber = itemSequence
+	cd.EceInstitutionItemSequenceNumber = cd.numericField(seq, 15)
 	return cd.EceInstitutionItemSequenceNumber
 }
