@@ -64,14 +64,18 @@ func TestICLWrite(t *testing.T) {
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.AddBundle(bundle)
 	cl.AddBundle(returnBundle)
-	cl.Create()
+	if err := cl.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
 	file.AddCashLetter(cl)
 
 	clTwo := NewCashLetter(mockCashLetterHeader())
 	clTwo.CashLetterHeader.CashLetterID = "A2"
 	clTwo.AddBundle(bundle)
 	clTwo.AddBundle(returnBundle)
-	clTwo.Create()
+	if err := clTwo.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
 	file.AddCashLetter(clTwo)
 
 	// Create file
@@ -138,14 +142,18 @@ func TestICLWriteCreditItem(t *testing.T) {
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.AddCreditItem(ci)
 	cl.AddBundle(bundle)
-	cl.Create()
+	if err := cl.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
 	file.AddCashLetter(cl)
 
 	clTwo := NewCashLetter(mockCashLetterHeader())
 	clTwo.CashLetterHeader.CashLetterID = "A2"
 	clTwo.AddBundle(bundle)
 
-	clTwo.Create()
+	if err := clTwo.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
 	file.AddCashLetter(clTwo)
 
 	// Create file
@@ -202,7 +210,9 @@ func TestICLWriteRoutingNumber(t *testing.T) {
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.AddBundle(bundle)
 	cl.AddRoutingNumberSummary(rns)
-	cl.Create()
+	if err := cl.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
 	file.AddCashLetter(cl)
 
 	// Create file
