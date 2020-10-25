@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+
+	"github.com/gdamore/encoding"
 )
 
 // ParseError is returned for parsing reader errors.
@@ -33,8 +35,9 @@ type Reader struct {
 	scanner *bufio.Scanner
 	// file is ach.file model being built as r is parsed.
 	File File
-	// format in which to read file
-	format Format
+	// func used to decode line to desired encoding ie. ASCII,EBCDIC
+	decodeLine     DecodeLineFn
+	ebcdicEncoding bool
 	// line is the current line being parsed from the input r
 	line string
 	// currentCashLetter is the current CashLetter being parsed
@@ -73,52 +76,79 @@ func (r *Reader) addCurrentRoutingNumberSummary(rns *RoutingNumberSummary) {
 }
 
 // NewReader returns a new ACH Reader that reads from r.
-func NewReader(r io.Reader) *Reader {
+func NewReader(r io.Reader, opts ...ReaderOption) *Reader {
 	f := NewFile()
 	f.Control = FileControl{}
-	return &Reader{
-		File:    *f,
-		scanner: bufio.NewScanner(r),
+	reader := &Reader{
+		File:       *f,
+		scanner:    bufio.NewScanner(r),
+		decodeLine: Passthrough,
 	}
+	for _, opt := range opts {
+		opt(reader)
+	}
+	return reader
 }
 
-// SetFormat of imagecashletter file
-func (r *Reader) SetFormat(format Format) {
-	switch format {
-	case Discover:
-		r.format = format
-	case DSTU:
-		r.format = format
+// DecodeLineFn is used to decode a scanned line into desired encoding.
+// Depending on X9 spec, cashletter could be encoded as ASCII or EBCDIC
+type DecodeLineFn func(lineIn string) (lineOut string)
+
+// Passthrough will return line as is
+func Passthrough(lineIn string) (lineOut string) {
+	return lineIn
+}
+
+// DecodeEBCDIC will decode a line from EBCDIC-0037 to UTF-8
+func DecodeEBCDIC(lineIn string) (lineOut string) {
+	lineOut, err := encoding.EBCDIC.NewDecoder().String(lineIn)
+	if err != nil {
+		fmt.Printf("Error decoding '%X' as EBCDIC: %v\n", lineIn, err)
+	}
+	return lineOut
+}
+
+// ReaderOption can be used to change default behavior of Reader
+type ReaderOption func(*Reader)
+
+//ReadVariableLineLengthOption allows Reader to split imagecashletter files based on encoded line lengths
+func ReadVariableLineLengthOption() ReaderOption {
+	scanVariableLengthLines := func(data []byte, atEOF bool) (advance int, token []byte, err error) {
+		// nothing to scan
+		if atEOF && len(data) == 0 {
+			return 0, nil, nil
+		}
+
+		// line length can be variable
+		// use the 4 control bytes at the beginning of a line to determine its length
+		ctrl := data[0:4]
+		dataLen := int(binary.BigEndian.Uint32(ctrl))
+		lineLen := 4 + dataLen
+
+		// the last calculated line is expected to match the remaining bytes
+		if atEOF && lineLen != len(data) {
+			return len(data), data, io.ErrUnexpectedEOF
+		}
+
+		// return line while accounting for control bytes
+		if lineLen <= len(data) {
+			return lineLen, data[4:lineLen], nil
+		}
+
+		// request more data.
+		return 0, nil, nil
+	}
+
+	return func(r *Reader) {
 		r.scanner.Split(scanVariableLengthLines)
 	}
 }
 
-// ScanVariableLengthLines will return lines from imagecashletter file based on encoded line length
-// This implements bufio.SplitFunc
-func scanVariableLengthLines(data []byte, atEOF bool) (advance int, token []byte, err error) {
-	// nothing to scan
-	if atEOF && len(data) == 0 {
-		return 0, nil, nil
+//ReadEbcdicEncodingOption allows Reader to decode scanned lines from EBCDIC to UTF-8
+func ReadEbcdicEncodingOption() ReaderOption {
+	return func(r *Reader) {
+		r.decodeLine = DecodeEBCDIC
 	}
-
-	// line length can be variable
-	// use the 4 control bytes at the beginning of a line to determine its length
-	ctrl := data[0:4]
-	dataLen := int(binary.BigEndian.Uint32(ctrl))
-	lineLen := 4 + dataLen
-
-	// the last calculated line is expected to match the remaining bytes
-	if atEOF && lineLen != len(data) {
-		return len(data), data, io.ErrUnexpectedEOF
-	}
-
-	// return line while accounting for control bytes
-	if lineLen <= len(data) {
-		return lineLen, data[4:lineLen], nil
-	}
-
-	// request more data.
-	return 0, nil, nil
 }
 
 // Read reads each line of the imagecashletter file and defines which parser to use based
@@ -128,17 +158,16 @@ func (r *Reader) Read() (File, error) {
 	r.lineNum = 0
 	// read through the entire file
 	for r.scanner.Scan() {
-		line := r.scanner.Text()
+		r.line = r.scanner.Text()
 		r.lineNum++
 
-		lineLength := len(line)
+		lineLength := len(r.line)
 
 		if lineLength < 80 {
 			msg := fmt.Sprintf(msgRecordLength, lineLength)
 			err := &FileError{FieldName: "RecordLength", Value: strconv.Itoa(lineLength), Msg: msg}
 			return r.File, r.error(err)
 		}
-		r.line = line
 		if err := r.parseLine(); err != nil {
 			return r.File, err
 		}
@@ -158,71 +187,71 @@ func (r *Reader) Read() (File, error) {
 
 func (r *Reader) parseLine() error {
 	switch r.line[:2] {
-	case fileHeaderPos:
+	case fileHeaderPos, fileHeaderEbcPos:
 		if err := r.parseFileHeader(); err != nil {
 			return err
 		}
-	case cashLetterHeaderPos:
+	case cashLetterHeaderPos, cashLetterHeaderEbcPos:
 		if err := r.parseCashLetterHeader(); err != nil {
 			return err
 		}
-	case bundleHeaderPos:
+	case bundleHeaderPos, bundleHeaderEbcPos:
 		if err := r.parseBundleHeader(); err != nil {
 			return err
 		}
-	case checkDetailPos:
+	case checkDetailPos, checkDetailEbcPos:
 		if err := r.parseCheckDetail(); err != nil {
 			return err
 		}
-	case checkDetailAddendumAPos:
+	case checkDetailAddendumAPos, checkDetailAddendumAEbcPos:
 		if err := r.parseCheckDetailAddendumA(); err != nil {
 			return err
 		}
-	case checkDetailAddendumBPos:
+	case checkDetailAddendumBPos, checkDetailAddendumBEbcPos:
 		if err := r.parseCheckDetailAddendumB(); err != nil {
 			return err
 		}
-	case checkDetailAddendumCPos:
+	case checkDetailAddendumCPos, checkDetailAddendumCEbcPos:
 		if err := r.parseCheckDetailAddendumC(); err != nil {
 			return err
 		}
-	case imageViewDetailPos:
+	case imageViewDetailPos, imageViewDetailEbcPos:
 		if err := r.parseImageViewDetail(); err != nil {
 			return err
 		}
-	case imageViewDataPos:
+	case imageViewDataPos, imageViewDataEbcPos:
 		if err := r.parseImageViewData(); err != nil {
 			return err
 		}
-	case imageViewAnalysisPos:
+	case imageViewAnalysisPos, imageViewAnalysisEbcPos:
 		if err := r.parseImageViewAnalysis(); err != nil {
 			return err
 		}
-	case returnDetailPos:
+	case returnDetailPos, returnDetailEbcPos:
 		if err := r.parseReturnDetail(); err != nil {
 			return err
 		}
-	case returnAddendumAPos:
+	case returnAddendumAPos, returnAddendumAPEbcos:
 		if err := r.parseReturnDetailAddendumA(); err != nil {
 			return err
 		}
-	case returnAddendumBPos:
+	case returnAddendumBPos, returnAddendumBEbcPos:
 		if err := r.parseReturnDetailAddendumB(); err != nil {
 			return err
 		}
-	case returnAddendumCPos:
+	case returnAddendumCPos, returnAddendumCEbcPos:
 		if err := r.parseReturnDetailAddendumC(); err != nil {
 			return err
 		}
-	case returnAddendumDPos:
+	case returnAddendumDPos, returnAddendumDEbcPos:
 		if err := r.parseReturnDetailAddendumD(); err != nil {
 			return err
 		}
-	case creditItemPos:
+	case creditItemPos, creditItemEbcPos:
 		if err := r.parseCreditItem(); err != nil {
 			return err
 		}
-	case bundleControlPos:
+	case bundleControlPos, bundleControlEbcPos:
 		if err := r.parseBundleControl(); err != nil {
 			return err
 		}
@@ -238,13 +267,13 @@ func (r *Reader) parseLine() error {
 			r.currentCashLetter.AddBundle(r.currentCashLetter.currentBundle)
 			r.currentCashLetter.currentBundle = new(Bundle)
 		}
-	case routingNumberSummaryPos:
+	case routingNumberSummaryPos, routingNumberSummaryEbcPos:
 		if err := r.parseRoutingNumberSummary(); err != nil {
 			return err
 		}
 		r.currentCashLetter.AddRoutingNumberSummary(r.currentCashLetter.currentRoutingNumberSummary)
 		r.currentCashLetter.currentRoutingNumberSummary = new(RoutingNumberSummary)
-	case cashLetterControlPos:
+	case cashLetterControlPos, cashLetterControlEbcPos:
 		if err := r.parseCashLetterControl(); err != nil {
 			return err
 		}
@@ -254,7 +283,7 @@ func (r *Reader) parseLine() error {
 		}
 		r.File.AddCashLetter(r.currentCashLetter)
 		r.currentCashLetter = CashLetter{}
-	case fileControlPos:
+	case fileControlPos, fileControlEbcPos:
 		if err := r.parseFileControl(); err != nil {
 			return err
 		}
@@ -272,7 +301,7 @@ func (r *Reader) parseFileHeader() error {
 		// There can only be one File Header per File
 		r.error(&FileError{Msg: msgFileHeader})
 	}
-	r.File.Header.Parse(r.line)
+	r.File.Header.Parse(r.decodeLine(r.line))
 	// Ensure valid FileHeader
 	if err := r.File.Header.Validate(); err != nil {
 		return r.error(err)
@@ -288,7 +317,7 @@ func (r *Reader) parseCashLetterHeader() error {
 		return r.error(&FileError{Msg: msgFileCashLetterInside})
 	}
 	clh := NewCashLetterHeader()
-	clh.Parse(r.line)
+	clh.Parse(r.decodeLine(r.line))
 	// Ensure we have a valid CashLetterHeader
 	if err := clh.Validate(); err != nil {
 		return r.error(err)
@@ -310,7 +339,7 @@ func (r *Reader) parseBundleHeader() error {
 	}
 	// Ensure we have a valid bundle header before building a bundle.
 	bh := NewBundleHeader()
-	bh.Parse(r.line)
+	bh.Parse(r.decodeLine(r.line))
 	if err := bh.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -328,7 +357,7 @@ func (r *Reader) parseCheckDetail() error {
 		return r.error(&FileError{Msg: msgFileBundleOutside})
 	}
 	cd := new(CheckDetail)
-	cd.Parse(r.line)
+	cd.Parse(r.decodeLine(r.line))
 	// Ensure valid CheckDetail
 	if err := cd.Validate(); err != nil {
 		return r.error(err)
@@ -348,7 +377,7 @@ func (r *Reader) parseCheckDetailAddendumA() error {
 		return r.error(&FileError{FieldName: "CheckDetailAddendumA", Msg: msg})
 	}
 	cdAddendumA := NewCheckDetailAddendumA()
-	cdAddendumA.Parse(r.line)
+	cdAddendumA.Parse(r.decodeLine(r.line))
 	if err := cdAddendumA.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -366,7 +395,7 @@ func (r *Reader) parseCheckDetailAddendumB() error {
 		return r.error(&FileError{FieldName: "CheckDetailAddendumB", Msg: msg})
 	}
 	cdAddendumB := NewCheckDetailAddendumB()
-	cdAddendumB.Parse(r.line)
+	cdAddendumB.Parse(r.decodeLine(r.line))
 	if err := cdAddendumB.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -383,7 +412,7 @@ func (r *Reader) parseCheckDetailAddendumC() error {
 		return r.error(&FileError{FieldName: "CheckDetailAddendumC", Msg: msg})
 	}
 	cdAddendumC := NewCheckDetailAddendumC()
-	cdAddendumC.Parse(r.line)
+	cdAddendumC.Parse(r.decodeLine(r.line))
 	if err := cdAddendumC.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -399,7 +428,7 @@ func (r *Reader) parseReturnDetail() error {
 		return r.error(&FileError{Msg: msgFileBundleOutside})
 	}
 	rd := new(ReturnDetail)
-	rd.Parse(r.line)
+	rd.Parse(r.decodeLine(r.line))
 	if err := rd.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -417,7 +446,7 @@ func (r *Reader) parseReturnDetailAddendumA() error {
 		return r.error(&FileError{FieldName: "ReturnDetailAddendumA", Msg: msg})
 	}
 	rdAddendumA := NewReturnDetailAddendumA()
-	rdAddendumA.Parse(r.line)
+	rdAddendumA.Parse(r.decodeLine(r.line))
 	if err := rdAddendumA.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -435,7 +464,7 @@ func (r *Reader) parseReturnDetailAddendumB() error {
 		return r.error(&FileError{FieldName: "ReturnDetailAddendumB", Msg: msg})
 	}
 	rdAddendumB := NewReturnDetailAddendumB()
-	rdAddendumB.Parse(r.line)
+	rdAddendumB.Parse(r.decodeLine(r.line))
 	if err := rdAddendumB.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -452,7 +481,7 @@ func (r *Reader) parseReturnDetailAddendumC() error {
 		return r.error(&FileError{FieldName: "ReturnDetailAddendumC", Msg: msg})
 	}
 	rdAddendumC := NewReturnDetailAddendumC()
-	rdAddendumC.Parse(r.line)
+	rdAddendumC.Parse(r.decodeLine(r.line))
 	if err := rdAddendumC.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -470,7 +499,7 @@ func (r *Reader) parseReturnDetailAddendumD() error {
 		return r.error(&FileError{FieldName: "ReturnDetailAddendumD", Msg: msg})
 	}
 	rdAddendumD := NewReturnDetailAddendumD()
-	rdAddendumD.Parse(r.line)
+	rdAddendumD.Parse(r.decodeLine(r.line))
 	if err := rdAddendumD.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -492,7 +521,7 @@ func (r *Reader) parseImageViewDetail() error {
 func (r *Reader) ImageViewDetail() error {
 	if r.currentCashLetter.currentBundle.GetChecks() != nil {
 		ivDetail := NewImageViewDetail()
-		ivDetail.Parse(r.line)
+		ivDetail.Parse(r.decodeLine(r.line))
 		if err := ivDetail.Validate(); err != nil {
 			return r.error(err)
 		}
@@ -501,7 +530,7 @@ func (r *Reader) ImageViewDetail() error {
 
 	} else if r.currentCashLetter.currentBundle.GetReturns() != nil {
 		ivDetail := NewImageViewDetail()
-		ivDetail.Parse(r.line)
+		ivDetail.Parse(r.decodeLine(r.line))
 		if err := ivDetail.Validate(); err != nil {
 			return r.error(err)
 		}
@@ -528,7 +557,7 @@ func (r *Reader) parseImageViewData() error {
 func (r *Reader) ImageViewData() error {
 	if r.currentCashLetter.currentBundle.GetChecks() != nil {
 		ivData := NewImageViewData()
-		ivData.Parse(r.line)
+		ivData.ParseAndDecode(r.line, r.decodeLine)
 		if err := ivData.Validate(); err != nil {
 			return r.error(err)
 		}
@@ -537,7 +566,7 @@ func (r *Reader) ImageViewData() error {
 
 	} else if r.currentCashLetter.currentBundle.GetReturns() != nil {
 		ivData := NewImageViewData()
-		ivData.Parse(r.line)
+		ivData.ParseAndDecode(r.line, r.decodeLine)
 		if err := ivData.Validate(); err != nil {
 			return r.error(err)
 		}
@@ -564,7 +593,7 @@ func (r *Reader) parseImageViewAnalysis() error {
 func (r *Reader) ImageViewAnalysis() error {
 	if r.currentCashLetter.currentBundle.GetChecks() != nil {
 		ivAnalysis := NewImageViewAnalysis()
-		ivAnalysis.Parse(r.line)
+		ivAnalysis.Parse(r.decodeLine(r.line))
 		if err := ivAnalysis.Validate(); err != nil {
 			return r.error(err)
 		}
@@ -573,7 +602,7 @@ func (r *Reader) ImageViewAnalysis() error {
 
 	} else if r.currentCashLetter.currentBundle.GetReturns() != nil {
 		ivAnalysis := NewImageViewAnalysis()
-		ivAnalysis.Parse(r.line)
+		ivAnalysis.Parse(r.decodeLine(r.line))
 		if err := ivAnalysis.Validate(); err != nil {
 			return r.error(err)
 		}
@@ -595,7 +624,7 @@ func (r *Reader) parseCreditItem() error {
 		return r.error(&FileError{Msg: msgFileCreditItem})
 	}
 	ci := new(CreditItem)
-	ci.Parse(r.line)
+	ci.Parse(r.decodeLine(r.line))
 	if err := ci.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -610,7 +639,7 @@ func (r *Reader) parseBundleControl() error {
 	if r.currentCashLetter.currentBundle == nil || r.currentCashLetter.currentBundle.BundleControl == nil {
 		return r.error(&FileError{Msg: msgFileBundleControl})
 	}
-	r.currentCashLetter.currentBundle.GetControl().Parse(r.line)
+	r.currentCashLetter.currentBundle.GetControl().Parse(r.decodeLine(r.line))
 	if err := r.currentCashLetter.currentBundle.GetControl().Validate(); err != nil {
 		return r.error(err)
 	}
@@ -625,7 +654,7 @@ func (r *Reader) parseRoutingNumberSummary() error {
 	}
 
 	rns := NewRoutingNumberSummary()
-	rns.Parse(r.line)
+	rns.Parse(r.decodeLine(r.line))
 	if err := rns.Validate(); err != nil {
 		return r.error(err)
 	}
@@ -639,7 +668,7 @@ func (r *Reader) parseCashLetterControl() error {
 		// CashLetterControl without a current CashLetter
 		return r.error(&FileError{Msg: msgFileCashLetterControl})
 	}
-	r.currentCashLetter.GetControl().Parse(r.line)
+	r.currentCashLetter.GetControl().Parse(r.decodeLine(r.line))
 	// Ensure valid CashLetterControl
 	if err := r.currentCashLetter.GetControl().Validate(); err != nil {
 		return r.error(err)
@@ -654,7 +683,7 @@ func (r *Reader) parseFileControl() error {
 		// Can be only one file control per file
 		return r.error(&FileError{Msg: msgFileControl})
 	}
-	r.File.Control.Parse(r.line)
+	r.File.Control.Parse(r.decodeLine(r.line))
 	// Ensure valid FileControl
 	if err := r.File.Control.Validate(); err != nil {
 		return r.error(err)

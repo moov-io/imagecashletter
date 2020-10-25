@@ -47,6 +47,30 @@ const (
 	// boxSummaryPos           = "75"
 )
 
+// Record Types in EBCDIC
+const (
+	fileHeaderEbcPos           = "\xF0\xF1"
+	cashLetterHeaderEbcPos     = "\xF1\xF0"
+	bundleHeaderEbcPos         = "\xF2\xF0"
+	checkDetailEbcPos          = "\xF2\xF5"
+	checkDetailAddendumAEbcPos = "\xF2\xF6"
+	checkDetailAddendumBEbcPos = "\xF2\xF7"
+	checkDetailAddendumCEbcPos = "\xF2\xF8"
+	returnDetailEbcPos         = "\xF3\xF1"
+	returnAddendumAPEbcos      = "\xF3\xF2"
+	returnAddendumBEbcPos      = "\xF3\xF3"
+	returnAddendumCEbcPos      = "\xF3\xF4"
+	returnAddendumDEbcPos      = "\xF3\xF5"
+	imageViewDetailEbcPos      = "\xF5\xF0"
+	imageViewDataEbcPos        = "\xF5\xF2"
+	imageViewAnalysisEbcPos    = "\xF5\xF4"
+	creditItemEbcPos           = "\xF6\xF2"
+	bundleControlEbcPos        = "\xF7\xF0"
+	routingNumberSummaryEbcPos = "\xF8\xF5"
+	cashLetterControlEbcPos    = "\xF9\xF0"
+	fileControlEbcPos          = "\xF9\xF9"
+)
+
 // Errors strings specific to parsing a Batch container
 var (
 	//msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
