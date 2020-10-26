@@ -36,8 +36,7 @@ type Reader struct {
 	// file is ach.file model being built as r is parsed.
 	File File
 	// func used to decode line to desired encoding ie. ASCII,EBCDIC
-	decodeLine     DecodeLineFn
-	ebcdicEncoding bool
+	decodeLine DecodeLineFn
 	// line is the current line being parsed from the input r
 	line string
 	// currentCashLetter is the current CashLetter being parsed
