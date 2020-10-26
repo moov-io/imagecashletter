@@ -226,6 +226,10 @@ func (ivData *ImageViewData) Parse(record string) {
 
 // String writes the ImageViewData struct to a string.
 func (ivData *ImageViewData) String() string {
+	return ivData.toString(true)
+}
+
+func (ivData *ImageViewData) toString(inclImage bool) string {
 	var buf strings.Builder
 	buf.Grow(105)
 	buf.WriteString(ivData.recordType)
@@ -248,8 +252,10 @@ func (ivData *ImageViewData) String() string {
 	buf.Grow(ivData.parseNumField(ivData.LengthDigitalSignature))
 	buf.WriteString(ivData.DigitalSignatureField())
 	buf.WriteString(ivData.LengthImageDataField())
-	buf.Grow(ivData.parseNumField(ivData.LengthImageData))
-	buf.WriteString(ivData.ImageDataField())
+	if inclImage {
+		buf.Grow(ivData.parseNumField(ivData.LengthImageData))
+		buf.WriteString(ivData.ImageDataField())
+	}
 	return buf.String()
 }
 
