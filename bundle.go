@@ -118,8 +118,6 @@ func (b *Bundle) build() error {
 		}
 
 		itemCount = itemCount + 1
-		itemCount = itemCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
-		itemCount = itemCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
 		bundleTotalAmount = bundleTotalAmount + cd.ItemAmount
 		if cd.MICRValidIndicator == 1 {
 			micrValidTotalAmount = micrValidTotalAmount + cd.ItemAmount
@@ -136,8 +134,6 @@ func (b *Bundle) build() error {
 			return err
 		}
 		itemCount = itemCount + 1
-		itemCount = itemCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC) + len(rd.ReturnDetailAddendumD)
-		itemCount = itemCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
 		bundleTotalAmount = bundleTotalAmount + rd.ItemAmount
 		bundleImagesCount = bundleImagesCount + len(rd.ImageViewDetail)
 	}

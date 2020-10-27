@@ -6,7 +6,6 @@ package imagecashletter
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -307,7 +306,6 @@ func (cdAddendumA *CheckDetailAddendumA) reservedField() string {
 
 // SetBOFDItemSequenceNumber sets BOFDItemSequenceNumber
 func (cdAddendumA *CheckDetailAddendumA) SetBOFDItemSequenceNumber(seq int) string {
-	itemSequence := strconv.Itoa(seq)
-	cdAddendumA.BOFDItemSequenceNumber = itemSequence
+	cdAddendumA.BOFDItemSequenceNumber = cdAddendumA.numericField(seq, 15)
 	return cdAddendumA.BOFDItemSequenceNumber
 }

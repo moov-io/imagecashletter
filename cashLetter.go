@@ -4,7 +4,9 @@
 
 package imagecashletter
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // CashLetterError is an Error that describes CashLetter validation issues
 type CashLetterError struct {
@@ -122,11 +124,17 @@ func (cl *CashLetter) build() error {
 		// Set Bundle Sequence Numbers
 		b.BundleHeader.SetBundleSequenceNumber(bundleSequenceNumber)
 
+		// Sequence  Number
+		cdSequenceNumber := 1
+
 		// Check Items
 		for _, cd := range b.Checks {
 
-			// Sequence  Number
-			cdSequenceNumber := 1
+			if cd.EceInstitutionItemSequenceNumber != "" {
+				i := cd.parseNumField(cd.EceInstitutionItemSequenceNumber)
+				cdSequenceNumber = i
+			}
+
 			// Record Numbers
 			cdAddendumARecordNumber := 1
 			cdAddendumCRecordNumber := 1
@@ -154,8 +162,6 @@ func (cl *CashLetter) build() error {
 			cdSequenceNumber++
 
 			cashLetterItemsCount = cashLetterItemsCount + 1
-			cashLetterItemsCount = cashLetterItemsCount + len(cd.CheckDetailAddendumA) + len(cd.CheckDetailAddendumB) + len(cd.CheckDetailAddendumC)
-			cashLetterItemsCount = cashLetterItemsCount + len(cd.ImageViewDetail) + len(cd.ImageViewData) + len(cd.ImageViewAnalysis)
 			cashLetterTotalAmount = cashLetterTotalAmount + cd.ItemAmount
 			cashLetterImagesCount = cashLetterImagesCount + len(cd.ImageViewDetail)
 		}
@@ -193,8 +199,6 @@ func (cl *CashLetter) build() error {
 			rdSequenceNumber++
 
 			cashLetterItemsCount = cashLetterItemsCount + 1
-			cashLetterItemsCount = cashLetterItemsCount + len(rd.ReturnDetailAddendumA) + len(rd.ReturnDetailAddendumB) + len(rd.ReturnDetailAddendumC) + len(rd.ReturnDetailAddendumD)
-			cashLetterItemsCount = cashLetterItemsCount + len(rd.ImageViewDetail) + len(rd.ImageViewData) + len(rd.ImageViewAnalysis)
 			cashLetterTotalAmount = cashLetterTotalAmount + rd.ItemAmount
 			cashLetterImagesCount = cashLetterImagesCount + len(rd.ImageViewDetail)
 		}
@@ -216,7 +220,11 @@ func (cl *CashLetter) build() error {
 	clc.CashLetterItemsCount = cashLetterItemsCount
 	clc.CashLetterTotalAmount = cashLetterTotalAmount
 	clc.CashLetterImagesCount = cashLetterImagesCount
-	clc.ECEInstitutionName = cl.GetHeader().ECEInstitutionRoutingNumber
+	if cl.CashLetterControl.ECEInstitutionName != "" {
+		clc.ECEInstitutionName = cl.CashLetterControl.ECEInstitutionName
+	} else {
+		clc.ECEInstitutionName = cl.GetHeader().ECEInstitutionRoutingNumber
+	}
 	clc.CreditTotalIndicator = creditIndicator
 	cl.CashLetterControl = clc
 	return nil

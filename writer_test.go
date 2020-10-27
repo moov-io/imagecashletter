@@ -7,6 +7,7 @@ package imagecashletter
 import (
 	"bytes"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -63,14 +64,18 @@ func TestICLWrite(t *testing.T) {
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.AddBundle(bundle)
 	cl.AddBundle(returnBundle)
-	cl.Create()
+	if err := cl.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
 	file.AddCashLetter(cl)
 
 	clTwo := NewCashLetter(mockCashLetterHeader())
 	clTwo.CashLetterHeader.CashLetterID = "A2"
 	clTwo.AddBundle(bundle)
 	clTwo.AddBundle(returnBundle)
-	clTwo.Create()
+	if err := clTwo.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
 	file.AddCashLetter(clTwo)
 
 	// Create file
@@ -137,14 +142,18 @@ func TestICLWriteCreditItem(t *testing.T) {
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.AddCreditItem(ci)
 	cl.AddBundle(bundle)
-	cl.Create()
+	if err := cl.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
 	file.AddCashLetter(cl)
 
 	clTwo := NewCashLetter(mockCashLetterHeader())
 	clTwo.CashLetterHeader.CashLetterID = "A2"
 	clTwo.AddBundle(bundle)
 
-	clTwo.Create()
+	if err := clTwo.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
 	file.AddCashLetter(clTwo)
 
 	// Create file
@@ -201,7 +210,9 @@ func TestICLWriteRoutingNumber(t *testing.T) {
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.AddBundle(bundle)
 	cl.AddRoutingNumberSummary(rns)
-	cl.Create()
+	if err := cl.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
 	file.AddCashLetter(cl)
 
 	// Create file
@@ -235,4 +246,39 @@ func TestICLWriteRoutingNumber(t *testing.T) {
 		t.Errorf("%T: %s", err, err)
 	}
 
+}
+
+func TestICLWrite_DSTU(t *testing.T) {
+	fd, err := os.Open(filepath.Join("test", "testdata", "valid-dstu.x937"))
+	if err != nil {
+		t.Fatalf("Can not open local file: %s: \n", err)
+	}
+	defer fd.Close()
+
+	fdInfo, err := fd.Stat()
+	if err != nil {
+		t.Errorf("Could not stat file: %s: \n", err)
+	}
+
+	r := NewReader(fd)
+	r.SetFormat(DSTU)
+	ICLFile, err := r.Read()
+	if err != nil {
+		t.Errorf("Issue reading file: %+v \n", err)
+	}
+	// ensure we have a validated file structure
+	if ICLFile.Validate(); err != nil {
+		t.Errorf("Could not validate entire read file: %v", err)
+	}
+
+	b := &bytes.Buffer{}
+	w := NewWriter(b)
+	w.SetFormat(DSTU)
+	if err := w.Write(&ICLFile); err != nil {
+		t.Errorf("Issue writing ICL: %+v \n", err)
+	}
+
+	if b.Len() != int(fdInfo.Size()) {
+		t.Errorf("File size does not match")
+	}
 }
