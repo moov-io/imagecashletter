@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -91,6 +92,20 @@ func (clc *CashLetterControl) Parse(record string) {
 	clc.CreditTotalIndicator = clc.parseNumField(record[65:66])
 	// 67-80
 	clc.reserved = "              "
+}
+
+func (clc *CashLetterControl) UnmarshalJSON(data []byte) error {
+	type Alias CashLetterControl
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(clc),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	clc.setRecordType()
+	return nil
 }
 
 // String writes the CashLetterControl struct to a string.

@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"unicode/utf8"
@@ -64,6 +65,20 @@ func (rns *RoutingNumberSummary) Parse(record string) {
 	rns.UserField = rns.parseStringField(record[31:55])
 	// 56-80
 	rns.reserved = "                         "
+}
+
+func (rns *RoutingNumberSummary) UnmarshalJSON(data []byte) error {
+	type Alias RoutingNumberSummary
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(rns),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	rns.setRecordType()
+	return nil
 }
 
 // String writes the ImageViewDetail struct to a string.

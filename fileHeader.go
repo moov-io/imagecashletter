@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -141,6 +142,20 @@ func (fh *FileHeader) Parse(record string) {
 	fh.UserField = fh.parseStringField(record[75:79])
 	// 80-80
 	fh.CompanionDocumentIndicator = fh.parseStringField(record[79:80])
+}
+
+func (fh *FileHeader) UnmarshalJSON(data []byte) error {
+	type Alias FileHeader
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(fh),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	fh.setRecordType()
+	return nil
 }
 
 // String writes the FileHeader struct to a string.

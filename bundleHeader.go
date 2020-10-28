@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -134,6 +135,20 @@ func (bh *BundleHeader) Parse(record string) {
 	bh.UserField = bh.parseStringField(record[63:68])
 	// 69-80
 	bh.reserved = "            "
+}
+
+func (bh *BundleHeader) UnmarshalJSON(data []byte) error {
+	type Alias BundleHeader
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(bh),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	bh.setRecordType()
+	return nil
 }
 
 // String writes the BundleHeader struct to a string.

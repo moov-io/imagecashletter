@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"unicode/utf8"
@@ -82,6 +83,20 @@ func (bc *BundleControl) Parse(record string) {
 	// 57-80
 	bc.reserved = "                        "
 
+}
+
+func (bc *BundleControl) UnmarshalJSON(data []byte) error {
+	type Alias BundleControl
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(bc),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	bc.setRecordType()
+	return nil
 }
 
 // String writes the BundleControl struct to a string.

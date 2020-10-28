@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -134,6 +135,20 @@ func (rdAddendumA *ReturnDetailAddendumA) Parse(record string) {
 	// 78-80
 	rdAddendumA.reserved = "   "
 
+}
+
+func (rdAddendumA *ReturnDetailAddendumA) UnmarshalJSON(data []byte) error {
+	type Alias ReturnDetailAddendumA
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(rdAddendumA),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	rdAddendumA.setRecordType()
+	return nil
 }
 
 // String writes the ReturnDetailAddendumA struct to a string.

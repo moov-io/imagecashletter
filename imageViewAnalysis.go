@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"unicode/utf8"
@@ -297,6 +298,20 @@ func (ivAnalysis *ImageViewAnalysis) Parse(record string) {
 	ivAnalysis.UserField = ivAnalysis.parseStringField(record[45:65])
 	// 66-80
 	ivAnalysis.reservedThree = "               "
+}
+
+func (ivAnalysis *ImageViewAnalysis) UnmarshalJSON(data []byte) error {
+	type Alias ImageViewAnalysis
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(ivAnalysis),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	ivAnalysis.setRecordType()
+	return nil
 }
 
 // String writes the ImageViewAnalysis struct to a string.

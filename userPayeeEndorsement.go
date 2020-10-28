@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -175,6 +176,20 @@ func (upe *UserPayeeEndorsement) Parse(record string) {
 	upe.EndorsementIndicator = upe.parseNumField(record[324:325])
 	// 326-335
 	upe.UserField = upe.parseStringField(record[325:335])
+}
+
+func (upe *UserPayeeEndorsement) UnmarshalJSON(data []byte) error {
+	type Alias UserPayeeEndorsement
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(upe),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	upe.setRecordType()
+	return nil
 }
 
 // String writes the UserPayeeEndorsement struct to a variable length string.

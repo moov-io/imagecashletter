@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -197,6 +198,20 @@ func (clh *CashLetterHeader) Parse(record string) {
 	clh.UserField = clh.parseStringField(record[78:79])
 	// 80-80
 	clh.reserved = " "
+}
+
+func (clh *CashLetterHeader) UnmarshalJSON(data []byte) error {
+	type Alias CashLetterHeader
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(clh),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	clh.setRecordType()
+	return nil
 }
 
 // String writes the CashLetterHeader struct to a string.

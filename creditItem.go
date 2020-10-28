@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"unicode/utf8"
@@ -158,6 +159,20 @@ func (ci *CreditItem) Parse(record string) {
 	ci.UserField = ci.parseStringField(record[80:96])
 	// 97-100
 	ci.reserved = "    "
+}
+
+func (ci *CreditItem) UnmarshalJSON(data []byte) error {
+	type Alias CreditItem
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(ci),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	ci.setRecordType()
+	return nil
 }
 
 // String writes the CreditItem struct to a variable length string.
