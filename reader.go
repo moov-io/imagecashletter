@@ -113,27 +113,25 @@ type ReaderOption func(*Reader)
 //ReadVariableLineLengthOption allows Reader to split imagecashletter files based on encoded line lengths
 func ReadVariableLineLengthOption() ReaderOption {
 	scanVariableLengthLines := func(data []byte, atEOF bool) (advance int, token []byte, err error) {
-		// nothing to scan
-		if atEOF && len(data) == 0 {
+		if len(data) < 4 && atEOF {
+			// we ran out of bytes and we're at the end of the file
+			return 0, nil, io.ErrUnexpectedEOF
+		} else if len(data) < 4 {
+			// we need at least the control bytes
 			return 0, nil, nil
 		}
-
 		// line length can be variable
 		// use the 4 control bytes at the beginning of a line to determine its length
 		ctrl := data[0:4]
 		dataLen := int(binary.BigEndian.Uint32(ctrl))
 		lineLen := 4 + dataLen
-
-		// the last calculated line is expected to match the remaining bytes
-		if atEOF && lineLen != len(data) {
-			return len(data), data, io.ErrUnexpectedEOF
-		}
-
-		// return line while accounting for control bytes
 		if lineLen <= len(data) {
+			// return line while accounting for control bytes
 			return lineLen, data[4:lineLen], nil
+		} else if lineLen > len(data) && atEOF {
+			// we need more data, but there is no more data to read
+			return 0, nil, io.ErrUnexpectedEOF
 		}
-
 		// request more data.
 		return 0, nil, nil
 	}
@@ -157,6 +155,11 @@ func (r *Reader) Read() (File, error) {
 	r.lineNum = 0
 	// read through the entire file
 	for r.scanner.Scan() {
+		if scanErr := r.scanner.Err(); scanErr != nil {
+			err := &FileError{FieldName: "LineNumber", Value: strconv.Itoa(r.lineNum), Msg: scanErr.Error()}
+			return r.File, r.error(err)
+		}
+
 		r.line = r.scanner.Text()
 		r.lineNum++
 
