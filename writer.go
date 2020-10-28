@@ -7,6 +7,7 @@ package imagecashletter
 import (
 	"bufio"
 	"encoding/binary"
+	"fmt"
 	"io"
 
 	"github.com/gdamore/encoding"
@@ -23,6 +24,7 @@ type Writer struct {
 	lineNum            int //current line being written
 	VariableLineLength bool
 	EbcdicEncoding     bool
+	CollateImageView   bool
 }
 
 // NewWriter returns a new Writer that writes to w.
@@ -55,6 +57,14 @@ func WriteEbcdicEncodingOption() WriterOption {
 	}
 }
 
+// WriteCollatedImageViewOption allows Writer to collate related ImageViewDetail, ImageViewData and ImageViewAnalysis record types
+// Follows DSTU microformat as defined https://www.frbservices.org/assets/financial-services/check/setup/frb-x937-standards-reference.pdf
+func WriteCollatedImageViewOption() WriterOption {
+	return func(w *Writer) {
+		w.CollateImageView = true
+	}
+}
+
 func (w *Writer) writeLine(record FileRecord) error {
 	line := record.String()
 	lineLength := len(line)
@@ -62,7 +72,9 @@ func (w *Writer) writeLine(record FileRecord) error {
 	if w.VariableLineLength {
 		ctrl := make([]byte, 4)
 		binary.BigEndian.PutUint32(ctrl, uint32(lineLength))
-		w.w.Write(ctrl)
+		if _, err := w.w.Write(ctrl); err != nil {
+			return err
+		}
 	}
 
 	if w.EbcdicEncoding {
@@ -72,23 +84,33 @@ func (w *Writer) writeLine(record FileRecord) error {
 			if err != nil {
 				return err
 			}
-			w.w.WriteString(encoded)
-			w.w.Write(ivData.ImageData)
+			if _, err := w.w.WriteString(encoded); err != nil {
+				return err
+			}
+			if _, err := w.w.Write(ivData.ImageData); err != nil {
+				return err
+			}
 		} else {
 			// no binary data in record, encode entire line
 			encoded, err := encoding.EBCDIC.NewEncoder().String(line)
 			if err != nil {
 				return err
 			}
-			w.w.WriteString(encoded)
+			if _, err := w.w.WriteString(encoded); err != nil {
+				return err
+			}
 		}
 	} else {
 		// ASCII encoding by default
-		w.w.WriteString(line)
+		if _, err := w.w.WriteString(line); err != nil {
+			return err
+		}
 	}
 
 	if !w.VariableLineLength {
-		w.w.WriteString("\n")
+		if _, err := w.w.WriteString("\n"); err != nil {
+			return err
+		}
 	}
 
 	w.lineNum++
@@ -183,7 +205,6 @@ func (w *Writer) writeCheckDetail(b *Bundle) error {
 		if err := w.writeCheckDetailAddendum(cd); err != nil {
 			return err
 		}
-		//w.lineNum++
 		if err := w.writeCheckImageView(cd); err != nil {
 			return err
 		}
@@ -213,21 +234,63 @@ func (w *Writer) writeCheckDetailAddendum(cd *CheckDetail) error {
 
 // writeCheckImageView writes ImageViews (Detail, Data, Analysis) to a CheckDetail
 func (w *Writer) writeCheckImageView(cd *CheckDetail) error {
-	for _, ivDetail := range cd.GetImageViewDetail() {
-		if err := w.writeLine(&ivDetail); err != nil {
-			return err
+
+	ivDetailSlice := cd.GetImageViewDetail()
+	ivDataSlice := cd.GetImageViewData()
+	ivAnalysisSlice := cd.GetImageViewAnalysis()
+
+	// TODO: Add validator to ensure that each imageViewDetail has a corresponding imageViewData and imageViewAnalysis
+	// for now enforce that all images have data and analysis or no images have data and analysis
+
+	if len(ivDataSlice) > 0 && len(ivDataSlice) != len(ivDetailSlice) {
+		// should be same number of imageViewData as imageViewDetail
+		msg := fmt.Sprintf(msgBundleImageDetailCount, len(ivDataSlice))
+		return &BundleError{FieldName: "ImageViewData", Msg: msg}
+	}
+
+	if len(ivAnalysisSlice) > 0 && len(ivAnalysisSlice) != len(ivDetailSlice) {
+		// should same number of imageViewAnalysis and imageViewDetail
+		msg := fmt.Sprintf(msgBundleImageDetailCount, len(ivAnalysisSlice))
+		return &BundleError{FieldName: "ImageViewAnalysis", Msg: msg}
+	}
+
+	if w.CollateImageView {
+		// FRB asks that imageViewDetail should immediately be followed by its corresponding data and analysis
+		for i, ivDetail := range ivDetailSlice {
+			if err := w.writeLine(&ivDetail); err != nil {
+				return err
+			}
+			if len(ivDataSlice) > 0 {
+				ivData := ivDataSlice[i]
+				if err := w.writeLine(&ivData); err != nil {
+					return err
+				}
+			}
+			if len(ivAnalysisSlice) > 0 {
+				ivAnalysis := ivAnalysisSlice[i]
+				if err := w.writeLine(&ivAnalysis); err != nil {
+					return err
+				}
+			}
+		}
+	} else {
+		for _, ivDetail := range ivDetailSlice {
+			if err := w.writeLine(&ivDetail); err != nil {
+				return err
+			}
+		}
+		for _, ivData := range ivDataSlice {
+			if err := w.writeLine(&ivData); err != nil {
+				return err
+			}
+		}
+		for _, ivAnalysis := range ivAnalysisSlice {
+			if err := w.writeLine(&ivAnalysis); err != nil {
+				return err
+			}
 		}
 	}
-	for _, ivData := range cd.GetImageViewData() {
-		if err := w.writeLine(&ivData); err != nil {
-			return err
-		}
-	}
-	for _, ivAnalysis := range cd.GetImageViewAnalysis() {
-		if err := w.writeLine(&ivAnalysis); err != nil {
-			return err
-		}
-	}
+
 	return nil
 }
 
