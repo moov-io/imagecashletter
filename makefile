@@ -47,7 +47,7 @@ else
 	CGO_ENABLED=1 GOOS=$(PLATFORM) go build -o bin/imagecashletter-$(PLATFORM)-amd64 github.com/moov-io/imagecashletter/cmd/server
 endif
 
-docker: clean docker-hub docker-fuzz docker-webui
+docker: clean docker-hub docker-fuzz docker-openshift docker-webui
 
 docker-hub:
 	docker build --pull -t moov/imagecashletter:$(VERSION) -f Dockerfile .

@@ -1,6 +1,6 @@
 FROM registry.access.redhat.com/ubi8/go-toolset as builder
 COPY . .
-RUN make build
+RUN make build-server
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal
 
