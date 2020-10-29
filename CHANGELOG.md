@@ -7,6 +7,7 @@ ADDITIONS
 - file: Allow File to be written as DTSU with control bytes dictating line lengths rather than line breaks.
 - imageViewData: add decode method for ImageData
 - imageViewData: attempt base64 decode when generating a file
+- server: pass `ReaderOption`/`WriterOption` for variable line lengths
 
 BUG FIXES
 
