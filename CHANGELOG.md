@@ -1,3 +1,31 @@
+## v0.5.0 (Unreleased)
+
+ADDITIONS
+
+- cmd/webui: initial setup with pretty JSON formatting example
+- file: Add support for writing EBCDIC
+- file: Allow File to be written as DTSU with control bytes dictating line lengths rather than line breaks.
+- imageViewData: add decode method for ImageData
+- imageViewData: attempt base64 decode when generating a file
+
+BUG FIXES
+
+- file: Do not overwrite institution sequence number if one already exists
+- file: populate recordType inside each record's JSON unmarshal
+- file: setup additional nil checks
+
+IMPROVEMENTS
+
+- api: add returnLocationRoutingNumber to BundleHeader
+- api: include missing imageViewDataSize
+- api: use a correct example timestamp
+
+BUILD
+
+- chore(deps): update golang docker tag to v1.15
+- chore(deps): update module gorilla/mux to v1.8.0
+- chore(deps): update module prometheus/client_golang to v1.7.1
+
 ## v0.4.3 (Released 2020-07-07)
 
 BUILD
