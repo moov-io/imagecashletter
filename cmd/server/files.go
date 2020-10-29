@@ -103,7 +103,7 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 				req = file
 			}
 		} else {
-			f, err := imagecashletter.NewReader(bytes.NewReader(bs)).Read()
+			f, err := imagecashletter.NewReader(bytes.NewReader(bs), imagecashletter.ReadVariableLineLengthOption()).Read()
 			if err != nil {
 				moovhttp.Problem(w, err)
 				return
@@ -227,7 +227,7 @@ func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc
 		logger.Log("files", fmt.Sprintf("rendering file=%s contents", fileId), "requestID", requestID)
 
 		w.Header().Set("Content-Type", "text/plain")
-		if err := imagecashletter.NewWriter(w).Write(file); err != nil {
+		if err := imagecashletter.NewWriter(w, imagecashletter.WriteVariableLineLengthOption()).Write(file); err != nil {
 			logger.Log("files", fmt.Sprintf("problem rendering file=%s contents: %v", fileId, err))
 			moovhttp.Problem(w, err)
 			return

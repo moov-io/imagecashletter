@@ -16,6 +16,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/moov-io/base"
 	"github.com/moov-io/imagecashletter"
 
@@ -95,7 +97,7 @@ func readFile(filename string) (*imagecashletter.File, error) {
 }
 
 func TestFiles__createFile(t *testing.T) {
-	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "BNK20180905121042882-A.icl"))
+	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "valid-ascii.x937"))
 
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("POST", "/files/create", fd)
@@ -107,16 +109,12 @@ func TestFiles__createFile(t *testing.T) {
 	router.ServeHTTP(w, req)
 	w.Flush()
 
-	if w.Code != http.StatusCreated {
-		t.Errorf("bogus HTTP status: %d: %s", w.Code, w.Body.String())
-	}
+	require.Equal(t, http.StatusCreated, w.Code, w.Body.String())
+
 	var resp imagecashletter.File
-	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
-		t.Fatal(err)
-	}
-	if resp.Header.CountryCode != "US" {
-		t.Errorf("CountryCode=%s", resp.Header.CountryCode)
-	}
+	require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
+
+	require.Equal(t, "Wave Money", resp.Header.ImmediateDestinationName)
 
 	// error case
 	repo.err = errors.New("bad error")
@@ -125,9 +123,7 @@ func TestFiles__createFile(t *testing.T) {
 	router.ServeHTTP(w, req)
 	w.Flush()
 
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
+	require.Equal(t, http.StatusBadRequest, w.Code, w.Body.String())
 }
 
 func TestFiles__createFileJSON(t *testing.T) {
