@@ -6,6 +6,7 @@ package imagecashletter
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -222,6 +223,20 @@ func (ivData *ImageViewData) ParseAndDecode(record string, decode DecodeLineFn) 
 // Parse takes the input record string and parses the ImageViewData values
 func (ivData *ImageViewData) Parse(record string) {
 	ivData.ParseAndDecode(record, Passthrough)
+}
+
+func (ivData *ImageViewData) UnmarshalJSON(data []byte) error {
+	type Alias ImageViewData
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(ivData),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	ivData.setRecordType()
+	return nil
 }
 
 // String writes the ImageViewData struct to a string.

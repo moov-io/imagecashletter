@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -72,6 +73,20 @@ func (rdAddendumB *ReturnDetailAddendumB) Parse(record string) {
 	rdAddendumB.PayorBankBusinessDate = rdAddendumB.parseYYYYMMDDDate(record[50:58])
 	// 59-80
 	rdAddendumB.PayorAccountName = rdAddendumB.parseStringField(record[58:80])
+}
+
+func (rdAddendumB *ReturnDetailAddendumB) UnmarshalJSON(data []byte) error {
+	type Alias ReturnDetailAddendumB
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(rdAddendumB),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	rdAddendumB.setRecordType()
+	return nil
 }
 
 // String writes the ReturnDetailAddendumB struct to a string.

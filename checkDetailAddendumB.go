@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"unicode/utf8"
@@ -93,6 +94,20 @@ func (cdAddendumB *CheckDetailAddendumB) Parse(record string) {
 	cdAddendumB.UserField = cdAddendumB.parseStringField(record[37+imageRefLength : 41+imageRefLength])
 	// 42+X - 46+X
 	cdAddendumB.reserved = cdAddendumB.parseStringField(record[41+imageRefLength : 46+imageRefLength])
+}
+
+func (cdAddendumB *CheckDetailAddendumB) UnmarshalJSON(data []byte) error {
+	type Alias CheckDetailAddendumB
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(cdAddendumB),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	cdAddendumB.setRecordType()
+	return nil
 }
 
 // String writes the CheckDetailAddendumB struct to a string.

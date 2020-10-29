@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -229,6 +230,20 @@ func (ivDetail *ImageViewDetail) Parse(record string) {
 	ivDetail.OverrideIndicator = ivDetail.parseStringField(record[66:67])
 	// 68-80
 	ivDetail.reservedTwo = "             "
+}
+
+func (ivDetail *ImageViewDetail) UnmarshalJSON(data []byte) error {
+	type Alias ImageViewDetail
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(ivDetail),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	ivDetail.setRecordType()
+	return nil
 }
 
 // String writes the ImageViewDetail struct to a string.

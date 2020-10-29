@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"unicode/utf8"
@@ -112,6 +113,20 @@ func (ug *UserGeneral) Parse(record string) {
 	ug.LengthUserData = ug.parseStringField(record[38:45])
 	// 46-45+(lud)
 	ug.UserData = ug.parseStringField(record[45 : 45+ug.parseNumField(ug.LengthUserData)])
+}
+
+func (ug *UserGeneral) UnmarshalJSON(data []byte) error {
+	type Alias UserGeneral
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(ug),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	ug.setRecordType()
+	return nil
 }
 
 // String writes the UserGeneral struct to a variable length string.

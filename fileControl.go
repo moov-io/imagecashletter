@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"unicode/utf8"
@@ -83,6 +84,20 @@ func (fc *FileControl) Parse(record string) {
 	fc.CreditTotalIndicator = fc.parseNumField(record[64:65])
 	// 66-80 reserved - Leave blank
 	fc.reserved = "               "
+}
+
+func (fc *FileControl) UnmarshalJSON(data []byte) error {
+	type Alias FileControl
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(fc),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	fc.setRecordType()
+	return nil
 }
 
 // String writes the FileControl struct to a string.

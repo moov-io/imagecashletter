@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"unicode/utf8"
@@ -202,6 +203,20 @@ func (cd *CheckDetail) Parse(record string) {
 	cd.CorrectionIndicator = cd.parseNumField(record[78:79])
 	// 80-80
 	cd.ArchiveTypeIndicator = cd.parseStringField(record[79:80])
+}
+
+func (cd *CheckDetail) UnmarshalJSON(data []byte) error {
+	type Alias CheckDetail
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(cd),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	cd.setRecordType()
+	return nil
 }
 
 // String writes the CheckDetail struct to a variable length string.
