@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	github.com/antihax/optional v1.0.0
+	github.com/gdamore/encoding v1.0.0
 	github.com/go-kit/kit v0.10.0
 	github.com/gorilla/mux v1.8.0
 	github.com/moov-io/base v0.11.0

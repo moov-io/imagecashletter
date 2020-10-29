@@ -70,15 +70,14 @@ func TestICLFile(t *testing.T) {
 	}
 }
 
-func TestICLFile_DSTU(t *testing.T) {
-	fd, err := os.Open(filepath.Join("test", "testdata", "valid-dstu.x937"))
+func TestICL_ReadVariableLineLengthOption(t *testing.T) {
+	fd, err := os.Open(filepath.Join("test", "testdata", "valid-ascii.x937"))
 	if err != nil {
 		t.Fatalf("Can not open local file: %s: \n", err)
 	}
 	defer fd.Close()
 
-	r := NewReader(fd)
-	r.SetFormat(DSTU)
+	r := NewReader(fd, ReadVariableLineLengthOption())
 	ICLFile, err := r.Read()
 	if err != nil {
 		t.Errorf("Issue reading file: %+v \n", err)
@@ -89,12 +88,42 @@ func TestICLFile_DSTU(t *testing.T) {
 	if ICLFile.Validate(); err != nil {
 		t.Errorf("Could not validate entire read file: %v", err)
 	}
-
 	actual, err := json.MarshalIndent(ICLFile, "", "    ")
 	if err != nil {
 		t.Errorf("Issue marshaling file: %+v \n", err)
 	}
-	expected, err := ioutil.ReadFile(filepath.Join("test", "testdata", "valid-dstu.json"))
+	expected, err := ioutil.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
+	if err != nil {
+		t.Errorf("Issue loading validation criteria: %+v \n", err)
+	}
+	if !bytes.Equal(actual, expected) {
+		t.Errorf("Read file does not match expected JSON")
+	}
+}
+
+func TestICL_EBCDICEncodingOption(t *testing.T) {
+	fd, err := os.Open(filepath.Join("test", "testdata", "valid-ebcdic.x937"))
+	if err != nil {
+		t.Fatalf("Can not open local file: %s: \n", err)
+	}
+	defer fd.Close()
+
+	r := NewReader(fd, ReadVariableLineLengthOption(), ReadEbcdicEncodingOption())
+	ICLFile, err := r.Read()
+	if err != nil {
+		t.Errorf("Issue reading file: %+v \n", err)
+	}
+	t.Logf("r.File.Header=%#v", r.File.Header)
+	t.Logf("r.File.Control=%#v", r.File.Control)
+	// ensure we have a validated file structure
+	if ICLFile.Validate(); err != nil {
+		t.Errorf("Could not validate entire read file: %v", err)
+	}
+	actual, err := json.MarshalIndent(ICLFile, "", "    ")
+	if err != nil {
+		t.Errorf("Issue marshaling file: %+v \n", err)
+	}
+	expected, err := ioutil.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
 	if err != nil {
 		t.Errorf("Issue loading validation criteria: %+v \n", err)
 	}

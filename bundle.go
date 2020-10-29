@@ -32,9 +32,10 @@ const (
 
 // Errors specific to parsing a Bundle
 var (
-	msgBundleEntries       = "must have Check Detail or Return Detail to be built"
-	msgBundleAddendum      = "%v found is greater than maximum of %v"
-	msgBundleAddendumCount = "%v does not match Addenda Records"
+	msgBundleEntries          = "must have Check Detail or Return Detail to be built"
+	msgBundleAddendum         = "%v found is greater than maximum of %v"
+	msgBundleAddendumCount    = "%v does not match Addenda Records"
+	msgBundleImageDetailCount = "does not match Image View Detail count of %v"
 )
 
 // Bundle contains forward items (checks)
@@ -218,12 +219,12 @@ func (b *Bundle) ValidateForwardItems(cd *CheckDetail) error {
 			return err
 		}
 	}
-	for _, ivData := range cd.ImageViewDetail {
+	for _, ivData := range cd.ImageViewData {
 		if err := ivData.Validate(); err != nil {
 			return err
 		}
 	}
-	for _, ivAnalysis := range cd.ImageViewDetail {
+	for _, ivAnalysis := range cd.ImageViewAnalysis {
 		if err := ivAnalysis.Validate(); err != nil {
 			return err
 		}

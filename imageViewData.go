@@ -156,8 +156,8 @@ func (ivData *ImageViewData) setRecordType() {
 	ivData.recordType = "52"
 }
 
-// Parse takes the input record string and parses the ImageViewData values
-func (ivData *ImageViewData) Parse(record string) {
+// ParseAndDecode takes the input record string, decodes all except image and parses the ImageViewData values
+func (ivData *ImageViewData) ParseAndDecode(record string, decode DecodeLineFn) {
 	// record contains binary data that may not map to UTF-8 charmap
 	recordLength := len(record)
 	if recordLength < 105 {
@@ -166,31 +166,31 @@ func (ivData *ImageViewData) Parse(record string) {
 	// Character position 1-2, Always "52"
 	ivData.setRecordType()
 	// 03-11
-	ivData.EceInstitutionRoutingNumber = ivData.parseStringField(record[2:11])
+	ivData.EceInstitutionRoutingNumber = ivData.parseStringField(decode(record[2:11]))
 	// 12-19
-	ivData.BundleBusinessDate = ivData.parseYYYYMMDDDate(record[11:19])
+	ivData.BundleBusinessDate = ivData.parseYYYYMMDDDate(decode(record[11:19]))
 	// 20-21
-	ivData.CycleNumber = ivData.parseStringField(record[19:21])
+	ivData.CycleNumber = ivData.parseStringField(decode(record[19:21]))
 	// 22-36
-	ivData.EceInstitutionItemSequenceNumber = ivData.parseStringField(record[21:36])
+	ivData.EceInstitutionItemSequenceNumber = ivData.parseStringField(decode(record[21:36]))
 	// 37-52
-	ivData.SecurityOriginatorName = ivData.parseStringField(record[36:52])
+	ivData.SecurityOriginatorName = ivData.parseStringField(decode(record[36:52]))
 	// 53-68
-	ivData.SecurityAuthenticatorName = ivData.parseStringField(record[52:68])
+	ivData.SecurityAuthenticatorName = ivData.parseStringField(decode(record[52:68]))
 	// 69-84
-	ivData.SecurityKeyName = ivData.parseStringField(record[68:84])
+	ivData.SecurityKeyName = ivData.parseStringField(decode(record[68:84]))
 	// 85-85
-	ivData.ClippingOrigin = ivData.parseNumField(record[84:85])
+	ivData.ClippingOrigin = ivData.parseNumField(decode(record[84:85]))
 	// 86-89
-	ivData.ClippingCoordinateH1 = ivData.parseStringField(record[85:89])
+	ivData.ClippingCoordinateH1 = ivData.parseStringField(decode(record[85:89]))
 	// 90-93
-	ivData.ClippingCoordinateH2 = ivData.parseStringField(record[89:93])
+	ivData.ClippingCoordinateH2 = ivData.parseStringField(decode(record[89:93]))
 	// 94-97
-	ivData.ClippingCoordinateV1 = ivData.parseStringField(record[93:97])
+	ivData.ClippingCoordinateV1 = ivData.parseStringField(decode(record[93:97]))
 	// 98-101
-	ivData.ClippingCoordinateV2 = ivData.parseStringField(record[97:101])
+	ivData.ClippingCoordinateV2 = ivData.parseStringField(decode(record[97:101]))
 	// 102-105
-	ivData.LengthImageReferenceKey = ivData.parseStringField(record[101:105])
+	ivData.LengthImageReferenceKey = ivData.parseStringField(decode(record[101:105]))
 
 	lirk := ivData.parseNumField(ivData.LengthImageReferenceKey)
 	if lirk < 0 || recordLength < 110+lirk {
@@ -198,18 +198,18 @@ func (ivData *ImageViewData) Parse(record string) {
 	}
 
 	// 106 - (105+X)
-	ivData.ImageReferenceKey = ivData.parseStringField(record[105 : 105+lirk])
+	ivData.ImageReferenceKey = ivData.parseStringField(decode(record[105 : 105+lirk]))
 	// (106 + lirk) – (110 + lirk)
-	ivData.LengthDigitalSignature = ivData.parseStringField(record[105+lirk : 110+lirk])
+	ivData.LengthDigitalSignature = ivData.parseStringField(decode(record[105+lirk : 110+lirk]))
 
 	lds := ivData.parseNumField(ivData.LengthDigitalSignature)
 	if lds < 0 || recordLength < 117+lirk+lds {
 		return // line too short
 	}
 	// (111 + lirk) – (110 + lirk + lds)
-	ivData.DigitalSignature = ivData.stringToBytesField(record[110+lirk : 110+lirk+lds])
+	ivData.DigitalSignature = ivData.stringToBytesField(decode(record[110+lirk : 110+lirk+lds]))
 	// (111 + lirk + lds) – (117 + lirk + lds)
-	ivData.LengthImageData = ivData.parseStringField(record[110+lirk+lds : 117+lirk+lds])
+	ivData.LengthImageData = ivData.parseStringField(decode(record[110+lirk+lds : 117+lirk+lds]))
 
 	lid := ivData.parseNumField(ivData.LengthImageData)
 	if lid < 0 || recordLength < 117+lirk+lds+lid {
@@ -219,8 +219,17 @@ func (ivData *ImageViewData) Parse(record string) {
 	ivData.ImageData = ivData.stringToBytesField(record[117+lirk+lds : 117+lirk+lds+lid])
 }
 
+// Parse takes the input record string and parses the ImageViewData values
+func (ivData *ImageViewData) Parse(record string) {
+	ivData.ParseAndDecode(record, Passthrough)
+}
+
 // String writes the ImageViewData struct to a string.
 func (ivData *ImageViewData) String() string {
+	return ivData.toString(true)
+}
+
+func (ivData *ImageViewData) toString(inclImage bool) string {
 	var buf strings.Builder
 	buf.Grow(105)
 	buf.WriteString(ivData.recordType)
@@ -243,8 +252,10 @@ func (ivData *ImageViewData) String() string {
 	buf.Grow(ivData.parseNumField(ivData.LengthDigitalSignature))
 	buf.WriteString(ivData.DigitalSignatureField())
 	buf.WriteString(ivData.LengthImageDataField())
-	buf.Grow(ivData.parseNumField(ivData.LengthImageData))
-	buf.WriteString(ivData.ImageDataField())
+	if inclImage {
+		buf.Grow(ivData.parseNumField(ivData.LengthImageData))
+		buf.WriteString(ivData.ImageDataField())
+	}
 	return buf.String()
 }
 

@@ -47,18 +47,22 @@ else
 	CGO_ENABLED=1 GOOS=$(PLATFORM) go build -o bin/imagecashletter-$(PLATFORM)-amd64 github.com/moov-io/imagecashletter/cmd/server
 endif
 
-docker: clean
-# Main imagecashletter server Docker image
+docker: clean docker-hub docker-webui docker-fuzz
+
+docker-hub:
 	docker build --pull -t moov/imagecashletter:$(VERSION) -f Dockerfile .
 	docker tag moov/imagecashletter:$(VERSION) moov/imagecashletter:latest
-# webui Docker image
-	docker build --pull -t moov/imagecashletter-webui:$(VERSION) -f Dockerfile-webui .
+
+docker-webui:
+	docker build --pull -t moov/imagecashletter-webui:$(VERSION) -f Dockerfile.webui .
 	docker tag moov/imagecashletter-webui:$(VERSION) moov/imagecashletter-webui:latest
-# # OpenShift Docker image
-# 	docker build --pull -t quay.io/moov/imagecashletter:$(VERSION) -f Dockerfile-openshift --build-arg VERSION=$(VERSION) .
-# 	docker tag quay.io/moov/imagecashletter:$(VERSION) quay.io/moov/imagecashletter:latest
-# ICL Fuzzing docker image
-	docker build --pull -t moov/imagecashletterfuzz:$(VERSION) . -f Dockerfile-fuzz
+
+docker-openshift:
+	docker build --pull -t quay.io/moov/imagecashletter:$(VERSION) -f Dockerfile.openshift --build-arg VERSION=$(VERSION) .
+	docker tag quay.io/moov/imagecashletter:$(VERSION) quay.io/moov/imagecashletter:latest
+
+docker-fuzz:
+	docker build --pull -t moov/imagecashletterfuzz:$(VERSION) . -f Dockerfile.fuzz
 	docker tag moov/imagecashletterfuzz:$(VERSION) moov/imagecashletterfuzz:latest
 
 release: docker AUTHORS

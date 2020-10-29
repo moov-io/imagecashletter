@@ -6,6 +6,7 @@ package imagecashletter
 
 import (
 	"bytes"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -248,37 +249,52 @@ func TestICLWriteRoutingNumber(t *testing.T) {
 
 }
 
-func TestICLWrite_DSTU(t *testing.T) {
-	fd, err := os.Open(filepath.Join("test", "testdata", "valid-dstu.x937"))
+func TestICLWrite_VariableLengthOption(t *testing.T) {
+	fileBytes, err := ioutil.ReadFile(filepath.Join("test", "testdata", "valid-ascii.x937"))
 	if err != nil {
 		t.Fatalf("Can not open local file: %s: \n", err)
 	}
-	defer fd.Close()
 
-	fdInfo, err := fd.Stat()
-	if err != nil {
-		t.Errorf("Could not stat file: %s: \n", err)
-	}
-
-	r := NewReader(fd)
-	r.SetFormat(DSTU)
-	ICLFile, err := r.Read()
+	fd := bytes.NewReader(fileBytes)
+	r := NewReader(fd, ReadVariableLineLengthOption())
+	file, err := r.Read()
 	if err != nil {
 		t.Errorf("Issue reading file: %+v \n", err)
 	}
-	// ensure we have a validated file structure
-	if ICLFile.Validate(); err != nil {
-		t.Errorf("Could not validate entire read file: %v", err)
-	}
 
 	b := &bytes.Buffer{}
-	w := NewWriter(b)
-	w.SetFormat(DSTU)
-	if err := w.Write(&ICLFile); err != nil {
+	w := NewWriter(b, WriteVariableLineLengthOption(), WriteCollatedImageViewOption())
+
+	if err := w.Write(&file); err != nil {
 		t.Errorf("Issue writing ICL: %+v \n", err)
 	}
 
-	if b.Len() != int(fdInfo.Size()) {
-		t.Errorf("File size does not match")
+	if !bytes.Equal(fileBytes, b.Bytes()) {
+		t.Errorf("ICLs does not match")
+	}
+}
+
+func TestICLWrite_EbcdicEncodingOption(t *testing.T) {
+	fileBytes, err := ioutil.ReadFile(filepath.Join("test", "testdata", "valid-ebcdic.x937"))
+	if err != nil {
+		t.Fatalf("Can not open local file: %s: \n", err)
+	}
+
+	fd := bytes.NewReader(fileBytes)
+	r := NewReader(fd, ReadVariableLineLengthOption(), ReadEbcdicEncodingOption())
+	file, err := r.Read()
+	if err != nil {
+		t.Errorf("Issue reading file: %+v \n", err)
+	}
+
+	b := &bytes.Buffer{}
+	w := NewWriter(b, WriteVariableLineLengthOption(), WriteEbcdicEncodingOption(), WriteCollatedImageViewOption())
+
+	if err := w.Write(&file); err != nil {
+		t.Errorf("Issue writing ICL: %+v \n", err)
+	}
+
+	if !bytes.Equal(fileBytes, b.Bytes()) {
+		t.Errorf("ICLs does not match")
 	}
 }

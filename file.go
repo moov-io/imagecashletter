@@ -47,6 +47,30 @@ const (
 	// boxSummaryPos           = "75"
 )
 
+// Record Types in EBCDIC
+const (
+	fileHeaderEbcPos           = "\xF0\xF1"
+	cashLetterHeaderEbcPos     = "\xF1\xF0"
+	bundleHeaderEbcPos         = "\xF2\xF0"
+	checkDetailEbcPos          = "\xF2\xF5"
+	checkDetailAddendumAEbcPos = "\xF2\xF6"
+	checkDetailAddendumBEbcPos = "\xF2\xF7"
+	checkDetailAddendumCEbcPos = "\xF2\xF8"
+	returnDetailEbcPos         = "\xF3\xF1"
+	returnAddendumAPEbcos      = "\xF3\xF2"
+	returnAddendumBEbcPos      = "\xF3\xF3"
+	returnAddendumCEbcPos      = "\xF3\xF4"
+	returnAddendumDEbcPos      = "\xF3\xF5"
+	imageViewDetailEbcPos      = "\xF5\xF0"
+	imageViewDataEbcPos        = "\xF5\xF2"
+	imageViewAnalysisEbcPos    = "\xF5\xF4"
+	creditItemEbcPos           = "\xF6\xF2"
+	bundleControlEbcPos        = "\xF7\xF0"
+	routingNumberSummaryEbcPos = "\xF8\xF5"
+	cashLetterControlEbcPos    = "\xF9\xF0"
+	fileControlEbcPos          = "\xF9\xF9"
+)
+
 // Errors strings specific to parsing a Batch container
 var (
 	//msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
@@ -77,15 +101,10 @@ func (e *FileError) Error() string {
 	return fmt.Sprintf("%s %s", e.FieldName, e.Msg)
 }
 
-// Format standard of X9.37 specification used to parse file
-type Format uint32
-
-const (
-	// Discover format
-	Discover Format = iota
-	//DSTU microformat as defined https://www.frbservices.org/assets/financial-services/check/setup/frb-x937-standards-reference.pdf
-	DSTU
-)
+type FileRecord interface {
+	setRecordType()
+	String() string
+}
 
 // File is an imagecashletter file
 type File struct {
