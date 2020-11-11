@@ -2,20 +2,21 @@ package main
 
 import (
 	"fmt"
-	"github.com/moov-io/imagecashletter"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/moov-io/imagecashletter"
 )
 
 func main() {
-	f, err := os.Open(filepath.Join("examples", "imagecashletter-read", "iclFile.txt"))
+	f, err := os.Open(filepath.Join("examples", "imagecashletter-read", "iclFile.x937"))
 	if err != nil {
 		log.Fatalf("Could not open ICL File: %s\n", err)
 
 	}
 	defer f.Close()
-	r := imagecashletter.NewReader(f)
+	r := imagecashletter.NewReader(f, imagecashletter.ReadVariableLineLengthOption())
 
 	iclFile, err := r.Read()
 	if err != nil {
