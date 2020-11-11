@@ -406,7 +406,11 @@ func main() {
 		log.Fatalf("Could not validate File: %s\n", err)
 	}
 
-	w := imagecashletter.NewWriter(os.Stdout)
+	opts := []imagecashletter.WriterOption{
+		imagecashletter.WriteCollatedImageViewOption(),
+	}
+
+	w := imagecashletter.NewWriter(os.Stdout, opts...)
 	if err := w.Write(file); err != nil {
 		log.Fatalf("Unexpected error: %s\n", err)
 	}

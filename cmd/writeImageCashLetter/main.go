@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/moov-io/imagecashletter"
 	"log"
 	"os"
 	"path/filepath"
 	"runtime/pprof"
 	"strconv"
 	"time"
+
+	"github.com/moov-io/imagecashletter"
 )
 
 var (
@@ -265,7 +266,7 @@ func write(path string) {
 		}
 	} else {
 		// Write in ICL plain text format
-		w := imagecashletter.NewWriter(f)
+		w := imagecashletter.NewWriter(f, imagecashletter.WriteCollatedImageViewOption())
 		if err := w.Write(file); err != nil {
 			fmt.Printf("%T: %s", err, err)
 		}
@@ -275,13 +276,6 @@ func write(path string) {
 	if err := f.Close(); err != nil {
 		fmt.Println(err.Error())
 	}
-
-	/*	// We want to write the file to an io.Writer
-		w := x9.NewWriter(os.Stdout)
-		if err := w.Write(file); err != nil {
-			log.Fatalf("Unexpected error: %s\n", err)
-		}
-		w.Flush()*/
 
 	fmt.Printf("Wrote %s\n", path)
 
