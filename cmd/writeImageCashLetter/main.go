@@ -266,7 +266,11 @@ func write(path string) {
 		}
 	} else {
 		// Write in ICL plain text format
-		w := imagecashletter.NewWriter(f, imagecashletter.WriteCollatedImageViewOption())
+		opts := []imagecashletter.WriterOption{
+			imagecashletter.WriteCollatedImageViewOption(),
+			imagecashletter.WriteVariableLineLengthOption(),
+		}
+		w := imagecashletter.NewWriter(f, opts...)
 		if err := w.Write(file); err != nil {
 			fmt.Printf("%T: %s", err, err)
 		}
