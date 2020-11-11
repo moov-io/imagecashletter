@@ -13,12 +13,10 @@ import (
 	"github.com/gdamore/encoding"
 )
 
-// A Writer writes an imagecashletter.file to an encoded file.
+// Writer writes an ImageCashLetter/X9 File to an encoded format.
 //
-// As returned by NewWriter, a Writer writes imagecashletterfile structs into
-// imagecashletter formatted files.
-
-// Writer struct
+// Callers should use NewWriter to create a new instance and apply WriterOptions
+// as needed to properly encode files for their usecase.
 type Writer struct {
 	w                  *bufio.Writer
 	lineNum            int //current line being written
@@ -57,7 +55,8 @@ func WriteEbcdicEncodingOption() WriterOption {
 	}
 }
 
-// WriteCollatedImageViewOption allows Writer to collate related ImageViewDetail, ImageViewData and ImageViewAnalysis record types
+// WriteCollatedImageViewOption forces Writer to collate related ImageViewDetail, ImageViewData and ImageViewAnalysis record types
+// together in the resulting file. This is the expecation of how the low level files are represented.
 // Follows DSTU microformat as defined https://www.frbservices.org/assets/financial-services/check/setup/frb-x937-standards-reference.pdf
 func WriteCollatedImageViewOption() WriterOption {
 	return func(w *Writer) {
