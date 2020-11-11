@@ -14,8 +14,8 @@ import (
 	moovhttp "github.com/moov-io/base/http"
 	// "github.com/moov-io/base/idempotent/lru"
 
-	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/metrics/prometheus"
+	"github.com/moov-io/base/log"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 )
 
