@@ -59,8 +59,8 @@ func main() {
 	go func() {
 		logger.Logf("admin server listening on %s", adminServer.BindAddr())
 		if err := adminServer.Listen(); err != nil {
-			logged := logger.LogErrorf("problem starting admin http: %v", err)
-			errs <- logged.Err()
+			err = logger.LogErrorf("problem starting admin http: %v", err).Err()
+			errs <- err
 		}
 	}()
 	defer adminServer.Shutdown()
