@@ -41,6 +41,7 @@ func main() {
 	} else {
 		logger = log.NewDefaultLogger()
 	}
+	logger = logger.Set("package", "main")
 
 	logger.Logf("Starting moov-io/imagecashletter server version %s", imagecashletter.Version)
 
@@ -59,6 +60,10 @@ func main() {
 	go func() {
 		logger.Logf("admin server listening on %s", adminServer.BindAddr())
 		if err := adminServer.Listen(); err != nil {
+			if err == http.ErrServerClosed {
+				logger.Log("admin server closed")
+				return
+			}
 			err = logger.LogErrorf("problem starting admin http: %v", err).Err()
 			errs <- err
 		}
@@ -94,7 +99,7 @@ func main() {
 	}
 	shutdownServer := func() {
 		if err := serve.Shutdown(context.TODO()); err != nil {
-			logger.LogError(err)
+			logger.LogErrorf("shutdown error: %v", err)
 		}
 	}
 
@@ -103,12 +108,20 @@ func main() {
 		if certFile, keyFile := os.Getenv("HTTPS_CERT_FILE"), os.Getenv("HTTPS_KEY_FILE"); certFile != "" && keyFile != "" {
 			logger.Logf("binding to %s for secure HTTP server", *httpAddr)
 			if err := serve.ListenAndServeTLS(certFile, keyFile); err != nil {
-				logger.LogError(err)
+				if err == http.ErrServerClosed {
+					logger.Log("secure http server closed")
+					return
+				}
+				logger.LogErrorf("http server error: %v", err)
 			}
 		} else {
 			logger.Logf("binding to %s for HTTP server", *httpAddr)
 			if err := serve.ListenAndServe(); err != nil {
-				logger.LogError(err)
+				if err == http.ErrServerClosed {
+					logger.Log("http server closed")
+					return
+				}
+				logger.LogErrorf("http server error: %v", err)
 			}
 		}
 	}()

@@ -96,7 +96,7 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 
 		bs, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error reading request body: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
@@ -105,7 +105,7 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 		if strings.Contains(h, "application/json") {
 			file, err := imagecashletter.FileFromJSON(bs)
 			if err != nil {
-				logger.LogError(err)
+				err = logger.LogErrorf("error creating file from JSON: %v", err).Err()
 				moovhttp.Problem(w, err)
 				return
 			} else {
@@ -114,7 +114,7 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 		} else {
 			f, err := imagecashletter.NewReader(bytes.NewReader(bs), imagecashletter.ReadVariableLineLengthOption()).Read()
 			if err != nil {
-				logger.LogError(err)
+				err = logger.LogErrorf("error reading image cache letter: %v", err).Err()
 				moovhttp.Problem(w, err)
 				return
 			} else {
@@ -158,7 +158,7 @@ func getFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 			return
 		}
 
-		logger.Logf("rendering file=%s", fileId)
+		logger.Log("rendering file")
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
@@ -176,28 +176,31 @@ func updateFileHeader(logger log.Logger, repo ICLFileRepository) http.HandlerFun
 
 		var req imagecashletter.FileHeader
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error reading request body: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
 
 		fileId := getFileId(w, r)
 		if fileId == "" {
+			logger.LogError(errNoFileId)
 			return
 		}
+		logger = logger.Set("fileID", fileId)
+
 		file, err := repo.getFile(fileId)
 		if err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error retrieving file: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
 		file.Header = req
 		if err := repo.saveFile(file); err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error saving file: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
-		logger.Logf("updating FileHeader for file=%s", fileId)
+		logger.Log("updated FileHeader")
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusCreated)
@@ -215,15 +218,18 @@ func deleteFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 
 		fileId := getFileId(w, r)
 		if fileId == "" {
+			logger.LogError(errNoFileId)
 			return
 		}
+		logger = logger.Set("fileID", fileId)
+
 		if err := repo.deleteFile(fileId); err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error deleting file: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
 
-		logger.Logf("deleted file=%s", fileId)
+		logger.Log("deleted file")
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
@@ -241,16 +247,19 @@ func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc
 
 		fileId := getFileId(w, r)
 		if fileId == "" {
+			logger.LogError(errNoFileId)
 			return
 		}
+		logger = logger.Set("fileID", fileId)
+
 		file, err := repo.getFile(fileId)
 		if err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error retrieving file: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
 
-		logger.Logf("rendering file=%s contents", fileId)
+		logger.Log("rendering file contents")
 
 		opts := []imagecashletter.WriterOption{
 			imagecashletter.WriteCollatedImageViewOption(),
@@ -259,7 +268,7 @@ func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc
 
 		w.Header().Set("Content-Type", "text/plain")
 		if err := imagecashletter.NewWriter(w, opts...).Write(file); err != nil {
-			err = logger.LogErrorf("problem rendering file=%s contents: %v", fileId, err).Err()
+			err = logger.LogErrorf("problem rendering file contents: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
@@ -277,11 +286,14 @@ func validateFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 
 		fileId := getFileId(w, r)
 		if fileId == "" {
+			logger.LogError(errNoFileId)
 			return
 		}
+		logger = logger.Set("fileID", fileId)
+
 		file, err := repo.getFile(fileId)
 		if err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error retrieving file: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
@@ -291,7 +303,7 @@ func validateFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 			return
 		}
 
-		logger.Logf("validated file=%s", fileId)
+		logger.Log("validated file")
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
@@ -309,29 +321,32 @@ func addCashLetterToFile(logger log.Logger, repo ICLFileRepository) http.Handler
 
 		var req imagecashletter.CashLetter
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error reading request body: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
 
 		fileId := getFileId(w, r)
 		if fileId == "" {
+			logger.LogError(errNoFileId)
 			return
 		}
+		logger = logger.Set("fileID", fileId)
+
 		file, err := repo.getFile(fileId)
 		if err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error retrieving file: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
 		file.CashLetters = append(file.CashLetters, req)
 		if err := repo.saveFile(file); err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error saving file: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
 
-		logger.Logf("added CashLetter=%s to file=%s", req.ID, fileId)
+		logger.Logf("added CashLetter=%s to file", req.ID)
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
@@ -347,14 +362,23 @@ func removeCashLetterFromFile(logger log.Logger, repo ICLFileRepository) http.Ha
 
 		w = wrapResponseWriter(logger, w, r)
 
-		fileId, cashLetterId := getFileId(w, r), getCashLetterId(w, r)
-		if fileId == "" || cashLetterId == "" {
+		fileId := getFileId(w, r)
+		if fileId == "" {
+			logger.LogError(errNoFileId)
 			return
 		}
+		logger = logger.Set("fileID", fileId)
+
+		cashLetterId := getCashLetterId(w, r)
+		if cashLetterId == "" {
+			logger.LogError(errNoCashLetterId)
+			return
+		}
+		logger = logger.Set("cashLetterID", cashLetterId)
 
 		file, err := repo.getFile(fileId)
 		if err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error retrieving file: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
@@ -365,12 +389,12 @@ func removeCashLetterFromFile(logger log.Logger, repo ICLFileRepository) http.Ha
 			}
 		}
 		if err := repo.saveFile(file); err != nil {
-			logger.LogError(err)
+			err = logger.LogErrorf("error saving file: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
 
-		logger.Logf("removed CashLetter=%s to file=%s", cashLetterId, fileId)
+		logger.Log("removed CashLetter from file")
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
