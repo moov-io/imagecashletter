@@ -2,6 +2,7 @@
 
 ADDITIONS
 
+- all: update project to use [Moov's logger](https://github.com/moov-io/base/log) instead of [Go kit](https://github.com/go-kit/kit/tree/master/log)
 - cmd/webui: initial setup with pretty JSON formatting example
 - file: Add support for writing EBCDIC
 - file: Allow File to be written as DTSU with control bytes dictating line lengths rather than line breaks.
