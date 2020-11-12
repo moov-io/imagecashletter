@@ -21,8 +21,8 @@ import (
 	"github.com/moov-io/base/http/bind"
 	"github.com/moov-io/imagecashletter"
 
-	"github.com/go-kit/kit/log"
 	"github.com/gorilla/mux"
+	"github.com/moov-io/base/log"
 )
 
 var (
@@ -37,14 +37,13 @@ func main() {
 
 	var logger log.Logger
 	if strings.ToLower(*flagLogFormat) == "json" {
-		logger = log.NewJSONLogger(os.Stderr)
+		logger = log.NewJSONLogger()
 	} else {
-		logger = log.NewLogfmtLogger(os.Stderr)
+		logger = log.NewDefaultLogger()
 	}
-	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
-	logger = log.With(logger, "caller", log.DefaultCaller)
+	logger = logger.Set("package", "main")
 
-	logger.Log("startup", fmt.Sprintf("Starting moov-io/imagecashletter server version %s", imagecashletter.Version))
+	logger.Logf("Starting moov-io/imagecashletter server version %s", imagecashletter.Version)
 
 	// Channel for errors
 	errs := make(chan error)
@@ -59,10 +58,13 @@ func main() {
 	adminServer := admin.NewServer(*adminAddr)
 	adminServer.AddVersionHandler(imagecashletter.Version) // Setup 'GET /version'
 	go func() {
-		logger.Log("admin", fmt.Sprintf("listening on %s", adminServer.BindAddr()))
+		logger.Logf("admin server listening on %s", adminServer.BindAddr())
 		if err := adminServer.Listen(); err != nil {
-			err = fmt.Errorf("problem starting admin http: %v", err)
-			logger.Log("admin", err)
+			if err == http.ErrServerClosed {
+				logger.Log("admin server closed")
+				return
+			}
+			err = logger.LogErrorf("problem starting admin http: %v", err).Err()
 			errs <- err
 		}
 	}()
@@ -97,29 +99,37 @@ func main() {
 	}
 	shutdownServer := func() {
 		if err := serve.Shutdown(context.TODO()); err != nil {
-			logger.Log("shutdown", err)
+			logger.LogErrorf("shutdown error: %v", err)
 		}
 	}
 
 	// Start business logic HTTP server
 	go func() {
 		if certFile, keyFile := os.Getenv("HTTPS_CERT_FILE"), os.Getenv("HTTPS_KEY_FILE"); certFile != "" && keyFile != "" {
-			logger.Log("startup", fmt.Sprintf("binding to %s for secure HTTP server", *httpAddr))
+			logger.Logf("binding to %s for secure HTTP server", *httpAddr)
 			if err := serve.ListenAndServeTLS(certFile, keyFile); err != nil {
-				logger.Log("exit", err)
+				if err == http.ErrServerClosed {
+					logger.Log("secure http server closed")
+					return
+				}
+				logger.LogErrorf("http server error: %v", err)
 			}
 		} else {
-			logger.Log("startup", fmt.Sprintf("binding to %s for HTTP server", *httpAddr))
+			logger.Logf("binding to %s for HTTP server", *httpAddr)
 			if err := serve.ListenAndServe(); err != nil {
-				logger.Log("exit", err)
+				if err == http.ErrServerClosed {
+					logger.Log("http server closed")
+					return
+				}
+				logger.LogErrorf("http server error: %v", err)
 			}
 		}
 	}()
 
 	// Block/Wait for an error
 	if err := <-errs; err != nil {
+		logger.LogError(err)
 		shutdownServer()
-		logger.Log("exit", err)
 	}
 }
 
