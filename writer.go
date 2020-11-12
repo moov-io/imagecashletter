@@ -259,13 +259,13 @@ func (w *Writer) writeCheckImageView(cd *CheckDetail) error {
 			if err := w.writeLine(&ivDetail); err != nil {
 				return err
 			}
-			if len(ivDataSlice) > 0 {
+			if len(ivDataSlice) >= i {
 				ivData := ivDataSlice[i]
 				if err := w.writeLine(&ivData); err != nil {
 					return err
 				}
 			}
-			if len(ivAnalysisSlice) > 0 {
+			if len(ivAnalysisSlice) >= i {
 				ivAnalysis := ivAnalysisSlice[i]
 				if err := w.writeLine(&ivAnalysis); err != nil {
 					return err

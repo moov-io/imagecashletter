@@ -298,3 +298,33 @@ func TestICLWrite_EbcdicEncodingOption(t *testing.T) {
 		t.Errorf("ICLs does not match")
 	}
 }
+
+func TestWriter__CollateErr(t *testing.T) {
+	cd := &CheckDetail{
+		// Create a CheckDetail without a corresponding ImageData or ImageViewAnalysis
+		// so when we attempt to collate them it doesn't crash.
+		ImageViewDetail: []ImageViewDetail{
+			mockImageViewDetail(),
+			mockImageViewDetail(),
+		},
+		// To trigger the crash this issue fixes we need two ImageViewDetails, and one ImageData.
+		// Having one ImageViewAnalysis would work as well
+		ImageViewData: []ImageViewData{
+			mockImageViewData(),
+		},
+		ImageViewAnalysis: []ImageViewAnalysis{
+			mockImageViewAnalysis(),
+		},
+	}
+
+	var buf bytes.Buffer
+	w := NewWriter(&buf, WriteCollatedImageViewOption())
+
+	err := w.writeCheckImageView(cd)
+	if err == nil {
+		t.Fatal("expected error")
+	}
+	if !strings.Contains(err.Error(), "ImageViewData does not match Image View Detail count of 1") {
+		t.Errorf("unexpected error: %q", err)
+	}
+}
