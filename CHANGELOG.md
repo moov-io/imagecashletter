@@ -1,3 +1,9 @@
+## v0.5.1
+
+BUG FIXES
+
+- writer: fix indexing error when writing collated images
+
 ## v0.5.0
 
 ADDITIONS
