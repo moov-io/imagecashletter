@@ -106,7 +106,7 @@ type ReturnDetail struct {
 	// Values:
 	// 1: Preliminary notification
 	// 2: Final notification
-	ReturnNotificationIndicator int `json:"returnNotificationIndicator"`
+	ReturnNotificationIndicator string `json:"returnNotificationIndicator"`
 	// ArchiveTypeIndicator is a code that indicates the type of archive that supports this CheckDetail.
 	// Access method, availability and time-frames shall be defined by clearing arrangements.
 	// Values:
@@ -204,7 +204,7 @@ func (rd *ReturnDetail) Parse(record string) {
 	// 69-69
 	rd.ExternalProcessingCode = rd.parseStringField(record[68:69])
 	// 70-70
-	rd.ReturnNotificationIndicator = rd.parseNumField(record[69:70])
+	rd.ReturnNotificationIndicator = rd.parseStringField(record[69:70])
 	// 71-71
 	rd.ArchiveTypeIndicator = rd.parseStringField(record[70:71])
 	// 72-72
@@ -216,13 +216,20 @@ func (rd *ReturnDetail) Parse(record string) {
 func (rd *ReturnDetail) UnmarshalJSON(data []byte) error {
 	type Alias ReturnDetail
 	aux := struct {
+		// json.RawMessage is used here to allow library to still parse json files that stored
+		// RNI in an int. json.Number could also be used, but X937 standard doesn't specify a
+		// type for the RNI, so, RawMessage provides flexibility to handle non-numeric values
+		ReturnNotificationIndicator json.RawMessage `json:"returnNotificationIndicator"`
 		*Alias
 	}{
-		(*Alias)(rd),
+		Alias: (*Alias)(rd),
 	}
 	if err := json.Unmarshal(data, &aux); err != nil {
 		return err
 	}
+	// removes the quotes if its text, does nothing if its numeric
+	trimmed := strings.Trim(string(aux.ReturnNotificationIndicator),"\"")
+	rd.ReturnNotificationIndicator = trimmed
 	rd.setRecordType()
 	return nil
 }
@@ -269,17 +276,17 @@ func (rd *ReturnDetail) Validate() error {
 			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: rd.DocumentationTypeIndicator, Msg: err.Error()}
 		}
 	}
-	if rd.ReturnNotificationIndicatorField() != "" {
+	if rd.ReturnNotificationIndicator != "" {
 		if err := rd.isReturnNotificationIndicator(rd.ReturnNotificationIndicator); err != nil {
 			return &FieldError{FieldName: "ReturnNotificationIndicator", Value: rd.ReturnNotificationIndicatorField(), Msg: err.Error()}
 		}
 	}
-	if rd.ArchiveTypeIndicatorField() != "" {
+	if rd.ArchiveTypeIndicator != "" {
 		if err := rd.isArchiveTypeIndicator(rd.ArchiveTypeIndicator); err != nil {
 			return &FieldError{FieldName: "ArchiveTypeIndicator", Value: rd.ArchiveTypeIndicatorField(), Msg: err.Error()}
 		}
 	}
-	if rd.TimesReturnedField() != "" {
+	if rd.TimesReturnedField() != " " && rd.TimesReturnedField() != "" {
 		if err := rd.isTimesReturned(rd.TimesReturned); err != nil {
 			return &FieldError{FieldName: "TimesReturned", Value: rd.TimesReturnedField(), Msg: err.Error()}
 		}
@@ -384,7 +391,7 @@ func (rd *ReturnDetail) ExternalProcessingCodeField() string {
 
 // ReturnNotificationIndicatorField gets a string of the ReturnNotificationIndicator field
 func (rd *ReturnDetail) ReturnNotificationIndicatorField() string {
-	return rd.numericField(rd.ReturnNotificationIndicator, 1)
+	return rd.alphaField(rd.ReturnNotificationIndicator, 1)
 }
 
 // ArchiveTypeIndicatorField gets the ArchiveTypeIndicator field

@@ -211,7 +211,7 @@ func main() {
 	rd.ForwardBundleDate = time.Now()
 	rd.EceInstitutionItemSequenceNumber = "1              "
 	rd.ExternalProcessingCode = ""
-	rd.ReturnNotificationIndicator = 2
+	rd.ReturnNotificationIndicator = "2"
 	rd.ArchiveTypeIndicator = "B"
 	rd.TimesReturned = 0
 
@@ -355,7 +355,7 @@ func main() {
 	rdTwo.ForwardBundleDate = time.Now()
 	rdTwo.EceInstitutionItemSequenceNumber = "1              "
 	rdTwo.ExternalProcessingCode = ""
-	rdTwo.ReturnNotificationIndicator = 2
+	rdTwo.ReturnNotificationIndicator = "2"
 	rdTwo.ArchiveTypeIndicator = "B"
 	rdTwo.TimesReturned = 0
 

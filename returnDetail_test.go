@@ -24,7 +24,7 @@ func mockReturnDetail() *ReturnDetail {
 	rd.ForwardBundleDate = time.Now()
 	rd.EceInstitutionItemSequenceNumber = "1              "
 	rd.ExternalProcessingCode = ""
-	rd.ReturnNotificationIndicator = 2
+	rd.ReturnNotificationIndicator = "2"
 	rd.ArchiveTypeIndicator = "B"
 	rd.TimesReturned = 0
 	return rd
@@ -74,7 +74,7 @@ func TestMockReturnDetail(t *testing.T) {
 	if rd.ExternalProcessingCode != "" {
 		t.Error("ExternalProcessingCode does not validate")
 	}
-	if rd.ReturnNotificationIndicator != 2 {
+	if rd.ReturnNotificationIndicator != "2" {
 		t.Error("ReturnNotificationIndicator does not validate")
 	}
 	if rd.ArchiveTypeIndicator != "B" {
@@ -225,7 +225,7 @@ func TestRDDocumentationTypeIndicatorZ(t *testing.T) {
 // TestRDReturnNotificationIndicator validation
 func TestRDReturnNotificationIndicator(t *testing.T) {
 	rd := mockReturnDetail()
-	rd.ReturnNotificationIndicator = 0
+	rd.ReturnNotificationIndicator = "0"
 	if err := rd.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "ReturnNotificationIndicator" {
@@ -243,9 +243,9 @@ func TestRDArchiveTypeIndicator(t *testing.T) {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "ArchiveTypeIndicator" {
 				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+		    }
+	    }
+    }
 }
 
 // TestRDTimesReturned validation
