@@ -676,13 +676,13 @@ func (v *validator) isImageViewAnalysisValid(code string) error {
 // Returns
 
 // isReturnNotificationIndicator ensures ReturnNotificationIndicator of ReturnDetail is valid
-func (v *validator) isReturnNotificationIndicator(code int) error {
+func (v *validator) isReturnNotificationIndicator(code string) error {
 	switch code {
 	case
 		// Preliminary notification
-		1,
+		"1",
 		// Final notification
-		2:
+		"2":
 		return nil
 	}
 	return errors.New(msgInvalid)
