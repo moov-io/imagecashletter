@@ -216,9 +216,8 @@ func (rd *ReturnDetail) Parse(record string) {
 func (rd *ReturnDetail) UnmarshalJSON(data []byte) error {
 	type Alias ReturnDetail
 	aux := struct {
-		// json.RawMessage is used here to allow library to still parse json files that stored
-		// RNI in an int. json.Number could also be used, but X937 standard doesn't specify a
-		// type for the RNI, so, RawMessage provides flexibility to handle non-numeric values
+		// json.RawMessage is used here to allow library to still parse older JSON files that stored
+		// RNI in an int instead of a string.
 		ReturnNotificationIndicator json.RawMessage `json:"returnNotificationIndicator"`
 		*Alias
 	}{
@@ -227,9 +226,17 @@ func (rd *ReturnDetail) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &aux); err != nil {
 		return err
 	}
-	// removes the quotes if its text, does nothing if its numeric
-	trimmed := strings.Trim(string(aux.ReturnNotificationIndicator),"\"")
-	rd.ReturnNotificationIndicator = trimmed
+
+	// trim quotes so both '"123"' and '123' end up as '123'
+	rniString := strings.Trim(string(aux.ReturnNotificationIndicator),"\"")
+	if rniString != "" {
+		numericVal, parseErr := strconv.Atoi(rniString)
+		if parseErr != nil {
+			return fmt.Errorf("ReturnNotificationIndicator failed to parse, must be numeric or empty: %w",parseErr)
+		}
+		rniString = strconv.Itoa(numericVal)
+	}
+	rd.ReturnNotificationIndicator = rniString
 	rd.setRecordType()
 	return nil
 }
