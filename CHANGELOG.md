@@ -1,3 +1,9 @@
+## v0.5.2 (Released 2020-12-10)
+
+BUG FIXES
+
+- returnDetail: change ReturnNotificationIndicator from `int` to `string` to prevent storing `0` when the field should have been empty
+
 ## v0.5.1
 
 BUG FIXES
