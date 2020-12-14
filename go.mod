@@ -8,7 +8,7 @@ require (
 	github.com/go-kit/kit v0.10.0
 	github.com/gorilla/mux v1.8.0
 	github.com/moov-io/base v0.14.2
-	github.com/moov-io/paygate v0.9.1
+	github.com/moov-io/paygate v0.9.2
 	github.com/prometheus/client_golang v1.8.0
 	github.com/prometheus/common v0.15.0 // indirect
 	github.com/stretchr/testify v1.6.1
