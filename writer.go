@@ -22,7 +22,6 @@ type Writer struct {
 	lineNum            int //current line being written
 	VariableLineLength bool
 	EbcdicEncoding     bool
-	CollateImageView   bool
 }
 
 // NewWriter returns a new Writer that writes to w.
@@ -52,15 +51,6 @@ func WriteVariableLineLengthOption() WriterOption {
 func WriteEbcdicEncodingOption() WriterOption {
 	return func(w *Writer) {
 		w.EbcdicEncoding = true
-	}
-}
-
-// WriteCollatedImageViewOption forces Writer to collate related ImageViewDetail, ImageViewData and ImageViewAnalysis record types
-// together in the resulting file. This is the expecation of how the low level files are represented.
-// Follows DSTU microformat as defined https://www.frbservices.org/assets/financial-services/check/setup/frb-x937-standards-reference.pdf
-func WriteCollatedImageViewOption() WriterOption {
-	return func(w *Writer) {
-		w.CollateImageView = true
 	}
 }
 
@@ -253,37 +243,19 @@ func (w *Writer) writeCheckImageView(cd *CheckDetail) error {
 		return &BundleError{FieldName: "ImageViewAnalysis", Msg: msg}
 	}
 
-	if w.CollateImageView {
-		// FRB asks that imageViewDetail should immediately be followed by its corresponding data and analysis
-		for i, ivDetail := range ivDetailSlice {
-			if err := w.writeLine(&ivDetail); err != nil {
-				return err
-			}
-			if len(ivDataSlice) > 0 && len(ivDataSlice) >= i-1 {
-				ivData := ivDataSlice[i]
-				if err := w.writeLine(&ivData); err != nil {
-					return err
-				}
-			}
-			if len(ivAnalysisSlice) > 0 && len(ivAnalysisSlice) >= i-1 {
-				ivAnalysis := ivAnalysisSlice[i]
-				if err := w.writeLine(&ivAnalysis); err != nil {
-					return err
-				}
-			}
+	// FRB asks that imageViewDetail should immediately be followed by its corresponding data and analysis
+	for i, ivDetail := range ivDetailSlice {
+		if err := w.writeLine(&ivDetail); err != nil {
+			return err
 		}
-	} else {
-		for _, ivDetail := range ivDetailSlice {
-			if err := w.writeLine(&ivDetail); err != nil {
-				return err
-			}
-		}
-		for _, ivData := range ivDataSlice {
+		if len(ivDataSlice) > 0 && len(ivDataSlice) >= i-1 {
+			ivData := ivDataSlice[i]
 			if err := w.writeLine(&ivData); err != nil {
 				return err
 			}
 		}
-		for _, ivAnalysis := range ivAnalysisSlice {
+		if len(ivAnalysisSlice) > 0 && len(ivAnalysisSlice) >= i-1 {
+			ivAnalysis := ivAnalysisSlice[i]
 			if err := w.writeLine(&ivAnalysis); err != nil {
 				return err
 			}

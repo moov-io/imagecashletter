@@ -228,11 +228,11 @@ func (rd *ReturnDetail) UnmarshalJSON(data []byte) error {
 	}
 
 	// trim quotes so both '"123"' and '123' end up as '123'
-	rniString := strings.Trim(string(aux.ReturnNotificationIndicator),"\"")
+	rniString := strings.Trim(string(aux.ReturnNotificationIndicator), "\"")
 	if rniString != "" {
 		numericVal, parseErr := strconv.Atoi(rniString)
 		if parseErr != nil {
-			return fmt.Errorf("ReturnNotificationIndicator failed to parse, must be numeric or empty: %w",parseErr)
+			return fmt.Errorf("ReturnNotificationIndicator failed to parse, must be numeric or empty: %w", parseErr)
 		}
 		rniString = strconv.Itoa(numericVal)
 	}

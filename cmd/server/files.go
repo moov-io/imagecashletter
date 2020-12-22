@@ -262,7 +262,6 @@ func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc
 		logger.Log("rendering file contents")
 
 		opts := []imagecashletter.WriterOption{
-			imagecashletter.WriteCollatedImageViewOption(),
 			imagecashletter.WriteVariableLineLengthOption(),
 		}
 
