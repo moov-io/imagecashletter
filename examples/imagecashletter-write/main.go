@@ -407,7 +407,6 @@ func main() {
 	}
 
 	opts := []imagecashletter.WriterOption{
-		imagecashletter.WriteCollatedImageViewOption(),
 		imagecashletter.WriteVariableLineLengthOption(),
 	}
 

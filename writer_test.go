@@ -263,7 +263,7 @@ func TestICLWrite_VariableLengthOption(t *testing.T) {
 	}
 
 	b := &bytes.Buffer{}
-	w := NewWriter(b, WriteVariableLineLengthOption(), WriteCollatedImageViewOption())
+	w := NewWriter(b, WriteVariableLineLengthOption())
 
 	if err := w.Write(&file); err != nil {
 		t.Errorf("Issue writing ICL: %+v \n", err)
@@ -288,7 +288,7 @@ func TestICLWrite_EbcdicEncodingOption(t *testing.T) {
 	}
 
 	b := &bytes.Buffer{}
-	w := NewWriter(b, WriteVariableLineLengthOption(), WriteEbcdicEncodingOption(), WriteCollatedImageViewOption())
+	w := NewWriter(b, WriteVariableLineLengthOption(), WriteEbcdicEncodingOption())
 
 	if err := w.Write(&file); err != nil {
 		t.Errorf("Issue writing ICL: %+v \n", err)
@@ -318,7 +318,7 @@ func TestWriter__CollateErr(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	w := NewWriter(&buf, WriteCollatedImageViewOption())
+	w := NewWriter(&buf)
 
 	err := w.writeCheckImageView(cd)
 	if err == nil {

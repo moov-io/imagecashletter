@@ -1,3 +1,14 @@
+## v0.6.0 (Unreleased)
+
+ADDITIONS
+
+- writer: always write collated image views (e.g. 50, 52, 50, 52)
+
+BUILD:
+
+- deps: update github.com/moov-io/base to v0.14.2
+- deps: update github.com/moov-io/paygate to v0.9.2
+
 ## v0.5.2 (Released 2020-12-10)
 
 BUG FIXES

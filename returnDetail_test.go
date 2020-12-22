@@ -243,9 +243,9 @@ func TestRDArchiveTypeIndicator(t *testing.T) {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "ArchiveTypeIndicator" {
 				t.Errorf("%T: %s", err, err)
-		    }
-	    }
-    }
+			}
+		}
+	}
 }
 
 // TestRDTimesReturned validation

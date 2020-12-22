@@ -21,15 +21,11 @@ func TestIssue138(t *testing.T) {
 	if err != nil {
 		t.Fatalf("FileFromJSON: %v", err)
 	}
-	opts := []WriterOption{
-		WriteCollatedImageViewOption(),
-		WriteVariableLineLengthOption(),
-	}
 
 	// prior to this code change, Write() panicked when writing collated images
 	var buf bytes.Buffer
 	require.NotPanics(t, func() {
-		assert.NoError(t, NewWriter(&buf, opts...).Write(f))
+		assert.NoError(t, NewWriter(&buf, WriteVariableLineLengthOption()).Write(f))
 	})
 
 	// Makes sure records are written with collated images
