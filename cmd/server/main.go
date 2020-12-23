@@ -41,7 +41,7 @@ func main() {
 	} else {
 		logger = log.NewDefaultLogger()
 	}
-	logger = logger.Set("package", "main")
+	logger = logger.Set("package", log.String("main"))
 
 	logger.Logf("Starting moov-io/imagecashletter server version %s", imagecashletter.Version)
 

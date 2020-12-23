@@ -7,7 +7,7 @@ require (
 	github.com/gdamore/encoding v1.0.0
 	github.com/go-kit/kit v0.10.0
 	github.com/gorilla/mux v1.8.0
-	github.com/moov-io/base v0.14.2
+	github.com/moov-io/base v0.15.2
 	github.com/moov-io/paygate v0.9.2
 	github.com/prometheus/client_golang v1.8.0
 	github.com/prometheus/common v0.15.0 // indirect

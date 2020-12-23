@@ -61,7 +61,7 @@ func getCashLetterId(w http.ResponseWriter, r *http.Request) string {
 func getFiles(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestID := moovhttp.GetRequestID(r); requestID != "" {
-			logger = logger.Set("requestID", requestID)
+			logger = logger.Set("requestID", log.String(requestID))
 		}
 
 		w = wrapResponseWriter(logger, w, r)
@@ -84,7 +84,7 @@ func getFiles(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestID := moovhttp.GetRequestID(r); requestID != "" {
-			logger = logger.Set("requestID", requestID)
+			logger = logger.Set("requestID", log.String(requestID))
 		}
 
 		w = wrapResponseWriter(logger, w, r)
@@ -142,7 +142,7 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 func getFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestID := moovhttp.GetRequestID(r); requestID != "" {
-			logger = logger.Set("requestID", requestID)
+			logger = logger.Set("requestID", log.String(requestID))
 		}
 
 		w = wrapResponseWriter(logger, w, r)
@@ -169,7 +169,7 @@ func getFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 func updateFileHeader(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestID := moovhttp.GetRequestID(r); requestID != "" {
-			logger = logger.Set("requestID", requestID)
+			logger = logger.Set("requestID", log.String(requestID))
 		}
 
 		w = wrapResponseWriter(logger, w, r)
@@ -186,7 +186,7 @@ func updateFileHeader(logger log.Logger, repo ICLFileRepository) http.HandlerFun
 			logger.LogError(errNoFileId)
 			return
 		}
-		logger = logger.Set("fileID", fileId)
+		logger = logger.Set("fileID", log.String(fileId))
 
 		file, err := repo.getFile(fileId)
 		if err != nil {
@@ -211,7 +211,7 @@ func updateFileHeader(logger log.Logger, repo ICLFileRepository) http.HandlerFun
 func deleteFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestID := moovhttp.GetRequestID(r); requestID != "" {
-			logger = logger.Set("requestID", requestID)
+			logger = logger.Set("requestID", log.String(requestID))
 		}
 
 		w = wrapResponseWriter(logger, w, r)
@@ -221,7 +221,7 @@ func deleteFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 			logger.LogError(errNoFileId)
 			return
 		}
-		logger = logger.Set("fileID", fileId)
+		logger = logger.Set("fileID", log.String(fileId))
 
 		if err := repo.deleteFile(fileId); err != nil {
 			err = logger.LogErrorf("error deleting file: %v", err).Err()
@@ -240,7 +240,7 @@ func deleteFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestID := moovhttp.GetRequestID(r); requestID != "" {
-			logger = logger.Set("requestID", requestID)
+			logger = logger.Set("requestID", log.String(requestID))
 		}
 
 		w = wrapResponseWriter(logger, w, r)
@@ -250,7 +250,7 @@ func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc
 			logger.LogError(errNoFileId)
 			return
 		}
-		logger = logger.Set("fileID", fileId)
+		logger = logger.Set("fileID", log.String(fileId))
 
 		file, err := repo.getFile(fileId)
 		if err != nil {
@@ -278,7 +278,7 @@ func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc
 func validateFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestID := moovhttp.GetRequestID(r); requestID != "" {
-			logger = logger.Set("requestID", requestID)
+			logger = logger.Set("requestID", log.String(requestID))
 		}
 
 		w = wrapResponseWriter(logger, w, r)
@@ -288,7 +288,7 @@ func validateFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 			logger.LogError(errNoFileId)
 			return
 		}
-		logger = logger.Set("fileID", fileId)
+		logger = logger.Set("fileID", log.String(fileId))
 
 		file, err := repo.getFile(fileId)
 		if err != nil {
@@ -313,7 +313,7 @@ func validateFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 func addCashLetterToFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestID := moovhttp.GetRequestID(r); requestID != "" {
-			logger = logger.Set("requestID", requestID)
+			logger = logger.Set("requestID", log.String(requestID))
 		}
 
 		w = wrapResponseWriter(logger, w, r)
@@ -330,7 +330,7 @@ func addCashLetterToFile(logger log.Logger, repo ICLFileRepository) http.Handler
 			logger.LogError(errNoFileId)
 			return
 		}
-		logger = logger.Set("fileID", fileId)
+		logger = logger.Set("fileID", log.String(fileId))
 
 		file, err := repo.getFile(fileId)
 		if err != nil {
@@ -356,7 +356,7 @@ func addCashLetterToFile(logger log.Logger, repo ICLFileRepository) http.Handler
 func removeCashLetterFromFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestID := moovhttp.GetRequestID(r); requestID != "" {
-			logger = logger.Set("requestID", requestID)
+			logger = logger.Set("requestID", log.String(requestID))
 		}
 
 		w = wrapResponseWriter(logger, w, r)
@@ -366,14 +366,14 @@ func removeCashLetterFromFile(logger log.Logger, repo ICLFileRepository) http.Ha
 			logger.LogError(errNoFileId)
 			return
 		}
-		logger = logger.Set("fileID", fileId)
+		logger = logger.Set("fileID", log.String(fileId))
 
 		cashLetterId := getCashLetterId(w, r)
 		if cashLetterId == "" {
 			logger.LogError(errNoCashLetterId)
 			return
 		}
-		logger = logger.Set("cashLetterID", cashLetterId)
+		logger = logger.Set("cashLetterID", log.String(cashLetterId))
 
 		file, err := repo.getFile(fileId)
 		if err != nil {
