@@ -45,7 +45,6 @@ then
   exit
 fi
 
-# see https://github.com/moovfinancial/engineering-guide#open-source-releases
 git add CHANGELOG.md version.go
 git commit -m "release $1"
 git tag "$1"
