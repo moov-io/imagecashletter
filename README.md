@@ -31,71 +31,77 @@ ImageCashLetter implements a reader, writer, and validator for X9’s Specificat
 
 ## Project Status
 
-Moov Image Cash Letter is actively used in multiple production environments. Please star the project if you are interested in its progress. If you have layers above Image Cash Letter to simplify tasks, perform business operations, or found bugs we would appreciate an issue or pull request. Thanks!
+Moov ImageCashLetter is actively used in multiple production environments. Please star the project if you are interested in its progress. If you have layers above ImageCashLetter to simplify tasks, perform business operations, or found bugs we would appreciate an issue or pull request. Thanks!
 
 ## Usage
+The Image Cash Letter project implements an HTTP server and [Go library](https://pkg.go.dev/github.com/moov-io/imagecashletter) for creating and modifying ICL files. We also have some [examples](https://pkg.go.dev/github.com/moov-io/imagecashletter/examples) of the reader and writer.
 
 ### Docker
 
-We publish a [public Docker image `moov/imagecashletter`](https://hub.docker.com/r/moov/imagecashletter/) from Docker Hub or use this repository. No configuration is required to serve on `:8083` and metrics at `:9093/metrics` in Prometheus format. We also have docker images for [OpenShift](https://quay.io/repository/moov/imagecashletter?tab=tags).
+We publish a [public Docker image `moov/imagecashletter`](https://hub.docker.com/r/moov/imagecashletter/) from Docker Hub or use this repository. No configuration is required to serve on `:8083` and metrics at `:9093/metrics` in Prometheus format. We also have Docker images for [OpenShift](https://quay.io/repository/moov/imagecashletter?tab=tags) published as `quay.io/moov/imagecashletter`.
 
-Start the Docker image:
+Pull & start the Docker image:
 ```
+docker pull moov/imagecashletter:latest
 docker run -p 8083:8083 -p 9093:9093 moov/imagecashletter:latest
 ```
 
-List files stored in-memory
+List files stored in-memory:
 ```
 curl localhost:8083/files
 ```
 ```
-{"files":[],"error":null}
+null
 ```
 
-Create a file on the HTTP server
+Create a file on the HTTP server:
 ```
-curl -XPOST --data-binary "@./test/testdata/BNK20180905121042882-A.icl" http://localhost:8083/files/create
+curl -XPOST --data-binary "@./test/testdata/valid-ascii.x937" http://localhost:8083/files/create
 ```
 ```
-{"id":"71ae3f5bc5527cdb1efc88e1814333fd9d6d2edb","fileHeader":{"id":"","standardLevel":"35","testIndicator":"T","immediateDestination":"231380104","immediateOrigin":"121042882", ...
+{"id":"<YOUR-UNIQUE-FILE-ID>","fileHeader":{"id":"","standardLevel":"03","testIndicator":"T","immediateDestination":"061000146","immediateOrigin":"026073150", ...
 ```
 
-Create a file with the JSON format on the HTTP server
+Read the X9 file (in JSON form):
+```
+curl http://localhost:8083/files/<YOUR-UNIQUE-FILE-ID>
+```
+```
+{"id":"<YOUR-UNIQUE-FILE-ID>","fileHeader":{"id":"","standardLevel":"03","testIndicator":"T","immediateDestination":"061000146","immediateOrigin":"026073150", ...
+```
+
+Create a file with JSON format on the HTTP server:
 ```
 curl -XPOST -H "content-type: application/json" localhost:8083/files/create --data @./test/testdata/icl-valid.json
 ```
 ```
-{"id":"8afcde4fc2cf4023e92a7a96be9dbbe44e1e9508","fileHeader":{"id":"","standardLevel":"35","testIndicator":"T","immediateDestination":"231380104","immediateOrigin":"121042882", ...
+{"id":"<YOUR-UNIQUE-FILE-ID>","fileHeader":{"id":"","standardLevel":"35","testIndicator":"T","immediateDestination":"231380104","immediateOrigin":"121042882", ...
 ```
 
-Get the formatted file
+Get the formatted file:
 ```
-curl localhost:8083/files/8afcde4fc2cf4023e92a7a96be9dbbe44e1e9508/contents
+curl localhost:8083/files/<YOUR-UNIQUE-FILE-ID>/contents
 ```
 ```
-0135T231380104121042882201810032219NCitadel           Wells Fargo        US
-0123138010412104288220181003201810032219IGA1      Contact Name  5558675552
-0123138010412104288220181003201810039999      1   01
-      123456789 031300012             555888100001000001              GD1Y030B
-1121042882201810031              938383            01   Test Payee     Y10
+P0135T231380104121042882201810032219NCitadel      Wells Fargo    US   P100123138010412104288220181003201810032219IGA1   Contact Name 5558675552  P200123138010412104288220181003201810039999   1  01             P25   123456789 031300012       555888100001000001       GD1Y030BP261121042882201810031       938383      01  Test Payee   Y10
 ...
 ```
 
-### Go library
+### Configuration Settings
 
-`github.com/moov-io/imagecashletter` offers a Go based Image Cash Letter file reader and writer. To get started checkout a specific example:
+The following environmental variables can be set to configure behavior in ImageCashLetter.
 
-<details>
-<summary>ICL File</summary>
+| Environmental Variable | Description | Default |
+|-----|-----|-----|
+| `HTTPS_CERT_FILE` | Filepath containing a certificate (or intermediate chain) to be served by the HTTP server. Requires all traffic be over secure HTTP. | Empty |
+| `HTTPS_KEY_FILE`  | Filepath of a private key matching the leaf certificate from `HTTPS_CERT_FILE`. | Empty |
 
- Example | Read | Write |
-|---------|------|-------|
-| [Link](examples/imagecashletter-read/iclFile.txt) | [Link](examples/imagecashletter-read/main.go) | [Link](examples/imagecashletter-write/main.go) |
-</details>
+### Data Persistence
+By design, ImageCashLetter  **does not persist** (save) any data about the files or entry details created. The only storage occurs in memory of the process and upon restart ImageCashLetter will have no files or data saved. Also, no in-memory encryption of the data is performed.
 
-### From Source
+### Go Library
 
-This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and uses Go 1.14 or higher. See [Golang's install instructions](https://golang.org/doc/install) for help setting up Go. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io/imagecashletter/releases/latest) as well. We highly recommend you use a tagged release for production.
+This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and uses Go v1.14 or higher. See [Golang's install instructions](https://golang.org/doc/install) for help setting up Go. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io/imagecashletter/releases/latest) as well. We highly recommend you use a tagged release for production.
 
 ```
 $ git@github.com:moov-io/imagecashletter.git
@@ -106,14 +112,18 @@ $ go get -u github.com/moov-io/imagecashletter
 $ go doc github.com/moov-io/imagecashletter CashLetter
 ```
 
-### Configuration
+The package [`github.com/moov-io/imagecashletter`](https://pkg.go.dev/github.com/moov-io/imagecashletter) offers a Go-based Image Cash Letter file reader and writer. To get started, check out a specific example:
 
-The following environmental variables can be set to configure behavior in paygate.
+<details>
+<summary>ICL File</summary>
 
-| Environmental Variable | Description | Default |
-|-----|-----|-----|
-| `HTTPS_CERT_FILE` | Filepath containing a certificate (or intermediate chain) to be served by the HTTP server. Requires all traffic be over secure HTTP. | Empty |
-| `HTTPS_KEY_FILE`  | Filepath of a private key matching the leaf certificate from `HTTPS_CERT_FILE`. | Empty |
+ Example | Read | Write |
+|---------|------|-------|
+| [Link](examples/imagecashletter-read/iclFile.x937) | [Link](examples/imagecashletter-read/main.go) | [Link](examples/imagecashletter-write/main.go) |
+</details>
+
+### In-Browser ICL File Parser
+Using our [in-browser utility](http://oss.moov.io/x9/), you can instantly convert X9 files into JSON. Either paste in ICL file content directly or choose a file from your local machine. This tool is particulary useful if you're handling sensitive PII or want perform some quick tests, as operations are fully client-side with nothing stored in memory. We plan to support bidirectional conversion in the near future.
 
 ## Getting Help
 
