@@ -21,7 +21,7 @@ func TestICLFileRead(t *testing.T) {
 		t.Errorf("%T: %s", err, err)
 	}
 	defer fd.Close()
-	r := NewReader(fd)
+	r := NewReader(fd, ReadVariableLineLengthOption())
 	_, err = r.Read()
 
 	if err != nil {
@@ -57,7 +57,7 @@ func TestICLFile(t *testing.T) {
 	}
 	defer fd.Close()
 
-	r := NewReader(fd)
+	r := NewReader(fd, ReadVariableLineLengthOption())
 	ICLFile, err := r.Read()
 	if err != nil {
 		t.Errorf("Issue reading file: %+v \n", err)
@@ -1051,7 +1051,7 @@ func TestICLCreditItemFile(t *testing.T) {
 	}
 	defer fd.Close()
 
-	ICLFile, err := NewReader(fd).Read()
+	ICLFile, err := NewReader(fd, ReadVariableLineLengthOption()).Read()
 	if err != nil {
 		t.Errorf("Issue reading file: %+v \n", err)
 	}
