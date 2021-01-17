@@ -106,7 +106,7 @@ func (fh *FileHeader) setRecordType() {
 		return
 	}
 	fh.recordType = "01"
-	fh.StandardLevel = "35"
+	// fh.StandardLevel = "35"
 }
 
 // Parse takes the input record string and parses the FileHeader values
