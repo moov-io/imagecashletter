@@ -29,6 +29,23 @@ Moov's mission is to give developers an easy way to create and integrate bank pr
 
 ImageCashLetter implements a reader, writer, and validator for X9’s Specifications for [Image Cash Letter](https://en.wikipedia.org/wiki/Check_21_Act) (ICL) to provide Check 21 services in an HTTP server and Go library. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/imagecashletter` is available.
 
+## Table of Contents
+
+- [Project Status](#project-status)
+- [Usage](#usage)
+  - As an API
+    - [Docker](#docker) ([Config](#configuration-settings))
+    - [Google Cloud](#google-cloud-run) ([Config](#configuration-settings))
+    - [Data Persistence](#data-persistence)
+  - [As a Go Module](#go-library)
+  - [As an In-Browser Parser](##in-browser-icl-file-parser)
+- [Learn About Image Cash Letter](#useful-links)
+- [FAQ](#faq)
+- [Getting Help](#getting-help)
+- [Supported and Tested Platforms](#supported-and-tested-platforms)
+- [Contributing](#contributing)
+- [Related Projects](#related-projects)
+
 ## Project Status
 
 Moov ImageCashLetter is actively used in multiple production environments. Please star the project if you are interested in its progress. If you have layers above ImageCashLetter to simplify tasks, perform business operations, or found bugs we would appreciate an issue or pull request. Thanks!
@@ -87,6 +104,44 @@ P0135T231380104121042882201810032219NCitadel      Wells Fargo    US   P100123138
 ...
 ```
 
+### Google Cloud Run
+
+To get started in a hosted environment you can deploy this project to the Google Cloud Platform.
+
+From your [Google Cloud dashboard](https://console.cloud.google.com/home/dashboard) create a new project and call it:
+```
+moov-icl-demo
+```
+
+Enable the [Container Registry](https://cloud.google.com/container-registry) API for your project and associate a [billing account](https://cloud.google.com/billing/docs/how-to/manage-billing-account) if needed. Then, open the Cloud Shell terminal and run the following Docker commands, substituting your unique project ID:
+
+```
+docker pull moov/imagecashletter
+docker tag moov/imagecashletter gcr.io/<PROJECT-ID>/imagecashletter
+docker push gcr.io/<PROJECT-ID>/imagecashletter
+```
+
+Deploy the container to Cloud Run:
+```
+gcloud run deploy --image gcr.io/<PROJECT-ID>/imagecashletter --port 8083
+```
+
+Select your target platform to `1`, service name to `imagecashletter`, and region to the one closest to you (enable Google API service if a prompt appears). Upon a successful build you will be given a URL where the API has been deployed:
+
+```
+https://YOUR-ICL-APP-URL.a.run.app
+```
+
+Now you can list files stored in-memory:
+```
+curl https://YOUR-ICL-APP-URL.a.run.app/files
+```
+You should get this response:
+```
+null
+```
+
+
 ### Configuration Settings
 
 The following environmental variables can be set to configure behavior in ImageCashLetter.
@@ -125,12 +180,17 @@ The package [`github.com/moov-io/imagecashletter`](https://pkg.go.dev/github.com
 ### In-Browser ICL File Parser
 Using our [in-browser utility](http://oss.moov.io/x9/), you can instantly convert X9 files into JSON. Either paste in ICL file content directly or choose a file from your local machine. This tool is particulary useful if you're handling sensitive PII or want perform some quick tests, as operations are fully client-side with nothing stored in memory. We plan to support bidirectional conversion in the near future.
 
+## Learn About Image Cash Letter
+- [Intro to ICL](./docs/intro.md)
+- [ICL File Structure](./docs/file-structure.md)
+
+## FAQ
+
 ## Getting Help
 
  channel | info
  ------- | -------
 [Project Documentation](https://moov-io.github.io/imagecashletter/) | Our project documentation available online.
-Google Group [moov-users](https://groups.google.com/forum/#!forum/moov-users)| The Moov users Google group is for contributors other people contributing to the Moov project. You can join them without a google account by sending an email to [moov-users+subscribe@googlegroups.com](mailto:moov-users+subscribe@googlegroups.com). After receiving the join-request message, you can simply reply to that to confirm the subscription.
 Twitter [@moov_io](https://twitter.com/moov_io)	| You can follow Moov.IO's Twitter feed to get updates on our project(s). You can also tweet us questions or just share blogs or stories.
 [GitHub Issue](https://github.com/moov-io) | If you are able to reproduce a problem please open a GitHub Issue under the specific project that caused the error.
 [moov-io slack](https://slack.moov.io/) | Join our slack channel to have an interactive discussion about the development of the project.
@@ -138,7 +198,7 @@ Twitter [@moov_io](https://twitter.com/moov_io)	| You can follow Moov.IO's Twitt
 ## Supported and Tested Platforms
 
 - 64-bit Linux (Ubuntu, Debian), macOS, and Windows
-- Rasberry Pi
+- Raspberry Pi
 
 Note: 32-bit platforms have known issues and is not supported.
 
@@ -146,12 +206,33 @@ Note: 32-bit platforms have known issues and is not supported.
 
 Yes please! Please review our [Contributing guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) to get started!
 
-This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and uses Go 1.14 or higher. See [Golang's install instructions](https://golang.org/doc/install) for help setting up Go. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io/imagecashletter/releases/latest) as well. We highly recommend you use a tagged release for production.
+This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and uses Go v1.14 or higher. See [Golang's install instructions](https://golang.org/doc/install) for help setting up Go. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io/imagecashletter/releases/latest) as well. We highly recommend you use a tagged release for production.
+
+### Releasing
+
+To make a release of imagecashletter simply open a pull request with `CHANGELOG.md` and `version.go` updated with the next version number and details. You'll also need to push the tag (i.e. `git push origin v1.0.0`) to origin in order for CI to make the release.
+
+### Testing
+
+We maintain a comprehensive suite of unit tests and recommend table-driven testing when a particular function warrants several very similar test cases. To run all test files in the current directory, use `go test`. Current overall coverage can be found on [Codecov](https://app.codecov.io/gh/moov-io/imagecashletter/).
 
 ### Fuzzing
 
-We currently run fuzzing over ACH in the form of a [`moov/imagecashletterfuzz`](https://hub.docker.com/r/moov/imagecashletterfuzz) Docker image. You can [read more](./test/fuzz-reader/README.md) or run the image and report crasher examples to [`security@moov.io`](mailto:security@moov.io). Thanks!
+We currently run fuzzing over ImageCashLetter in the form of a [`moov/imagecashletterfuzz`](https://hub.docker.com/r/moov/imagecashletterfuzz) Docker image. You can [read more](./test/fuzz-reader/README.md) or run the image and report crasher examples to [`security@moov.io`](mailto:security@moov.io). Thanks!
+
+## Related Projects
+As part of Moov's initiative to offer open source fintech infrastructure, we have a large collection of active projects you may find useful:
+
+- [Moov Watchman](https://github.com/moov-io/watchman) offers search functions over numerous trade sanction lists from the United States and European Union.
+
+- [Moov Fed](https://github.com/moov-io/fed) implements utility services for searching the United States Federal Reserve System such as ABA routing numbers, financial institution name lookup, and FedACH and Fedwire routing information.
+
+- [Moov Wire](https://github.com/moov-io/wire) implements an interface to write files for the Fedwire Funds Service, a real-time gross settlement funds transfer system operated by the United States Federal Reserve Banks.
+
+- [Moov ACH](https://github.com/moov-io/ach) provides ACH file generation and parsing, supporting all Standard Entry Codes for the primary method of money movement throughout the United States.
+
+- [Moov Metro 2](https://github.com/moov-io/metro2) provides a way to easily read, create, and validate Metro 2 format, which is used for consumer credit history reporting by the United States credit bureaus.
 
 ## License
 
-Apache License 2.0 See [LICENSE](LICENSE) for details.
+Apache License 2.0 - See [LICENSE](LICENSE) for details.
