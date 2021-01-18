@@ -169,13 +169,18 @@ $ go doc github.com/moov-io/imagecashletter CashLetter
 
 The package [`github.com/moov-io/imagecashletter`](https://pkg.go.dev/github.com/moov-io/imagecashletter) offers a Go-based Image Cash Letter file reader and writer. To get started, check out a specific example:
 
-<details>
-<summary>ICL File</summary>
-
- Example | Read | Write |
+ ICL File | Read | Write |
 |---------|------|-------|
 | [Link](examples/imagecashletter-read/iclFile.x937) | [Link](examples/imagecashletter-read/main.go) | [Link](examples/imagecashletter-write/main.go) |
-</details>
+
+There are a few reader and writer options available to change default behavior:
+| Option | Description |
+|-----|-----|-----|
+| `ReadVariableLineLengthOption` | Allows Reader to split ICL files based on encoded line lengths. |
+| `ReadEbcdicEncodingOption` | Allows Reader to decode scanned lines from EBCDIC to UTF-8. |
+| `WriteVariableLineLengthOption` | Allows Writer to write control bytes ahead of record to describe how long the line is. |
+| `WriteEbcdicEncodingOption` | Allows Writer to write file in EBCDIC. |
+
 
 ### In-Browser ICL File Parser
 Using our [in-browser utility](http://oss.moov.io/x9/), you can instantly convert X9 files into JSON. Either paste in ICL file content directly or choose a file from your local machine. This tool is particulary useful if you're handling sensitive PII or want perform some quick tests, as operations are fully client-side with nothing stored in memory. We plan to support bidirectional conversion in the near future.
@@ -183,8 +188,6 @@ Using our [in-browser utility](http://oss.moov.io/x9/), you can instantly conver
 ## Learn About Image Cash Letter
 - [Intro to ICL](./docs/intro.md)
 - [ICL File Structure](./docs/file-structure.md)
-
-## FAQ
 
 ## Getting Help
 
