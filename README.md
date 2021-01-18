@@ -38,9 +38,8 @@ ImageCashLetter implements a reader, writer, and validator for X9’s Specificat
     - [Google Cloud](#google-cloud-run) ([Config](#configuration-settings))
     - [Data Persistence](#data-persistence)
   - [As a Go Module](#go-library)
-  - [As an In-Browser Parser](##in-browser-icl-file-parser)
-- [Learn About Image Cash Letter](#useful-links)
-- [FAQ](#faq)
+  - [As an In-Browser Parser](#in-browser-icl-file-parser)
+- [Learn About Image Cash Letter](#learn-about-image-cash-letter)
 - [Getting Help](#getting-help)
 - [Supported and Tested Platforms](#supported-and-tested-platforms)
 - [Contributing](#contributing)
@@ -175,7 +174,7 @@ The package [`github.com/moov-io/imagecashletter`](https://pkg.go.dev/github.com
 
 There are a few reader and writer options available to change default behavior:
 | Option | Description |
-|-----|-----|-----|
+|-----|-----|
 | `ReadVariableLineLengthOption` | Allows Reader to split ICL files based on encoded line lengths. |
 | `ReadEbcdicEncodingOption` | Allows Reader to decode scanned lines from EBCDIC to UTF-8. |
 | `WriteVariableLineLengthOption` | Allows Writer to write control bytes ahead of record to describe how long the line is. |
