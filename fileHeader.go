@@ -98,6 +98,7 @@ type FileHeader struct {
 func NewFileHeader() FileHeader {
 	fh := FileHeader{}
 	fh.setRecordType()
+	fh.StandardLevel = "35"
 	return fh
 }
 
@@ -106,7 +107,6 @@ func (fh *FileHeader) setRecordType() {
 		return
 	}
 	fh.recordType = "01"
-	// fh.StandardLevel = "35"
 }
 
 // Parse takes the input record string and parses the FileHeader values
