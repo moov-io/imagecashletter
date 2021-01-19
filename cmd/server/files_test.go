@@ -92,7 +92,7 @@ func readFile(filename string) (*imagecashletter.File, error) {
 	if err != nil {
 		return nil, err
 	}
-	f, err := imagecashletter.NewReader(fd).Read()
+	f, err := imagecashletter.NewReader(fd, imagecashletter.ReadVariableLineLengthOption()).Read()
 	return &f, err
 }
 
