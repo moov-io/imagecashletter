@@ -70,15 +70,15 @@ curl localhost:8083/files
 null
 ```
 
-Create a file on the HTTP server:
+Upload an x9 file (binary):
 ```
-curl -XPOST --data-binary "@./test/testdata/valid-ascii.x937" http://localhost:8083/files/create
+curl -X POST --data-binary "@./test/testdata/valid-ascii.x937" http://localhost:8083/files/create
 ```
 ```
 {"id":"<YOUR-UNIQUE-FILE-ID>","fileHeader":{"id":"","standardLevel":"03","testIndicator":"T","immediateDestination":"061000146","immediateOrigin":"026073150", ...
 ```
 
-Read the X9 file (in JSON form):
+Retrieve an existing x9 file (JSON):
 ```
 curl http://localhost:8083/files/<YOUR-UNIQUE-FILE-ID>
 ```
@@ -86,9 +86,9 @@ curl http://localhost:8083/files/<YOUR-UNIQUE-FILE-ID>
 {"id":"<YOUR-UNIQUE-FILE-ID>","fileHeader":{"id":"","standardLevel":"03","testIndicator":"T","immediateDestination":"061000146","immediateOrigin":"026073150", ...
 ```
 
-Create a file with JSON format on the HTTP server:
+Create an x9 file from JSON:
 ```
-curl -XPOST -H "content-type: application/json" localhost:8083/files/create --data @./test/testdata/icl-valid.json
+curl -X POST -H "content-type: application/json" localhost:8083/files/create --data @./test/testdata/icl-valid.json
 ```
 ```
 {"id":"<YOUR-UNIQUE-FILE-ID>","fileHeader":{"id":"","standardLevel":"35","testIndicator":"T","immediateDestination":"231380104","immediateOrigin":"121042882", ...
@@ -172,12 +172,14 @@ The package [`github.com/moov-io/imagecashletter`](https://pkg.go.dev/github.com
 |---------|------|-------|
 | [Link](examples/imagecashletter-read/iclFile.x937) | [Link](examples/imagecashletter-read/main.go) | [Link](examples/imagecashletter-write/main.go) |
 
-There are a few reader and writer options available to change default behavior:
+ImageCashLetter's file handling behaviors can be modified to accommodate your specific use case. This is done by passing _options_ into ICL's `reader` and `writer` during instantiation. For example, to read EBCDID encoded files you would instantiate a reader with `NewReader(fd, ReadVariableLineLengthOption(), ReadEbcdicEncodingOption())`.
+
+The following options are currently supported:
 | Option | Description |
 |-----|-----|
-| `ReadVariableLineLengthOption` | Allows Reader to split ICL files based on encoded line lengths. |
+| `ReadVariableLineLengthOption` | Allows Reader to split ICL files based on the Inserted Length Field. |
 | `ReadEbcdicEncodingOption` | Allows Reader to decode scanned lines from EBCDIC to UTF-8. |
-| `WriteVariableLineLengthOption` | Allows Writer to write control bytes ahead of record to describe how long the line is. |
+| `WriteVariableLineLengthOption` | Instructs the Writer to begin each record with the appropriate Inserted Length Field. |
 | `WriteEbcdicEncodingOption` | Allows Writer to write file in EBCDIC. |
 
 
