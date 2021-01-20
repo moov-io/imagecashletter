@@ -1,4 +1,11 @@
-## v0.6.1 (Unreleased)
+## v0.6.1 (Released 2021-01-20)
+
+IMPROVEMENTS
+
+- readme: add table of contents
+- readme: document reader/writer options
+- readme: update cURL examples (and fix broken example files)
+- readme: add a section about running on Google Cloud Platform
 
 BUG FIXES
 
