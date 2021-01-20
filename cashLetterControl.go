@@ -64,7 +64,9 @@ func (clc *CashLetterControl) setRecordType() {
 	}
 
 	clc.recordType = "90"
-	clc.SettlementDate = time.Now()
+	if clc.SettlementDate.IsZero() {
+		clc.SettlementDate = time.Now()
+	}
 	clc.reserved = "              "
 }
 

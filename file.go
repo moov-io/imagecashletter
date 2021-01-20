@@ -261,9 +261,8 @@ func (f *File) Create() error {
 	fc.TotalRecordCount = fileTotalRecordCount
 	fc.TotalItemCount = fileTotalItemCount
 	fc.FileTotalAmount = fileTotalAmount
-	// May need to pass in a FC for these values
-	fc.ImmediateOriginContactName = ""
-	fc.ImmediateOriginContactPhoneNumber = ""
+	fc.ImmediateOriginContactName = f.Control.ImmediateOriginContactName
+	fc.ImmediateOriginContactPhoneNumber = f.Control.ImmediateOriginContactPhoneNumber
 	fc.CreditTotalIndicator = creditIndicator
 	f.Control = fc
 	return nil
