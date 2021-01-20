@@ -1,3 +1,15 @@
+## v0.6.1 (Unreleased)
+
+BUG FIXES
+
+- icl: don't overwrite existing file values with defaults
+
+BUILD
+
+- deps: update github.com/moov-io/base to v0.15.4
+- deps: update github.com/prometheus/client_golang to v1.8.0
+- deps: update github.com/stretchr/testify to v1.7.0
+
 ## v0.6.0 (Released 2020-12-24)
 
 ADDITIONS
