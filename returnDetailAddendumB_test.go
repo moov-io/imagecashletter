@@ -140,6 +140,13 @@ func TestParseAddendumBJSON(t *testing.T) {
 	if !addB.PayorBankBusinessDate.Equal(parsedTime) {
 		t.Errorf("PayorBankBusinessDate Expected '2021-01-21T00:00:00Z' got: %v", addB.PayorBankBusinessDate)
 	}
+	marshalledDate, marshalDateErr := json.Marshal(addB)
+	if marshalDateErr != nil {
+		t.Errorf("Unable to marshal ReturnDetailAddendumB to JSON: %v", marshalDateErr)
+	}
+	if !strings.Contains(string(marshalledDate),"2021-01-21T00:00:00Z") {
+		t.Errorf("ReturnDetailAddendumB failed to marshal time.Time value")
+	}
 
 	var testNoBusinessDateJSON =`{
 		"id": "",
@@ -157,6 +164,14 @@ func TestParseAddendumBJSON(t *testing.T) {
 	}
 	if !addB.PayorBankBusinessDate.IsZero() {
 		t.Errorf("PayorBankBusinessDate Expected zero-date got: %v", addB.PayorBankBusinessDate)
+	}
+
+	marshalled, marshalErr := json.Marshal(addB)
+	if marshalErr != nil {
+		t.Errorf("Unable to marshal ReturnDetailAddendumB to JSON: %v", marshalErr)
+	}
+	if strings.Contains(string(marshalled),"0001-01-01") {
+		t.Errorf("ReturnDetailAddendumB marshalled zero time.Time value")
 	}
 }
 
