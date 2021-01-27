@@ -95,7 +95,7 @@ func (rdAddendumB *ReturnDetailAddendumB) UnmarshalJSON(data []byte) error {
 			return dateErr
 		}
 	} else if !rdAddendumB.PayorBankBusinessDate.IsZero() {
-		// check if the current value is the zero value and setting it to
+		// checking if the current value is the zero value and setting it to
 		// the zero value if it isn't
 		rdAddendumB.PayorBankBusinessDate = time.Time{}
 	}
