@@ -55,9 +55,6 @@ The following snippet runs the ImageCashLetter Server on [Kubernetes](https://ku
 # Needs to be ran from inside the cluster
 $ curl http://imagecashletter.apps.svc.cluster.local:8083/ping
 PONG
-
-$ curl http://localhost:8083/files
-{"files":[],"error":null}
 ```
 
 Kubernetes manifest - save in a file (`imagecashletter.yaml`) and apply with `kubectl apply -f imagecashletter.yaml`.
