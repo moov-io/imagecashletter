@@ -166,11 +166,7 @@ func (rdAddendumB *ReturnDetailAddendumB) fieldInclusion() error {
 			Value: rdAddendumB.PayorBankSequenceNumber,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
 	}
-	//if rdAddendumB.PayorBankBusinessDate.IsZero() {
-	//	return &FieldError{FieldName: "PayorBankBusinessDate",
-	//		Value: rdAddendumB.PayorBankBusinessDate.String(),
-	//		Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
-	//}
+
 	return nil
 }
 
