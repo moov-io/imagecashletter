@@ -25,7 +25,7 @@
 
 # moov-io/imagecashletter
 
-Moov's mission is to give developers an easy way to create and integrate bank processing into their own software products. Our open source projects are each focused on solving a single responsibility in financial services and designed around performance, scalability, and ease-of-use.
+Moov's mission is to give developers an easy way to create and integrate bank processing into their own software products. Our open source projects are each focused on solving a single responsibility in financial services and designed around performance, scalability, and ease of use.
 
 ImageCashLetter implements a reader, writer, and validator for X9’s Specifications for [Image Cash Letter](https://en.wikipedia.org/wiki/Check_21_Act) (ICL) to provide Check 21 services in an HTTP server and Go library. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/imagecashletter` is available.
 
@@ -196,7 +196,7 @@ Using our [in-browser utility](http://oss.moov.io/x9/), you can instantly conver
  ------- | -------
 [Project Documentation](https://moov-io.github.io/imagecashletter/) | Our project documentation available online.
 Twitter [@moov_io](https://twitter.com/moov_io)	| You can follow Moov.IO's Twitter feed to get updates on our project(s). You can also tweet us questions or just share blogs or stories.
-[GitHub Issue](https://github.com/moov-io) | If you are able to reproduce a problem please open a GitHub Issue under the specific project that caused the error.
+[GitHub Issue](github.com/moov-io/imagecashletter/issues) | If you are able to reproduce a problem please open a GitHub Issue under the specific project that caused the error.
 [moov-io slack](https://slack.moov.io/) | Join our slack channel to have an interactive discussion about the development of the project.
 
 ## Supported and Tested Platforms
@@ -204,7 +204,7 @@ Twitter [@moov_io](https://twitter.com/moov_io)	| You can follow Moov.IO's Twitt
 - 64-bit Linux (Ubuntu, Debian), macOS, and Windows
 - Raspberry Pi
 
-Note: 32-bit platforms have known issues and is not supported.
+Note: 32-bit platforms have known issues and are not supported.
 
 ## Contributing
 
