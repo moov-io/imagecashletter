@@ -106,7 +106,7 @@ func (rdAddendumB *ReturnDetailAddendumB) UnmarshalJSON(data []byte) error {
 func (rdAddendumB ReturnDetailAddendumB) MarshalJSON() ([]byte, error) {
 	type Alias ReturnDetailAddendumB
 	if rdAddendumB.PayorBankBusinessDate.IsZero() {
-		// put the empty string in
+		// put the empty string in instead of marshalling the zero value
 		return json.Marshal(&struct{
 			*Alias
 			PayorBankBusinessDate string `json:"payorBankBusinessDate"`
