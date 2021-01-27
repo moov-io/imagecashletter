@@ -134,11 +134,11 @@ func (rdAddendumB *ReturnDetailAddendumB) fieldInclusion() error {
 			Value: rdAddendumB.PayorBankSequenceNumber,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
 	}
-	if rdAddendumB.PayorBankBusinessDate.IsZero() {
-		return &FieldError{FieldName: "PayorBankBusinessDate",
-			Value: rdAddendumB.PayorBankBusinessDate.String(),
-			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
-	}
+	//if rdAddendumB.PayorBankBusinessDate.IsZero() {
+	//	return &FieldError{FieldName: "PayorBankBusinessDate",
+	//		Value: rdAddendumB.PayorBankBusinessDate.String(),
+	//		Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
+	//}
 	return nil
 }
 
@@ -159,7 +159,11 @@ func (rdAddendumB *ReturnDetailAddendumB) PayorBankSequenceNumberField() string 
 
 // PayorBankBusinessDateField gets the PayorBankBusinessDate in YYYYMMDD format
 func (rdAddendumB *ReturnDetailAddendumB) PayorBankBusinessDateField() string {
-	return rdAddendumB.formatYYYYMMDDDate(rdAddendumB.PayorBankBusinessDate)
+	if rdAddendumB.PayorBankBusinessDate.IsZero() {
+		return rdAddendumB.alphaField("",8)
+	} else {
+		return rdAddendumB.formatYYYYMMDDDate(rdAddendumB.PayorBankBusinessDate)
+	}
 }
 
 // PayorAccountNameField gets the PayorAccountName field
