@@ -78,8 +78,10 @@ func (rdAddendumB *ReturnDetailAddendumB) Parse(record string) {
 func (rdAddendumB *ReturnDetailAddendumB) UnmarshalJSON(data []byte) error {
 	type Alias ReturnDetailAddendumB
 	aux := struct {
-		*Alias
+		// string is used here so we can check if the date is "" and
+		// avoid trying to unmarshal that value into a time.Time
 		PayorBankBusinessDate string `json:"payorBankBusinessDate"`
+		*Alias
 	}{
 		Alias: (*Alias)(rdAddendumB),
 	}
@@ -87,9 +89,15 @@ func (rdAddendumB *ReturnDetailAddendumB) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	if aux.PayorBankBusinessDate != "" {
-		if dateErr := rdAddendumB.UnmarshalJSON([]byte("\""+aux.PayorBankBusinessDate+"\"")); dateErr != nil {
+		if dateErr := rdAddendumB.PayorBankBusinessDate.UnmarshalJSON(
+			[]byte("\""+aux.PayorBankBusinessDate+"\""),
+		); dateErr != nil {
 			return dateErr
 		}
+	} else if !rdAddendumB.PayorBankBusinessDate.IsZero() {
+		// check if the current value is the zero value and setting it to
+		// the zero value if it isn't
+		rdAddendumB.PayorBankBusinessDate = time.Time{}
 	}
 	rdAddendumB.setRecordType()
 	return nil
@@ -107,13 +115,11 @@ func (rdAddendumB ReturnDetailAddendumB) MarshalJSON() ([]byte, error) {
 			PayorBankBusinessDate: "",
 		})
 	} else {
-		// necessary to avoid infinite recursion
+		// necessary to still use the alias to avoid infinite recursion
 		return json.Marshal(&struct{
 			*Alias
-			PayorBankBusinessDate time.Time `json:"payorBankBusinessDate"`
 		}{
 			Alias: (*Alias)(&rdAddendumB),
-			PayorBankBusinessDate: rdAddendumB.PayorBankBusinessDate,
 		})
 	}
 }

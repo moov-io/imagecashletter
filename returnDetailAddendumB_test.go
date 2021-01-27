@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"encoding/json"
 	"log"
 	"strings"
 	"testing"
@@ -112,6 +113,50 @@ func testRDAddendumBString(t testing.TB) {
 
 	if record.String() != line {
 		t.Errorf("Strings do not match")
+	}
+}
+
+// TestParseAddendumBJSON tests parsing a known ReturnDetailAddendumB
+func TestParseAddendumBJSON(t *testing.T) {
+	addB := ReturnDetailAddendumB{}
+	var testBusinessDateJSON =`{
+		"id": "",
+		"payorBankName": "",
+		"auxiliaryOnUs": "",
+		"payorBankSequenceNumber": "3713365076",
+		"payorAccountName": "",
+		"payorBankBusinessDate": "2021-01-21T00:00:00Z"
+}`
+	if err := json.Unmarshal([]byte(testBusinessDateJSON), &addB); err != nil {
+		t.Errorf("Unable to unmarshal ReturnDetailAddendumB JSON: %v", err)
+	}
+	if addB.PayorBankSequenceNumber != "3713365076" {
+		t.Errorf("PayorBankSequenceNumber Expected '3713365076' got: %v", addB.PayorBankSequenceNumber)
+	}
+	parsedTime, timeParseErr := time.Parse(time.RFC3339,"2021-01-21T00:00:00Z")
+	if timeParseErr != nil {
+		t.Errorf("Unable to parse test time: %v", timeParseErr)
+	}
+	if !addB.PayorBankBusinessDate.Equal(parsedTime) {
+		t.Errorf("PayorBankBusinessDate Expected '2021-01-21T00:00:00Z' got: %v", addB.PayorBankBusinessDate)
+	}
+
+	var testNoBusinessDateJSON =`{
+		"id": "",
+		"payorBankName": "",
+		"auxiliaryOnUs": "",
+		"payorBankSequenceNumber": "3713365088",
+		"payorAccountName": "",
+		"payorBankBusinessDate": ""
+}`
+	if err := json.Unmarshal([]byte(testNoBusinessDateJSON), &addB); err != nil {
+		t.Errorf("Unable to unmarshal ReturnDetailAddendumB JSON: %v", err)
+	}
+	if addB.PayorBankSequenceNumber != "3713365088" {
+		t.Errorf("PayorBankSequenceNumber Expected '3713365088' got: %v", addB.PayorBankSequenceNumber)
+	}
+	if !addB.PayorBankBusinessDate.IsZero() {
+		t.Errorf("PayorBankBusinessDate Expected zero-date got: %v", addB.PayorBankBusinessDate)
 	}
 }
 
