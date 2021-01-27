@@ -195,9 +195,9 @@ func (rdAddendumB *ReturnDetailAddendumB) PayorBankSequenceNumberField() string 
 func (rdAddendumB *ReturnDetailAddendumB) PayorBankBusinessDateField() string {
 	if rdAddendumB.PayorBankBusinessDate.IsZero() {
 		return rdAddendumB.alphaField("",8)
-	} else {
-		return rdAddendumB.formatYYYYMMDDDate(rdAddendumB.PayorBankBusinessDate)
 	}
+
+	return rdAddendumB.formatYYYYMMDDDate(rdAddendumB.PayorBankBusinessDate)
 }
 
 // PayorAccountNameField gets the PayorAccountName field
