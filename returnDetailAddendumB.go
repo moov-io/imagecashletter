@@ -89,6 +89,32 @@ func (rdAddendumB *ReturnDetailAddendumB) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+func (rdAddendumB ReturnDetailAddendumB) MarshalJSON() ([]byte, error) {
+	type Alias ReturnDetailAddendumB
+	if rdAddendumB.PayorBankBusinessDate.IsZero() {
+		// put the empty string in
+		return json.Marshal(&struct{
+			*Alias
+			PayorBankBusinessDate string `json:"payorBankBusinessDate"`
+		}{
+			Alias: (*Alias)(&rdAddendumB),
+			PayorBankBusinessDate: "",
+		})
+	} else {
+		// necessary to avoid infinite recursion
+		return json.Marshal(&struct{
+			*Alias
+			PayorBankBusinessDate time.Time `json:"payorBankBusinessDate"`
+		}{
+			Alias: (*Alias)(&rdAddendumB),
+			PayorBankBusinessDate: rdAddendumB.PayorBankBusinessDate,
+		})
+	}
+}
+
+
+
+
 // String writes the ReturnDetailAddendumB struct to a string.
 func (rdAddendumB *ReturnDetailAddendumB) String() string {
 	var buf strings.Builder
