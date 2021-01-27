@@ -114,14 +114,14 @@ func (rdAddendumB ReturnDetailAddendumB) MarshalJSON() ([]byte, error) {
 			Alias: (*Alias)(&rdAddendumB),
 			PayorBankBusinessDate: "",
 		})
-	} else {
-		// necessary to still use the alias to avoid infinite recursion
-		return json.Marshal(&struct{
-			*Alias
-		}{
-			Alias: (*Alias)(&rdAddendumB),
-		})
 	}
+
+	// necessary to still use the alias to avoid infinite recursion
+	return json.Marshal(&struct{
+		*Alias
+	}{
+		Alias: (*Alias)(&rdAddendumB),
+	})
 }
 
 
