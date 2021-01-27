@@ -79,11 +79,17 @@ func (rdAddendumB *ReturnDetailAddendumB) UnmarshalJSON(data []byte) error {
 	type Alias ReturnDetailAddendumB
 	aux := struct {
 		*Alias
+		PayorBankBusinessDate string `json:"payorBankBusinessDate"`
 	}{
-		(*Alias)(rdAddendumB),
+		Alias: (*Alias)(rdAddendumB),
 	}
 	if err := json.Unmarshal(data, &aux); err != nil {
 		return err
+	}
+	if aux.PayorBankBusinessDate != "" {
+		if dateErr := rdAddendumB.UnmarshalJSON([]byte("\""+aux.PayorBankBusinessDate+"\"")); dateErr != nil {
+			return dateErr
+		}
 	}
 	rdAddendumB.setRecordType()
 	return nil
