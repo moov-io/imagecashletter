@@ -6,6 +6,7 @@ package imagecashletter
 
 import (
 	"encoding/json"
+	"github.com/stretchr/testify/assert"
 	"log"
 	"strings"
 	"testing"
@@ -116,10 +117,10 @@ func testRDAddendumBString(t testing.TB) {
 	}
 }
 
-// TestParseAddendumBJSON tests parsing a known ReturnDetailAddendumB
-func TestParseAddendumBJSON(t *testing.T) {
+// TestParseAddendumBJSONWith3339Date tests parsing ReturnAddendumB with a PayorBankBusinessDate in RFC3339 format
+func TestParseAddendumBJSONWith3339Date(t *testing.T) {
 	addB := ReturnDetailAddendumB{}
-	var testBusinessDateJSON =`{
+	var testBusinessDateJSON = `{
 		"id": "",
 		"payorBankName": "",
 		"auxiliaryOnUs": "",
@@ -127,27 +128,76 @@ func TestParseAddendumBJSON(t *testing.T) {
 		"payorAccountName": "",
 		"payorBankBusinessDate": "2021-01-21T00:00:00Z"
 }`
-	if err := json.Unmarshal([]byte(testBusinessDateJSON), &addB); err != nil {
-		t.Errorf("Unable to unmarshal ReturnDetailAddendumB JSON: %v", err)
-	}
-	if addB.PayorBankSequenceNumber != "3713365076" {
-		t.Errorf("PayorBankSequenceNumber Expected '3713365076' got: %v", addB.PayorBankSequenceNumber)
-	}
-	parsedTime, timeParseErr := time.Parse(time.RFC3339,"2021-01-21T00:00:00Z")
-	if timeParseErr != nil {
-		t.Errorf("Unable to parse test time: %v", timeParseErr)
-	}
-	if !addB.PayorBankBusinessDate.Equal(parsedTime) {
-		t.Errorf("PayorBankBusinessDate Expected '2021-01-21T00:00:00Z' got: %v", addB.PayorBankBusinessDate)
-	}
-	marshalledDate, marshalDateErr := json.Marshal(addB)
-	if marshalDateErr != nil {
-		t.Errorf("Unable to marshal ReturnDetailAddendumB to JSON: %v", marshalDateErr)
-	}
-	if !strings.Contains(string(marshalledDate),"2021-01-21T00:00:00Z") {
-		t.Errorf("ReturnDetailAddendumB failed to marshal time.Time value")
-	}
+	assert.NoError(
+		t,
+		json.Unmarshal([]byte(testBusinessDateJSON), &addB),
+		"Unable to unmarshal ReturnDetailAddendumB",
+	)
+	assert.Equal(
+		t,
+		"3713365076",
+		addB.PayorBankSequenceNumber,
+		"PayorBankSequenceNumber should match JSON",
+	)
+	parsedTime, timeParseErr := time.Parse(
+		time.RFC3339,
+		"2021-01-21T00:00:00Z",
+	)
+	assert.NoError(t, timeParseErr, "Unable to parse test time")
+	assert.True(t, addB.PayorBankBusinessDate.Equal(parsedTime), "PayorBankBusinessDate should match JSON")
 
+	marshalled, marshalErr := json.Marshal(addB)
+	assert.NoError(t, marshalErr, "Unable to marshal ReturnDetailAddendumB to JSON")
+	assert.Contains(
+		t,
+		string(marshalled),
+		"2021-01-21T00:00:00Z",
+		"JSON should contain PayorBankBusinessDate",
+	)
+}
+
+// TestParseAddendumBJSONWithX9Date tests parsing ReturnAddendumB with a PayorBankBusinessDate in X9's YYYYMMDD format
+func TestParseAddendumBJSONWithX9Date(t *testing.T) {
+	addB := ReturnDetailAddendumB{}
+	var testBusinessDateJSON = `{
+		"id": "",
+		"payorBankName": "",
+		"auxiliaryOnUs": "",
+		"payorBankSequenceNumber": "3713365076",
+		"payorAccountName": "",
+		"payorBankBusinessDate": "20210121"
+}`
+	assert.NoError(
+		t,
+		json.Unmarshal([]byte(testBusinessDateJSON), &addB),
+		"Unable to unmarshal ReturnDetailAddendumB",
+	)
+	assert.Equal(
+		t,
+		"3713365076",
+		addB.PayorBankSequenceNumber,
+		"PayorBankSequenceNumber should match JSON",
+	)
+	parsedTime, timeParseErr := time.Parse(
+		time.RFC3339,
+		"2021-01-21T00:00:00Z",
+	)
+	assert.NoError(t, timeParseErr, "Unable to parse test time")
+	assert.True(t, addB.PayorBankBusinessDate.Equal(parsedTime), "PayorBankBusinessDate should match JSON")
+
+	marshalled, marshalErr := json.Marshal(addB)
+	assert.NoError(t, marshalErr, "Unable to marshal ReturnDetailAddendumB to JSON")
+	assert.Contains(
+		t,
+		string(marshalled),
+		"2021-01-21T00:00:00Z",
+		"JSON should contain PayorBankBusinessDate",
+	)
+}
+
+// TestParseAddendumBJSONWith3339Date tests parsing ReturnAddendumB with a PayorBankBusinessDate that is empty
+func TestParseAddendumBJSONWithEmptyDate(t *testing.T) {
+	addB := ReturnDetailAddendumB{}
 	var testNoBusinessDateJSON =`{
 		"id": "",
 		"payorBankName": "",
@@ -156,23 +206,32 @@ func TestParseAddendumBJSON(t *testing.T) {
 		"payorAccountName": "",
 		"payorBankBusinessDate": ""
 }`
-	if err := json.Unmarshal([]byte(testNoBusinessDateJSON), &addB); err != nil {
-		t.Errorf("Unable to unmarshal ReturnDetailAddendumB JSON: %v", err)
-	}
-	if addB.PayorBankSequenceNumber != "3713365088" {
-		t.Errorf("PayorBankSequenceNumber Expected '3713365088' got: %v", addB.PayorBankSequenceNumber)
-	}
-	if !addB.PayorBankBusinessDate.IsZero() {
-		t.Errorf("PayorBankBusinessDate Expected zero-date got: %v", addB.PayorBankBusinessDate)
-	}
+
+	assert.NoError(
+		t,
+		json.Unmarshal([]byte(testNoBusinessDateJSON), &addB),
+		"Unable to unmarshal ReturnDetailAddendumB",
+	)
+	assert.Equal(
+		t,
+		"3713365088",
+		addB.PayorBankSequenceNumber,
+		"PayorBankSequenceNumber should match JSON",
+	)
+	assert.True(
+		t,
+		addB.PayorBankBusinessDate.IsZero(),
+		"PayorBankBusinessDate should be a time.Time zero value",
+	)
 
 	marshalled, marshalErr := json.Marshal(addB)
-	if marshalErr != nil {
-		t.Errorf("Unable to marshal ReturnDetailAddendumB to JSON: %v", marshalErr)
-	}
-	if strings.Contains(string(marshalled),"0001-01-01") {
-		t.Errorf("ReturnDetailAddendumB marshalled zero time.Time value")
-	}
+	assert.NoError(t, marshalErr, "Unable to marshal ReturnDetailAddendumB to JSON")
+	assert.NotContains(
+		t,
+		string(marshalled),
+		"0001-01-01",
+		"JSON should not contain a time.Time zero value",
+	)
 }
 
 // TestRDAddendumBString tests validating that a known parsed ReturnDetailAddendumB can return to a string of the
