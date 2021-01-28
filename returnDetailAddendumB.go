@@ -88,16 +88,18 @@ func (rdAddendumB *ReturnDetailAddendumB) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &aux); err != nil {
 		return err
 	}
+	// The spec calls for this field to be formatted as YYYYMMDD, but we should handle
+	// RFC3339 as well for convenience. Default to empty time.Time{} if no date was passed in.
+	rdAddendumB.PayorBankBusinessDate = time.Time{}
 	if aux.PayorBankBusinessDate != "" {
-		if dateErr := rdAddendumB.PayorBankBusinessDate.UnmarshalJSON(
-			[]byte("\""+aux.PayorBankBusinessDate+"\""),
-		); dateErr != nil {
-			return dateErr
+		parsed, err := time.Parse(time.RFC3339, aux.PayorBankBusinessDate)
+		if err != nil {
+			parsed, err = time.Parse("20060102", aux.PayorBankBusinessDate)
+			if err != nil {
+				return err
+			}
 		}
-	} else if !rdAddendumB.PayorBankBusinessDate.IsZero() {
-		// checking if the current value is the zero value and setting it to
-		// the zero value if it isn't
-		rdAddendumB.PayorBankBusinessDate = time.Time{}
+		rdAddendumB.PayorBankBusinessDate = parsed
 	}
 	rdAddendumB.setRecordType()
 	return nil
