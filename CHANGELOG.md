@@ -1,3 +1,9 @@
+## v0.6.2 (Unreleased)
+
+BUG FIXES
+
+- returnDetailAddendumB: make `PayorBankBusinessDate` conditional; don't marshal empty `time.Time{}`
+
 ## v0.6.1 (Released 2021-01-20)
 
 IMPROVEMENTS
