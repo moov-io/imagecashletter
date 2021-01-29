@@ -78,16 +78,56 @@ func (rdAddendumB *ReturnDetailAddendumB) Parse(record string) {
 func (rdAddendumB *ReturnDetailAddendumB) UnmarshalJSON(data []byte) error {
 	type Alias ReturnDetailAddendumB
 	aux := struct {
+		// string is used here so we can check if the date is "" and
+		// avoid trying to unmarshal that value into a time.Time
+		PayorBankBusinessDate string `json:"payorBankBusinessDate"`
 		*Alias
 	}{
-		(*Alias)(rdAddendumB),
+		Alias: (*Alias)(rdAddendumB),
 	}
 	if err := json.Unmarshal(data, &aux); err != nil {
 		return err
 	}
+	// The spec calls for this field to be formatted as YYYYMMDD, but we should handle
+	// RFC3339 as well for convenience. Default to empty time.Time{} if no date was passed in.
+	rdAddendumB.PayorBankBusinessDate = time.Time{}
+	if aux.PayorBankBusinessDate != "" {
+		parsed, err := time.Parse(time.RFC3339, aux.PayorBankBusinessDate)
+		if err != nil {
+			parsed, err = time.Parse("20060102", aux.PayorBankBusinessDate)
+			if err != nil {
+				return err
+			}
+		}
+		rdAddendumB.PayorBankBusinessDate = parsed
+	}
 	rdAddendumB.setRecordType()
 	return nil
 }
+
+func (rdAddendumB ReturnDetailAddendumB) MarshalJSON() ([]byte, error) {
+	type Alias ReturnDetailAddendumB
+	if rdAddendumB.PayorBankBusinessDate.IsZero() {
+		// put the empty string in instead of marshalling the zero value
+		return json.Marshal(&struct{
+			*Alias
+			PayorBankBusinessDate string `json:"payorBankBusinessDate"`
+		}{
+			Alias: (*Alias)(&rdAddendumB),
+			PayorBankBusinessDate: "",
+		})
+	}
+
+	// necessary to still use the alias to avoid infinite recursion
+	return json.Marshal(&struct{
+		*Alias
+	}{
+		Alias: (*Alias)(&rdAddendumB),
+	})
+}
+
+
+
 
 // String writes the ReturnDetailAddendumB struct to a string.
 func (rdAddendumB *ReturnDetailAddendumB) String() string {
@@ -134,11 +174,7 @@ func (rdAddendumB *ReturnDetailAddendumB) fieldInclusion() error {
 			Value: rdAddendumB.PayorBankSequenceNumber,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
 	}
-	if rdAddendumB.PayorBankBusinessDate.IsZero() {
-		return &FieldError{FieldName: "PayorBankBusinessDate",
-			Value: rdAddendumB.PayorBankBusinessDate.String(),
-			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
-	}
+
 	return nil
 }
 
@@ -159,6 +195,10 @@ func (rdAddendumB *ReturnDetailAddendumB) PayorBankSequenceNumberField() string 
 
 // PayorBankBusinessDateField gets the PayorBankBusinessDate in YYYYMMDD format
 func (rdAddendumB *ReturnDetailAddendumB) PayorBankBusinessDateField() string {
+	if rdAddendumB.PayorBankBusinessDate.IsZero() {
+		return rdAddendumB.alphaField("",8)
+	}
+
 	return rdAddendumB.formatYYYYMMDDDate(rdAddendumB.PayorBankBusinessDate)
 }
 
