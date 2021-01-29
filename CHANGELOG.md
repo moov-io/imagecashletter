@@ -1,4 +1,4 @@
-## v0.6.2 (Unreleased)
+## v0.6.2 (Released 2021-01-29)
 
 BUG FIXES
 
