@@ -1,3 +1,10 @@
+---
+layout: page
+title: File Structure
+hide_hero: true
+show_sidebar: false
+menubar: docs-menu
+---
 
 ## File Structure and Record Types
 

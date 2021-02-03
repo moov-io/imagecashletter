@@ -1,3 +1,11 @@
+---
+layout: page
+title: Intro
+hide_hero: true
+show_sidebar: false
+menubar: docs-menu
+---
+
 ## What is Image Cash Letter?
 
 Image Cash Letter (ICL) specifications provide Check 21 services and are designed to enable banks to handle more checks electronically, which should make check processing faster and more efficient. Traditionally, banks often physically move original paper checks from the bank where the checks are deposited to the bank that pays them. The overall process of translating physical checks to electronic messages is [called Check Truncation](https://en.wikipedia.org/wiki/Cheque_truncation).
