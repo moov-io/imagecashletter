@@ -16,7 +16,7 @@ Moov ImageCashLetter is dependent on Docker being properly installed and running
 docker ps
 ```
 ```
-CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+CONTAINER ID        IMAGE        COMMAND        CREATED        STATUS        PORTS        NAMES
 ```
 
 Pull & start the Docker image:
