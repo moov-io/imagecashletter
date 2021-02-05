@@ -24,8 +24,6 @@ description: >- # this means to ignore newlines until "baseurl:"
   Moov ImageCashLetter implements a low-level Image Cash Letter (ICL) interface for parsing, creating, and validating ICL files. Moov ImageCashLetter exposes an HTTP API for REST-based interaction.
 url: "https://moov-io.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 baseurl: "/imagecashletter" # the subpath of your site, e.g. /blog
-twitter_username: jekyllrb
-github_username:  jekyll
 source_code: https://github.com/moov-io/imagecashletter
 permalink: pretty
 
