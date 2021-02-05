@@ -27,6 +27,7 @@ baseurl: "/imagecashletter" # the subpath of your site, e.g. /blog
 twitter_username: jekyllrb
 github_username:  jekyll
 source_code: https://github.com/moov-io/imagecashletter
+permalink: pretty
 
 # Build settings
 remote_theme: nlakritz/bulma-clean-theme
