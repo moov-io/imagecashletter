@@ -17,7 +17,7 @@ type BundleControl struct {
 	BundleItemsCount int32 `json:"bundleItemsCount"`
 	// BundleTotalAmount identifies the total amount of item amounts within the bundle.
 	BundleTotalAmount int32 `json:"bundleTotalAmount"`
-	// MICRValidTotalAmount identifies the total amount of all CheckDetail Records within the bundle which contains 1 in the MICRValidIndicator.
+	// MICRValidTotalAmount identifies the total amount of all Check Records within the bundle which contains 1 in the MICRValidIndicator.
 	MicrValidTotalAmount int32 `json:"micrValidTotalAmount,omitempty"`
 	// BundleImagesCount identifies the total number of Image ViewDetail Records  within the bundle.
 	BundleImagesCount int32 `json:"bundleImagesCount,omitempty"`

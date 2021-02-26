@@ -569,7 +569,7 @@ components:
       properties:
         cashLetterHeader:
           $ref: '#/components/schemas/CashLetterHeader'
-        # Current Implementation: CreditItem(s) Precede CheckDetail(s) - CreditItem(s) outside the leading Bundle
+        # Current Implementation: CreditItem(s) Precede Check(s) - CreditItem(s) outside the leading Bundle
         # and Within the First Cash Letter.  Please adjust reader and writer, and openAPI for your specific clearing arrangement
         # implementation or contact MOOV for your particular implementation.
         creditItems:
@@ -654,8 +654,7 @@ components:
             - F
           description: |
             RecordTypeIndicator is a code that indicates the presence of records or the type of records contained in the cash letter.
-            If an image is associated with any CheckDetail or Return, the cash letter must have a
-            RecordTypeIndicator of I or F.
+            If an image is associated with any Check or Return, the cash letter must have a RecordTypeIndicator of I or F.
 
             * `N` - No electronic check records or image records (Type 2x’s, 3x’s, 5x’s); e.g., an empty cash letter.
             * `E` - Cash letter contains electronic check records with no images (Type 2x’s and 3x’s only).
@@ -698,7 +697,6 @@ components:
             * `L` - No image provided, no paper provided, image upon request
             * `M` - No image provided, Electronic Check provided separately
             * `Z` - Not Same Type–Documentation associated with each item in Cash Letter will be different.
-            The Check Detail
           example: 'A'
         cashLetterID:
           type: string
@@ -904,7 +902,7 @@ components:
           example: 100
         micrValidTotalAmount:
           type: integer
-          description: MICRValidTotalAmount identifies the total amount of all CheckDetail Records within the bundle which
+          description: MICRValidTotalAmount identifies the total amount of all Check Records within the bundle which
             contains 1 in the MICRValidIndicator.
           example: 100
         bundleImagesCount:
@@ -934,17 +932,9 @@ components:
         - bundleTotalAmount
     Checks:
       properties:
-        checkDetail:
-          $ref: '#/components/schemas/CheckDetail'
-    Returns:
-      properties:
-        returnDetail:
-          $ref: '#/components/schemas/ReturnDetail'
-    CheckDetail:
-      properties:
         ID:
           type: string
-          description: CheckDetail ID
+          description: Check ID
           example: d1e26288
         auxiliaryOnUs:
           type: string
@@ -989,7 +979,7 @@ components:
         eCEInstitutionItemSequenceNumber:
           type: string
           maxLength: 15
-          description: ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
+          description: ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the Check.
             Field must contain a numeric value. It cannot be all blanks.
           example: '24531'
         documentationTypeIndicator:
@@ -1053,7 +1043,7 @@ components:
             - E
             - F
           description: |
-            ReturnAcceptanceIndicator is a code that indicates whether the institution that creates the CheckDetail
+            ReturnAcceptanceIndicator is a code that indicates whether the institution that creates the Check
             will or will not support electronic return processing.
 
             * `0` -	Will not accept any electronic information
@@ -1083,7 +1073,7 @@ components:
             - 4
           description: |
             MICRValidIndicator is a code that indicates whether any character in the Magnetic Ink Character Recognition
-            (MICR) property is unreadable, or the OnUs property is missing from the CheckDetail.
+            (MICR) property is unreadable, or the OnUs property is missing from the Check.
             * `1` - Good read
             * `2` - Good read, missing field
             * `3` - Read error encountered
@@ -1141,7 +1131,7 @@ components:
             - H
             - I
           description: |
-            ArchiveTypeIndicator is a code that indicates the type of archive that supports this CheckDetail.
+            ArchiveTypeIndicator is a code that indicates the type of archive that supports this Check.
             Access method, availability and time-frames shall be defined by clearing arrangements.
 
             * `A` - Microfilm
@@ -1155,22 +1145,34 @@ components:
             * `I` - None
           example: 'A'
         checkDetailAddendumA:
-          $ref: '#/components/schemas/CheckDetailAddendumA'
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckDetailAddendumA'
         checkDetailAddendumB:
-          $ref: '#/components/schemas/CheckDetailAddendumB'
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckDetailAddendumB'
         checkDetailAddendumC:
-          $ref: '#/components/schemas/CheckDetailAddendumC'
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckDetailAddendumC'
         imageViewDetail:
-          $ref: '#/components/schemas/ImageViewDetail'
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageViewDetail'
         imageViewData:
-          $ref: '#/components/schemas/ImageViewData'
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageViewData'
         imageViewAnalysis:
-          $ref: '#/components/schemas/ImageViewAnalysis'
-    ReturnDetail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageViewAnalysis'
+    Returns:
       properties:
         ID:
           type: string
-          description: CheckDetail ID
+          description: Return ID
           example: d1e26288
         payorBankRoutingNumber:
           type: string
@@ -1299,7 +1301,7 @@ components:
             - H
             - I
           description: |
-            ArchiveTypeIndicator is a code that indicates the type of archive that supports this CheckDetail.
+            ArchiveTypeIndicator is a code that indicates the type of archive that supports this Check.
             Access method, availability and time-frames shall be defined by clearing arrangements.
             * `A` - Microfilm
             * `B` - Image
@@ -1326,19 +1328,33 @@ components:
             * `2` - The item has been returned twice
             * `3` - The item has been returned three times
         returnDetailAddendumA:
-          $ref: '#/components/schemas/ReturnDetailAddendumA'
+          type: array
+          items:
+            $ref: '#/components/schemas/ReturnDetailAddendumA'
         returnDetailAddendumB:
-          $ref: '#/components/schemas/ReturnDetailAddendumB'
+          type: array
+          items:
+            $ref: '#/components/schemas/ReturnDetailAddendumB'
         returnDetailAddendumC:
-          $ref: '#/components/schemas/ReturnDetailAddendumC'
+          type: array
+          items:
+            $ref: '#/components/schemas/ReturnDetailAddendumC'
         returnDetailAddendumD:
-          $ref: '#/components/schemas/ReturnDetailAddendumD'
+          type: array
+          items:
+            $ref: '#/components/schemas/ReturnDetailAddendumD'
         imageViewDetail:
-          $ref: '#/components/schemas/ImageViewDetail'
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageViewDetail'
         imageViewData:
-          $ref: '#/components/schemas/ImageViewData'
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageViewData'
         imageViewAnalysis:
-          $ref: '#/components/schemas/ImageViewAnalysis'
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageViewAnalysis'
     CreditItem:
       properties:
         ID:
@@ -1487,12 +1503,12 @@ components:
           example: '231380104'
         routingNumberTotalAmount:
           type: integer
-          description: RoutingNumberTotalAmount is the total amount for all Check Detail Records associated with the
+          description: RoutingNumberTotalAmount is the total amount for all Check Records associated with the
             Payor bank routing number designated in the Routing Number within Cash Letter.
           example: 10000
         routingNumberItemCount:
           type: integer
-          description: RoutingNumberItemCount is the the total number of all Check Detail Records associated with the
+          description: RoutingNumberItemCount is the the total number of all Check Records associated with the
             payor bank routing number designated in the Routing Number within Cash Letter.
           example: 10
         userField:
@@ -1638,7 +1654,7 @@ components:
           type: string
           maxLength: 15
           description: microfilmArchiveSequenceNumber is a number that identifies the item in the microfilm archive system;
-            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+            it may be different than the Check.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
           example: '1'
         lengthImageReferenceKey:
           type: string
@@ -1646,7 +1662,7 @@ components:
             - 0034
           description: |
             MicrofilmArchiveSequenceNumber A number that identifies the item in the microfilm archive system;
-            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+            it may be different than the Check.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
 
             * `0034` - ImageReferenceKey contains the ImageReferenceKey (ImageReferenceKeyIndicator is 0).
             * `0000` - ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
@@ -2073,7 +2089,7 @@ components:
           type: string
           maxLength: 15
           description: ECEInstitutionItemSequenceNumber is a number assigned by the institution that creates the
-            CheckDetail or Return.  This number is imported from the CheckDetail.ECEInstitutionItemSequenceNumber or
+            Check or Return.  This number is imported from the Check.ECEInstitutionItemSequenceNumber or
             Return.ECEInstitutionItemSequenceNumber associated with the image view conveyed in this Image View Data Record.
             The ECE institution must construct the sequence number to guarantee uniqueness for a given routing number,
             business day, and cycle number. Must contain a numeric value.
@@ -2778,7 +2794,7 @@ components:
           type: string
           maxLength: 15
           description: microfilmArchiveSequenceNumber is a number that identifies the item in the microfilm archive system;
-            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+            it may be different than the Check.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
           example: '1'
         lengthImageReferenceKey:
           type: string
@@ -2786,7 +2802,7 @@ components:
             - 0034
           description: |
             MicrofilmArchiveSequenceNumber A number that identifies the item in the microfilm archive system;
-            it may be different than the Check Detail.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+            it may be different than the Check.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
 
             * `0034` - ImageReferenceKey contains the ImageReferenceKey (ImageReferenceKeyIndicator is 0).
             * `0000` - ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).

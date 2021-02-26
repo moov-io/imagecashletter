@@ -15,9 +15,9 @@ type RoutingNumberSummary struct {
 	ID string `json:"ID,omitempty"`
 	// CashLetterRoutingNumber is a number that identifies a given payor bank within a cash letter containing one or more payor banks.
 	CashLetterRoutingNumber string `json:"cashLetterRoutingNumber"`
-	// RoutingNumberTotalAmount is the total amount for all Check Detail Records associated with the Payor bank routing number designated in the Routing Number within Cash Letter.
+	// RoutingNumberTotalAmount is the total amount for all Check Records associated with the Payor bank routing number designated in the Routing Number within Cash Letter.
 	RoutingNumberTotalAmount int32 `json:"routingNumberTotalAmount,omitempty"`
-	// RoutingNumberItemCount is the the total number of all Check Detail Records associated with the payor bank routing number designated in the Routing Number within Cash Letter.
+	// RoutingNumberItemCount is the the total number of all Check Records associated with the payor bank routing number designated in the Routing Number within Cash Letter.
 	RoutingNumberItemCount int32 `json:"routingNumberItemCount,omitempty"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField,omitempty"`
