@@ -109,25 +109,22 @@ func (rdAddendumB ReturnDetailAddendumB) MarshalJSON() ([]byte, error) {
 	type Alias ReturnDetailAddendumB
 	if rdAddendumB.PayorBankBusinessDate.IsZero() {
 		// put the empty string in instead of marshalling the zero value
-		return json.Marshal(&struct{
+		return json.Marshal(&struct {
 			*Alias
 			PayorBankBusinessDate string `json:"payorBankBusinessDate"`
 		}{
-			Alias: (*Alias)(&rdAddendumB),
+			Alias:                 (*Alias)(&rdAddendumB),
 			PayorBankBusinessDate: "",
 		})
 	}
 
 	// necessary to still use the alias to avoid infinite recursion
-	return json.Marshal(&struct{
+	return json.Marshal(&struct {
 		*Alias
 	}{
 		Alias: (*Alias)(&rdAddendumB),
 	})
 }
-
-
-
 
 // String writes the ReturnDetailAddendumB struct to a string.
 func (rdAddendumB *ReturnDetailAddendumB) String() string {
@@ -196,7 +193,7 @@ func (rdAddendumB *ReturnDetailAddendumB) PayorBankSequenceNumberField() string 
 // PayorBankBusinessDateField gets the PayorBankBusinessDate in YYYYMMDD format
 func (rdAddendumB *ReturnDetailAddendumB) PayorBankBusinessDateField() string {
 	if rdAddendumB.PayorBankBusinessDate.IsZero() {
-		return rdAddendumB.alphaField("",8)
+		return rdAddendumB.alphaField("", 8)
 	}
 
 	return rdAddendumB.formatYYYYMMDDDate(rdAddendumB.PayorBankBusinessDate)

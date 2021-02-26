@@ -23,7 +23,7 @@ type ImageViewData struct {
 	BundleBusinessDate time.Time `json:"bundleBusinessDate,omitempty"`
 	// CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which the bundle is created.
 	CycleNumber string `json:"cycleNumber,omitempty"`
-	// ECEInstitutionItemSequenceNumber is a number assigned by the institution that creates the CheckDetail or Return.  This number is imported from the CheckDetail.ECEInstitutionItemSequenceNumber or Return.ECEInstitutionItemSequenceNumber associated with the image view conveyed in this Image View Data Record. The ECE institution must construct the sequence number to guarantee uniqueness for a given routing number, business day, and cycle number. Must contain a numeric value.
+	// ECEInstitutionItemSequenceNumber is a number assigned by the institution that creates the Check or Return.  This number is imported from the Check.ECEInstitutionItemSequenceNumber or Return.ECEInstitutionItemSequenceNumber associated with the image view conveyed in this Image View Data Record. The ECE institution must construct the sequence number to guarantee uniqueness for a given routing number, business day, and cycle number. Must contain a numeric value.
 	IvDataECEInstitutionItemSequenceNumber string `json:"ivData.ECEInstitutionItemSequenceNumber,omitempty"`
 	// SecurityOriginatorName is a unique name that creates the Digital Signature for data to be exchanged. Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1 Shall not be present when ImageViewDetail.ImageIndicator is 0.
 	IvDataSecurityOriginatorName string `json:"ivData.SecurityOriginatorName,omitempty"`
