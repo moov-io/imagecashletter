@@ -6,21 +6,9 @@ show_sidebar: false
 menubar: docs-menu
 ---
 
-## Supported Standards
-
-There are many X9 standards out there, several with multiple releases. Our ImageCashLetter project supports the DSTU X9.37-2003 standard for *Electronic Exchange of Check and Image Data* and its updated versions, which include X9.100-187-2008, X9.100-187-2013, and X9.100-187-2016. Note the standard number was changed from X9.37 to X9.100-187.
-
-A few other X9 standards are closely related to X9.37/X9.100-187, such as *TIFF Image Format for Image Exchange* (X9.100-181) and *Non-Domestic Specifications for Electronic Exchange of Check and Image Data* (X9.100-180). If you’re interested in support for additional standards like these, please reach out to us on [Slack](https://slack.moov.io/) or open up a [GitHub issue](https://github.com/moov-io/imagecashletter/issues/new).
-
-## X9.37 Version Timeline
-
-X9.37-2003 originally released as a draft standard and became widely adopted before being finalized. It was the first major standard to support image cash letters and electronic check exchange. X9.100-187-2008 was published several years later, incorporating fixes and clarifications mentioned in various industry companion documents for X9.37-2003. A backward-compatible maintenance update was released in 2013 and another in 2016 with the sole change of removing return reason codes. There is also a Universal Companion Document for X9.100-187-2016 called [TR 47-2016](https://x9.org/wp-content/uploads/2016/11/ASC-X9-TR-47-2016.pdf), which helps clarify how financial institutions should use the standard.
-
-It should be mentioned X9.100-180-2006 was meant to be a more flexible replacement for X9.37-2003. While it was fully adopted by Canada, it was ultimately abandoned by the U.S. and is only used in the states for specialized purposes today.
-
 ## Record Types
 
-The chart below illustrates the record differences among standards we currently support:
+The chart below shows the record differences among standards we currently support:
 
 | Record Name             | Type | X9.37 | X9.100-187-2008 | X9.100-187-2013/2016 |
 |-------------------------|------|-------|-----------------|-----------------|
