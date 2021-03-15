@@ -6,32 +6,45 @@ show_sidebar: false
 menubar: docs-menu
 ---
 
-## File Structure and Record Types
+## Supported Standards
 
-The following record types are established for Electronic Exchange:
+There are several X9 standards out there, many with multiple releases. Our ImageCashLetter project supports the DSTU X9.37-2003 standard for *Electronic Exchange of Check and Image Data* and its updated versions, which include X9.100-187-2008, X9.100-187-2013, and X9.100-187-2016. Note the standard number was changed from X9.37 to X9.100-187. While X9.37-2003 was originally released as a draft standard, it was widely adopted before being approved and finalized. 
 
- * 01 File Header Record
- * 10 Cash Letter Header Record
- * 20 Bundle Header Record
- * 25 Check Detail Record
- * 26 Check Detail Addendum A Record
- * 27 Check Detail Addendum B Record
- * 28 Check Detail Addendum C record
- * 31 Return Record
- * 32 Return Addendum A Record
- * 33 Return Addendum B Record
- * 34 Return Addendum C Record
- * 35 Return Addendum D Record
- * 50 Image View Detail Record
- * 52 Image View Data Record
- * 54 Image View Analysis Record
- * 62 Credit Record (Currently in Development )
- * 68 User Record (Currently in Development )
- * 70 Bundle Control Record
- * 85 Routing Number Summary Record (Currently in Development)
- * 90 Cash Letter Control Record
- * 99 File Control Record
+A few other X9 standards are closely related to X9.37/X9.100-187, such as *TIFF Image Format for Image Exchange* (X9.100-181) and *Non-Domestic Specifications for Electronic Exchange of Check and Image Data* (X9.100-180). If you’re interested in support for additional standards like these, please reach out to us on [Slack](https://slack.moov.io/) or open up a [GitHub issue](https://github.com/moov-io/imagecashletter/issues/new).
 
+## Record Types
+
+The chart below illustrates the record differences among standards we currently support:
+
+| Record Name             | Type | X9.37 | X9.100-187-2008 | X9.100-187-2013/2016 |
+|-------------------------|------|-------|-----------------|-----------------|
+| File Header             | 01   | ✔️     | ✔️               | ✔️               |
+| Cash Letter Header      | 10   | ✔️     | ✔️               | ✔️               |
+| Bundle Header           | 20   | ✔️     | ✔️               | ✔️               |
+| Check Detail            | 25   | ✔️     | ✔️               | ✔️               |
+| Check Detail Addendum A | 26   | ✔️     | ✔️               | ✔️               |
+| Check Detail Addendum B | 27   |       |                 | ✔️               |
+| Check Detail Addendum C | 28   | ✔️     | ✔️               | ✔️               |
+| Return                  | 31   | ✔️     | ✔️               | ✔️               |
+| Return Addendum A       | 32   | ✔️     | ✔️               | ✔️               |
+| Return Addendum B       | 33   | ✔️     | ✔️               | ✔️               |
+| Return Addendum C       | 34   |       |                 | ✔️               |
+| Return Addendum D       | 35   | ✔️     | ✔️               | ✔️               |
+| Account Totals Detail   | 40   |       |                 |                 |
+| Non-Hit Totals Detail   | 41   |       |                 |                 |
+| Image View Detail       | 50   | ✔️     | ✔️               | ✔️               |
+| Image View Data         | 52   | ✔️     | ✔️               | ✔️               |
+| Image View Analysis     | 54   | ✔️     | ✔️               | ✔️               |
+| Credit/Reconciliation   | 61   |       |                 |                 |
+| Credit                  | 62   |       |                 | ✔️               |
+| User                    | 68   |       |                 | ✔️               |
+| Bundle Control          | 70   | ✔️     | ✔️               | ✔️               |
+| Box Summary             | 75   |       |                 |                 |
+| Routing Number Summary  | 85   |       |                 | ✔️               |
+| Cash Letter Control     | 90   | ✔️     | ✔️               | ✔️               |
+| File Control            | 99   | ✔️     | ✔️               | ✔️               |
+
+File Header (01), File Control (99), Cash Letter Header (10), and Cash Letter Control (90) records are mandatory. For each bundle that exists, Bundle Header (20) and Bundle Control (70) records are mandatory.
 
 ## X9 Data Types
 
