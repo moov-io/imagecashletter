@@ -20,8 +20,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/moov-io/base/admin"
 	"github.com/moov-io/base/http/bind"
-	"github.com/moov-io/paygate/pkg/util"
-
 	"github.com/moov-io/imagecashletter"
 )
 
@@ -65,7 +63,11 @@ func main() {
 	addPingRoute(router)
 
 	// Register our assets route
-	assetsPath := util.Or(os.Getenv("ASSETS_PATH"), filepath.Join("cmd", "webui", "assets"))
+	assetsPath := os.Getenv("ASSETS_PATH")
+	if assetsPath == "" {
+		// set to default assets path
+		assetsPath = filepath.Join("cmd", "webui", "assets")
+	}
 	log.Printf("serving assets from %s", assetsPath)
 	addAssetsPath(router, assetsPath)
 

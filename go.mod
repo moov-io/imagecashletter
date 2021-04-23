@@ -9,11 +9,9 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/moov-io/base v0.18.2
-	github.com/moov-io/paygate v0.10.1
 	github.com/prometheus/client_golang v1.10.0
 	github.com/prometheus/common v0.21.0 // indirect
 	github.com/stretchr/testify v1.7.0
-	golang.org/x/net v0.0.0-20210423174036-e997de6604e2 // indirect
+	golang.org/x/net v0.0.0-20210423184538-5f58ad60dda6 // indirect
 	golang.org/x/oauth2 v0.0.0-20210413134643-5e61552d6c78
-	golang.org/x/sys v0.0.0-20210423082822-04245dca01da // indirect
 )
