@@ -6,34 +6,43 @@ show_sidebar: false
 menubar: docs-menu
 ---
 
-## File Structure and Record Types
+## Record Types
 
-The following record types are established for Electronic Exchange:
+The chart below shows the record differences among standards we currently support:
 
- * 01 File Header Record
- * 10 Cash Letter Header Record
- * 20 Bundle Header Record
- * 25 Check Detail Record
- * 26 Check Detail Addendum A Record
- * 27 Check Detail Addendum B Record
- * 28 Check Detail Addendum C record
- * 31 Return Record
- * 32 Return Addendum A Record
- * 33 Return Addendum B Record
- * 34 Return Addendum C Record
- * 35 Return Addendum D Record
- * 50 Image View Detail Record
- * 52 Image View Data Record
- * 54 Image View Analysis Record
- * 62 Credit Record (Currently in Development )
- * 68 User Record (Currently in Development )
- * 70 Bundle Control Record
- * 85 Routing Number Summary Record (Currently in Development)
- * 90 Cash Letter Control Record
- * 99 File Control Record
+| Record Name             | Type | X9.37 | X9.100-187-2008 | X9.100-187-2013/2016 |
+|-------------------------|------|-------|-----------------|-----------------|
+| File Header             | 01   | ✔️     | ✔️               | ✔️               |
+| Cash Letter Header      | 10   | ✔️     | ✔️               | ✔️               |
+| Bundle Header           | 20   | ✔️     | ✔️               | ✔️               |
+| Check Detail            | 25   | ✔️     | ✔️               | ✔️               |
+| Check Detail Addendum A | 26   | ✔️     | ✔️               | ✔️               |
+| Check Detail Addendum B | 27   |       |                 | ✔️               |
+| Check Detail Addendum C | 28   | ✔️     | ✔️               | ✔️               |
+| Return                  | 31   | ✔️     | ✔️               | ✔️               |
+| Return Addendum A       | 32   | ✔️     | ✔️               | ✔️               |
+| Return Addendum B       | 33   | ✔️     | ✔️               | ✔️               |
+| Return Addendum C       | 34   |       |                 | ✔️               |
+| Return Addendum D       | 35   | ✔️     | ✔️               | ✔️               |
+| Account Totals Detail   | 40   |       |                 |                 |
+| Non-Hit Totals Detail   | 41   |       |                 |                 |
+| Image View Detail       | 50   | ✔️     | ✔️               | ✔️               |
+| Image View Data         | 52   | ✔️     | ✔️               | ✔️               |
+| Image View Analysis     | 54   | ✔️     | ✔️               | ✔️               |
+| Credit/Reconciliation   | 61   |       |                 |                 |
+| Credit                  | 62   |       |                 | ✔️               |
+| User                    | 68   |       |                 | ✔️               |
+| Bundle Control          | 70   | ✔️     | ✔️               | ✔️               |
+| Box Summary             | 75   |       |                 |                 |
+| Routing Number Summary  | 85   |       |                 | ✔️               |
+| Cash Letter Control     | 90   | ✔️     | ✔️               | ✔️               |
+| File Control            | 99   | ✔️     | ✔️               | ✔️               |
 
+File Header (01), File Control (99), Cash Letter Header (10), and Cash Letter Control (90) records are mandatory. For each bundle that exists, Bundle Header (20) and Bundle Control (70) records are mandatory.
 
-## X9 Data Types
+## Data Types
+
+The following data types are from X9.100-187-2013/2016 and may be defined differently in earlier versions.
 
 ###  Alphabetic (A)
 The alphabetic characters are the upper case letters A through Z; the lower case letters a through z, and the blank (space) character. When lower case letters are used, they shall be interpreted to have the same meaning as their respective upper case letters, e.g., no distinction shall be made between the upper case letter A and the lower case letter a.
@@ -45,8 +54,7 @@ The numeric characters are the numbers zero (0) through nine (9).
 The blank character is defined in ASCII with the hexadecimal value ‘20’ and in EBCDIC with the hexadecimal value ‘40’; also referred to as a space.
 
 ### Special characters (S)
-Special characters are any of the printable characters listed in the table below. (IBM Corporation EBCDIC code page: Code Page CPGID 00037)
-
+Special characters are any of the printable characters listed in the table below:
 
 | Special Printable | Character	ASCII hex |	EBCDIC hex |
 | :---: | :---: | :---: |
@@ -89,13 +97,14 @@ An alphameric character is any of the alphabetic or numeric characters.
 ### Alphameric/special (ANS)
 An Alphameric/special character is any one of the alphabetic, numeric, or special characters.
 
-### X9.100-187–2016
+### Numericblank (NB)
+A numericblank character is any one of the numeric characters or the blank character. Blanks shall not be embedded within the numeric digits. Blanks may be used only to fill out a field when the numeric value length is shorter than the actual field length. Leading zeros may be present but shall not be removed or added. Numericblank fields, when present, shall contain at least one numeric character and shall not be all blanks.
 
-Numericblank (NB): A numericblank character is any one of the numeric characters or the blank character. Blanks shall not be embedded within the numeric digits. Blanks may be used only to fill out a field when the numeric value length is shorter than the actual field length. Leading zeros may be present but shall not be removed or added. Numericblank fields, when present, shall contain at least one numeric character and shall not be all blanks.
+### Numeric/special (NS)
+A numeric/special is any one of the numeric characters or special characters.
 
-Numeric/special (NS): A numeric/special is any one of the numeric characters or special characters.
-
-Binary: The binary data type is composed of a sequence of bytes where each byte ranges in value from binary 00000000 to 11111111 (8-bit encoding). The syntax, semantics, and number of bytes in the string are specified in the standard for each occurrence of the binary data type.
+### Binary
+The binary data type is composed of a sequence of bytes where each byte ranges in value from binary 00000000 to 11111111 (8-bit encoding). The syntax, semantics, and number of bytes in the string are specified in the standard for each occurrence of the binary data type.
 
 ### Special MICR line data types
 
@@ -103,16 +112,17 @@ The MICR line on a check is composed of a series of symbols. The MICR symbols fo
 
 However, the MICR symbols for delineation of data on the MICR line do not have any graphic equivalents. Therefore, certain special characters shall be used to interpret these MICR symbols. These special characters shall have these special meanings only when used in fields directly read from the MICR line. When these same special characters are used elsewhere in other fields they shall represent their actual value.
 
-Asterisk (*): The asterisk character shall be used to represent the presence of MICR when the processing system cannot interpret the MICR as a specific valid MICR character.
+**Asterisk (*)**: The asterisk character shall be used to represent the presence of MICR when the processing system cannot interpret the MICR as a specific valid MICR character.
 
-Dash (-): The dash character shall be used to represent the presence of the MICR symbol for a dash.
+**Dash (-)**: The dash character shall be used to represent the presence of the MICR symbol for a dash.
 
-Forward slash (/): The forward slash character shall be used to represent the presence of the MICR symbol for ‘On-Us’.
+**Forward slash (/)**: The forward slash character shall be used to represent the presence of the MICR symbol for ‘On-Us’.
 
-Numericblank/special MICR (NBSM): A numericblank/special MICR character is any one of the numeric characters, the blank character, the dash character, or asterisk character.
+**Numericblank/special MICR (NBSM)**: A numericblank/special MICR character is any one of the numeric characters, the blank character, the dash character, or asterisk character.
 
-Numericblank/special MICR On-Us (NBSMOS): A numericblank/special MICR On-Us character is any one of the numeric characters, the blank character, the asterisk character, the dash character, or the forward slash character.
+**Numericblank/special MICR On-Us (NBSMOS)**: A numericblank/special MICR On-Us character is any one of the numeric characters, the blank character, the asterisk character, the dash character, or the forward slash character.
 
+## Other Terminology
 
 ### Fill data
 Fill data are any characters used to fill up unused bytes in a field. Fill characters shall be blanks or zeros.
@@ -126,7 +136,8 @@ A field is right justified when the data is aligned based on its rightmost chara
 ### Left justification
 A field is left justified when the data is aligned based on its leftmost character.
 
-### General Field Format
+
+## Field Format
 
 The following shall apply to all fields on all records in the standard:
 
@@ -155,11 +166,11 @@ All amounts fields have two implied decimal points, e.g., $1,234.67 is entered a
 
 Most records of the file provide for User Fields. Users of the standard utilize these fields at their discretion. The standard does not define particular uses for, or the internal contents of, these fields. In many cases, the user fields within the records are more than one character in length. Users are free to use the field as a single field or divide it into multiple fields.
 
-### Usage
-M - Mandatory
-C - Conditional
-
 ## Annotated Image Cash Letter Record Formats
+
+The following record formats are from X9.100-187-2013/2016.
+
+M - Mandatory, C - Conditional
 
 ### 01 File Header Record
 
