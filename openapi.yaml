@@ -411,14 +411,14 @@ components:
             * `30` - X9.100-187-2008
             * `35` - X9.100-187-2013 and 2016
           example: '35'
-        testFileIndicator:
+        testIndicator:
           type: string
           maxLength: 1
           enum:
             - T
             - P
           description: |
-            TestFileIndicator dentifies whether the file is a test or production file.
+            TestIndicator dentifies whether the file is a test or production file.
 
             * `T` - Test File
             * `P` - Production File
@@ -536,8 +536,7 @@ components:
           description: ImmediateOriginContactPhoneNumber identifies the phone number of the contact at the institution that creates the file.
           example: '555-555-1212'
         creditTotalIndicator:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -659,7 +658,7 @@ components:
             * `I` - Cash letter contains electronic check records (Type 2x’s, 3x’s) and image records (Type 5x’s).
             * `F` - Cash letter contains electronic check records (Type 2x’s and 3x’s) and image records (Type 5x’s)
             that correspond to a previously sent cash letter (i.e., E file).
-          example: 'N'
+          example: 'I'
         documentationTypeIndicator:
           type: string
           maxLength: 1
@@ -770,7 +769,7 @@ components:
           description: SettlementDate identifies the date that the institution that creates the cash letter expects settlement.
           example: '2018-10-03T00:00:00Z'
         creditTotalIndicator:
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -1098,7 +1097,7 @@ components:
           description: AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of
             CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number
             of addendum records associated with this item. The standard supports up to 99 addendum records.
-          example: 1
+          example: 3
         correctionIndicator:
           type: integer
           enum:
@@ -1210,7 +1209,7 @@ components:
           description: AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of
             CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number
             of addendum records associated with this item. The standard supports up to 99 addendum records.
-          example: 1
+          example: 4
         documentationTypeIndicator:
           type: string
           maxLength: 1
