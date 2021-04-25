@@ -1,0 +1,16 @@
+{
+    "id": "wp63ek23902v",
+    "standardLevel": "03",
+    "testIndicator": "T",
+    "immediateDestination": "061000146",
+    "immediateOrigin": "026073150",
+    "fileCreationDate": "2020-10-23T00:00:00Z",
+    "fileCreationTime": "0000-01-01T09:11:00Z",
+    "ResendIndicator": "N",
+    "immediateDestinationName": "Moov Financial",
+    "ImmediateOriginName": "Moov Money",
+    "fileIDModifier": "1",
+    "countryCode": "",
+    "userField": "",
+    "companionDocumentIndicator": "1"
+}
