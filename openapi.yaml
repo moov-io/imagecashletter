@@ -441,14 +441,12 @@ components:
           type: string
           format: 'date-time'
           description: FileCreationDate is the date that the immediate origin institution creates the file.
-          example: 2018-10-03T00:00:00Z
+          example: '2020-10-23T00:00:00Z'
         fileCreationTime:
           type: string
-          maxLength: 4
-          description: |
-            FileCreationTime is the time the immediate origin institution creates the file.
-            (Format - hhmm, where - hh hour, mm minute)
-          example: '1310'
+          format: 'date-time'
+          description: FileCreationTime is the time the immediate origin institution creates the file.
+          example: '0000-01-01T09:11:00Z'
         resendIndicator:
           type: string
           maxLength: 1
@@ -633,17 +631,17 @@ components:
           type: string
           maxLength: 8
           description: cashLetterBusinessDate is the business date of the cash letter. (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: 2018-10-03T00:00:00Z
+          example: '2020-10-23T00:00:00Z'
         cashLetterCreationDate:
           type: string
           format: 'date-time'
           description: cashLetterCreationDate is the date that the cash letter is created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: 2018-10-03T00:00:00Z
+          example: '2020-10-23T00:00:00Z'
         cashLetterCreationTime:
           type: string
-          maxLength: 4
-          description: CashLetterCreationTime is the time that the cash letter is created. (Format - hhmm, where - hh hour, mm minute)
-          example: '1310'
+          format: 'date-time'
+          description: CashLetterCreationTime is the time that the cash letter is created.
+          example: '0000-01-01T09:11:00Z'
         recordTypeIndicator:
           type: string
           maxLength: 1
