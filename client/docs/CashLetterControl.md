@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **CashLetterImagesCount** | **int32** | CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter. | [optional] 
 **ECEInstitutionName** | **string** | ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl. | [optional] 
 **SettlementDate** | [**time.Time**](time.Time.md) | SettlementDate identifies the date that the institution that creates the cash letter expects settlement. | 
-**CreditTotalIndicator** | **float32** | CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of all types regardless of the value of this field. * &#x60; &#x60; - No Credit Items * &#x60;0&#x60; - Credit Items are not included in totals * &#x60;1&#x60; - Credit Items are included in totals  | [optional] 
+**CreditTotalIndicator** | **int32** | CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of all types regardless of the value of this field. * &#x60; &#x60; - No Credit Items * &#x60;0&#x60; - Credit Items are not included in totals * &#x60;1&#x60; - Credit Items are included in totals  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

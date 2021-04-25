@@ -26,5 +26,5 @@ type IclFileControl struct {
 	// ImmediateOriginContactPhoneNumber identifies the phone number of the contact at the institution that creates the file.
 	ImmediateOriginContactPhoneNumber string `json:"immediateOriginContactPhoneNumber,omitempty"`
 	// CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of all types regardless of the value of this field. * ` ` - No Credit Items * `0` - Credit Items are not included in totals * `1` - Credit Items are included in totals
-	CreditTotalIndicator string `json:"creditTotalIndicator,omitempty"`
+	CreditTotalIndicator int32 `json:"creditTotalIndicator,omitempty"`
 }
