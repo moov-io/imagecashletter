@@ -14,7 +14,7 @@ type ReturnDetailAddendumC struct {
 	// ReturnDetailAddendumC ID
 	ID string `json:"ID,omitempty"`
 	// ImageReferenceKeyIndicator identifies whether ImageReferenceKeyLength contains a variable value within the allowable range, or contains a defined value and the content is ItemReferenceKey.  * `0` - ImageReferenceKeyIndicator has Defined Value of 0034 and ImageReferenceKey contains the Image Reference Key. * `1`- ImageReferenceKeyIndicator contains a value other than Value 0034; or ImageReferenceKeyIndicator contains Value 0034, which is not a Defined Value, and the content of ImageReferenceKey has no special significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the ImageReferenceKey is not present.
-	ImageReferenceKeyIndicator string `json:"imageReferenceKeyIndicator,omitempty"`
+	ImageReferenceKeyIndicator int32 `json:"imageReferenceKeyIndicator,omitempty"`
 	// microfilmArchiveSequenceNumber is a number that identifies the item in the microfilm archive system; it may be different than the Check.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
 	MicrofilmArchiveSequenceNumber string `json:"microfilmArchiveSequenceNumber,omitempty"`
 	// MicrofilmArchiveSequenceNumber A number that identifies the item in the microfilm archive system; it may be different than the Check.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.  * `0034` - ImageReferenceKey contains the ImageReferenceKey (ImageReferenceKeyIndicator is 0). * `0000` - ImageReferenceKey not present (ImageReferenceKeyIndicator is 1). * `0001` - 9999: May include Value 0034, and ImageReferenceKey has no special significance to Image Reference Key (ImageReferenceKey is 1).

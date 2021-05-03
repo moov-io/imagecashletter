@@ -219,7 +219,7 @@ func TestRDAddendumABOFDAccountNumber(t *testing.T) {
 }
 
 // TestRDAddendumABOFDBranchCode validation
-func TestRDAddendumABOFDBOFDBranchCode(t *testing.T) {
+func TestRDAddendumABOFDBranchCode(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.BOFDBranchCode = "®©"
 	if err := rdAddendumA.Validate(); err != nil {

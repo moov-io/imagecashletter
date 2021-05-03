@@ -411,14 +411,14 @@ components:
             * `30` - X9.100-187-2008
             * `35` - X9.100-187-2013 and 2016
           example: '35'
-        testFileIndicator:
+        testIndicator:
           type: string
           maxLength: 1
           enum:
             - T
             - P
           description: |
-            TestFileIndicator dentifies whether the file is a test or production file.
+            TestIndicator dentifies whether the file is a test or production file.
 
             * `T` - Test File
             * `P` - Production File
@@ -441,14 +441,12 @@ components:
           type: string
           format: 'date-time'
           description: FileCreationDate is the date that the immediate origin institution creates the file.
-          example: 2018-10-03T00:00:00Z
+          example: '2020-10-23T00:00:00Z'
         fileCreationTime:
           type: string
-          maxLength: 4
-          description: |
-            FileCreationTime is the time the immediate origin institution creates the file.
-            (Format - hhmm, where - hh hour, mm minute)
-          example: '1310'
+          format: 'date-time'
+          description: FileCreationTime is the time the immediate origin institution creates the file.
+          example: '0000-01-01T09:11:00Z'
         resendIndicator:
           type: string
           maxLength: 1
@@ -538,8 +536,7 @@ components:
           description: ImmediateOriginContactPhoneNumber identifies the phone number of the contact at the institution that creates the file.
           example: '555-555-1212'
         creditTotalIndicator:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -633,17 +630,17 @@ components:
           type: string
           maxLength: 8
           description: cashLetterBusinessDate is the business date of the cash letter. (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: 2018-10-03T00:00:00Z
+          example: '2020-10-23T00:00:00Z'
         cashLetterCreationDate:
           type: string
           format: 'date-time'
           description: cashLetterCreationDate is the date that the cash letter is created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
-          example: 2018-10-03T00:00:00Z
+          example: '2020-10-23T00:00:00Z'
         cashLetterCreationTime:
           type: string
-          maxLength: 4
-          description: CashLetterCreationTime is the time that the cash letter is created. (Format - hhmm, where - hh hour, mm minute)
-          example: '1310'
+          format: 'date-time'
+          description: CashLetterCreationTime is the time that the cash letter is created.
+          example: '0000-01-01T09:11:00Z'
         recordTypeIndicator:
           type: string
           maxLength: 1
@@ -661,7 +658,7 @@ components:
             * `I` - Cash letter contains electronic check records (Type 2x’s, 3x’s) and image records (Type 5x’s).
             * `F` - Cash letter contains electronic check records (Type 2x’s and 3x’s) and image records (Type 5x’s)
             that correspond to a previously sent cash letter (i.e., E file).
-          example: 'N'
+          example: 'I'
         documentationTypeIndicator:
           type: string
           maxLength: 1
@@ -770,9 +767,9 @@ components:
           type: string
           format: 'date-time'
           description: SettlementDate identifies the date that the institution that creates the cash letter expects settlement.
-          example: 2018-10-03T00:00:00Z
+          example: '2018-10-03T00:00:00Z'
         creditTotalIndicator:
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -853,12 +850,12 @@ components:
           type: string
           format: 'date-time'
           description: BundleBusinessDate is the business date of the bundle.
-          example: 2018-10-03T00:00:00Z
+          example: '2018-10-03T00:00:00Z'
         bundleCreationDate:
           type: string
           format: 'date-time'
           description: BundleCreationDate is the date that the bundle is created.
-          example: 2018-10-03T00:00:00Z
+          example: '2018-10-03T00:00:00Z'
         bundleID:
           type: string
           maxLength: 10
@@ -1064,8 +1061,7 @@ components:
             * `F` -	Will accept image returns only
           example: '1'
         mICRValidIndicator:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 1
             - 2
@@ -1078,7 +1074,7 @@ components:
             * `2` - Good read, missing field
             * `3` - Read error encountered
             * `4` - Missing field and read error encountered
-          example: '1'
+          example: 1
         bOFDIndicator:
           type: string
           maxLength: 1
@@ -1101,9 +1097,9 @@ components:
           description: AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of
             CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number
             of addendum records associated with this item. The standard supports up to 99 addendum records.
-          example: 1
+          example: 3
         correctionIndicator:
-          type: string
+          type: integer
           enum:
             - 1
             - 2
@@ -1117,7 +1113,7 @@ components:
             * `2` - Repaired without Operator intervention
             * `3` - Repaired with Operator intervention
             * `4` - Undetermined if repair has been done or not
-          example: '0'
+          example: 0
         archiveTypeIndicator:
           type: string
           enum:
@@ -1213,7 +1209,7 @@ components:
           description: AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of
             CheckDetailAddendumA, CheckDetailAddendumB and CheckDetailAddendumC types.  It matches the total number
             of addendum records associated with this item. The standard supports up to 99 addendum records.
-          example: 1
+          example: 4
         documentationTypeIndicator:
           type: string
           maxLength: 1
@@ -1261,7 +1257,7 @@ components:
             designates the business date of the original forward bundle. This data is transferred from the BundleHeader
             BundleBusinessDate.  For items presented in paper cash letters, the year, month, and day that the cash
             letter was created.
-          example: 2018-10-03T00:00:00Z
+          example: '2018-10-03T00:00:00Z'
         eCEInstitutionItemSequenceNumber:
           type: string
           maxLength: 15
@@ -1541,7 +1537,7 @@ components:
           type: string
           format: 'date-time'
           description: BOFDEndorsementDate is the date of endorsement
-          example: 2018-10-03T00:00:00Z
+          example: '2018-10-03T00:00:00Z'
         bOFDItemSequenceNumber:
           type: string
           maxLength: 15
@@ -1598,9 +1594,8 @@ components:
             * `7` - Did not convert image (e.g., same as source)
             * `8` - Undetermined
           example: '1'
-        bOFDBOFDCorrectionIndicator:
-          type: string
-          maxLength:  1
+        BOFDCorrectionIndicator:
+          type: integer
           enum:
             - 0
             - 1
@@ -1615,7 +1610,7 @@ components:
             * `2` - Repaired without Operator intervention
             * `3` - Repaired with Operator intervention
             * `4` - Undetermined if repair has been done or not
-          example: '1'
+          example: 1
         userField:
           type: string
           maxLength: 4
@@ -1634,8 +1629,7 @@ components:
           description: CheckDetailAddendumB ID
           example: d1e26288
         imageReferenceKeyIndicator:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -1649,7 +1643,7 @@ components:
               contains Value 0034, which is not a Defined Value, and the content of ImageReferenceKey has no special
               significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the
               ImageReferenceKey is not present.
-          example: '0'
+          example: 1
         microfilmArchiveSequenceNumber:
           type: string
           maxLength: 15
@@ -1709,7 +1703,7 @@ components:
           type: string
           format: 'date-time'
           description: BOFDEndorsementBusinessDate is the date of endorsement.
-          example: 2018-10-03T00:00:00Z
+          example: '2018-10-03T00:00:00Z'
         endorsingBankSequenceNumber:
           type: string
           maxLength: 15
@@ -1752,8 +1746,7 @@ components:
             * `8` - Undetermined
           example: '1'
         endorsingBankCorrectionIndicator:
-          type: string
-          maxLength:  1
+          type: integer
           enum:
             - 0
             - 1
@@ -1769,7 +1762,7 @@ components:
             * `2` - Repaired without Operator intervention
             * `3` - Repaired with Operator intervention
             * `4` - Undetermined if repair has been done or not
-          example: '1'
+          example: 1
         returnReason:
           type: string
           description: ReturnReason is a code that indicates the reason for non-payment.
@@ -1779,8 +1772,7 @@ components:
           description: UserField identifies a field used at the discretion of users of the standard.
           example: 'Z'
         endorsingBankIdentifier:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -1792,7 +1784,7 @@ components:
            * `1` - Other Collecting Bank
            * `2` - Other Returning Bank
            * `3` - Payor Bank
-          example: '0'
+          example: 0
       required:
         - recordNumber
         - endorsingBankRoutingNumber
@@ -1834,7 +1826,7 @@ components:
           format: 'date-time'
           description: |
             ImageCreatorDate is the date assigned by the image creator for the image view conveyed in the related ImageData.
-          example: 2018-10-03T00:00:00Z
+          example: '2018-10-03T00:00:00Z'
         imageViewFormatIndicator:
           type: string
           maxLength: 2
@@ -1886,8 +1878,7 @@ components:
               ImageViewDataSize is the total number of bytes in ImageViewData.ImageData.  Use of this field is NOT recommended. If data is present it shall be ignored, and ImageViewData.ImageDataLength shall take precedence.
           example: "1024"
         viewSideIndicator:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -1898,7 +1889,7 @@ components:
 
             * `0` - Front image view
             * `1` - Rear image view
-          example: '0'
+          example: 0
         viewDescriptor:
           type: string
           maxLength: 2
@@ -1936,9 +1927,9 @@ components:
             * `12` -  Partial view–Bank Of First Deposit (BOFD) endorsement Area of Interest
             * `13` -  Partial view–transit endorsement Area of Interest
             * `14 - 99` -  Reserved for X9
+          example: '00'
         digitalSignatureIndicator:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -1948,7 +1939,7 @@ components:
 
             * `0` - Digital Signature is not present
             * `1` - Digital Signature is present
-          example:  '0'
+          example:  0
         digitalSignatureMethod:
           type: string
           maxLength: 2
@@ -2078,7 +2069,7 @@ components:
           type: string
           format: 'date-time'
           description: BundleBusinessDate is the business date of the bundle.
-          example: 2018-10-03T00:00:00Z
+          example: '2018-10-03T00:00:00Z'
         cycleNumber:
           type: string
           maxLength: 2
@@ -2244,8 +2235,7 @@ components:
           description: ImageViewAnalysis ID
           example: 'd1e26288'
         globalImageQuality:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -2257,10 +2247,9 @@ components:
             * `0` -  The image was not tested for any of the image quality conditions
             * `1` -  The image was tested and one or more image quality conditions were reported
             * `2` -  The image was tested and no image quality conditions were reported
-          example: '0'
+          example: 0
         globalImageUsability:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -2272,10 +2261,9 @@ components:
             * `0` -  The image was not tested for any of the image quality conditions
             * `1` -  The image was tested and one or more image quality conditions were reported
             * `2` -  The image was tested and no image quality conditions were reported
-          example: '0'
+          example: 0
         imagingBankSpecificTest:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -2292,10 +2280,9 @@ components:
             * `0` -  The image was not tested for any of the image quality conditions
             * `1` -  The image was tested and one or more image quality conditions were reported
             * `2` -  The image was tested and no image quality conditions were reported
-          example: '0'
+          example: 0
         partialImage:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -2307,10 +2294,9 @@ components:
             * `0` -  The image was not tested for any of the image quality conditions
             * `1` -  The image was tested and one or more image quality conditions were reported
             * `2` -  The image was tested and no image quality conditions were reported
-          example: '0'
+          example: 0
         excessiveImageSkew:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -2322,10 +2308,9 @@ components:
             * `0` -  The image was not tested for any of the image quality conditions
             * `1` -  The image was tested and one or more image quality conditions were reported
             * `2` -  The image was tested and no image quality conditions were reported
-          example: '0'
+          example: 0
         piggybackImage:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -2339,10 +2324,9 @@ components:
             * `0` -  The image was not tested for any of the image quality conditions
             * `1` -  The image was tested and one or more image quality conditions were reported
             * `2` -  The image was tested and no image quality conditions were reported
-          example: '0'
+          example: 0
         tooLightOrTooDark:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -2354,10 +2338,9 @@ components:
             * `0` -  The image was not tested for any of the image quality conditions
             * `1` -  The image was tested and one or more image quality conditions were reported
             * `2` -  The image was tested and no image quality conditions were reported
-          example: '0'
+          example: 0
         streaksAndOrBands:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2370,10 +2353,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         belowMinimumImageSize:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2385,10 +2367,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         exceedsMaximumImageSize:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2401,10 +2382,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         imageEnabledPOD:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2416,10 +2396,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         sourceDocumentBad:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2431,10 +2410,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         dateUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2447,10 +2425,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         payeeUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2463,10 +2440,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         convenienceAmountUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2479,10 +2455,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         amountInWordsUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2495,10 +2470,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         signatureUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2508,10 +2482,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         payorNameAddressUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2524,10 +2497,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         mICRLineUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2540,10 +2512,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         memoLineUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2556,10 +2527,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         payorBankNameAddressUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2572,10 +2542,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         payeeEndorsementUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2588,10 +2557,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         bOFDEndorsementUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2604,10 +2572,9 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         transitEndorsementUsability:
-            type: string
-            maxLength: 1
+            type: integer
             enum:
               - 0
               - 1
@@ -2620,7 +2587,7 @@ components:
               * `0` -  The image was not tested for any of the image quality conditions
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
-            example: '0'
+            example: 0
         userField:
             type: string
             maxLength: 20
@@ -2649,7 +2616,7 @@ components:
           type: string
           format: 'date-time'
           description: BOFDEndorsementDate is the date of endorsement
-          example: 2018-10-03T00:00:00Z
+          example: '2018-10-03T00:00:00Z'
         bOFDItemSequenceNumber:
           type: string
           maxLength: 15
@@ -2706,9 +2673,8 @@ components:
             * `7` - Did not convert image (e.g., same as source)
             * `8` - Undetermined
           example: '1'
-        bOFDBOFDCorrectionIndicator:
-          type: string
-          maxLength:  1
+        BOFDCorrectionIndicator:
+          type: integer
           enum:
             - 0
             - 1
@@ -2723,7 +2689,7 @@ components:
             * `2` - Repaired without Operator intervention
             * `3` - Repaired with Operator intervention
             * `4` - Undetermined if repair has been done or not
-          example: '1'
+          example: 1
         userField:
           type: string
           maxLength: 1
@@ -2760,7 +2726,7 @@ components:
           type: string
           format: 'date-time'
           description: PayorBankBusinessDate is the year, month, and day the payor bank processed the Return Record.
-          example: 2018-10-03T00:00:00Z
+          example: '2018-10-03T00:00:00Z'
         payorAccountName:
           type: string
           maxLength: 22
@@ -2776,7 +2742,7 @@ components:
           description:  ReturnDetailAddendumC ID
           example: d1e26288
         imageReferenceKeyIndicator:
-          type: string
+          type: integer
           enum:
             - 0
             - 1
@@ -2790,6 +2756,7 @@ components:
             contains Value 0034, which is not a Defined Value, and the content of ImageReferenceKey has no special
             significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the
             ImageReferenceKey is not present.
+          example: 1
         microfilmArchiveSequenceNumber:
           type: string
           maxLength: 15
@@ -2831,12 +2798,13 @@ components:
           description:  ReturnDetailAddendumD ID
           example: d1e26288
         recordNumber:
-          type: string
+          type: integer
           minimum: 1
           maximum: 99
           description: |
             RecordNumber is a number representing the order in which each ReturnDetailAddendumD was created.
             ReturnDetailAddendumD shall be in sequential order starting with 1.  Maximum 99.
+          example: 1
         endorsingBankRoutingNumber:
           type: string
           maxLength: 9
@@ -2847,7 +2815,7 @@ components:
           type: string
           format: 'date-time'
           description: BOFDEndorsementBusinessDate is the date of endorsement
-          example: 2018-10-03T00:00:00Z
+          example: '2018-10-03T00:00:00Z'
         endorsingBankSequenceNumber:
           type: string
           maxLength: 15
@@ -2890,8 +2858,7 @@ components:
             * `8` - Undetermined
           example: '1'
         endorsingBankCorrectionIndicator:
-          type: string
-          maxLength:  1
+          type: integer
           enum:
             - 0
             - 1
@@ -2907,7 +2874,7 @@ components:
             * `2` - Repaired without Operator intervention
             * `3` - Repaired with Operator intervention
             * `4` - Undetermined if repair has been done or not
-          example: '1'
+          example: 1
         returnReason:
           type: string
           description: ReturnReason is a code that indicates the reason for non-payment.
@@ -2917,8 +2884,7 @@ components:
           description: UserField identifies a field used at the discretion of users of the standard.
           example: 'Z'
         endorsingBankIdentifier:
-          type: string
-          maxLength: 1
+          type: integer
           enum:
             - 0
             - 1
@@ -2930,7 +2896,7 @@ components:
             * `1` - Other Collecting Bank
             * `2` - Other Returning Bank
             * `3` - Payor Bank
-          example: '0'
+          example: 0
       required:
         - endorsingBankRoutingNumber
         - bOFDEndorsementBusinessDate

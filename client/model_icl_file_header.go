@@ -19,16 +19,16 @@ type IclFileHeader struct {
 	ID string `json:"ID,omitempty"`
 	// StandardLevel identifies the standard level of the file.  * `03` - DSTU X9.37 - 2003 * `30` - X9.100-187-2008 * `35` - X9.100-187-2013 and 2016
 	StandardLevel string `json:"standardLevel"`
-	// TestFileIndicator dentifies whether the file is a test or production file.  * `T` - Test File * `P` - Production File
-	TestFileIndicator string `json:"testFileIndicator"`
+	// TestIndicator dentifies whether the file is a test or production file.  * `T` - Test File * `P` - Production File
+	TestIndicator string `json:"testIndicator,omitempty"`
 	// ImmediateDestination is the routing and transit number of the Federal Reserve Bank (FRB) or receiver to which the file is being sent.
 	ImmediateDestination string `json:"immediateDestination"`
 	// ImmediateOrigin is the routing and transit number of the Federal Reserve Bank (FRB) or originator from which the file is being sent.
 	ImmediateOrigin string `json:"immediateOrigin"`
 	// FileCreationDate is the date that the immediate origin institution creates the file.
 	FileCreationDate time.Time `json:"fileCreationDate"`
-	// FileCreationTime is the time the immediate origin institution creates the file. (Format - hhmm, where - hh hour, mm minute)
-	FileCreationTime string `json:"fileCreationTime"`
+	// FileCreationTime is the time the immediate origin institution creates the file.
+	FileCreationTime time.Time `json:"fileCreationTime"`
 	// ResendIndicator Indicates whether the file has been previously transmitted. (Y - Yes, N - No)
 	ResendIndicator string `json:"resendIndicator"`
 	// ImmediateDestinationName Identifies the short name of the institution that receives the file.
