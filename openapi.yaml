@@ -1594,7 +1594,7 @@ components:
             * `7` - Did not convert image (e.g., same as source)
             * `8` - Undetermined
           example: '1'
-        bOFDBOFDCorrectionIndicator:
+        BOFDCorrectionIndicator:
           type: integer
           enum:
             - 0
@@ -2673,7 +2673,7 @@ components:
             * `7` - Did not convert image (e.g., same as source)
             * `8` - Undetermined
           example: '1'
-        bOFDBOFDCorrectionIndicator:
+        BOFDCorrectionIndicator:
           type: integer
           enum:
             - 0

@@ -572,10 +572,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -584,10 +584,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               checkDetailAddendumB:
               - imageReferenceKey: "0"
                 lengthImageReferenceKey: "34"
@@ -777,10 +777,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -789,10 +789,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               checkDetailAddendumB:
               - imageReferenceKey: "0"
                 lengthImageReferenceKey: "34"
@@ -997,10 +997,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -1009,10 +1009,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
@@ -1214,10 +1214,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -1226,10 +1226,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
@@ -1438,10 +1438,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -1450,10 +1450,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               checkDetailAddendumB:
               - imageReferenceKey: "0"
                 lengthImageReferenceKey: "34"
@@ -1643,10 +1643,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -1655,10 +1655,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               checkDetailAddendumB:
               - imageReferenceKey: "0"
                 lengthImageReferenceKey: "34"
@@ -1863,10 +1863,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -1875,10 +1875,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
@@ -2080,10 +2080,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -2092,10 +2092,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
@@ -2364,10 +2364,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -2376,10 +2376,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               checkDetailAddendumB:
               - imageReferenceKey: "0"
                 lengthImageReferenceKey: "34"
@@ -2569,10 +2569,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -2581,10 +2581,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               checkDetailAddendumB:
               - imageReferenceKey: "0"
                 lengthImageReferenceKey: "34"
@@ -2789,10 +2789,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -2801,10 +2801,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
@@ -3006,10 +3006,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -3018,10 +3018,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
@@ -3230,10 +3230,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -3242,10 +3242,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               checkDetailAddendumB:
               - imageReferenceKey: "0"
                 lengthImageReferenceKey: "34"
@@ -3435,10 +3435,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -3447,10 +3447,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               checkDetailAddendumB:
               - imageReferenceKey: "0"
                 lengthImageReferenceKey: "34"
@@ -3655,10 +3655,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -3667,10 +3667,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
@@ -3872,10 +3872,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               - bOFDBranchCode: "01"
                 recordNumber: 1
                 payeeName: Payee Name
@@ -3884,10 +3884,10 @@ components:
                 bOFDAccountNumber: "938383"
                 userField: Z
                 bOFDEndorsementDate: 2018-10-03T00:00:00Z
+                BOFDCorrectionIndicator: 1
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-                bOFDBOFDCorrectionIndicator: 1
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
@@ -4126,10 +4126,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -4138,10 +4138,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             checkDetailAddendumB:
             - imageReferenceKey: "0"
               lengthImageReferenceKey: "34"
@@ -4331,10 +4331,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -4343,10 +4343,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             checkDetailAddendumB:
             - imageReferenceKey: "0"
               lengthImageReferenceKey: "34"
@@ -4551,10 +4551,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -4563,10 +4563,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
@@ -4768,10 +4768,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -4780,10 +4780,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
@@ -4992,10 +4992,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -5004,10 +5004,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             checkDetailAddendumB:
             - imageReferenceKey: "0"
               lengthImageReferenceKey: "34"
@@ -5197,10 +5197,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -5209,10 +5209,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             checkDetailAddendumB:
             - imageReferenceKey: "0"
               lengthImageReferenceKey: "34"
@@ -5417,10 +5417,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -5429,10 +5429,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
@@ -5634,10 +5634,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -5646,10 +5646,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
@@ -6141,10 +6141,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -6153,10 +6153,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             checkDetailAddendumB:
             - imageReferenceKey: "0"
               lengthImageReferenceKey: "34"
@@ -6346,10 +6346,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -6358,10 +6358,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             checkDetailAddendumB:
             - imageReferenceKey: "0"
               lengthImageReferenceKey: "34"
@@ -6566,10 +6566,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -6578,10 +6578,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
@@ -6783,10 +6783,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -6795,10 +6795,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
@@ -7007,10 +7007,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -7019,10 +7019,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             checkDetailAddendumB:
             - imageReferenceKey: "0"
               lengthImageReferenceKey: "34"
@@ -7212,10 +7212,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -7224,10 +7224,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             checkDetailAddendumB:
             - imageReferenceKey: "0"
               lengthImageReferenceKey: "34"
@@ -7432,10 +7432,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -7444,10 +7444,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
@@ -7649,10 +7649,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             - bOFDBranchCode: "01"
               recordNumber: 1
               payeeName: Payee Name
@@ -7661,10 +7661,10 @@ components:
               bOFDAccountNumber: "938383"
               userField: Z
               bOFDEndorsementDate: 2018-10-03T00:00:00Z
+              BOFDCorrectionIndicator: 1
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-              bOFDBOFDCorrectionIndicator: 1
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
@@ -8159,10 +8159,10 @@ components:
             bOFDAccountNumber: "938383"
             userField: Z
             bOFDEndorsementDate: 2018-10-03T00:00:00Z
+            BOFDCorrectionIndicator: 1
             ID: d1e26288
             returnLocationRoutingNumber: "231486745"
             bOFDItemSequenceNumber: "1"
-            bOFDBOFDCorrectionIndicator: 1
           - bOFDBranchCode: "01"
             recordNumber: 1
             payeeName: Payee Name
@@ -8171,10 +8171,10 @@ components:
             bOFDAccountNumber: "938383"
             userField: Z
             bOFDEndorsementDate: 2018-10-03T00:00:00Z
+            BOFDCorrectionIndicator: 1
             ID: d1e26288
             returnLocationRoutingNumber: "231486745"
             bOFDItemSequenceNumber: "1"
-            bOFDBOFDCorrectionIndicator: 1
           checkDetailAddendumB:
           - imageReferenceKey: "0"
             lengthImageReferenceKey: "34"
@@ -8364,10 +8364,10 @@ components:
             bOFDAccountNumber: "938383"
             userField: Z
             bOFDEndorsementDate: 2018-10-03T00:00:00Z
+            BOFDCorrectionIndicator: 1
             ID: d1e26288
             returnLocationRoutingNumber: "231486745"
             bOFDItemSequenceNumber: "1"
-            bOFDBOFDCorrectionIndicator: 1
           - bOFDBranchCode: "01"
             recordNumber: 1
             payeeName: Payee Name
@@ -8376,10 +8376,10 @@ components:
             bOFDAccountNumber: "938383"
             userField: Z
             bOFDEndorsementDate: 2018-10-03T00:00:00Z
+            BOFDCorrectionIndicator: 1
             ID: d1e26288
             returnLocationRoutingNumber: "231486745"
             bOFDItemSequenceNumber: "1"
-            bOFDBOFDCorrectionIndicator: 1
           checkDetailAddendumB:
           - imageReferenceKey: "0"
             lengthImageReferenceKey: "34"
@@ -8584,10 +8584,10 @@ components:
             bOFDAccountNumber: "938383"
             userField: Z
             bOFDEndorsementDate: 2018-10-03T00:00:00Z
+            BOFDCorrectionIndicator: 1
             ID: d1e26288
             returnLocationRoutingNumber: "231486745"
             bOFDItemSequenceNumber: "1"
-            bOFDBOFDCorrectionIndicator: 1
           - bOFDBranchCode: "01"
             recordNumber: 1
             payeeName: Payee Name
@@ -8596,10 +8596,10 @@ components:
             bOFDAccountNumber: "938383"
             userField: Z
             bOFDEndorsementDate: 2018-10-03T00:00:00Z
+            BOFDCorrectionIndicator: 1
             ID: d1e26288
             returnLocationRoutingNumber: "231486745"
             bOFDItemSequenceNumber: "1"
-            bOFDBOFDCorrectionIndicator: 1
           eCEInstitutionItemSequenceNumber: "24531"
           externalProcessingCode: "9"
           timesReturned: 0
@@ -8801,10 +8801,10 @@ components:
             bOFDAccountNumber: "938383"
             userField: Z
             bOFDEndorsementDate: 2018-10-03T00:00:00Z
+            BOFDCorrectionIndicator: 1
             ID: d1e26288
             returnLocationRoutingNumber: "231486745"
             bOFDItemSequenceNumber: "1"
-            bOFDBOFDCorrectionIndicator: 1
           - bOFDBranchCode: "01"
             recordNumber: 1
             payeeName: Payee Name
@@ -8813,10 +8813,10 @@ components:
             bOFDAccountNumber: "938383"
             userField: Z
             bOFDEndorsementDate: 2018-10-03T00:00:00Z
+            BOFDCorrectionIndicator: 1
             ID: d1e26288
             returnLocationRoutingNumber: "231486745"
             bOFDItemSequenceNumber: "1"
-            bOFDBOFDCorrectionIndicator: 1
           eCEInstitutionItemSequenceNumber: "24531"
           externalProcessingCode: "9"
           timesReturned: 0
@@ -9180,10 +9180,10 @@ components:
           bOFDAccountNumber: "938383"
           userField: Z
           bOFDEndorsementDate: 2018-10-03T00:00:00Z
+          BOFDCorrectionIndicator: 1
           ID: d1e26288
           returnLocationRoutingNumber: "231486745"
           bOFDItemSequenceNumber: "1"
-          bOFDBOFDCorrectionIndicator: 1
         - bOFDBranchCode: "01"
           recordNumber: 1
           payeeName: Payee Name
@@ -9192,10 +9192,10 @@ components:
           bOFDAccountNumber: "938383"
           userField: Z
           bOFDEndorsementDate: 2018-10-03T00:00:00Z
+          BOFDCorrectionIndicator: 1
           ID: d1e26288
           returnLocationRoutingNumber: "231486745"
           bOFDItemSequenceNumber: "1"
-          bOFDBOFDCorrectionIndicator: 1
         checkDetailAddendumB:
         - imageReferenceKey: "0"
           lengthImageReferenceKey: "34"
@@ -9633,10 +9633,10 @@ components:
           bOFDAccountNumber: "938383"
           userField: Z
           bOFDEndorsementDate: 2018-10-03T00:00:00Z
+          BOFDCorrectionIndicator: 1
           ID: d1e26288
           returnLocationRoutingNumber: "231486745"
           bOFDItemSequenceNumber: "1"
-          bOFDBOFDCorrectionIndicator: 1
         - bOFDBranchCode: "01"
           recordNumber: 1
           payeeName: Payee Name
@@ -9645,10 +9645,10 @@ components:
           bOFDAccountNumber: "938383"
           userField: Z
           bOFDEndorsementDate: 2018-10-03T00:00:00Z
+          BOFDCorrectionIndicator: 1
           ID: d1e26288
           returnLocationRoutingNumber: "231486745"
           bOFDItemSequenceNumber: "1"
-          bOFDBOFDCorrectionIndicator: 1
         eCEInstitutionItemSequenceNumber: "24531"
         externalProcessingCode: "9"
         timesReturned: 0
@@ -10176,10 +10176,10 @@ components:
         bOFDAccountNumber: "938383"
         userField: Z
         bOFDEndorsementDate: 2018-10-03T00:00:00Z
+        BOFDCorrectionIndicator: 1
         ID: d1e26288
         returnLocationRoutingNumber: "231486745"
         bOFDItemSequenceNumber: "1"
-        bOFDBOFDCorrectionIndicator: 1
       properties:
         ID:
           description: CheckDetailAddendumA ID
@@ -10265,7 +10265,7 @@ components:
           example: "1"
           maxLength: 1
           type: string
-        bOFDBOFDCorrectionIndicator:
+        BOFDCorrectionIndicator:
           description: |
             BOFDCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
             creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount.
@@ -11368,10 +11368,10 @@ components:
         bOFDAccountNumber: "938383"
         userField: Z
         bOFDEndorsementDate: 2018-10-03T00:00:00Z
+        BOFDCorrectionIndicator: 1
         ID: d1e26288
         returnLocationRoutingNumber: "231486745"
         bOFDItemSequenceNumber: "1"
-        bOFDBOFDCorrectionIndicator: 1
       properties:
         ID:
           description: ReturnDetailAddendumA ID
@@ -11457,7 +11457,7 @@ components:
           example: "1"
           maxLength: 1
           type: string
-        bOFDBOFDCorrectionIndicator:
+        BOFDCorrectionIndicator:
           description: |
             BOFDCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
             creator of this CheckDetailAddendumA Record for fields other than Payor Bank Routing Number and Amount.

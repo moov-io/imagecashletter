@@ -218,7 +218,7 @@ func TestCDAddendumABOFDAccountNumber(t *testing.T) {
 }
 
 // TestCDAddendumABOFDBranchCode validation
-func TestCDAddendumABOFDBOFDBranchCode(t *testing.T) {
+func TestCDAddendumABOFDBranchCode(t *testing.T) {
 	cdAddendumA := mockCheckDetailAddendumA()
 	cdAddendumA.BOFDBranchCode = "®©"
 	if err := cdAddendumA.Validate(); err != nil {
