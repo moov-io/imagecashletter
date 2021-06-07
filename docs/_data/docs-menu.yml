@@ -24,6 +24,8 @@
   items:
     - name: File Structure
       link: /file-structure/
+    - name: Image Formats
+      link: /image-formats/
 
 - label: Production and Monitoring
   items:
