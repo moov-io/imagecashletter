@@ -429,7 +429,10 @@ func (ivDetail *ImageViewDetail) DigitalSignatureMethodField() string {
 
 // SecurityKeySizeField gets the SecurityKeySize field
 func (ivDetail *ImageViewDetail) SecurityKeySizeField() string {
-	return ivDetail.numericField(ivDetail.SecurityKeySize, 5)
+	// return ivDetail.numericField(ivDetail.SecurityKeySize, 5)
+
+	// return empty string of length 5
+	return "     "
 }
 
 // ProtectedDataStartField gets the ProtectedDataStart field
