@@ -152,8 +152,6 @@ paths:
           description: Permanently deleted File.
         400:
           description: A problem was encountered deleting the file, check errors.
-        404:
-          description: The specified fileID was not found
       security:
       - bearerAuth: []
       - cookieAuth: []
