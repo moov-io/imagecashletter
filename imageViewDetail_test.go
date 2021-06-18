@@ -146,8 +146,8 @@ func TestParseIVDetail(t *testing.T) {
 	if record.DigitalSignatureMethodField() != "00" {
 		t.Errorf("DigitalSignatureMethod Expected '00' got: %v", record.DigitalSignatureMethodField())
 	}
-	if record.SecurityKeySizeField() != "00000" {
-		t.Errorf("SecurityKeySize Expected '0' got: %v", record.SecurityKeySizeField())
+	if record.SecurityKeySizeField() != "     " {
+		t.Errorf("SecurityKeySize Expected '     ' got: %v", record.SecurityKeySizeField())
 	}
 	if record.ProtectedDataStartField() != "0000000" {
 		t.Errorf("ProtectedDataStart Expected '0' got: %v", record.ProtectedDataStartField())
@@ -174,7 +174,7 @@ func TestParseIVDetail(t *testing.T) {
 
 // testIVDetailString validates that a known parsed ImageViewDetail can return to a string of the same value
 func testIVDetailString(t testing.TB) {
-	var line = "501031300012201809050000000000000000000000000000000000000         0             "
+	var line = "5010313000122018090500000000000000000     000000000000000         0             "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()

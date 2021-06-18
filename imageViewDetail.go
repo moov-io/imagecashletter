@@ -429,12 +429,9 @@ func (ivDetail *ImageViewDetail) DigitalSignatureMethodField() string {
 
 // SecurityKeySizeField gets the SecurityKeySize field
 func (ivDetail *ImageViewDetail) SecurityKeySizeField() string {
-
 	if ivDetail.SecurityKeySize <= 0 {
-		// return empty string of length 5
 		return "     "
 	}
-
 	return ivDetail.numericField(ivDetail.SecurityKeySize, 5)
 
 }
