@@ -52,10 +52,7 @@ func TestMemoryStorage(t *testing.T) {
 		t.Errorf("files=%#v error=%v", files, err)
 	}
 
-	f, err := readFile("BNK20180905121042882-A.icl")
-	if err != nil {
-		t.Fatal(err)
-	}
+	f := readFile(t, "BNK20180905121042882-A.icl")
 	f.ID = base.ID()
 
 	if err := repo.saveFile(f); err != nil {

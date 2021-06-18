@@ -151,10 +151,17 @@ func getFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 		if fileId == "" {
 			return
 		}
+
 		file, err := repo.getFile(fileId)
 		if err != nil {
 			err = logger.LogErrorf("problem reading file=%s: %v", fileId, err).Err()
 			moovhttp.Problem(w, err)
+			return
+		}
+
+		if file == nil {
+			logger.Logf("file %q was not found", fileId)
+			http.NotFound(w, r)
 			return
 		}
 
@@ -194,6 +201,13 @@ func updateFileHeader(logger log.Logger, repo ICLFileRepository) http.HandlerFun
 			moovhttp.Problem(w, err)
 			return
 		}
+
+		if file == nil {
+			logger.Logf("file %q was not found", fileId)
+			http.NotFound(w, r)
+			return
+		}
+
 		file.Header = req
 		if err := repo.saveFile(file); err != nil {
 			err = logger.LogErrorf("error saving file: %v", err).Err()
@@ -222,6 +236,19 @@ func deleteFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 			return
 		}
 		logger = logger.Set("fileID", log.String(fileId))
+
+		file, err := repo.getFile(fileId)
+		if err != nil {
+			err = logger.LogErrorf("error retrieving file: %v", err).Err()
+			moovhttp.Problem(w, err)
+			return
+		}
+
+		if file == nil {
+			logger.Logf("file %q was not found", fileId)
+			http.NotFound(w, r)
+			return
+		}
 
 		if err := repo.deleteFile(fileId); err != nil {
 			err = logger.LogErrorf("error deleting file: %v", err).Err()
@@ -256,6 +283,12 @@ func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc
 		if err != nil {
 			err = logger.LogErrorf("error retrieving file: %v", err).Err()
 			moovhttp.Problem(w, err)
+			return
+		}
+
+		if file == nil {
+			logger.Logf("file %q was not found", fileId)
+			http.NotFound(w, r)
 			return
 		}
 
@@ -296,6 +329,13 @@ func validateFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 			moovhttp.Problem(w, err)
 			return
 		}
+
+		if file == nil {
+			logger.Logf("file %q was not found", fileId)
+			http.NotFound(w, r)
+			return
+		}
+
 		if err := file.Create(); err != nil { // Create calls Validate
 			err = logger.LogErrorf("file=%s was invalid: %v", fileId, err).Err()
 			moovhttp.Problem(w, err)
@@ -338,6 +378,13 @@ func addCashLetterToFile(logger log.Logger, repo ICLFileRepository) http.Handler
 			moovhttp.Problem(w, err)
 			return
 		}
+
+		if file == nil {
+			logger.Logf("file %q was not found", fileId)
+			http.NotFound(w, r)
+			return
+		}
+
 		file.CashLetters = append(file.CashLetters, req)
 		if err := repo.saveFile(file); err != nil {
 			err = logger.LogErrorf("error saving file: %v", err).Err()
@@ -381,6 +428,13 @@ func removeCashLetterFromFile(logger log.Logger, repo ICLFileRepository) http.Ha
 			moovhttp.Problem(w, err)
 			return
 		}
+
+		if file == nil {
+			logger.Logf("file %q was not found", fileId)
+			http.NotFound(w, r)
+			return
+		}
+
 		for i := 0; i < len(file.CashLetters); i++ {
 			if file.CashLetters[i].ID == cashLetterId {
 				file.CashLetters = append(file.CashLetters[:i], file.CashLetters[i+1:]...)
