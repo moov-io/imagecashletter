@@ -34,7 +34,7 @@ type AddICLToFileOpts struct {
 }
 
 /*
-AddICLToFile Add CashLetter to File
+AddICLToFile Add cash letter to file
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileID File ID
  * @param cashLetter
@@ -118,7 +118,7 @@ type CreateICLFileOpts struct {
 }
 
 /*
-CreateICLFile Create File
+CreateICLFile Create file
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param createIclFile Content of the ImageCashLetter file (in json or raw text)
  * @param optional nil or *CreateICLFileOpts - Optional Parameters:
@@ -229,7 +229,7 @@ type DeleteICLFileOpts struct {
 }
 
 /*
-DeleteICLFile Delete File
+DeleteICLFile Delete file
 Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileID File ID
@@ -306,7 +306,7 @@ type DeleteICLFromFileOpts struct {
 }
 
 /*
-DeleteICLFromFile Delete CashLetter from File
+DeleteICLFromFile Delete cash letter from file
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileID File ID
  * @param cashLetterID CashLetter ID
@@ -384,7 +384,7 @@ type GetICLFileByIDOpts struct {
 }
 
 /*
-GetICLFileByID Retrieve File
+GetICLFileByID Retrieve file
 Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileID File ID
@@ -482,7 +482,7 @@ type GetICLFileContentsOpts struct {
 }
 
 /*
-GetICLFileContents Get File Contents
+GetICLFileContents Get file contents
 Assembles the existing file records (Cash Letters, Bundles, and Controls), computes sequence numbers and totals. Returns plaintext file.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileID File ID
@@ -580,7 +580,7 @@ type GetICLFilesOpts struct {
 }
 
 /*
-GetICLFiles List Files
+GetICLFiles List files
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param optional nil or *GetICLFilesOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
@@ -669,7 +669,7 @@ func (a *ImageCashLetterFilesApiService) GetICLFiles(ctx _context.Context, local
 }
 
 /*
-Ping Ping ImageCashLetter Service
+Ping Ping ImageCashLetter service
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 */
 func (a *ImageCashLetterFilesApiService) Ping(ctx _context.Context) (*_nethttp.Response, error) {
@@ -739,7 +739,7 @@ type UpdateICLFileOpts struct {
 }
 
 /*
-UpdateICLFile Update FileHeader
+UpdateICLFile Update file header
 Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileID File ID
@@ -853,7 +853,7 @@ type ValidateICLFileOpts struct {
 }
 
 /*
-ValidateICLFile Validate File
+ValidateICLFile Validate file
 Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileID File ID

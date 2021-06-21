@@ -33,16 +33,16 @@ All URIs are relative to *http://localhost:8083*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ImageCashLetterFilesApi* | [**AddICLToFile**](docs/ImageCashLetterFilesApi.md#addicltofile) | **Post** /files/{fileID}/cashLetters | Add CashLetter to File
-*ImageCashLetterFilesApi* | [**CreateICLFile**](docs/ImageCashLetterFilesApi.md#createiclfile) | **Post** /files/create | Create File
-*ImageCashLetterFilesApi* | [**DeleteICLFile**](docs/ImageCashLetterFilesApi.md#deleteiclfile) | **Delete** /files/{fileID} | Delete File
-*ImageCashLetterFilesApi* | [**DeleteICLFromFile**](docs/ImageCashLetterFilesApi.md#deleteiclfromfile) | **Delete** /files/{fileID}/cashLetters/{cashLetterID} | Delete CashLetter from File
-*ImageCashLetterFilesApi* | [**GetICLFileByID**](docs/ImageCashLetterFilesApi.md#geticlfilebyid) | **Get** /files/{fileID} | Retrieve File
-*ImageCashLetterFilesApi* | [**GetICLFileContents**](docs/ImageCashLetterFilesApi.md#geticlfilecontents) | **Get** /files/{fileID}/contents | Get File Contents
-*ImageCashLetterFilesApi* | [**GetICLFiles**](docs/ImageCashLetterFilesApi.md#geticlfiles) | **Get** /files | List Files
-*ImageCashLetterFilesApi* | [**Ping**](docs/ImageCashLetterFilesApi.md#ping) | **Get** /ping | Ping ImageCashLetter Service
-*ImageCashLetterFilesApi* | [**UpdateICLFile**](docs/ImageCashLetterFilesApi.md#updateiclfile) | **Post** /files/{fileID} | Update FileHeader
-*ImageCashLetterFilesApi* | [**ValidateICLFile**](docs/ImageCashLetterFilesApi.md#validateiclfile) | **Get** /files/{fileID}/validate | Validate File
+*ImageCashLetterFilesApi* | [**AddICLToFile**](docs/ImageCashLetterFilesApi.md#addicltofile) | **Post** /files/{fileID}/cashLetters | Add cash letter to file
+*ImageCashLetterFilesApi* | [**CreateICLFile**](docs/ImageCashLetterFilesApi.md#createiclfile) | **Post** /files/create | Create file
+*ImageCashLetterFilesApi* | [**DeleteICLFile**](docs/ImageCashLetterFilesApi.md#deleteiclfile) | **Delete** /files/{fileID} | Delete file
+*ImageCashLetterFilesApi* | [**DeleteICLFromFile**](docs/ImageCashLetterFilesApi.md#deleteiclfromfile) | **Delete** /files/{fileID}/cashLetters/{cashLetterID} | Delete cash letter from file
+*ImageCashLetterFilesApi* | [**GetICLFileByID**](docs/ImageCashLetterFilesApi.md#geticlfilebyid) | **Get** /files/{fileID} | Retrieve file
+*ImageCashLetterFilesApi* | [**GetICLFileContents**](docs/ImageCashLetterFilesApi.md#geticlfilecontents) | **Get** /files/{fileID}/contents | Get file contents
+*ImageCashLetterFilesApi* | [**GetICLFiles**](docs/ImageCashLetterFilesApi.md#geticlfiles) | **Get** /files | List files
+*ImageCashLetterFilesApi* | [**Ping**](docs/ImageCashLetterFilesApi.md#ping) | **Get** /ping | Ping ImageCashLetter service
+*ImageCashLetterFilesApi* | [**UpdateICLFile**](docs/ImageCashLetterFilesApi.md#updateiclfile) | **Post** /files/{fileID} | Update file header
+*ImageCashLetterFilesApi* | [**ValidateICLFile**](docs/ImageCashLetterFilesApi.md#validateiclfile) | **Get** /files/{fileID}/validate | Validate file
 
 
 ## Documentation For Models

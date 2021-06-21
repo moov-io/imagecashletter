@@ -4,16 +4,16 @@ All URIs are relative to *http://localhost:8083*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AddICLToFile**](ImageCashLetterFilesApi.md#AddICLToFile) | **Post** /files/{fileID}/cashLetters | Add CashLetter to File
-[**CreateICLFile**](ImageCashLetterFilesApi.md#CreateICLFile) | **Post** /files/create | Create File
-[**DeleteICLFile**](ImageCashLetterFilesApi.md#DeleteICLFile) | **Delete** /files/{fileID} | Delete File
-[**DeleteICLFromFile**](ImageCashLetterFilesApi.md#DeleteICLFromFile) | **Delete** /files/{fileID}/cashLetters/{cashLetterID} | Delete CashLetter from File
-[**GetICLFileByID**](ImageCashLetterFilesApi.md#GetICLFileByID) | **Get** /files/{fileID} | Retrieve File
-[**GetICLFileContents**](ImageCashLetterFilesApi.md#GetICLFileContents) | **Get** /files/{fileID}/contents | Get File Contents
-[**GetICLFiles**](ImageCashLetterFilesApi.md#GetICLFiles) | **Get** /files | List Files
-[**Ping**](ImageCashLetterFilesApi.md#Ping) | **Get** /ping | Ping ImageCashLetter Service
-[**UpdateICLFile**](ImageCashLetterFilesApi.md#UpdateICLFile) | **Post** /files/{fileID} | Update FileHeader
-[**ValidateICLFile**](ImageCashLetterFilesApi.md#ValidateICLFile) | **Get** /files/{fileID}/validate | Validate File
+[**AddICLToFile**](ImageCashLetterFilesApi.md#AddICLToFile) | **Post** /files/{fileID}/cashLetters | Add cash letter to file
+[**CreateICLFile**](ImageCashLetterFilesApi.md#CreateICLFile) | **Post** /files/create | Create file
+[**DeleteICLFile**](ImageCashLetterFilesApi.md#DeleteICLFile) | **Delete** /files/{fileID} | Delete file
+[**DeleteICLFromFile**](ImageCashLetterFilesApi.md#DeleteICLFromFile) | **Delete** /files/{fileID}/cashLetters/{cashLetterID} | Delete cash letter from file
+[**GetICLFileByID**](ImageCashLetterFilesApi.md#GetICLFileByID) | **Get** /files/{fileID} | Retrieve file
+[**GetICLFileContents**](ImageCashLetterFilesApi.md#GetICLFileContents) | **Get** /files/{fileID}/contents | Get file contents
+[**GetICLFiles**](ImageCashLetterFilesApi.md#GetICLFiles) | **Get** /files | List files
+[**Ping**](ImageCashLetterFilesApi.md#Ping) | **Get** /ping | Ping ImageCashLetter service
+[**UpdateICLFile**](ImageCashLetterFilesApi.md#UpdateICLFile) | **Post** /files/{fileID} | Update file header
+[**ValidateICLFile**](ImageCashLetterFilesApi.md#ValidateICLFile) | **Get** /files/{fileID}/validate | Validate file
 
 
 
@@ -21,7 +21,7 @@ Method | HTTP request | Description
 
 > AddICLToFile(ctx, fileID, cashLetter, optional)
 
-Add CashLetter to File
+Add cash letter to file
 
 ### Required Parameters
 
@@ -67,7 +67,7 @@ No authorization required
 
 > IclFile CreateICLFile(ctx, createIclFile, optional)
 
-Create File
+Create file
 
 ### Required Parameters
 
@@ -111,7 +111,7 @@ No authorization required
 
 > DeleteICLFile(ctx, fileID, optional)
 
-Delete File
+Delete file
 
 Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
 
@@ -156,7 +156,7 @@ No authorization required
 
 > DeleteICLFromFile(ctx, fileID, cashLetterID, optional)
 
-Delete CashLetter from File
+Delete cash letter from file
 
 ### Required Parameters
 
@@ -201,7 +201,7 @@ No authorization required
 
 > IclFile GetICLFileByID(ctx, fileID, optional)
 
-Retrieve File
+Retrieve file
 
 Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 
@@ -246,7 +246,7 @@ No authorization required
 
 > string GetICLFileContents(ctx, fileID, optional)
 
-Get File Contents
+Get file contents
 
 Assembles the existing file records (Cash Letters, Bundles, and Controls), computes sequence numbers and totals. Returns plaintext file.
 
@@ -291,7 +291,7 @@ No authorization required
 
 > []IclFile GetICLFiles(ctx, optional)
 
-List Files
+List files
 
 ### Required Parameters
 
@@ -332,7 +332,7 @@ No authorization required
 
 > Ping(ctx, )
 
-Ping ImageCashLetter Service
+Ping ImageCashLetter service
 
 ### Required Parameters
 
@@ -360,7 +360,7 @@ No authorization required
 
 > IclFile UpdateICLFile(ctx, fileID, iclFileHeader, optional)
 
-Update FileHeader
+Update file header
 
 Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
@@ -408,7 +408,7 @@ No authorization required
 
 > IclFile ValidateICLFile(ctx, fileID, optional)
 
-Validate File
+Validate file
 
 Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
