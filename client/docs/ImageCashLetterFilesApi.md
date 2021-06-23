@@ -4,15 +4,15 @@ All URIs are relative to *http://localhost:8083*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AddICLToFile**](ImageCashLetterFilesApi.md#AddICLToFile) | **Post** /files/{fileID}/cashLetters | Add CashLetter to File
-[**CreateICLFile**](ImageCashLetterFilesApi.md#CreateICLFile) | **Post** /files/create | Create File
+[**AddICLToFile**](ImageCashLetterFilesApi.md#AddICLToFile) | **Post** /files/{fileID}/cashLetters | Add cash letter to file
+[**CreateICLFile**](ImageCashLetterFilesApi.md#CreateICLFile) | **Post** /files/create | Create file
 [**DeleteICLFile**](ImageCashLetterFilesApi.md#DeleteICLFile) | **Delete** /files/{fileID} | Delete file
-[**DeleteICLFromFile**](ImageCashLetterFilesApi.md#DeleteICLFromFile) | **Delete** /files/{fileID}/cashLetters/{cashLetterID} | Delete a CashLetter from a File
-[**GetICLFileByID**](ImageCashLetterFilesApi.md#GetICLFileByID) | **Get** /files/{fileID} | Retrieve a file
+[**DeleteICLFromFile**](ImageCashLetterFilesApi.md#DeleteICLFromFile) | **Delete** /files/{fileID}/cashLetters/{cashLetterID} | Delete cash letter from file
+[**GetICLFileByID**](ImageCashLetterFilesApi.md#GetICLFileByID) | **Get** /files/{fileID} | Retrieve file
 [**GetICLFileContents**](ImageCashLetterFilesApi.md#GetICLFileContents) | **Get** /files/{fileID}/contents | Get file contents
-[**GetICLFiles**](ImageCashLetterFilesApi.md#GetICLFiles) | **Get** /files | Get ICL Files
+[**GetICLFiles**](ImageCashLetterFilesApi.md#GetICLFiles) | **Get** /files | List files
 [**Ping**](ImageCashLetterFilesApi.md#Ping) | **Get** /ping | Ping ImageCashLetter service
-[**UpdateICLFile**](ImageCashLetterFilesApi.md#UpdateICLFile) | **Post** /files/{fileID} | Updates FileHeader
+[**UpdateICLFile**](ImageCashLetterFilesApi.md#UpdateICLFile) | **Post** /files/{fileID} | Update file header
 [**ValidateICLFile**](ImageCashLetterFilesApi.md#ValidateICLFile) | **Get** /files/{fileID}/validate | Validate file
 
 
@@ -21,7 +21,7 @@ Method | HTTP request | Description
 
 > AddICLToFile(ctx, fileID, cashLetter, optional)
 
-Add CashLetter to File
+Add cash letter to file
 
 ### Required Parameters
 
@@ -42,8 +42,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
- **xIDempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests. | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
+ **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests. | 
 
 ### Return type
 
@@ -67,7 +67,7 @@ No authorization required
 
 > IclFile CreateICLFile(ctx, createIclFile, optional)
 
-Create File
+Create file
 
 ### Required Parameters
 
@@ -86,8 +86,8 @@ Optional parameters are passed through a pointer to a CreateICLFileOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
- **xIDempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests. | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
+ **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests. | 
 
 ### Return type
 
@@ -132,7 +132,7 @@ Optional parameters are passed through a pointer to a DeleteICLFileOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
 
 ### Return type
 
@@ -156,7 +156,7 @@ No authorization required
 
 > DeleteICLFromFile(ctx, fileID, cashLetterID, optional)
 
-Delete a CashLetter from a File
+Delete cash letter from file
 
 ### Required Parameters
 
@@ -177,7 +177,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
 
 ### Return type
 
@@ -201,7 +201,7 @@ No authorization required
 
 > IclFile GetICLFileByID(ctx, fileID, optional)
 
-Retrieve a file
+Retrieve file
 
 Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 
@@ -222,7 +222,7 @@ Optional parameters are passed through a pointer to a GetICLFileByIDOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
 
 ### Return type
 
@@ -248,7 +248,7 @@ No authorization required
 
 Get file contents
 
-Assembles the existing file (Cash Letters, Bundles and Controls) records, computes sequence numbers and totals. Returns plaintext file.
+Assembles the existing file records (Cash Letters, Bundles, and Controls), computes sequence numbers and totals. Returns plaintext file.
 
 ### Required Parameters
 
@@ -267,7 +267,7 @@ Optional parameters are passed through a pointer to a GetICLFileContentsOpts str
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
 
 ### Return type
 
@@ -291,7 +291,7 @@ No authorization required
 
 > []IclFile GetICLFiles(ctx, optional)
 
-Get ICL Files
+List files
 
 ### Required Parameters
 
@@ -308,7 +308,7 @@ Optional parameters are passed through a pointer to a GetICLFilesOpts struct
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
 
 ### Return type
 
@@ -360,7 +360,7 @@ No authorization required
 
 > IclFile UpdateICLFile(ctx, fileID, iclFileHeader, optional)
 
-Updates FileHeader
+Update file header
 
 Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
@@ -383,8 +383,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
- **xIDempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests. | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
+ **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests. | 
 
 ### Return type
 
@@ -429,7 +429,7 @@ Optional parameters are passed through a pointer to a ValidateICLFileOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
 
 ### Return type
 

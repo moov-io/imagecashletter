@@ -2,7 +2,7 @@ openapi: 3.0.2
 info:
   contact:
     url: https://github.com/moov-io/imagecashletter
-  description: Moov Image Cash Letter (ICL) implements an HTTP API for creating, parsing
+  description: Moov Image Cash Letter (ICL) implements an HTTP API for creating, parsing,
     and validating ImageCashLetter files.
   license:
     name: Apache 2.0
@@ -14,7 +14,7 @@ servers:
   url: http://localhost:8083
 tags:
 - description: |
-    Files contains ImageCashLetter Cash Letters and Bundles.
+    Files contain ImageCashLetter Cash Letters and Bundles.
   name: Image Cash Letter Files
 paths:
   /ping:
@@ -31,7 +31,7 @@ paths:
       operationId: getICLFiles
       parameters:
       - description: Optional Request ID allows application developer to trace requests
-          through the systems logs
+          through the system's logs
         example: rs4f9915
         explode: false
         in: header
@@ -57,7 +57,7 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Get ICL Files
+      summary: List files
       tags:
       - Image Cash Letter Files
   /files/create:
@@ -65,7 +65,7 @@ paths:
       operationId: createICLFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
-          through the systems logs
+          through the system's logs
         example: rs4f9915
         explode: false
         in: header
@@ -75,12 +75,12 @@ paths:
           type: string
         style: simple
       - description: Idempotent key in the header which expires after 24 hours. These
-          strings should contain enough entropy for to not collide with each other
-          in your requests.
+          strings should contain enough entropy to not collide with each other in
+          your requests.
         example: a4f88150
         explode: false
         in: header
-        name: X-IDempotency-Key
+        name: X-Idempotency-Key
         required: false
         schema:
           type: string
@@ -119,7 +119,7 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Create File
+      summary: Create file
       tags:
       - Image Cash Letter Files
   /files/{fileID}:
@@ -138,7 +138,7 @@ paths:
           type: string
         style: simple
       - description: Optional Request ID allows application developer to trace requests
-          through the systems logs
+          through the system's logs
         example: rs4f9915
         explode: false
         in: header
@@ -164,7 +164,7 @@ paths:
       operationId: getICLFileByID
       parameters:
       - description: Optional Request ID allows application developer to trace requests
-          through the systems logs
+          through the system's logs
         example: rs4f9915
         explode: false
         in: header
@@ -194,7 +194,7 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Retrieve a file
+      summary: Retrieve file
       tags:
       - Image Cash Letter Files
     post:
@@ -203,7 +203,7 @@ paths:
       operationId: updateICLFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
-          through the systems logs
+          through the system's logs
         example: rs4f9915
         explode: false
         in: header
@@ -213,12 +213,12 @@ paths:
           type: string
         style: simple
       - description: Idempotent key in the header which expires after 24 hours. These
-          strings should contain enough entropy for to not collide with each other
-          in your requests.
+          strings should contain enough entropy to not collide with each other in
+          your requests.
         example: a4f88150
         explode: false
         in: header
-        name: X-IDempotency-Key
+        name: X-Idempotency-Key
         required: false
         schema:
           type: string
@@ -262,17 +262,17 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Updates FileHeader
+      summary: Update file header
       tags:
       - Image Cash Letter Files
   /files/{fileID}/contents:
     get:
-      description: Assembles the existing file (Cash Letters, Bundles and Controls)
-        records, computes sequence numbers and totals. Returns plaintext file.
+      description: Assembles the existing file records (Cash Letters, Bundles, and
+        Controls), computes sequence numbers and totals. Returns plaintext file.
       operationId: getICLFileContents
       parameters:
       - description: Optional Request ID allows application developer to trace requests
-          through the systems logs
+          through the system's logs
         example: rs4f9915
         explode: false
         in: header
@@ -297,6 +297,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/RawICLFile'
           description: File built successfully without errors.
+        400:
+          description: A problem was encountered getting the file, check errors.
       security:
       - bearerAuth: []
       - cookieAuth: []
@@ -310,7 +312,7 @@ paths:
       operationId: validateICLFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
-          through the systems logs
+          through the system's logs
         example: rs4f9915
         explode: false
         in: header
@@ -348,7 +350,7 @@ paths:
       operationId: addICLToFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
-          through the systems logs
+          through the system's logs
         example: rs4f9915
         explode: false
         in: header
@@ -358,12 +360,12 @@ paths:
           type: string
         style: simple
       - description: Idempotent key in the header which expires after 24 hours. These
-          strings should contain enough entropy for to not collide with each other
-          in your requests.
+          strings should contain enough entropy to not collide with each other in
+          your requests.
         example: a4f88150
         explode: false
         in: header
-        name: X-IDempotency-Key
+        name: X-Idempotency-Key
         required: false
         schema:
           type: string
@@ -389,7 +391,7 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Add CashLetter to File
+      summary: Add cash letter to file
       tags:
       - Image Cash Letter Files
   /files/{fileID}/cashLetters/{cashLetterID}:
@@ -397,7 +399,7 @@ paths:
       operationId: deleteICLFromFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
-          through the systems logs
+          through the system's logs
         example: rs4f9915
         explode: false
         in: header
@@ -432,7 +434,7 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Delete a CashLetter from a File
+      summary: Delete cash letter from file
       tags:
       - Image Cash Letter Files
 components:
@@ -463,7 +465,7 @@ components:
         - creditItems:
           - externalProcessingCode: "9"
             creditItemSequenceNumber: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             postingBankRoutingNumber: "231986436"
             itemAmount: 100000
             userField: B12345678
@@ -474,7 +476,7 @@ components:
             sourceWorkCode: "01"
           - externalProcessingCode: "9"
             creditItemSequenceNumber: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             postingBankRoutingNumber: "231986436"
             itemAmount: 100000
             userField: B12345678
@@ -560,7 +562,7 @@ components:
               addendumCount: 3
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
-              auxiliaryOnUs: '*'
+              auxiliaryOnUs: "1001"
               itemAmount: 100000
               payorBankCheckDigit: "5"
               checkDetailAddendumA:
@@ -590,14 +592,14 @@ components:
                 bOFDItemSequenceNumber: "1"
               checkDetailAddendumB:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -765,7 +767,7 @@ components:
               addendumCount: 3
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
-              auxiliaryOnUs: '*'
+              auxiliaryOnUs: "1001"
               itemAmount: 100000
               payorBankCheckDigit: "5"
               checkDetailAddendumA:
@@ -795,14 +797,14 @@ components:
                 bOFDItemSequenceNumber: "1"
               checkDetailAddendumB:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -1022,7 +1024,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -1033,7 +1035,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -1042,14 +1044,14 @@ components:
               itemAmount: 100000
               returnDetailAddendumC:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -1239,7 +1241,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -1250,7 +1252,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -1259,14 +1261,14 @@ components:
               itemAmount: 100000
               returnDetailAddendumC:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -1426,7 +1428,7 @@ components:
               addendumCount: 3
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
-              auxiliaryOnUs: '*'
+              auxiliaryOnUs: "1001"
               itemAmount: 100000
               payorBankCheckDigit: "5"
               checkDetailAddendumA:
@@ -1456,14 +1458,14 @@ components:
                 bOFDItemSequenceNumber: "1"
               checkDetailAddendumB:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -1631,7 +1633,7 @@ components:
               addendumCount: 3
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
-              auxiliaryOnUs: '*'
+              auxiliaryOnUs: "1001"
               itemAmount: 100000
               payorBankCheckDigit: "5"
               checkDetailAddendumA:
@@ -1661,14 +1663,14 @@ components:
                 bOFDItemSequenceNumber: "1"
               checkDetailAddendumB:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -1888,7 +1890,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -1899,7 +1901,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -1908,14 +1910,14 @@ components:
               itemAmount: 100000
               returnDetailAddendumC:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -2105,7 +2107,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -2116,7 +2118,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -2125,14 +2127,14 @@ components:
               itemAmount: 100000
               returnDetailAddendumC:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -2255,7 +2257,7 @@ components:
         - creditItems:
           - externalProcessingCode: "9"
             creditItemSequenceNumber: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             postingBankRoutingNumber: "231986436"
             itemAmount: 100000
             userField: B12345678
@@ -2266,7 +2268,7 @@ components:
             sourceWorkCode: "01"
           - externalProcessingCode: "9"
             creditItemSequenceNumber: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             postingBankRoutingNumber: "231986436"
             itemAmount: 100000
             userField: B12345678
@@ -2352,7 +2354,7 @@ components:
               addendumCount: 3
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
-              auxiliaryOnUs: '*'
+              auxiliaryOnUs: "1001"
               itemAmount: 100000
               payorBankCheckDigit: "5"
               checkDetailAddendumA:
@@ -2382,14 +2384,14 @@ components:
                 bOFDItemSequenceNumber: "1"
               checkDetailAddendumB:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -2557,7 +2559,7 @@ components:
               addendumCount: 3
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
-              auxiliaryOnUs: '*'
+              auxiliaryOnUs: "1001"
               itemAmount: 100000
               payorBankCheckDigit: "5"
               checkDetailAddendumA:
@@ -2587,14 +2589,14 @@ components:
                 bOFDItemSequenceNumber: "1"
               checkDetailAddendumB:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -2814,7 +2816,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -2825,7 +2827,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -2834,14 +2836,14 @@ components:
               itemAmount: 100000
               returnDetailAddendumC:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -3031,7 +3033,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -3042,7 +3044,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -3051,14 +3053,14 @@ components:
               itemAmount: 100000
               returnDetailAddendumC:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -3218,7 +3220,7 @@ components:
               addendumCount: 3
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
-              auxiliaryOnUs: '*'
+              auxiliaryOnUs: "1001"
               itemAmount: 100000
               payorBankCheckDigit: "5"
               checkDetailAddendumA:
@@ -3248,14 +3250,14 @@ components:
                 bOFDItemSequenceNumber: "1"
               checkDetailAddendumB:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -3423,7 +3425,7 @@ components:
               addendumCount: 3
               eCEInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
-              auxiliaryOnUs: '*'
+              auxiliaryOnUs: "1001"
               itemAmount: 100000
               payorBankCheckDigit: "5"
               checkDetailAddendumA:
@@ -3453,14 +3455,14 @@ components:
                 bOFDItemSequenceNumber: "1"
               checkDetailAddendumB:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -3680,7 +3682,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -3691,7 +3693,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -3700,14 +3702,14 @@ components:
               itemAmount: 100000
               returnDetailAddendumC:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -3897,7 +3899,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -3908,7 +3910,7 @@ components:
                 endorsingBankCorrectionIndicator: 1
                 endorsingBankIdentifier: 0
                 bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-                returnReason: returnReason
+                returnReason: A
                 endorsingBankRoutingNumber: "231486745"
                 endorsingBankSequenceNumber: "1"
                 endorsingBankConversionIndicator: "1"
@@ -3917,14 +3919,14 @@ components:
               itemAmount: 100000
               returnDetailAddendumC:
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
                 ID: d1e26288
                 descript: Payment
               - imageReferenceKey: "0"
-                lengthImageReferenceKey: "34"
+                lengthImageReferenceKey: "0000"
                 userField: ZZZZ
                 imageReferenceKeyIndicator: 1
                 microfilmArchiveSequenceNumber: "1"
@@ -4114,7 +4116,7 @@ components:
             addendumCount: 3
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             itemAmount: 100000
             payorBankCheckDigit: "5"
             checkDetailAddendumA:
@@ -4144,14 +4146,14 @@ components:
               bOFDItemSequenceNumber: "1"
             checkDetailAddendumB:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -4319,7 +4321,7 @@ components:
             addendumCount: 3
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             itemAmount: 100000
             payorBankCheckDigit: "5"
             checkDetailAddendumA:
@@ -4349,14 +4351,14 @@ components:
               bOFDItemSequenceNumber: "1"
             checkDetailAddendumB:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -4576,7 +4578,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -4587,7 +4589,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -4596,14 +4598,14 @@ components:
             itemAmount: 100000
             returnDetailAddendumC:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -4793,7 +4795,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -4804,7 +4806,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -4813,14 +4815,14 @@ components:
             itemAmount: 100000
             returnDetailAddendumC:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -4980,7 +4982,7 @@ components:
             addendumCount: 3
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             itemAmount: 100000
             payorBankCheckDigit: "5"
             checkDetailAddendumA:
@@ -5010,14 +5012,14 @@ components:
               bOFDItemSequenceNumber: "1"
             checkDetailAddendumB:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -5185,7 +5187,7 @@ components:
             addendumCount: 3
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             itemAmount: 100000
             payorBankCheckDigit: "5"
             checkDetailAddendumA:
@@ -5215,14 +5217,14 @@ components:
               bOFDItemSequenceNumber: "1"
             checkDetailAddendumB:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -5442,7 +5444,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -5453,7 +5455,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -5462,14 +5464,14 @@ components:
             itemAmount: 100000
             returnDetailAddendumC:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -5659,7 +5661,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -5670,7 +5672,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -5679,14 +5681,14 @@ components:
             itemAmount: 100000
             returnDetailAddendumC:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -5844,11 +5846,11 @@ components:
           description: |
             StandardLevel identifies the standard level of the file.
 
-            * `03` - DSTU X9.37 - 2003
+            * `03` - DSTU X9.37-2003
             * `30` - X9.100-187-2008
-            * `35` - X9.100-187-2013 and 2016
+            * `35` - X9.100-187-2013 and X9.100-187-2016
           enum:
-          - "3"
+          - "03"
           - "30"
           - "35"
           example: "35"
@@ -5856,7 +5858,7 @@ components:
           type: string
         testIndicator:
           description: |
-            TestIndicator dentifies whether the file is a test or production file.
+            TestIndicator identifies whether the file is a test or production file.
 
             * `T` - Test File
             * `P` - Production File
@@ -5881,7 +5883,7 @@ components:
           maxLength: 9
           type: string
         fileCreationDate:
-          description: FileCreationDate is the date that the immediate origin institution
+          description: FileCreationDate is the date the immediate origin institution
             creates the file.
           example: 2020-10-23T00:00:00Z
           format: date-time
@@ -5893,13 +5895,13 @@ components:
           format: date-time
           type: string
         resendIndicator:
-          description: ResendIndicator Indicates whether the file has been previously
+          description: ResendIndicator indicates whether the file has been previously
             transmitted. (Y - Yes, N - No)
           example: Y
           maxLength: 1
           type: string
         immediateDestinationName:
-          description: ImmediateDestinationName Identifies the short name of the institution
+          description: ImmediateDestinationName identifies the short name of the institution
             that receives the file.
           example: ABC Bank
           maxLength: 18
@@ -5912,10 +5914,9 @@ components:
           type: string
         fileIDModifier:
           description: |
-            FileIDModifier is a code that permits multiple files, created on the same date, same time and between the
-            same institutions, to be distinguished one from another. If all of the following fields in a previous file are
-            equal to the same fields in this file: FileHeader ImmediateDestination, ImmediateOrigin, FileCreationDate, and
-            FileCreationTime, it must be defined.
+            FileIDModifier is a code that permits multiple files, created on the same date, at the same time, and sent between the
+            same institutions, to be distinguished from one another. If FileHeader ImmediateDestination, ImmediateOrigin, FileCreationDate, and
+            FileCreationTime in a previous file are equal to the same fields in this file, FileIDModifier must be defined.
           example: A
           maxLength: 1
           type: string
@@ -5934,13 +5935,13 @@ components:
           type: string
         companionDocumentIndicator:
           description: |
-            CompanionDocumentIndicator identifies a field used to indicate the Companion Document being used.
-            Shall be present only under clearing arrangements. Companion Document usage and values
-            defined by clearing arrangements.
+            CompanionDocumentIndicator indicates the Companion Document being used.
+            It shall be present only under clearing arrangements, where Companion Document usage and values are
+            defined.
             Values:
-            0–9 Reserved for United States use
-            A–J Reserved for Canadian use
-            Other - as defined by clearing arrangements.
+            * 0–9 - Reserved for United States use
+            * A–J - Reserved for Canadian use
+            * Other - Defined by clearing arrangements
           example: "1"
           maxLength: 1
           type: string
@@ -5988,7 +5989,7 @@ components:
           example: 100
           type: integer
         immediateOriginContactName:
-          description: immediateOriginContactName identifies contact at the institution
+          description: immediateOriginContactName identifies a contact at the institution
             that creates the file.
           example: John Smith
           maxLength: 14
@@ -6001,7 +6002,7 @@ components:
           type: string
         creditTotalIndicator:
           description: |
-            CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals. If so they will be included in TotalItemCount and FileTotalAmount.
+            CreditTotalIndicator is a code that indicates whether Credit Items are included in this record’s totals. If so, they will be included in TotalItemCount and FileTotalAmount.
             TotalRecordCount includes all records of all types regardless of the value of this field.
             * ` ` - No Credit Items
             * `0` - Credit Items are not included in totals
@@ -6032,7 +6033,7 @@ components:
         creditItems:
         - externalProcessingCode: "9"
           creditItemSequenceNumber: "1"
-          auxiliaryOnUs: '*'
+          auxiliaryOnUs: "1001"
           postingBankRoutingNumber: "231986436"
           itemAmount: 100000
           userField: B12345678
@@ -6043,7 +6044,7 @@ components:
           sourceWorkCode: "01"
         - externalProcessingCode: "9"
           creditItemSequenceNumber: "1"
-          auxiliaryOnUs: '*'
+          auxiliaryOnUs: "1001"
           postingBankRoutingNumber: "231986436"
           itemAmount: 100000
           userField: B12345678
@@ -6129,7 +6130,7 @@ components:
             addendumCount: 3
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             itemAmount: 100000
             payorBankCheckDigit: "5"
             checkDetailAddendumA:
@@ -6159,14 +6160,14 @@ components:
               bOFDItemSequenceNumber: "1"
             checkDetailAddendumB:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -6334,7 +6335,7 @@ components:
             addendumCount: 3
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             itemAmount: 100000
             payorBankCheckDigit: "5"
             checkDetailAddendumA:
@@ -6364,14 +6365,14 @@ components:
               bOFDItemSequenceNumber: "1"
             checkDetailAddendumB:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -6591,7 +6592,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -6602,7 +6603,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -6611,14 +6612,14 @@ components:
             itemAmount: 100000
             returnDetailAddendumC:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -6808,7 +6809,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -6819,7 +6820,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -6828,14 +6829,14 @@ components:
             itemAmount: 100000
             returnDetailAddendumC:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -6995,7 +6996,7 @@ components:
             addendumCount: 3
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             itemAmount: 100000
             payorBankCheckDigit: "5"
             checkDetailAddendumA:
@@ -7025,14 +7026,14 @@ components:
               bOFDItemSequenceNumber: "1"
             checkDetailAddendumB:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -7200,7 +7201,7 @@ components:
             addendumCount: 3
             eCEInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
-            auxiliaryOnUs: '*'
+            auxiliaryOnUs: "1001"
             itemAmount: 100000
             payorBankCheckDigit: "5"
             checkDetailAddendumA:
@@ -7230,14 +7231,14 @@ components:
               bOFDItemSequenceNumber: "1"
             checkDetailAddendumB:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -7457,7 +7458,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -7468,7 +7469,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -7477,14 +7478,14 @@ components:
             itemAmount: 100000
             returnDetailAddendumC:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -7674,7 +7675,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -7685,7 +7686,7 @@ components:
               endorsingBankCorrectionIndicator: 1
               endorsingBankIdentifier: 0
               bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-              returnReason: returnReason
+              returnReason: A
               endorsingBankRoutingNumber: "231486745"
               endorsingBankSequenceNumber: "1"
               endorsingBankConversionIndicator: "1"
@@ -7694,14 +7695,14 @@ components:
             itemAmount: 100000
             returnDetailAddendumC:
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
               ID: d1e26288
               descript: Payment
             - imageReferenceKey: "0"
-              lengthImageReferenceKey: "34"
+              lengthImageReferenceKey: "0000"
               userField: ZZZZ
               imageReferenceKeyIndicator: 1
               microfilmArchiveSequenceNumber: "1"
@@ -7874,13 +7875,13 @@ components:
             * `20` - No Detail
             * `99` - Bundles not the same collection type. Use of the value is only allowed by clearing arrangement.
           enum:
-          - "0"
-          - "1"
-          - "2"
-          - "3"
-          - "4"
-          - "5"
-          - "6"
+          - "00"
+          - "01"
+          - "02"
+          - "03"
+          - "04"
+          - "05"
+          - "06"
           - "20"
           - "99"
           example: "00"
@@ -7895,19 +7896,18 @@ components:
           type: string
         eCEInstitutionRoutingNumber:
           description: ECEInstitutionRoutingNumber is the routing and transit number
-            of the institution that creates the Cash Letter Header record
+            of the institution that creates the Cash Letter Header record.
           example: "217876527"
           maxLength: 9
           type: string
         cashLetterBusinessDate:
           description: cashLetterBusinessDate is the business date of the cash letter.
-            (Format YYYYMMDD, where - YYYY year, MM month, DD day)
           example: 2020-10-23T00:00:00Z
-          maxLength: 8
+          format: date-time
           type: string
         cashLetterCreationDate:
           description: cashLetterCreationDate is the date that the cash letter is
-            created (Format YYYYMMDD, where - YYYY year, MM month, DD day)
+            created.
           example: 2020-10-23T00:00:00Z
           format: date-time
           type: string
@@ -7979,7 +7979,7 @@ components:
           maxLength: 8
           type: string
         originatorContactName:
-          description: OriginatorContactName is the name of contact at the institution
+          description: OriginatorContactName is the name of a contact at the institution
             that creates the cash letter.
           example: John Smith
           maxLength: 14
@@ -7991,14 +7991,14 @@ components:
           maxLength: 10
           type: string
         fedWorkType:
-          description: fedWorkType is any valid codes specified by the Federal Reserve
-            Bank
+          description: fedWorkType is any valid code specified by the Federal Reserve
+            Bank.
           example: V
           maxLength: 1
           type: string
         returnsIndicator:
           description: |
-            ReturnsIndicator ddentifies type of returns
+            ReturnsIndicator identifies type of returns.
 
             * ` ` - Original Message
             * `E` - Administrative - items being returned that are handled by the bank and usually do not directly
@@ -8066,8 +8066,8 @@ components:
           type: string
         creditTotalIndicator:
           description: |
-            CreditTotalIndicator is a code that indicates whether Credits Items are included in this record’s totals.
-            If so they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of
+            CreditTotalIndicator is a code that indicates whether Credit Items are included in this record’s totals.
+            If so, they will be included in TotalItemCount and FileTotalAmount. TotalRecordCount includes all records of
             all types regardless of the value of this field.
             * ` ` - No Credit Items
             * `0` - Credit Items are not included in totals
@@ -8147,7 +8147,7 @@ components:
           addendumCount: 3
           eCEInstitutionItemSequenceNumber: "24531"
           externalProcessingCode: "1"
-          auxiliaryOnUs: '*'
+          auxiliaryOnUs: "1001"
           itemAmount: 100000
           payorBankCheckDigit: "5"
           checkDetailAddendumA:
@@ -8177,14 +8177,14 @@ components:
             bOFDItemSequenceNumber: "1"
           checkDetailAddendumB:
           - imageReferenceKey: "0"
-            lengthImageReferenceKey: "34"
+            lengthImageReferenceKey: "0000"
             userField: ZZZZ
             imageReferenceKeyIndicator: 1
             microfilmArchiveSequenceNumber: "1"
             ID: d1e26288
             descript: Payment
           - imageReferenceKey: "0"
-            lengthImageReferenceKey: "34"
+            lengthImageReferenceKey: "0000"
             userField: ZZZZ
             imageReferenceKeyIndicator: 1
             microfilmArchiveSequenceNumber: "1"
@@ -8352,7 +8352,7 @@ components:
           addendumCount: 3
           eCEInstitutionItemSequenceNumber: "24531"
           externalProcessingCode: "1"
-          auxiliaryOnUs: '*'
+          auxiliaryOnUs: "1001"
           itemAmount: 100000
           payorBankCheckDigit: "5"
           checkDetailAddendumA:
@@ -8382,14 +8382,14 @@ components:
             bOFDItemSequenceNumber: "1"
           checkDetailAddendumB:
           - imageReferenceKey: "0"
-            lengthImageReferenceKey: "34"
+            lengthImageReferenceKey: "0000"
             userField: ZZZZ
             imageReferenceKeyIndicator: 1
             microfilmArchiveSequenceNumber: "1"
             ID: d1e26288
             descript: Payment
           - imageReferenceKey: "0"
-            lengthImageReferenceKey: "34"
+            lengthImageReferenceKey: "0000"
             userField: ZZZZ
             imageReferenceKeyIndicator: 1
             microfilmArchiveSequenceNumber: "1"
@@ -8609,7 +8609,7 @@ components:
             endorsingBankCorrectionIndicator: 1
             endorsingBankIdentifier: 0
             bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-            returnReason: returnReason
+            returnReason: A
             endorsingBankRoutingNumber: "231486745"
             endorsingBankSequenceNumber: "1"
             endorsingBankConversionIndicator: "1"
@@ -8620,7 +8620,7 @@ components:
             endorsingBankCorrectionIndicator: 1
             endorsingBankIdentifier: 0
             bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-            returnReason: returnReason
+            returnReason: A
             endorsingBankRoutingNumber: "231486745"
             endorsingBankSequenceNumber: "1"
             endorsingBankConversionIndicator: "1"
@@ -8629,14 +8629,14 @@ components:
           itemAmount: 100000
           returnDetailAddendumC:
           - imageReferenceKey: "0"
-            lengthImageReferenceKey: "34"
+            lengthImageReferenceKey: "0000"
             userField: ZZZZ
             imageReferenceKeyIndicator: 1
             microfilmArchiveSequenceNumber: "1"
             ID: d1e26288
             descript: Payment
           - imageReferenceKey: "0"
-            lengthImageReferenceKey: "34"
+            lengthImageReferenceKey: "0000"
             userField: ZZZZ
             imageReferenceKeyIndicator: 1
             microfilmArchiveSequenceNumber: "1"
@@ -8826,7 +8826,7 @@ components:
             endorsingBankCorrectionIndicator: 1
             endorsingBankIdentifier: 0
             bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-            returnReason: returnReason
+            returnReason: A
             endorsingBankRoutingNumber: "231486745"
             endorsingBankSequenceNumber: "1"
             endorsingBankConversionIndicator: "1"
@@ -8837,7 +8837,7 @@ components:
             endorsingBankCorrectionIndicator: 1
             endorsingBankIdentifier: 0
             bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-            returnReason: returnReason
+            returnReason: A
             endorsingBankRoutingNumber: "231486745"
             endorsingBankSequenceNumber: "1"
             endorsingBankConversionIndicator: "1"
@@ -8846,14 +8846,14 @@ components:
           itemAmount: 100000
           returnDetailAddendumC:
           - imageReferenceKey: "0"
-            lengthImageReferenceKey: "34"
+            lengthImageReferenceKey: "0000"
             userField: ZZZZ
             imageReferenceKeyIndicator: 1
             microfilmArchiveSequenceNumber: "1"
             ID: d1e26288
             descript: Payment
           - imageReferenceKey: "0"
-            lengthImageReferenceKey: "34"
+            lengthImageReferenceKey: "0000"
             userField: ZZZZ
             imageReferenceKeyIndicator: 1
             microfilmArchiveSequenceNumber: "1"
@@ -8998,13 +8998,13 @@ components:
             * `05` - Preliminary Return Notification
             * `06` - Final Return Notification
           enum:
-          - "0"
-          - "1"
-          - "2"
-          - "3"
-          - "4"
-          - "5"
-          - "6"
+          - "00"
+          - "01"
+          - "02"
+          - "03"
+          - "04"
+          - "05"
+          - "06"
           example: "00"
           maxLength: 2
           type: string
@@ -9032,7 +9032,7 @@ components:
           format: date-time
           type: string
         bundleID:
-          description: BundleID is number that identifies the bundle, assigned by
+          description: BundleID is a number that identifies the bundle, assigned by
             the institution that creates the bundle.
           example: "9999"
           maxLength: 10
@@ -9088,11 +9088,11 @@ components:
           type: integer
         micrValidTotalAmount:
           description: MICRValidTotalAmount identifies the total amount of all Check
-            Records within the bundle which contains 1 in the MICRValidIndicator.
+            Records within the bundle which contain 1 in the MICRValidIndicator.
           example: 100
           type: integer
         bundleImagesCount:
-          description: BundleImagesCount identifies the total number of Image ViewDetail
+          description: BundleImagesCount identifies the total number of ImageViewDetail
             Records  within the bundle.
           example: 1
           type: integer
@@ -9104,9 +9104,8 @@ components:
           type: string
         creditTotalIndicator:
           description: |
-            CreditTotalIndicator is a code that indicates whether Credits Items are included in the totals.
-            If so they  they will be included in this record’s: Items Within Bundle Count, Bundle Total Amount and,
-            Images Within Bundle Count
+            CreditTotalIndicator is a code that indicates whether Credit Items are included in the totals.
+            If so, they will be included in this record’s BundleItemsCount, BundleTotalAmount, and BundleImagesCount.
             * ` ` - No Credit Items
             * `0` - Credit Items are not included in totals
             * `1` - Credit Items are included in totals
@@ -9115,7 +9114,7 @@ components:
           - 1
           example: 1
           maxLength: 1
-          type: number
+          type: integer
       required:
       - bundleItemsCount
       - bundleTotalAmount
@@ -9168,7 +9167,7 @@ components:
         addendumCount: 3
         eCEInstitutionItemSequenceNumber: "24531"
         externalProcessingCode: "1"
-        auxiliaryOnUs: '*'
+        auxiliaryOnUs: "1001"
         itemAmount: 100000
         payorBankCheckDigit: "5"
         checkDetailAddendumA:
@@ -9198,14 +9197,14 @@ components:
           bOFDItemSequenceNumber: "1"
         checkDetailAddendumB:
         - imageReferenceKey: "0"
-          lengthImageReferenceKey: "34"
+          lengthImageReferenceKey: "0000"
           userField: ZZZZ
           imageReferenceKeyIndicator: 1
           microfilmArchiveSequenceNumber: "1"
           ID: d1e26288
           descript: Payment
         - imageReferenceKey: "0"
-          lengthImageReferenceKey: "34"
+          lengthImageReferenceKey: "0000"
           userField: ZZZZ
           imageReferenceKeyIndicator: 1
           microfilmArchiveSequenceNumber: "1"
@@ -9334,7 +9333,7 @@ components:
         auxiliaryOnUs:
           description: AuxiliaryOnUs identifies a code used on commercial checks at
             the discretion of the payor bank.
-          example: '*'
+          example: "1001"
           maxLength: 15
           type: string
         externalProcessingCode:
@@ -9346,18 +9345,18 @@ components:
           type: string
         payorBankRoutingNumber:
           description: |
-            PayorBankRoutingNumber identifies a number that identifies the institution by or through which the item is
+            PayorBankRoutingNumber identifies the institution by or through which the item is
             payable. Must be a valid routing and transit number issued by the ABA’s Routing Number Registrar. Shall
             represent the first 8 digits of a 9-digit routing number or 8 numeric digits of a 4 dash 4 routing number.
-            A valid routing number consists of 2 fields: the eight- digit Payor Bank Routing Number  and the
+            A valid routing number consists of 2 fields: the eight-digit Payor Bank Routing Number and the
             one-digit Payor Bank Routing Number Check Digit.
           example: "01120036"
           maxLength: 8
           type: string
         payorBankCheckDigit:
           description: |
-            PayorBankCheckDigit identifies a digit representing the routing number check digit.  The
-            combination of Payor Bank Routing Number and payor Bank Routing Number Check Digit must be a mod-checked
+            PayorBankCheckDigit identifies the routing number check digit.  The
+            combination of Payor Bank Routing Number and Payor Bank Routing Number Check Digit must be a mod-checked
             routing number with a valid check digit.
           example: "5"
           maxLength: 1
@@ -9371,7 +9370,7 @@ components:
           type: string
         itemAmount:
           description: Amount identifies the amount of the check.  All amounts fields
-            have two implied decimal points. e.g., 100000 is $1,000.00
+            have two implied decimal points. e.g., 100000 is $1,000.00.
           example: 100000
           type: integer
         eCEInstitutionItemSequenceNumber:
@@ -9492,8 +9491,8 @@ components:
           type: string
         addendumCount:
           description: AddendumCount is a number of Check Detail Record Addenda to
-            follow. This represents the number of CheckDetailAddendumA, CheckDetailAddendumB
-            and CheckDetailAddendumC types.  It matches the total number of addendum
+            follow. This represents the number of CheckDetailAddendumA, CheckDetailAddendumB,
+            and CheckDetailAddendumC types. It matches the total number of addendum
             records associated with this item. The standard supports up to 99 addendum
             records.
           example: 3
@@ -9510,6 +9509,7 @@ components:
             * `3` - Repaired with Operator intervention
             * `4` - Undetermined if repair has been done or not
           enum:
+          - 0
           - 1
           - 2
           - 3
@@ -9519,7 +9519,7 @@ components:
         archiveTypeIndicator:
           description: |
             ArchiveTypeIndicator is a code that indicates the type of archive that supports this Check.
-            Access method, availability and time-frames shall be defined by clearing arrangements.
+            Access method, availability, and time frames shall be defined by clearing arrangements.
 
             * `A` - Microfilm
             * `B` - Image
@@ -9658,7 +9658,7 @@ components:
           endorsingBankCorrectionIndicator: 1
           endorsingBankIdentifier: 0
           bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-          returnReason: returnReason
+          returnReason: A
           endorsingBankRoutingNumber: "231486745"
           endorsingBankSequenceNumber: "1"
           endorsingBankConversionIndicator: "1"
@@ -9669,7 +9669,7 @@ components:
           endorsingBankCorrectionIndicator: 1
           endorsingBankIdentifier: 0
           bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-          returnReason: returnReason
+          returnReason: A
           endorsingBankRoutingNumber: "231486745"
           endorsingBankSequenceNumber: "1"
           endorsingBankConversionIndicator: "1"
@@ -9678,14 +9678,14 @@ components:
         itemAmount: 100000
         returnDetailAddendumC:
         - imageReferenceKey: "0"
-          lengthImageReferenceKey: "34"
+          lengthImageReferenceKey: "0000"
           userField: ZZZZ
           imageReferenceKeyIndicator: 1
           microfilmArchiveSequenceNumber: "1"
           ID: d1e26288
           descript: Payment
         - imageReferenceKey: "0"
-          lengthImageReferenceKey: "34"
+          lengthImageReferenceKey: "0000"
           userField: ZZZZ
           imageReferenceKeyIndicator: 1
           microfilmArchiveSequenceNumber: "1"
@@ -9792,18 +9792,18 @@ components:
           type: string
         payorBankRoutingNumber:
           description: |
-            PayorBankRoutingNumber identifies a number that identifies the institution by or through which the item is
+            PayorBankRoutingNumber identifies the institution by or through which the item is
             payable. Must be a valid routing and transit number issued by the ABA’s Routing Number Registrar. Shall
             represent the first 8 digits of a 9-digit routing number or 8 numeric digits of a 4 dash 4 routing number.
-            A valid routing number consists of 2 fields: the eight- digit Payor Bank Routing Number  and the
+            A valid routing number consists of 2 fields: the eight-digit Payor Bank Routing Number and the
             one-digit Payor Bank Routing Number Check Digit.
           example: "01120036"
           maxLength: 8
           type: string
         payorBankCheckDigit:
           description: |
-            PayorBankCheckDigit identifies a digit representing the routing number check digit.  The
-            combination of Payor Bank Routing Number and payor Bank Routing Number Check Digit must be a mod-checked
+            PayorBankCheckDigit identifies the routing number check digit.  The
+            combination of Payor Bank Routing Number and Payor Bank Routing Number Check Digit must be a mod-checked
             routing number with a valid check digit.
           example: "5"
           maxLength: 1
@@ -9817,7 +9817,7 @@ components:
           type: string
         itemAmount:
           description: Amount identifies the amount of the check.  All amounts fields
-            have two implied decimal points. e.g., 100000 is $1,000.00
+            have two implied decimal points. e.g., 100000 is $1,000.00.
           example: 100000
           type: integer
         returnReason:
@@ -9825,8 +9825,8 @@ components:
           type: string
         addendumCount:
           description: AddendumCount is a number of Check Detail Record Addenda to
-            follow. This represents the number of CheckDetailAddendumA, CheckDetailAddendumB
-            and CheckDetailAddendumC types.  It matches the total number of addendum
+            follow. This represents the number of CheckDetailAddendumA, CheckDetailAddendumB,
+            and CheckDetailAddendumC types. It matches the total number of addendum
             records associated with this item. The standard supports up to 99 addendum
             records.
           example: 4
@@ -9875,7 +9875,7 @@ components:
           type: string
         forwardBundleDate:
           description: ForwardBundleDate represents for electronic check exchange
-            items, the year, month, and day that designates the business date of the
+            items, the year, month, and day that designate the business date of the
             original forward bundle. This data is transferred from the BundleHeader
             BundleBusinessDate.  For items presented in paper cash letters, the year,
             month, and day that the cash letter was created.
@@ -9899,7 +9899,7 @@ components:
         returnNotificationIndicator:
           description: |
             ReturnNotificationIndicator is a code that identifies the type of notification. The
-            CashLetterHeader.CollectionTypeIndicator and the BundleHeader.CollectionTypeIndicator when equal 05 or 06
+            CashLetterHeader.CollectionTypeIndicator and BundleHeader.CollectionTypeIndicator equalling `05` or `06`
             takes precedence over this field.
 
             * `1` - Preliminary notification
@@ -9912,14 +9912,14 @@ components:
         archiveTypeIndicator:
           description: |
             ArchiveTypeIndicator is a code that indicates the type of archive that supports this Check.
-            Access method, availability and time-frames shall be defined by clearing arrangements.
+            Access method, availability, and time frames shall be defined by clearing arrangements.
             * `A` - Microfilm
             * `B` - Image
             * `C` - Paper
             * `D` - Microfilm and image
             * `E` - Microfilm and paper
             * `F` - Image and paper
-            * `G` - Microfilm, image and paper
+            * `G` - Microfilm, image, and paper
             * `H` - Electronic Check Instrument
             * `I` - None
           enum:
@@ -9936,7 +9936,7 @@ components:
           type: string
         timesReturned:
           description: |
-            TimesReturned is code used to indicate the number of times the paying bank has returned this item.
+            TimesReturned is a code used to indicate the number of times the paying bank has returned this item.
 
             * `0` - The item has been returned an unknown number of times
             * `1` - The item has been returned once
@@ -9947,7 +9947,6 @@ components:
           - 1
           - 2
           - 3
-          - 4
           type: integer
         returnDetailAddendumA:
           items:
@@ -9981,7 +9980,7 @@ components:
       example:
         externalProcessingCode: "9"
         creditItemSequenceNumber: "1"
-        auxiliaryOnUs: '*'
+        auxiliaryOnUs: "1001"
         postingBankRoutingNumber: "231986436"
         itemAmount: 100000
         userField: B12345678
@@ -9999,7 +9998,7 @@ components:
           description: AuxiliaryOnUs identifies a code used at the discretion of the
             creating bank. The handling of dashes and spaces shall be determined between
             the exchange partners.
-          example: '*'
+          example: "1001"
           maxLength: 15
           type: string
         externalProcessingCode:
@@ -10024,7 +10023,7 @@ components:
           type: string
         itemAmount:
           description: Amount identifies the amount of the check.  All amounts fields
-            have two implied decimal points. e.g., 100000 is $1,000.00
+            have two implied decimal points. e.g., 100000 is $1,000.00.
           example: 100000
           type: integer
         creditItemSequenceNumber:
@@ -10088,7 +10087,7 @@ components:
           type: string
         sourceWorkCode:
           description: |
-            AccountTypeCode is a code that indicates the type of account to which this CreditItem is associated.
+            SourceWorkCode is a code used to identify the source of the work associated with this CreditItem.
 
             * `00` - Unknown
             * `01` - Internal–ATM
@@ -10103,19 +10102,6 @@ components:
             * `10` - International–Internal
             * `11` - International–External
             * `21–50` - User Defined
-          enum:
-          - "0"
-          - "1"
-          - "2"
-          - "3"
-          - "4"
-          - "5"
-          - "6"
-          - "7"
-          - "8.0"
-          - "9.0"
-          - "10"
-          - "11"
           example: "01"
           maxLength: 2
           type: string
@@ -10148,14 +10134,14 @@ components:
           type: string
         routingNumberTotalAmount:
           description: RoutingNumberTotalAmount is the total amount for all Check
-            Records associated with the Payor bank routing number designated in the
-            Routing Number within Cash Letter.
+            Records associated with the payor bank routing number designated in the
+            Routing Number within the Cash Letter.
           example: 10000
           type: integer
         routingNumberItemCount:
           description: RoutingNumberItemCount is the the total number of all Check
             Records associated with the payor bank routing number designated in the
-            Routing Number within Cash Letter.
+            Routing Number within the Cash Letter.
           example: 10
           type: integer
         userField:
@@ -10201,7 +10187,7 @@ components:
           maxLength: 9
           type: string
         bOFDEndorsementDate:
-          description: BOFDEndorsementDate is the date of endorsement
+          description: BOFDEndorsementDate is the date of endorsement.
           example: 2018-10-03T00:00:00Z
           format: date-time
           type: string
@@ -10240,7 +10226,7 @@ components:
         bOFDConversionIndicator:
           description: |
             BOFDConversionIndicator is a code that indicates the conversion within the processing institution
-            between original paper check, image and IRD. The indicator is specific to the action of institution that created
+            between original paper check, image, and IRD. The indicator is specific to the action of the institution that created
             this record.
 
             * `0` - Did not convert physical document
@@ -10297,7 +10283,7 @@ components:
     CheckDetailAddendumB:
       example:
         imageReferenceKey: "0"
-        lengthImageReferenceKey: "34"
+        lengthImageReferenceKey: "0000"
         userField: ZZZZ
         imageReferenceKeyIndicator: 1
         microfilmArchiveSequenceNumber: "1"
@@ -10313,9 +10299,9 @@ components:
             ImageReferenceKeyIndicator identifies whether ImageReferenceKeyLength contains a variable value within the
             allowable range, or contains a defined value and the content is ItemReferenceKey.
 
-            * `0` - ImageReferenceKeyIndicator has Defined Value of 0034 and ImageReferenceKey contains the Image
+            * `0` - ImageReferenceKeyIndicator has a Defined Value of 0034 and ImageReferenceKey contains the Image
             Reference Key.
-            * `1`- ImageReferenceKeyIndicator contains a value other than Value 0034; or ImageReferenceKeyIndicator
+            * `1`- ImageReferenceKeyIndicator contains a value other than 0034; or ImageReferenceKeyIndicator
             contains Value 0034, which is not a Defined Value, and the content of ImageReferenceKey has no special
             significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the
             ImageReferenceKey is not present.
@@ -10333,15 +10319,13 @@ components:
           type: string
         lengthImageReferenceKey:
           description: |
-            MicrofilmArchiveSequenceNumber A number that identifies the item in the microfilm archive system;
-            it may be different than the Check.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+            ImageReferenceKeyLength is the number of characters in the ImageReferenceKey.
 
             * `0034` - ImageReferenceKey contains the ImageReferenceKey (ImageReferenceKeyIndicator is 0).
             * `0000` - ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
             * `0001` - 9999: May include Value 0034, and ImageReferenceKey has no special significance to Image Reference
             Key (ImageReferenceKey is 1).
-          enum:
-          - "34"
+          example: "0000"
           type: string
         imageReferenceKey:
           description: |
@@ -10383,7 +10367,7 @@ components:
           type: string
         recordNumber:
           description: RecordNumber is a number representing the order in which each
-            CheckDetailAddendumC was created. CheckDetailAddendumA shall be in sequential
+            CheckDetailAddendumC was created. CheckDetailAddendumC shall be in sequential
             order starting with 1.
           example: 1
           maximum: 99
@@ -10418,7 +10402,7 @@ components:
         endorsingBankConversionIndicator:
           description: |
             EndorsingBankConversionIndicator is a code that indicates the conversion within the processing institution
-            between original paper check, image and IRD. The indicator is specific to the action institution identified in the
+            between original paper check, image, and IRD. The indicator is specific to the action of the institution identified in the
             EndorsingBankRoutingNumber.
 
             * `0` - Did not convert physical document
@@ -10445,7 +10429,7 @@ components:
           type: string
         endorsingBankCorrectionIndicator:
           description: |
-            EndorsingCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
+            EndorsingBankCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
             creator of this CheckDetailAddendumC Record for fields other than Payor Bank Routing Number and Amount.
 
             * `0` - No Repair
@@ -10550,16 +10534,16 @@ components:
             \ of image format used in the related\nImageViewData.ImageData. The image\
             \ format type is also commonly specified by reference to the file extension\n\
             used when image data is saved as an image file.\n\nAgreement not required:\n\
-            * `00` - TIFF 6; Extension: TIF\nAgreement required:\n* `01` - IOCA FS\
-            \ 11; Extension: ICA\n* `20` - PNG (Portable Network Graphics); Extension:\
+            * `00` - TIFF 6; Extension: TIF\n\nAgreement required:\n* `01` - IOCA\
+            \ FS 11; Extension: ICA\n* `20` - PNG (Portable Network Graphics); Extension:\
             \ PNG ‘21’\tJFIF (JPEG File Interchange Format); Extension: JPG\n* `22`\
             \ - SPIFF (Still Picture Interchange File Format) (ITU-T Rec. T.84 Annex\
             \ F); Extension: SPF\n* `23` - JBIG data stream (ITU-T Rec. T.82/ISO/IEC\
             \ 11544:1993); Extension: JBG ‘24’\tJPEG 2000 (ISO/IEC 15444-1:2000);\
             \ Extension: JP2\n"
           enum:
-          - "0"
-          - "1"
+          - "00"
+          - "01"
           - "20"
           - "22"
           - "23"
@@ -10573,6 +10557,7 @@ components:
 
             Agreement not required:
             * `00` - Group 4 facsimile compression (ITU-T Rec. T.563/CCITT Rec. T.6)
+
             Agreement required:
             * `01` - JPEG Baseline (JPEG Interchange Format) (ITU-T Rec. T.81/ISO/IEC 10918)
             * `02` - ABIC
@@ -10580,12 +10565,12 @@ components:
             * `22` - JBIG (ITU-T Rec. T.82/ISO/IEC 11544:1993)
             * `23` - JPEG 2000 (ISO/IEC 15444–1:2000)
           enum:
-          - "0"
-          - "1"
-          - "2"
-          - "20"
+          - "00"
+          - "01"
+          - "02"
           - "21"
           - "22"
+          - "23"
           example: "02"
           maxLength: 2
           type: string
@@ -10626,21 +10611,6 @@ components:
             * `12` -  Partial view–Bank Of First Deposit (BOFD) endorsement Area of Interest
             * `13` -  Partial view–transit endorsement Area of Interest
             * `14 - 99` -  Reserved for X9
-          enum:
-          - "0"
-          - "1"
-          - "2"
-          - "3"
-          - "4"
-          - "5"
-          - "6"
-          - "7"
-          - "8.0"
-          - "9.0"
-          - "10"
-          - "11"
-          - "12"
-          - "13"
           example: "00"
           maxLength: 2
           type: string
@@ -10666,12 +10636,6 @@ components:
             * `03` - RSA with SHA1 (ANSI X9.31)
             * `04` - Elliptic Curve DSA (ECDSA) with SHA1 (ANSI X9.62)
             * `05 - 99` - Reserved for emerging cryptographic algorithms.
-          enum:
-          - "0"
-          - "1"
-          - "2"
-          - "3"
-          - "4"
           example: "00"
           maxLength: 2
           type: string
@@ -10683,17 +10647,25 @@ components:
           minimum: 0
           type: integer
         protectedDataStart:
-          description: |-
-            ProtectedDataStart is a number that represents the offset in bytes from the first byte (counted as byte 1) of the image data in ImageViewData.ImageData to the first byte of the image data protected by the digital signature.
-            Valid values - 0000000 - Digital Signature is applied to entire image data 000001–9999999 - Valid offset values
+          description: |
+            ProtectedDataStart is a number that represents the offset in bytes from the first byte (counted as byte 1)
+            of the image data in ImageViewData.ImageData to the first byte of the image data protected by the
+            digital signature.
+
+            * 0000000 - Digital Signature is applied to entire image data
+            * 000001–9999999 - Valid offset values
           example: 0
           maximum: 9999999
           minimum: 0
           type: integer
         protectedDataLength:
-          description: |-
-            ProtectedDataLength is number of contiguous bytes of image data in the related ImageViewData.ImageData protected by the digital signature starting with the byte indicated by the value of the ProtectedDataStart in this ImageViewDetail. The ProtectedDataLength value shall not exceed the ImageViewData.ImageDataLength.
-            Valid values - 0000000 - Digital Signature is applied to entire image data 000001–9999999 - Valid length values
+          description: |
+            ProtectedDataLength is a number of contiguous bytes of image data in the related ImageViewData.ImageData
+            protected by the digital signature starting with the byte indicated by the value of the ProtectedDataStart in
+            this ImageViewDetail. The ProtectedDataLength value shall not exceed the ImageViewData.ImageDataLength.
+
+            * 0000000 - Digital Signature is applied to entire image data
+            * 000001–9999999 - Valid length values
           example: 0
           maximum: 9999999
           minimum: 0
@@ -10789,7 +10761,7 @@ components:
           type: string
         eCEInstitutionRoutingNumber:
           description: ECEInstitutionRoutingNumber contains the routing and transit
-            number of the institution that that creates the bundle header.  This number
+            number of the institution that creates the bundle header.  This number
             is imported from the Bundle Header Record (Clause 9.4) associated with
             the image view conveyed in this Image View Data Property.
           example: "2318769876"
@@ -10901,7 +10873,7 @@ components:
           maxLength: 4
           type: string
         ivData.ClippingCoordinateV2:
-          description: ClippingCoordinateV2 is number that represents the vertical
+          description: ClippingCoordinateV2 is a number that represents the vertical
             offset in pixels from the clipping origin to the furthermost horizontal
             side of the clipping rectangle. Shall be present if Image View Data.ClippingOrigin
             is present and non-zero. Shall not be present when ImageViewDetail.ImageIndicator
@@ -10928,6 +10900,7 @@ components:
             a URL. This shall match CheckDetailAddendumB.ImageReferenceKey, or ReturnAddendumCImageReferenceKey
             Record, if used. Valid size - 0 – 9999
           example: "0"
+          maxLength: 4
           type: string
         ivData.LengthDigitalSignature:
           description: LengthDigitalSignature is the number of bytes in the Image
@@ -10944,13 +10917,14 @@ components:
             is 1 Shall not be present when ImageViewDetail.ImageIndicator is 0. Valid
             size - 0-99999
           example: "0101"
+          maxLength: 5
           type: string
         ivData.LengthImageData:
           description: LengthImageData is the number of bytes in the ImageViewData.ImageData.
             Shall be present when ImageViewDetail.ImageIndicator is NOT 0 Valid values
             - 0000001–99999999
           example: "0000001"
-          maxLength: 4
+          maxLength: 8
           type: string
         ivData.ImageData:
           description: ImageData contains the image view. The Image Data generally
@@ -10969,6 +10943,7 @@ components:
             encoding and will be decoded on file generation. Shall be present when
             ImageViewDetail.ImageIndicator Record is NOT 0. Valid size - 0-9999999
           example: "0101"
+          maxLength: 7
           type: string
     ImageViewAnalysis:
       example:
@@ -11212,8 +11187,8 @@ components:
           type: integer
         convenienceAmountUsability:
           description: |
-            AmountInWordsUsability is a code that indicates if the amount in words (legal amount) Area of Interest is usable
-            and readable from the image. The definition of the Area of Interest for image usability testing purposes is
+            ConvenienceAmountUsability is a code that indicates if the convenience amount Area of Interest is usable and
+            readable from the image. The definition of the Area of Interest for image usability testing purposes is
             specific to the imaging institution's own defined requirements and/or constraints.
 
             * `0` -  The image was not tested for any of the image quality conditions
@@ -11227,9 +11202,9 @@ components:
           type: integer
         amountInWordsUsability:
           description: |
-            SignatureUsability is a code that indicates if the signature Area of Interest is usable and readable from the
-            image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging
-            institution's own defined requirements and/or constraints.
+            AmountInWordsUsability is a code that indicates if the amount in words (legal amount) Area of Interest is usable
+            and readable from the image. The definition of the Area of Interest for image usability testing purposes is
+            specific to the imaging institution's own defined requirements and/or constraints.
 
             * `0` -  The image was not tested for any of the image quality conditions
             * `1` -  The image was tested and one or more image quality conditions were reported
@@ -11241,7 +11216,10 @@ components:
           example: 0
           type: integer
         signatureUsability:
-          description: |2
+          description: |
+            SignatureUsability is a code that indicates if the signature Area of Interest is usable and readable from the
+            image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging
+            institution's own defined requirements and/or constraints.
 
             * `0` -  The image was not tested for any of the image quality conditions
             * `1` -  The image was tested and one or more image quality conditions were reported
@@ -11283,9 +11261,14 @@ components:
           example: 0
           type: integer
         memoLineUsability:
-          description: |-
-            MemoLineUsability is code that indicates if the memo line Area of Interest is usable and readable from the image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging institution's own defined requirements and/or constraints.
-            * `0` -  The image was not tested for any of the image quality conditions * `1` -  The image was tested and one or more image quality conditions were reported * `2` -  The image was tested and no image quality conditions were reported
+          description: |
+            MemoLineUsability is a code that indicates if the memo line Area of Interest is usable and readable from the
+            image. The definition of the Area of Interest for image usability testing purposes is specific to the imaging
+            institution's own defined requirements and/or constraints.
+
+            * `0` -  The image was not tested for any of the image quality conditions
+            * `1` -  The image was tested and one or more image quality conditions were reported
+            * `2` -  The image was tested and no image quality conditions were reported
           enum:
           - 0
           - 1
@@ -11393,7 +11376,7 @@ components:
           maxLength: 9
           type: string
         bOFDEndorsementDate:
-          description: BOFDEndorsementDate is the date of endorsement
+          description: BOFDEndorsementDate is the date of endorsement.
           example: 2018-10-03T00:00:00Z
           format: date-time
           type: string
@@ -11432,7 +11415,7 @@ components:
         bOFDConversionIndicator:
           description: |
             BOFDConversionIndicator is a code that indicates the conversion within the processing institution
-            between original paper check, image and IRD. The indicator is specific to the action of institution that created
+            between original paper check, image, and IRD. The indicator is specific to the action of the institution that created
             this record.
 
             * `0` - Did not convert physical document
@@ -11534,7 +11517,7 @@ components:
     ReturnDetailAddendumC:
       example:
         imageReferenceKey: "0"
-        lengthImageReferenceKey: "34"
+        lengthImageReferenceKey: "0000"
         userField: ZZZZ
         imageReferenceKeyIndicator: 1
         microfilmArchiveSequenceNumber: "1"
@@ -11550,9 +11533,9 @@ components:
             ImageReferenceKeyIndicator identifies whether ImageReferenceKeyLength contains a variable value within the
             allowable range, or contains a defined value and the content is ItemReferenceKey.
 
-            * `0` - ImageReferenceKeyIndicator has Defined Value of 0034 and ImageReferenceKey contains the Image
+            * `0` - ImageReferenceKeyIndicator has a Defined Value of 0034 and ImageReferenceKey contains the Image
             Reference Key.
-            * `1`- ImageReferenceKeyIndicator contains a value other than Value 0034; or ImageReferenceKeyIndicator
+            * `1`- ImageReferenceKeyIndicator contains a value other than 0034; or ImageReferenceKeyIndicator
             contains Value 0034, which is not a Defined Value, and the content of ImageReferenceKey has no special
             significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the
             ImageReferenceKey is not present.
@@ -11570,15 +11553,13 @@ components:
           type: string
         lengthImageReferenceKey:
           description: |
-            MicrofilmArchiveSequenceNumber A number that identifies the item in the microfilm archive system;
-            it may be different than the Check.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
+            ImageReferenceKeyLength is the number of characters in the ImageReferenceKey.
 
             * `0034` - ImageReferenceKey contains the ImageReferenceKey (ImageReferenceKeyIndicator is 0).
             * `0000` - ImageReferenceKey not present (ImageReferenceKeyIndicator is 1).
             * `0001` - 9999: May include Value 0034, and ImageReferenceKey has no special significance to Image Reference
             Key (ImageReferenceKey is 1).
-          enum:
-          - "34"
+          example: "0000"
           type: string
         imageReferenceKey:
           description: |
@@ -11605,7 +11586,7 @@ components:
         endorsingBankCorrectionIndicator: 1
         endorsingBankIdentifier: 0
         bOFDEndorsementBusinessDate: 2018-10-03T00:00:00Z
-        returnReason: returnReason
+        returnReason: A
         endorsingBankRoutingNumber: "231486745"
         endorsingBankSequenceNumber: "1"
         endorsingBankConversionIndicator: "1"
@@ -11631,7 +11612,7 @@ components:
           maxLength: 9
           type: string
         bOFDEndorsementBusinessDate:
-          description: BOFDEndorsementBusinessDate is the date of endorsement
+          description: BOFDEndorsementBusinessDate is the date of endorsement.
           example: 2018-10-03T00:00:00Z
           format: date-time
           type: string
@@ -11653,7 +11634,7 @@ components:
         endorsingBankConversionIndicator:
           description: |
             EndorsingBankConversionIndicator is a code that indicates the conversion within the processing institution
-            between original paper check, image and IRD. The indicator is specific to the action institution identified in the
+            between original paper check, image, and IRD. The indicator is specific to the action of the institution identified in the
             EndorsingBankRoutingNumber.
 
             * `0` - Did not convert physical document
@@ -11680,7 +11661,7 @@ components:
           type: string
         endorsingBankCorrectionIndicator:
           description: |
-            EndorsingCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
+            EndorsingBankCorrectionIndicator identifies whether and how the MICR line of this item was repaired by the
             creator of this CheckDetailAddendumC Record for fields other than Payor Bank Routing Number and Amount.
 
             * `0` - No Repair
@@ -11698,6 +11679,7 @@ components:
           type: integer
         returnReason:
           description: ReturnReason is a code that indicates the reason for non-payment.
+          example: A
           type: string
         userField:
           description: UserField identifies a field used at the discretion of users
