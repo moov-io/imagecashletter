@@ -1,3 +1,13 @@
+## v0.6.3 (Released 2021-06-28)
+
+BUG FIXES
+
+- imageViewDetail: replace the conditional Security Key Size field with whitespace if it isn't a valid value
+
+IMPROVEMENTS
+
+- api: return HTTP 404 instead of empty response when a specified resource is not found
+
 ## v0.6.2 (Released 2021-01-29)
 
 BUG FIXES
