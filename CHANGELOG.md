@@ -1,3 +1,14 @@
+## v0.6.4 (Released 2021-07-07)
+
+BREAKING CHANGES
+
+- reader: pass CollectionTypeIndicator to CashLetterControl's `Validate()` function (Issue: [#185](https://github.com/moov-io/imagecashletter/pull/185))
+
+BUILD
+
+- fix(deps): update module github.com/go-kit/kit to v0.11.0
+- fix(deps): update module github.com/moov-io/base to v0.20.1
+
 ## v0.6.3 (Released 2021-06-28)
 
 BUG FIXES
