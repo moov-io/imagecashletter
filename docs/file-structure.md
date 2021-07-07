@@ -1,12 +1,12 @@
 ---
 layout: page
-title: File Structure
+title: File structure
 hide_hero: true
 show_sidebar: false
 menubar: docs-menu
 ---
 
-## Record Types
+## Record types
 
 The chart below shows the record differences among standards we currently support:
 
@@ -40,7 +40,7 @@ The chart below shows the record differences among standards we currently suppor
 
 File Header (01), File Control (99), Cash Letter Header (10), and Cash Letter Control (90) records are mandatory. For each bundle that exists, Bundle Header (20) and Bundle Control (70) records are mandatory.
 
-## Data Types
+## Data types
 
 The following data types are from X9.100-187-2013/2016 and may be defined differently in earlier versions.
 

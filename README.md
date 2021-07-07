@@ -21,7 +21,7 @@
 [![Slack Channel](https://slack.moov.io/badge.svg?bg=e01563&fgColor=fffff)](https://slack.moov.io/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/moov/imagecashletter)](https://hub.docker.com/r/moov/imagecashletter)
 [![GitHub Stars](https://img.shields.io/github/stars/moov-io/imagecashletter)](https://github.com/moov-io/imagecashletter)
-[![Twitter](https://img.shields.io/twitter/follow/moov_io?style=social)](https://twitter.com/moov_io?lang=en)
+[![Twitter](https://img.shields.io/twitter/follow/moov?style=social)](https://twitter.com/moov?lang=en)
 
 # moov-io/imagecashletter
 
@@ -29,23 +29,23 @@ Moov's mission is to give developers an easy way to create and integrate bank pr
 
 ImageCashLetter implements a reader, writer, and validator for X9’s Specifications for [Image Cash Letter](https://en.wikipedia.org/wiki/Check_21_Act) (ICL) to provide Check 21 services in an HTTP server and Go library. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/imagecashletter` is available.
 
-## Table of Contents
+## Table of contents
 
-- [Project Status](#project-status)
+- [Project status](#project-status)
 - [Usage](#usage)
   - As an API
     - [Docker](#docker) ([Config](#configuration-settings))
     - [Google Cloud](#google-cloud-run) ([Config](#configuration-settings))
-    - [Data Persistence](#data-persistence)
-  - [As a Go Module](#go-library)
-  - [As an In-Browser Parser](#in-browser-icl-file-parser)
-- [Learn About Image Cash Letter](#learn-about-image-cash-letter)
-- [Getting Help](#getting-help)
-- [Supported and Tested Platforms](#supported-and-tested-platforms)
+    - [Data persistence](#data-persistence)
+  - [As a Go module](#go-library)
+  - [As an in-browser parser](#in-browser-icl-file-parser)
+- [Learn about Image Cash Letter](#learn-about-image-cash-letter)
+- [Getting help](#getting-help)
+- [Supported and tested platforms](#supported-and-tested-platforms)
 - [Contributing](#contributing)
-- [Related Projects](#related-projects)
+- [Related projects](#related-projects)
 
-## Project Status
+## Project status
 
 Moov ImageCashLetter is actively used in multiple production environments. Please star the project if you are interested in its progress. If you have layers above ImageCashLetter to simplify tasks, perform business operations, or found bugs we would appreciate an issue or pull request. Thanks!
 
@@ -141,7 +141,7 @@ null
 ```
 
 
-### Configuration Settings
+### Configuration settings
 
 The following environmental variables can be set to configure behavior in ImageCashLetter.
 
@@ -150,10 +150,10 @@ The following environmental variables can be set to configure behavior in ImageC
 | `HTTPS_CERT_FILE` | Filepath containing a certificate (or intermediate chain) to be served by the HTTP server. Requires all traffic be over secure HTTP. | Empty |
 | `HTTPS_KEY_FILE`  | Filepath of a private key matching the leaf certificate from `HTTPS_CERT_FILE`. | Empty |
 
-### Data Persistence
+### Data persistence
 By design, ImageCashLetter  **does not persist** (save) any data about the files or entry details created. The only storage occurs in memory of the process and upon restart ImageCashLetter will have no files or data saved. Also, no in-memory encryption of the data is performed.
 
-### Go Library
+### Go library
 
 This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and uses Go v1.14 or higher. See [Golang's install instructions](https://golang.org/doc/install) for help setting up Go. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io/imagecashletter/releases/latest) as well. We highly recommend you use a tagged release for production.
 
@@ -183,23 +183,23 @@ The following options are currently supported:
 | `WriteEbcdicEncodingOption` | Allows Writer to write file in EBCDIC. |
 
 
-### In-Browser ICL File Parser
+### In-browser ICL file parser
 Using our [in-browser utility](http://oss.moov.io/x9/), you can instantly convert X9 files into JSON. Either paste in ICL file content directly or choose a file from your local machine. This tool is particulary useful if you're handling sensitive PII or want perform some quick tests, as operations are fully client-side with nothing stored in memory. We plan to support bidirectional conversion in the near future.
 
-## Learn About Image Cash Letter
+## Learn about Image Cash Letter
 - [Intro to ICL](./docs/intro.md)
 - [ICL File Structure](./docs/file-structure.md)
 
-## Getting Help
+## Getting help
 
  channel | info
  ------- | -------
 [Project Documentation](https://moov-io.github.io/imagecashletter/) | Our project documentation available online.
-Twitter [@moov_io](https://twitter.com/moov_io)	| You can follow Moov.IO's Twitter feed to get updates on our project(s). You can also tweet us questions or just share blogs or stories.
+Twitter [@moov](https://twitter.com/moov)	| You can follow Moov.io's Twitter feed to get updates on our project(s). You can also tweet us questions or just share blogs or stories.
 [GitHub Issue](github.com/moov-io/imagecashletter/issues) | If you are able to reproduce a problem please open a GitHub Issue under the specific project that caused the error.
 [moov-io slack](https://slack.moov.io/) | Join our slack channel to have an interactive discussion about the development of the project.
 
-## Supported and Tested Platforms
+## Supported and tested platforms
 
 - 64-bit Linux (Ubuntu, Debian), macOS, and Windows
 - Raspberry Pi
@@ -224,7 +224,7 @@ We maintain a comprehensive suite of unit tests and recommend table-driven testi
 
 We currently run fuzzing over ImageCashLetter in the form of a [`moov/imagecashletterfuzz`](https://hub.docker.com/r/moov/imagecashletterfuzz) Docker image. You can [read more](./test/fuzz-reader/README.md) or run the image and report crasher examples to [`security@moov.io`](mailto:security@moov.io). Thanks!
 
-## Related Projects
+## Related projects
 As part of Moov's initiative to offer open source fintech infrastructure, we have a large collection of active projects you may find useful:
 
 - [Moov Watchman](https://github.com/moov-io/watchman) offers search functions over numerous trade sanction lists from the United States and European Union.
