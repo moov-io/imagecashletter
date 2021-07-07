@@ -166,7 +166,7 @@ func (clc *CashLetterControl) fieldInclusion(collectionTypeIndicator string) err
 			Msg:   msgFieldInclusion + ", did you use CashLetterControl()?"}
 	}
 	// If the type of the cash letter control is `Return`, we do not require to have this field present.
-	if clc.SettlementDate.IsZero() && collectionTypeIndicator != "03" {
+	if clc.SettlementDate.IsZero() && !isReturnCollectionType(collectionTypeIndicator) {
 		return &FieldError{FieldName: "SettlementDate",
 			Value: clc.SettlementDate.String(),
 			Msg:   msgFieldInclusion + ", did you use CashLetterControl()?"}
@@ -212,4 +212,11 @@ func (clc *CashLetterControl) CreditTotalIndicatorField() string {
 // reservedField gets reserved - blank space
 func (clc *CashLetterControl) reservedField() string {
 	return clc.alphaField(clc.reserved, 14)
+}
+
+func isReturnCollectionType(code string) bool {
+	if code == "03" || code == "04" || code == "05" || code == "06" {
+		return true
+	}
+	return false
 }
