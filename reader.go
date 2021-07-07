@@ -276,7 +276,10 @@ func (r *Reader) parseLine() error {
 		r.currentCashLetter.AddRoutingNumberSummary(r.currentCashLetter.currentRoutingNumberSummary)
 		r.currentCashLetter.currentRoutingNumberSummary = new(RoutingNumberSummary)
 	case cashLetterControlPos, cashLetterControlEbcPos:
-		if err := r.parseCashLetterControl(); err != nil {
+		// This is needed for validation od CashLetterControl since SettlementDate
+		// is a conditional field and is only available for certain types of CashLetters.
+		collectionTypeIndicator := r.currentCashLetter.CashLetterHeader.CollectionTypeIndicator
+		if err := r.parseCashLetterControl(collectionTypeIndicator); err != nil {
 			return err
 		}
 		if err := r.currentCashLetter.Validate(); err != nil {
@@ -664,7 +667,7 @@ func (r *Reader) parseRoutingNumberSummary() error {
 }
 
 // parseCashLetterControl takes the input record string and parses the CashLetterControl values
-func (r *Reader) parseCashLetterControl() error {
+func (r *Reader) parseCashLetterControl(collectionTypeIndicator string) error {
 	r.recordName = "CashLetterControl"
 	if r.currentCashLetter.CashLetterHeader == nil {
 		// CashLetterControl without a current CashLetter
@@ -672,7 +675,7 @@ func (r *Reader) parseCashLetterControl() error {
 	}
 	r.currentCashLetter.GetControl().Parse(r.decodeLine(r.line))
 	// Ensure valid CashLetterControl
-	if err := r.currentCashLetter.GetControl().Validate(); err != nil {
+	if err := r.currentCashLetter.GetControl().Validate(collectionTypeIndicator); err != nil {
 		return r.error(err)
 	}
 	return nil

@@ -27,7 +27,7 @@ func mockCashLetterControl() *CashLetterControl {
 // TestMockCashLetterControl creates a CashLetterControl
 func TestMockCashLetterControl(t *testing.T) {
 	clc := mockCashLetterControl()
-	if err := clc.Validate(); err != nil {
+	if err := clc.Validate("01"); err != nil {
 		t.Error("mockCashLetterControl does not validate and will break other tests: ", err)
 	}
 	if clc.recordType != "90" {
@@ -60,7 +60,7 @@ func TestParseCashLetterControl(t *testing.T) {
 	r.line = line
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
-	err := r.parseCashLetterControl()
+	err := r.parseCashLetterControl("03")
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
 		log.Fatal(err)
@@ -103,7 +103,7 @@ func testCLCString(t testing.TB) {
 	r.line = line
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
-	err := r.parseCashLetterControl()
+	err := r.parseCashLetterControl("01")
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
 		log.Fatal(err)
@@ -131,7 +131,7 @@ func BenchmarkCLCString(b *testing.B) {
 func TestCLCRecordType(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.recordType = "00"
-	if err := clc.Validate(); err != nil {
+	if err := clc.Validate("01"); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "recordType" {
 				t.Errorf("%T: %s", err, err)
@@ -144,7 +144,7 @@ func TestCLCRecordType(t *testing.T) {
 func TestECEInstitutionName(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.ECEInstitutionName = "®©"
-	if err := clc.Validate(); err != nil {
+	if err := clc.Validate("01"); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "ECEInstitutionName" {
 				t.Errorf("%T: %s", err, err)
@@ -157,7 +157,7 @@ func TestECEInstitutionName(t *testing.T) {
 func TestCLCCreditTotalIndicator(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.CreditTotalIndicator = 9
-	if err := clc.Validate(); err != nil {
+	if err := clc.Validate("01"); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "CreditTotalIndicator" {
 				t.Errorf("%T: %s", err, err)
@@ -170,7 +170,7 @@ func TestCLCCreditTotalIndicator(t *testing.T) {
 func TestCLCFieldInclusionRecordType(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.recordType = ""
-	if err := clc.Validate(); err != nil {
+	if err := clc.Validate("01"); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "recordType" {
 				t.Errorf("%T: %s", err, err)
@@ -183,7 +183,7 @@ func TestCLCFieldInclusionRecordType(t *testing.T) {
 func TestFieldInclusionCashLetterItemsCount(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.CashLetterItemsCount = 0
-	if err := clc.Validate(); err != nil {
+	if err := clc.Validate("01"); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "CashLetterItemsCount" {
 				t.Errorf("%T: %s", err, err)
@@ -196,7 +196,7 @@ func TestFieldInclusionCashLetterItemsCount(t *testing.T) {
 func TestFieldInclusionCashLetterTotalAmount(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.CashLetterTotalAmount = 0
-	if err := clc.Validate(); err != nil {
+	if err := clc.Validate("01"); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "CashLetterTotalAmount" {
 				t.Errorf("%T: %s", err, err)
@@ -209,7 +209,7 @@ func TestFieldInclusionCashLetterTotalAmount(t *testing.T) {
 func TestFieldInclusionRecordTypeSettlementDate(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.SettlementDate = time.Time{}
-	if err := clc.Validate(); err != nil {
+	if err := clc.Validate("01"); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "SettlementDate" {
 				t.Errorf("%T: %s", err, err)
