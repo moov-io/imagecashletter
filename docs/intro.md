@@ -10,7 +10,7 @@ menubar: docs-menu
 
 Image Cash Letter (ICL) specifications provide Check 21 services and are designed to enable banks to handle more checks electronically, which should make check processing faster and more efficient. Traditionally, banks often physically move original paper checks from the bank where the checks are deposited to the bank that pays them. The overall process of translating physical checks to electronic messages is [called Check Truncation](https://en.wikipedia.org/wiki/Cheque_truncation).
 
-## How Does Check 21 Work?
+## How does Check 21 work?
 
 Check 21 affects check writers and depositors in the following ways:
 
@@ -21,7 +21,7 @@ Check 21 affects check writers and depositors in the following ways:
 
 [Source: FDIC Check 21](https://www.fdic.gov/consumers/assistance/protection/check21.html)
 
-## Additional Resources
+## Additional resources
 
 * [FRB: Frequently Asked Questions about Check 21 and Substitute Checks](https://www.federalreserve.gov/paymentsystems/regcc-faq-check21.htm)
 
