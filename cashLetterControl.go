@@ -128,8 +128,8 @@ func (clc *CashLetterControl) String() string {
 
 // Validate performs imagecashletter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
-func (clc *CashLetterControl) Validate() error {
-	if err := clc.fieldInclusion(); err != nil {
+func (clc *CashLetterControl) Validate(collectionTypeIndicator string) error {
+	if err := clc.fieldInclusion(collectionTypeIndicator); err != nil {
 		return err
 	}
 	if clc.recordType != "90" {
@@ -149,7 +149,7 @@ func (clc *CashLetterControl) Validate() error {
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
-func (clc *CashLetterControl) fieldInclusion() error {
+func (clc *CashLetterControl) fieldInclusion(collectionTypeIndicator string) error {
 	if clc.recordType == "" {
 		return &FieldError{FieldName: "recordType",
 			Value: clc.recordType,
@@ -165,7 +165,8 @@ func (clc *CashLetterControl) fieldInclusion() error {
 			Value: clc.CashLetterTotalAmountField(),
 			Msg:   msgFieldInclusion + ", did you use CashLetterControl()?"}
 	}
-	if clc.SettlementDate.IsZero() {
+	// If the type of the cash letter control is `Return`, we do not require to have this field present.
+	if clc.SettlementDate.IsZero() && !isReturnCollectionType(collectionTypeIndicator) {
 		return &FieldError{FieldName: "SettlementDate",
 			Value: clc.SettlementDate.String(),
 			Msg:   msgFieldInclusion + ", did you use CashLetterControl()?"}
@@ -211,4 +212,11 @@ func (clc *CashLetterControl) CreditTotalIndicatorField() string {
 // reservedField gets reserved - blank space
 func (clc *CashLetterControl) reservedField() string {
 	return clc.alphaField(clc.reserved, 14)
+}
+
+func isReturnCollectionType(code string) bool {
+	if code == "03" || code == "04" || code == "05" || code == "06" {
+		return true
+	}
+	return false
 }
