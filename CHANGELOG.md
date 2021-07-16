@@ -1,3 +1,11 @@
+## v0.6.5 (Released 2021-07-16)
+
+BUILD
+
+- build(deps): bump addressable from 2.7.0 to 2.8.0 in /docs
+- fix: Dockerfile to reduce vulnerabilities
+- fix: Dockerfile.webui to reduce vulnerabilities
+
 ## v0.6.4 (Released 2021-07-07)
 
 BREAKING CHANGES
