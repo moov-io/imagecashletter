@@ -1,3 +1,14 @@
+## v0.6.6 (Released 2021-08-13)
+
+BUG FIXES
+
+- reader: nil check before parsing CollectionTypeIndicator
+
+BUILD
+
+- fix: Dockerfile to reduce vulnerabilities
+- fix(deps): update module github.com/moov-io/base to v0.21.1
+
 ## v0.6.5 (Released 2021-07-16)
 
 BUILD
