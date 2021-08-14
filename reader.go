@@ -7,6 +7,7 @@ package imagecashletter
 import (
 	"bufio"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -278,8 +279,11 @@ func (r *Reader) parseLine() error {
 	case cashLetterControlPos, cashLetterControlEbcPos:
 		// This is needed for validation od CashLetterControl since SettlementDate
 		// is a conditional field and is only available for certain types of CashLetters.
-		collectionTypeIndicator := r.currentCashLetter.CashLetterHeader.CollectionTypeIndicator
-		if err := r.parseCashLetterControl(collectionTypeIndicator); err != nil {
+		header := r.currentCashLetter.CashLetterHeader
+		if header == nil {
+			return errors.New("missing CashLetterHeader")
+		}
+		if err := r.parseCashLetterControl(header.CollectionTypeIndicator); err != nil {
 			return err
 		}
 		if err := r.currentCashLetter.Validate(); err != nil {
