@@ -408,6 +408,7 @@ func main() {
 
 	opts := []imagecashletter.WriterOption{
 		imagecashletter.WriteVariableLineLengthOption(),
+		imagecashletter.WriteEbcdicEncodingOption(),
 	}
 
 	w := imagecashletter.NewWriter(os.Stdout, opts...)

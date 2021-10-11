@@ -268,6 +268,7 @@ func write(path string) {
 		// Write in ICL plain text format
 		opts := []imagecashletter.WriterOption{
 			imagecashletter.WriteVariableLineLengthOption(),
+			imagecashletter.WriteEbcdicEncodingOption(),
 		}
 		w := imagecashletter.NewWriter(f, opts...)
 		if err := w.Write(file); err != nil {
