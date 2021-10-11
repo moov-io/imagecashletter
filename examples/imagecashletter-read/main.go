@@ -16,7 +16,7 @@ func main() {
 
 	}
 	defer f.Close()
-	r := imagecashletter.NewReader(f, imagecashletter.ReadVariableLineLengthOption())
+	r := imagecashletter.NewReader(f, imagecashletter.ReadVariableLineLengthOption(), imagecashletter.ReadEbcdicEncodingOption())
 
 	iclFile, err := r.Read()
 	if err != nil {
