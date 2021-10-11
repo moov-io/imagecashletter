@@ -1,3 +1,13 @@
+## v0.7.0 (Released 2021-10-11)
+
+IMPROVEMENTS
+
+- api: make ebcdic the default encoding for readers and writers
+
+BUILD
+
+- deps: update moov-io/base to v0.25.0
+
 ## v0.6.6 (Released 2021-08-13)
 
 BUG FIXES
