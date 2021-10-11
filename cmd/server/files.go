@@ -112,7 +112,7 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 				req = file
 			}
 		} else {
-			f, err := imagecashletter.NewReader(bytes.NewReader(bs), imagecashletter.ReadVariableLineLengthOption()).Read()
+			f, err := imagecashletter.NewReader(bytes.NewReader(bs), imagecashletter.ReadVariableLineLengthOption(), imagecashletter.ReadEbcdicEncodingOption()).Read()
 			if err != nil {
 				err = logger.LogErrorf("error reading image cache letter: %v", err).Err()
 				moovhttp.Problem(w, err)
@@ -296,6 +296,7 @@ func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc
 
 		opts := []imagecashletter.WriterOption{
 			imagecashletter.WriteVariableLineLengthOption(),
+			imagecashletter.WriteEbcdicEncodingOption(),
 		}
 
 		w.Header().Set("Content-Type", "text/plain")
