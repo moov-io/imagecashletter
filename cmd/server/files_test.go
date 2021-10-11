@@ -80,7 +80,7 @@ func TestFiles_getFiles(t *testing.T) {
 
 func TestFiles_createFile(t *testing.T) {
 	w := httptest.NewRecorder()
-	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "valid-ascii.x937"))
+	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "valid-ebcdic.x937"))
 	req := httptest.NewRequest("POST", "/files/create", fd)
 	repo := &testICLFileRepository{}
 	router := mux.NewRouter()

@@ -296,6 +296,7 @@ func getFileContents(logger log.Logger, repo ICLFileRepository) http.HandlerFunc
 
 		opts := []imagecashletter.WriterOption{
 			imagecashletter.WriteVariableLineLengthOption(),
+			imagecashletter.WriteEbcdicEncodingOption(),
 		}
 
 		w.Header().Set("Content-Type", "text/plain")
