@@ -163,6 +163,9 @@ func TestParseReturnDetailAddendumAWithoutBOFDItemSequenceNumber(t *testing.T) {
 	if record.BOFDEndorsementDateField() != "20180905" {
 		t.Errorf("BOFDEndorsementDate Expected '20180905' got: %v", record.BOFDEndorsementDateField())
 	}
+	if record.BOFDItemSequenceNumberField() != "               " {
+		t.Errorf("BOFDItemSequenceNumber Expected '                ' got: %v", record.BOFDItemSequenceNumberField())
+	}
 	if record.BOFDAccountNumberField() != "938383            " {
 		t.Errorf("BOFDAccountNumber Expected '938383            ' got: %v", record.BOFDAccountNumberField())
 	}
