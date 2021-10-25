@@ -42,6 +42,8 @@ type ReturnDetailAddendumA struct {
 	// DD 01 through 31
 	BOFDEndorsementDate time.Time `json:"bofdEndorsementDate"`
 	// BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
+	// According to spec version of x9.100-187-2016, this field is conditional. It is required if creating
+	// a new Check Detail Addendum A Record, otherwise conditional.
 	BOFDItemSequenceNumber string `json:"bofdItemSequenceNumber"`
 	// BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
 	BOFDAccountNumber string `json:"bofdAccountNumber"`
