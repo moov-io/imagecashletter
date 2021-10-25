@@ -67,6 +67,9 @@ func TestMockReturnDetailAddendumA(t *testing.T) {
 	if rdAddendumA.ReturnLocationRoutingNumber != "121042882" {
 		t.Error("ReturnLocationRoutingNumber does not validate")
 	}
+	if rdAddendumA.BOFDItemSequenceNumber != "1              " {
+		t.Error("BOFDItemSequenceNumber does not validate")
+	}
 	if rdAddendumA.BOFDAccountNumber != "938383" {
 		t.Error("BOFDAccountNumber does not validate")
 	}
