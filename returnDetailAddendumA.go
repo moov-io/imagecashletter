@@ -245,11 +245,6 @@ func (rdAddendumA *ReturnDetailAddendumA) fieldInclusion() error {
 			Value: rdAddendumA.ReturnLocationRoutingNumber,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
 	}
-	if rdAddendumA.BOFDItemSequenceNumberField() == "               " {
-		return &FieldError{FieldName: "BOFDItemSequenceNumber",
-			Value: rdAddendumA.BOFDItemSequenceNumber,
-			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
-	}
 	if rdAddendumA.BOFDEndorsementDate.IsZero() {
 		return &FieldError{FieldName: "BOFDEndorsementDate",
 			Value: rdAddendumA.BOFDEndorsementDate.String(),
