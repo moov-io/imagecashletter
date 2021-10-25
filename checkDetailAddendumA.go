@@ -246,11 +246,6 @@ func (cdAddendumA *CheckDetailAddendumA) fieldInclusion() error {
 			Value: cdAddendumA.BOFDEndorsementDate.String(),
 			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
 	}
-	if cdAddendumA.BOFDItemSequenceNumber == "               " {
-		return &FieldError{FieldName: "BOFDItemSequenceNumber",
-			Value: cdAddendumA.BOFDItemSequenceNumber,
-			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
-	}
 	if cdAddendumA.TruncationIndicator == "" {
 		return &FieldError{FieldName: "TruncationIndicator",
 			Value: cdAddendumA.TruncationIndicator,
