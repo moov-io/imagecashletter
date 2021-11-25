@@ -170,7 +170,9 @@ func (cl *CashLetter) build() error {
 		for _, rd := range b.Returns {
 
 			// Sequence  Number
-			rdSequenceNumber := 1
+			var rdSequenceNumber int
+			rdSequenceNumber++
+
 			// Record Numbers
 			rdAddendumARecordNumber := 1
 			rdAddendumDRecordNumber := 1
@@ -196,7 +198,6 @@ func (cl *CashLetter) build() error {
 					rdAddendumDRecordNumber = 1
 				}
 			}
-			rdSequenceNumber++
 
 			cashLetterItemsCount = cashLetterItemsCount + 1
 			cashLetterTotalAmount = cashLetterTotalAmount + rd.ItemAmount
