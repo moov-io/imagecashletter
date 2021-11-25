@@ -20,7 +20,7 @@ ifeq ($(OS),Windows_NT)
 else
 	@wget -O lint-project.sh https://raw.githubusercontent.com/moov-io/infra/master/go/lint-project.sh
 	@chmod +x ./lint-project.sh
-	GOOS=js GOARCH=wasm COVER_THRESHOLD=90.0 time ./lint-project.sh
+	GOOS=js GOARCH=wasm COVER_THRESHOLD=90.0 ./lint-project.sh
 endif
 
 .PHONY: client
