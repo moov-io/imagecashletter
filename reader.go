@@ -188,7 +188,7 @@ func (r *Reader) Read() (File, error) {
 	return r.File, nil
 }
 
-func (r *Reader) parseLine() error {
+func (r *Reader) parseLine() error { //nolint:gocyclo
 	switch r.line[:2] {
 	case fileHeaderPos, fileHeaderEbcPos:
 		if err := r.parseFileHeader(); err != nil {

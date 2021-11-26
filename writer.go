@@ -203,18 +203,23 @@ func (w *Writer) writeCheckDetail(b *Bundle) error {
 
 // writeCheckDetailAddendum writes a CheckDetailAddendum (A, B, C) to a CheckDetail
 func (w *Writer) writeCheckDetailAddendum(cd *CheckDetail) error {
-	for _, cdAddendumA := range cd.GetCheckDetailAddendumA() {
-		if err := w.writeLine(&cdAddendumA); err != nil {
+	addendumA := cd.GetCheckDetailAddendumA()
+	for i := range addendumA {
+		if err := w.writeLine(&addendumA[i]); err != nil {
 			return err
 		}
 	}
-	for _, cdAddendumB := range cd.GetCheckDetailAddendumB() {
-		if err := w.writeLine(&cdAddendumB); err != nil {
+
+	addendumB := cd.GetCheckDetailAddendumB()
+	for i := range addendumB {
+		if err := w.writeLine(&addendumB[i]); err != nil {
 			return err
 		}
 	}
-	for _, cdAddendumC := range cd.GetCheckDetailAddendumC() {
-		if err := w.writeLine(&cdAddendumC); err != nil {
+
+	addendumC := cd.GetCheckDetailAddendumC()
+	for i := range addendumC {
+		if err := w.writeLine(&addendumC[i]); err != nil {
 			return err
 		}
 	}
@@ -244,8 +249,8 @@ func (w *Writer) writeCheckImageView(cd *CheckDetail) error {
 	}
 
 	// FRB asks that imageViewDetail should immediately be followed by its corresponding data and analysis
-	for i, ivDetail := range ivDetailSlice {
-		if err := w.writeLine(&ivDetail); err != nil {
+	for i := range ivDetailSlice {
+		if err := w.writeLine(&ivDetailSlice[i]); err != nil {
 			return err
 		}
 		if len(ivDataSlice) > 0 && len(ivDataSlice) >= i-1 {
@@ -284,23 +289,30 @@ func (w *Writer) writeReturnDetail(b *Bundle) error {
 
 // writeReturnDetailAddendum writes a ReturnDetailAddendum (A, B, C, D) to a ReturnDetail
 func (w *Writer) writeReturnDetailAddendum(rd *ReturnDetail) error {
-	for _, rdAddendumA := range rd.GetReturnDetailAddendumA() {
-		if err := w.writeLine(&rdAddendumA); err != nil {
+	addendumA := rd.GetReturnDetailAddendumA()
+	for i := range addendumA {
+		if err := w.writeLine(&addendumA[i]); err != nil {
 			return err
 		}
 	}
-	for _, rdAddendumB := range rd.GetReturnDetailAddendumB() {
-		if err := w.writeLine(&rdAddendumB); err != nil {
+
+	addendumB := rd.GetReturnDetailAddendumB()
+	for i := range addendumB {
+		if err := w.writeLine(&addendumB[i]); err != nil {
 			return err
 		}
 	}
-	for _, rdAddendumC := range rd.GetReturnDetailAddendumC() {
-		if err := w.writeLine(&rdAddendumC); err != nil {
+
+	addendumC := rd.GetReturnDetailAddendumC()
+	for i := range addendumC {
+		if err := w.writeLine(&addendumC[i]); err != nil {
 			return err
 		}
 	}
-	for _, rdAddendumD := range rd.GetReturnDetailAddendumD() {
-		if err := w.writeLine(&rdAddendumD); err != nil {
+
+	addendumD := rd.GetReturnDetailAddendumD()
+	for i := range addendumD {
+		if err := w.writeLine(&addendumD[i]); err != nil {
 			return err
 		}
 	}
@@ -309,18 +321,23 @@ func (w *Writer) writeReturnDetailAddendum(rd *ReturnDetail) error {
 
 // writeReturnImageView writes ImageViews (Detail, Data, Analysis) to a ReturnDetail
 func (w *Writer) writeReturnImageView(rd *ReturnDetail) error {
-	for _, ivDetail := range rd.GetImageViewDetail() {
-		if err := w.writeLine(&ivDetail); err != nil {
+	ivDetail := rd.GetImageViewDetail()
+	for i := range ivDetail {
+		if err := w.writeLine(&ivDetail[i]); err != nil {
 			return err
 		}
 	}
-	for _, ivData := range rd.GetImageViewData() {
-		if err := w.writeLine(&ivData); err != nil {
+
+	ivData := rd.GetImageViewData()
+	for i := range ivData {
+		if err := w.writeLine(&ivData[i]); err != nil {
 			return err
 		}
 	}
-	for _, ivAnalysis := range rd.GetImageViewAnalysis() {
-		if err := w.writeLine(&ivAnalysis); err != nil {
+
+	ivAnalysis := rd.GetImageViewAnalysis()
+	for i := range ivAnalysis {
+		if err := w.writeLine(&ivAnalysis[i]); err != nil {
 			return err
 		}
 	}

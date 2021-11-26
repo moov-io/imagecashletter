@@ -27,8 +27,7 @@ var (
 	httpAddr  = flag.String("http.addr", bind.HTTP("ICL"), "HTTP listen address")
 	adminAddr = flag.String("admin.addr", bind.Admin("ICL"), "Admin HTTP listen address")
 
-	flagBasePath  = flag.String("base-path", "/", "Base path to serve HTTP routes and webui from")
-	flagLogFormat = flag.String("log.format", "", "Format for log lines (Options: json, plain")
+	flagBasePath = flag.String("base-path", "/", "Base path to serve HTTP routes and webui from")
 )
 
 func main() {
