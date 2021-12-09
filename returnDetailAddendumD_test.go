@@ -27,6 +27,21 @@ func mockReturnDetailAddendumD() ReturnDetailAddendumD {
 	return rdAddendumD
 }
 
+// mockReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber creates a ReturnDetailAddendumD
+func mockReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber() ReturnDetailAddendumD {
+	rdAddendumD := NewReturnDetailAddendumD()
+	rdAddendumD.RecordNumber = 1
+	rdAddendumD.EndorsingBankRoutingNumber = "121042882"
+	rdAddendumD.BOFDEndorsementBusinessDate = time.Now()
+	rdAddendumD.TruncationIndicator = "Y"
+	rdAddendumD.EndorsingBankConversionIndicator = "1"
+	rdAddendumD.EndorsingBankCorrectionIndicator = 0
+	rdAddendumD.ReturnReason = "A"
+	rdAddendumD.UserField = ""
+	rdAddendumD.EndorsingBankIdentifier = 0
+	return rdAddendumD
+}
+
 func TestReturnDetailAddendumDParseErr(t *testing.T) {
 	var r ReturnDetailAddendumD
 	r.Parse("ASdasdas")
@@ -52,6 +67,41 @@ func TestMockReturnDetailAddendumD(t *testing.T) {
 	}
 	if rdAddendumD.EndorsingBankItemSequenceNumber != "1              " {
 		t.Error("EndorsingBankItemSequenceNumber does not validate")
+	}
+	if rdAddendumD.TruncationIndicator != "Y" {
+		t.Error("TruncationIndicator does not validate")
+	}
+	if rdAddendumD.ReturnReason != "A" {
+		t.Error("ReturnReason does not validate")
+	}
+	if rdAddendumD.EndorsingBankConversionIndicator != "1" {
+		t.Error("EndorsingBankConversionIndicator does not validate")
+	}
+	if rdAddendumD.EndorsingBankCorrectionIndicator != 0 {
+		t.Error("EndorsingBankCorrectionIndicator does not validate")
+	}
+	if rdAddendumD.UserField != "" {
+		t.Error("UserField does not validate")
+	}
+	if rdAddendumD.EndorsingBankIdentifier != 0 {
+		t.Error("EndorsingBankIdentifier does not validate")
+	}
+}
+
+// TestMockReturnDetailAddendumD creates a ReturnDetailAddendumD
+func TestMockReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber()
+	if err := rdAddendumD.Validate(); err != nil {
+		t.Error("MockReturnDetailAddendumD does not validate and will break other tests: ", err)
+	}
+	if rdAddendumD.recordType != "35" {
+		t.Error("recordType does not validate")
+	}
+	if rdAddendumD.RecordNumber != 1 {
+		t.Error("RecordNumber does not validate")
+	}
+	if rdAddendumD.EndorsingBankRoutingNumber != "121042882" {
+		t.Error("EndorsingBankRoutingNumber does not validate")
 	}
 	if rdAddendumD.TruncationIndicator != "Y" {
 		t.Error("TruncationIndicator does not validate")
@@ -110,6 +160,65 @@ func TestParseReturnDetailAddendumD(t *testing.T) {
 	}
 	if record.EndorsingBankItemSequenceNumberField() != "1              " {
 		t.Errorf("EndorsingBankItemSequenceNumber Expected '1              ' got: %v",
+			record.EndorsingBankItemSequenceNumberField())
+	}
+	if record.TruncationIndicatorField() != "Y" {
+		t.Errorf("TruncationIndicator Expected 'Y' got: %v", record.TruncationIndicatorField())
+	}
+	if record.EndorsingBankConversionIndicatorField() != "1" {
+		t.Errorf("EndorsingBankConversionIndicator  Expected '1' got: %v", record.EndorsingBankConversionIndicatorField())
+	}
+	if record.EndorsingBankCorrectionIndicatorField() != "0" {
+		t.Errorf("EndorsingBankCorrectionIndicator Expected '0' got: %v", record.EndorsingBankCorrectionIndicatorField())
+	}
+	if record.ReturnReasonField() != "A" {
+		t.Errorf("ReturnReason  Expected 'A' got: %v", record.ReturnReasonField())
+	}
+	if record.UserFieldField() != "                   " {
+		t.Errorf("UserField Expected '                   ' got: %v", record.UserFieldField())
+	}
+	if record.reservedField() != "                    " {
+		t.Errorf("reserved Expected '                    ' got: %v", record.reservedField())
+	}
+}
+
+// TestParseReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber validates parsing a ReturnDetailAddendumD
+func TestParseReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber(t *testing.T) {
+	var line = "350112104288220180905               Y10A                   0                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	clh := mockCashLetterHeader()
+	r.addCurrentCashLetter(NewCashLetter(clh))
+	bh := mockBundleHeader()
+	rb := NewBundle(bh)
+	r.currentCashLetter.AddBundle(rb)
+	r.addCurrentBundle(rb)
+	cd := mockReturnDetail()
+	r.currentCashLetter.currentBundle.AddReturnDetail(cd)
+
+	if err := r.parseReturnDetailAddendumD(); err != nil {
+		t.Errorf("%T: %s", err, err)
+		log.Fatal(err)
+	}
+	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumD[0]
+
+	if record.recordType != "35" {
+		t.Errorf("RecordType Expected '35' got: %v", record.recordType)
+	}
+	if record.RecordNumberField() != "01" {
+		t.Errorf("RecordNumber Expected '01' got: %v", record.RecordNumberField())
+	}
+
+	if record.EndorsingBankRoutingNumberField() != "121042882" {
+		t.Errorf("EndorsingBankRoutingNumbeRoutingNumber Expected '121042882' got: %v",
+			record.EndorsingBankRoutingNumberField())
+	}
+	if record.BOFDEndorsementBusinessDateField() != "20180905" {
+		t.Errorf("BOFDEndorsementBusinessDate Expected '20180905' got: %v",
+			record.BOFDEndorsementBusinessDateField())
+	}
+	if record.EndorsingBankItemSequenceNumberField() != "               " {
+		t.Errorf("EndorsingBankItemSequenceNumber Expected '               ' got: %v",
 			record.EndorsingBankItemSequenceNumberField())
 	}
 	if record.TruncationIndicatorField() != "Y" {
