@@ -2,7 +2,7 @@ FROM golang:1.17-buster as builder
 WORKDIR /go/src/github.com/moov-io/imagecashletter
 RUN apt-get update && apt-get install make gcc g++
 COPY . .
-RUN make build
+RUN make build-server
 
 FROM debian:stable-slim
 LABEL maintainer="Moov <support@moov.io>"
