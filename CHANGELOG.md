@@ -1,3 +1,9 @@
+## v0.7.2 (Released 2021-12-09)
+
+IMPROVEMENTS
+
+- returnDetailAddendumD: make `EndorsingBankItemSequenceNumber` conditional to support older specifications
+
 ## v0.7.1 (Released 2021-10-25)
 
 IMPROVEMENTS
