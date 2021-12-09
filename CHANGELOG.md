@@ -1,3 +1,13 @@
+## v0.7.1 (Released 2021-10-25)
+
+IMPROVEMENTS
+
+- returnDetailAddendumA: make `BOFDItemSequenceNumber` conditional to support more spec versions
+
+BUILD
+
+- deps: update moov-io/base to v0.26.0
+
 ## v0.7.0 (Released 2021-10-11)
 
 IMPROVEMENTS
