@@ -90,7 +90,7 @@ func TestMockReturnDetailAddendumD(t *testing.T) {
 
 // TestMockReturnDetailAddendumD creates a ReturnDetailAddendumD
 func TestMockReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber(t *testing.T) {
-	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD := mockReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber()
 	if err := rdAddendumD.Validate(); err != nil {
 		t.Error("MockReturnDetailAddendumD does not validate and will break other tests: ", err)
 	}
