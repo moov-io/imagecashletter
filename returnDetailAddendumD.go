@@ -40,6 +40,7 @@ type ReturnDetailAddendumD struct {
 	// DD 01 through 31
 	BOFDEndorsementBusinessDate time.Time `json:"bofdEndorsementBusinessDate"`
 	// EndorsingItemSequenceNumber is a number that identifies the item at the endorsing bank.
+	// This field is optional in earlier version of the specs.
 	EndorsingBankItemSequenceNumber string `json:"endorsingBankItemSequenceNumber"`
 	// TruncationIndicator identifies if the institution truncated the original check item.
 	// Values: Y: Yes this institution truncated this original check item and this is first endorsement
@@ -242,11 +243,6 @@ func (rdAddendumD *ReturnDetailAddendumD) fieldInclusion() error {
 	if rdAddendumD.BOFDEndorsementBusinessDate.IsZero() {
 		return &FieldError{FieldName: "BOFDEndorsementBusinessDate",
 			Value: rdAddendumD.BOFDEndorsementBusinessDate.String(),
-			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumD()?"}
-	}
-	if rdAddendumD.EndorsingBankItemSequenceNumberField() == "               " {
-		return &FieldError{FieldName: "EndorsingBankItemSequenceNumber",
-			Value: rdAddendumD.EndorsingBankItemSequenceNumber,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumD()?"}
 	}
 	if rdAddendumD.TruncationIndicator == "" {
