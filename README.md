@@ -186,7 +186,7 @@ The following options are currently supported:
 
 
 ### In-browser ICL file parser
-Using our [in-browser utility](http://oss.moov.io/x9/), you can instantly convert X9 files into JSON. Either paste in ICL file content directly or choose a file from your local machine. This tool is particulary useful if you're handling sensitive PII or want perform some quick tests, as operations are fully client-side with nothing stored in memory. We plan to support bidirectional conversion in the near future.
+Using our [in-browser utility](http://oss.moov.io/x9/), you can instantly convert X9 files into JSON. Either paste in ICL file content directly or choose a file from your local machine. This tool is particularly useful if you're handling sensitive PII or want to perform some quick tests, as operations are fully client-side with nothing stored in memory. We plan to support bidirectional conversion in the near future.
 
 ## Learn about Image Cash Letter
 - [Intro to ICL](./docs/intro.md)
