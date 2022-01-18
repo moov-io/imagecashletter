@@ -1,3 +1,13 @@
+## v0.7.3 (Released 2022-01-18)
+
+BUG FIXES
+
+- cmd/webui: pass a data URI through instead of raw file contents
+
+BUILD
+
+- fix(deps): update module github.com/moov-io/base to v0.27.5
+
 ## v0.7.2 (Released 2021-12-09)
 
 IMPROVEMENTS
