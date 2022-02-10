@@ -114,7 +114,9 @@ type ReaderOption func(*Reader)
 //ReadVariableLineLengthOption allows Reader to split imagecashletter files based on encoded line lengths
 func ReadVariableLineLengthOption() ReaderOption {
 	scanVariableLengthLines := func(data []byte, atEOF bool) (advance int, token []byte, err error) {
-		if len(data) < 4 && atEOF {
+		if atEOF && len(data) == 0 {
+			return 0, nil, nil
+		} else if len(data) < 4 && atEOF {
 			// we ran out of bytes and we're at the end of the file
 			return 0, nil, io.ErrUnexpectedEOF
 		} else if len(data) < 4 {
@@ -149,6 +151,15 @@ func ReadEbcdicEncodingOption() ReaderOption {
 	}
 }
 
+// BufferSizeOption creates a byte slice of the specified size and uses it as the buffer
+// for the Reader's internal scanner. You may need to set this when processing files that
+// contain check details exceeding bufio.MaxScanTokenSize (64 kB).
+func BufferSizeOption(size int) ReaderOption {
+	return func(r *Reader) {
+		r.scanner.Buffer(make([]byte, size), size)
+	}
+}
+
 // Read reads each line of the imagecashletter file and defines which parser to use based
 // on the first character of each line. It also enforces imagecashletter formatting rules and returns
 // the appropriate error if issues are found.
@@ -156,11 +167,6 @@ func (r *Reader) Read() (File, error) {
 	r.lineNum = 0
 	// read through the entire file
 	for r.scanner.Scan() {
-		if scanErr := r.scanner.Err(); scanErr != nil {
-			err := &FileError{FieldName: "LineNumber", Value: strconv.Itoa(r.lineNum), Msg: scanErr.Error()}
-			return r.File, r.error(err)
-		}
-
 		r.line = r.scanner.Text()
 		r.lineNum++
 
@@ -175,6 +181,12 @@ func (r *Reader) Read() (File, error) {
 			return r.File, err
 		}
 	}
+
+	if scanErr := r.scanner.Err(); scanErr != nil {
+		err := &FileError{FieldName: "LineNumber", Value: strconv.Itoa(r.lineNum), Msg: scanErr.Error()}
+		return r.File, r.error(err)
+	}
+
 	if (FileHeader{}) == r.File.Header {
 		// There must be at least one File Header
 		r.recordName = "FileHeader"

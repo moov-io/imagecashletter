@@ -5,11 +5,14 @@
 package imagecashletter
 
 import (
+	"bufio"
 	"bytes"
+	"crypto/rand"
 	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -1079,5 +1082,77 @@ func TestICLBase64ImageData(t *testing.T) {
 
 	if !bytes.Contains(buf.Bytes(), []byte("hello, world")) {
 		t.Fatalf("unexpected ICL file:\n%s", buf.String())
+	}
+}
+
+// TestICLFile_LargeCheckImage validates that reading a file with a large
+// check detail record fails by default with bufio.ErrTooLong, and succeeds
+// if a sufficiently-large buffer is created via BufferSizeOption.
+//
+// It creates this file on the fly to avoid bloating the repository.
+func TestICLFile_LargeCheckImage(t *testing.T) {
+	fd, err := os.Open(filepath.Join("test", "testdata", "BNK20180905121042882-A.icl"))
+	if err != nil {
+		t.Fatalf("Can not open local file: %s: \n", err)
+	}
+	defer fd.Close()
+
+	r := NewReader(fd, ReadVariableLineLengthOption())
+	ICLFile, err := r.Read()
+	if err != nil {
+		t.Errorf("Issue reading file: %+v \n", err)
+	}
+	t.Logf("r.File.Header=%#v", r.File.Header)
+	t.Logf("r.File.Control=%#v", r.File.Control)
+	// ensure we have a validated file structure
+	if ICLFile.Validate(); err != nil {
+		t.Errorf("Could not validate entire read file: %v", err)
+	}
+
+	data := make([]byte, 128*1024)
+	if _, err = rand.Read(data); err != nil {
+		t.Errorf("Failed to read random data: %v", err)
+	}
+
+	ICLFile.CashLetters[0].Bundles[0].Checks[0].ImageViewData[0].LengthImageData = strconv.Itoa(len(data))
+	ICLFile.CashLetters[0].Bundles[0].Checks[0].ImageViewData[0].ImageData = data
+
+	var buf bytes.Buffer
+	w := NewWriter(&buf, WriteVariableLineLengthOption())
+
+	if err := w.Write(&ICLFile); err != nil {
+		t.Errorf("Failed to write file: %v", err)
+	}
+
+	fileReader := bytes.NewReader(buf.Bytes())
+
+	r = NewReader(fileReader, ReadVariableLineLengthOption())
+	_, err = r.Read()
+	if err == nil {
+		t.Error("Expected read of file with large check image to fail")
+	}
+
+	var ok bool
+	var p *ParseError
+	var e *FileError
+
+	if p, ok = err.(*ParseError); ok {
+		if e, ok = p.Err.(*FileError); ok {
+			if e.Msg != bufio.ErrTooLong.Error() {
+				t.Fatalf("Received unexpected error %s, expected %s",
+					e.Msg, bufio.ErrTooLong.Error())
+			}
+		}
+	}
+
+	if !ok {
+		t.Errorf("Received unexpected error type %T: %v", err, err)
+	}
+
+	fileReader.Reset(buf.Bytes())
+	r = NewReader(fileReader, ReadVariableLineLengthOption(), BufferSizeOption(256*1024))
+	_, err = r.Read()
+	if err != nil {
+		t.Errorf("Unexpected error while reading file: %v", err)
 	}
 }
