@@ -49,24 +49,29 @@ func TestICLFileRead(t *testing.T) {
 	}
 }
 
-// TestICLFile validates reading an ICL file
-func TestICLFile(t *testing.T) {
-	fd, err := os.Open(filepath.Join("test", "testdata", "BNK20180905121042882-A.icl"))
-	if err != nil {
-		t.Fatalf("Can not open local file: %s: \n", err)
-	}
-	defer fd.Close()
+// TestICLFile validates reading ICL files
+func TestICLFiles(t *testing.T) {
+	files := []string{"BNK20180905121042882-A.icl", "without-micrValidIndicator.icl"}
+	for _, f := range files {
+		t.Run(f, func(t *testing.T) {
+			fd, err := os.Open(filepath.Join("test", "testdata", f))
+			if err != nil {
+				t.Fatalf("Can not open local file: %s: \n", err)
+			}
+			defer fd.Close()
 
-	r := NewReader(fd, ReadVariableLineLengthOption())
-	ICLFile, err := r.Read()
-	if err != nil {
-		t.Errorf("Issue reading file: %+v \n", err)
-	}
-	t.Logf("r.File.Header=%#v", r.File.Header)
-	t.Logf("r.File.Control=%#v", r.File.Control)
-	// ensure we have a validated file structure
-	if ICLFile.Validate(); err != nil {
-		t.Errorf("Could not validate entire read file: %v", err)
+			r := NewReader(fd, ReadVariableLineLengthOption())
+			ICLFile, err := r.Read()
+			if err != nil {
+				t.Errorf("Issue reading file: %+v \n", err)
+			}
+			t.Logf("r.File.Header=%#v", r.File.Header)
+			t.Logf("r.File.Control=%#v", r.File.Control)
+			// ensure we have a validated file structure
+			if ICLFile.Validate(); err != nil {
+				t.Errorf("Could not validate entire read file: %v", err)
+			}
+		})
 	}
 }
 
