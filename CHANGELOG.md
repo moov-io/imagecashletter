@@ -1,3 +1,15 @@
+## v0.7.4 (Released 2022-02-10)
+
+IMPROVEMENTS
+
+- checkDetail: make `MICRValidIndicator` validation more flexible
+- reader: handle check image data larger than `bufio`'s default buffer size
+- examples: fix writer to build a valid file, including a check image
+
+BUILD
+
+- deps: update github.com/prometheus/client_golang to v1.12.1
+
 ## v0.7.3 (Released 2022-01-18)
 
 BUG FIXES
