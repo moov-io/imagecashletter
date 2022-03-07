@@ -8,7 +8,7 @@ require (
 	github.com/go-kit/kit v0.12.0
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/mux v1.8.0
-	github.com/moov-io/base v0.27.5
+	github.com/moov-io/base v0.28.1
 	github.com/prometheus/client_golang v1.12.1
 	github.com/stretchr/testify v1.7.0
 	github.com/vincent-petithory/dataurl v1.0.0
