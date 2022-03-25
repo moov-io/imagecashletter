@@ -23,6 +23,7 @@ func (e *CashLetterError) Error() string {
 var (
 	msgCashLetterBundleEntries = "%v cannot have bundle entries"
 	msgCashLetterRoutingNumber = "%v cannot have a Routing Number Summary"
+	msgMandatoryRecord         = "record is mandatory"
 )
 
 // CashLetter contains CashLetterHeader, CashLetterControl and Bundle records.
@@ -75,9 +76,11 @@ func (cl *CashLetter) setRecordType() {
 func (cl *CashLetter) Validate() error {
 	if cl.CashLetterHeader.RecordTypeIndicator == "N" {
 		if cl.GetBundles() != nil {
-			msg := fmt.Sprintf(msgCashLetterBundleEntries, cl.CashLetterHeader.RecordTypeIndicator)
-			return &CashLetterError{CashLetterID: cl.CashLetterHeader.CashLetterID,
-				FieldName: "RecordTypeIndicator", Msg: msg}
+			return &CashLetterError{
+				CashLetterID: cl.CashLetterHeader.CashLetterID,
+				FieldName:    "RecordTypeIndicator",
+				Msg:          fmt.Sprintf(msgCashLetterBundleEntries, cl.CashLetterHeader.RecordTypeIndicator),
+			}
 		}
 	}
 	switch cl.CashLetterHeader.CollectionTypeIndicator {
@@ -85,9 +88,19 @@ func (cl *CashLetter) Validate() error {
 		"00", "01", "02":
 	default:
 		if cl.GetRoutingNumberSummary() != nil {
-			msg := fmt.Sprintf(msgCashLetterRoutingNumber, cl.CashLetterHeader.CollectionTypeIndicator)
-			return &CashLetterError{CashLetterID: cl.CashLetterHeader.CashLetterID,
-				FieldName: "CollectionTypeIndicator", Msg: msg}
+			return &CashLetterError{
+				CashLetterID: cl.CashLetterHeader.CashLetterID,
+				FieldName:    "CollectionTypeIndicator",
+				Msg:          fmt.Sprintf(msgCashLetterRoutingNumber, cl.CashLetterHeader.CollectionTypeIndicator),
+			}
+		}
+	}
+
+	if cl.CashLetterControl == nil {
+		return &CashLetterError{
+			CashLetterID: cl.CashLetterHeader.CashLetterID,
+			FieldName:    "CashLetterControl",
+			Msg:          msgMandatoryRecord,
 		}
 	}
 
@@ -111,7 +124,7 @@ func (cl *CashLetter) build() error {
 
 	// Sequence Numbers
 	bundleSequenceNumber := 1
-	//creditIndicator
+	// creditIndicator
 	creditIndicator := 0
 
 	if len(cl.GetCreditItems()) > 0 {

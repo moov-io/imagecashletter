@@ -14,7 +14,7 @@ import (
 
 // Errors specific to a CashLetterControl Record
 
-//CashLetterControl Record
+// CashLetterControl Record
 type CashLetterControl struct {
 	// ID is a client defined string used as a reference to this record.
 	ID string `json:"id"`
@@ -179,7 +179,7 @@ func (clc *CashLetterControl) CashLetterBundleCountField() string {
 	return clc.numericField(clc.CashLetterBundleCount, 6)
 }
 
-//CashLetterItemsCountField gets a string of the CashLetterItemsCount zero padded
+// CashLetterItemsCountField gets a string of the CashLetterItemsCount zero padded
 func (clc *CashLetterControl) CashLetterItemsCountField() string {
 	return clc.numericField(clc.CashLetterItemsCount, 8)
 }
