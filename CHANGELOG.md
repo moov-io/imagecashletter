@@ -1,3 +1,9 @@
+## v0.8.0 (Released 2022-03-29)
+
+IMPROVEMENTS
+
+- cashLetter: return error if CashLetterControl is missing or invalid
+
 ## v0.7.4 (Released 2022-02-10)
 
 IMPROVEMENTS
