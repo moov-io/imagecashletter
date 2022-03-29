@@ -405,6 +405,27 @@ func TestFiles_removeCashLetterFromFile(t *testing.T) {
 	})
 }
 
+func TestFiles_createFile_Issue228(t *testing.T) {
+	repo := &testICLFileRepository{}
+	router := mux.NewRouter()
+	addFileRoutes(log.NewNopLogger(), router, repo)
+
+	w := httptest.NewRecorder()
+	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "issue228.json"))
+	req := httptest.NewRequest("POST", "/files/create", fd)
+	req.Header.Set("Content-Type", "application/json")
+
+	router.ServeHTTP(w, req)
+
+	require.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+	type apiError struct {
+		Error string `json:"error"`
+	}
+	var wantErr apiError
+	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &wantErr))
+	require.Contains(t, wantErr.Error, "CashLetterControl record is mandatory")
+}
+
 func readFile(t *testing.T, filename string) *imagecashletter.File {
 	t.Helper()
 

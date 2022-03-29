@@ -1,0 +1,88 @@
+{
+  "fileHeader": {
+    "testIndicator": "T",
+    "immediateDestination": "221970443",
+    "immediateOrigin": "021913655",
+    "fileCreationDate": "2022-03-23T17:02:01Z",
+    "fileCreationTime": "2022-03-23T17:02:01Z",
+    "recordType": "01",
+    "standardLevel": "03",
+    "resendIndicator": "N"
+  },
+  "cashLetters": [
+    {
+      "cashLetterHeader": {
+        "recordType": "10",
+        "collectionTypeIndicator": "01",
+        "destinationRoutingNumber": "221970443",
+        "eceInstitutionRoutingNumber": "221970443",
+        "cashLetterBusinessDate": "2022-03-23T17:02:01Z",
+        "cashLetterCreationDate": "2022-03-23T17:02:01Z",
+        "cashLetterCreationTime": "2022-03-23T17:02:01Z",
+        "recordTypeIndicator": "I",
+        "documentationTypeIndicator": "G",
+        "cashLetterID": "2b0212d8"
+      },
+      "bundles": [
+        {
+          "bundleControl": {
+            "creditTotalIndicator": 0,
+            "userField": "",
+            "bundleImagesCount": 2,
+            "micrValidTotalAmount": 200000,
+            "bundleTotalAmount": 200000,
+            "bundleitemsCount": 14,
+            "id": ""
+          },
+          "bundleHeader": {
+            "recordType": "20",
+            "collectionTypeIndicator": "01",
+            "destinationRoutingNumber": "231380104",
+            "eceInstitutionRoutingNumber": "221970443",
+            "bundleBusinessDate": "2022-03-23T17:02:01Z",
+            "bundleCreationDate": "2022-03-23T17:02:01Z"
+          },
+          "checks": [
+            {
+              "recordType": "25",
+              "payorBankRoutingNumber": "231380104",
+              "payorBankCheckDigit": "2",
+              "itemAmount": 100,
+              "eceInstitutionItemSequenceNumber": "1",
+              "addendumCount": 0,
+              "documentationTypeIndicator": "G",
+              "bofdIndicator": "U",
+              "imageViewDetail": [
+                {
+                  "imageCreatorRoutingNumber": "231380104",
+                  "imageCreatorDate": "2022-03-23T17:02:01Z",
+                  "viewSideIndicator": 0,
+                  "recordType": "50",
+                  "imageIndicator": 1,
+                  "imageViewFormatIndicator": "00",
+                  "imageViewCompressionFormatIndicator": "00",
+                  "viewDescriptor": "00",
+                  "digitalSignatureIndicator": 0
+                }
+              ],
+              "imageViewData": [
+                {
+                  "eceInstitutionRoutingNumber": "221970443",
+                  "bundleBusinessDate": "2022-03-23T17:02:01Z",
+                  "eceInstitutionItemSequenceNumber": "1",
+                  "imageData": "IA==",
+                  "lengthImageData": "1",
+                  "recordType": "52",
+                  "clippingOrigin": 0,
+                  "lengthImageReferenceKey": "0",
+                  "lengthOfDigitalSignature": "0"
+                }
+              ],
+              "correctionIndicator": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
