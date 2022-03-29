@@ -16,6 +16,7 @@ func mockFile() *File {
 	mockFile.SetHeader(mockFileHeader())
 	clh := mockCashLetterHeader()
 	mockCashLetter := NewCashLetter(clh)
+	mockCashLetter.CashLetterControl = mockCashLetterControl()
 	mockFile.AddCashLetter(mockCashLetter)
 	if err := mockFile.Create(); err != nil {
 		panic(err)
