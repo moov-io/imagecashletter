@@ -20,12 +20,12 @@ type Credit struct {
 	// RecordType defines the type of record.
 	recordType string
 	// AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
-	AuxiliaryOnUs string `json:"auxillary,omitempty"`
+	AuxiliaryOnUs string `json:"auxiliaryOnUs,omitempty"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the AS Committee X9.
 	ExternalProcessingCode string `json:"externalProcessingCode,omitempty"`
 	// PayorBankRoutingNumber identifies a number that identifies the institution by or through
 	// which the item is payable.
-	PayorBankRoutingNumber int `json:"payorBankRoutingNumber"`
+	PayorBankRoutingNumber string `json:"payorBankRoutingNumber"`
 	// CreditAccountNumberOnUs identifies data specified by the payor bank.
 	// Usually an account number, serial number or transaction code or both.
 	CreditAccountNumberOnUs string `json:"creditAccountNumberOnUs"`
@@ -81,7 +81,7 @@ func (cr *Credit) Parse(record string) {
 	// 18
 	cr.ExternalProcessingCode = cr.parseStringField(record[17:18])
 	// 19–27
-	cr.PayorBankRoutingNumber = cr.parseNumField(record[18:27])
+	cr.PayorBankRoutingNumber = cr.parseStringField(record[18:27])
 	// 28–47
 	cr.CreditAccountNumberOnUs = cr.parseStringField(record[27:47])
 	// 48–57
@@ -153,6 +153,10 @@ func (cr *Credit) Validate() error {
 	if cr.DocumentationTypeIndicator != "G" {
 		return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cr.DocumentationTypeIndicator, Msg: msgInvalid}
 	}
+	if err := cr.isNumeric(cr.PayorBankRoutingNumber); err != nil {
+		return &FieldError{FieldName: "PayorBankRoutingNumber",
+			Value: cr.PayorBankRoutingNumber, Msg: err.Error()}
+	}
 	// Should not contain forward or back slashes
 	if cr.AuxiliaryOnUs != "" &&
 		(strings.Count(cr.AuxiliaryOnUs, `\`) > 0 ||
@@ -160,6 +164,7 @@ func (cr *Credit) Validate() error {
 
 		return &FieldError{FieldName: "AuxiliaryOnUs", Value: cr.AuxiliaryOnUsField(), Msg: msgInvalid}
 	}
+
 	return nil
 }
 
@@ -171,7 +176,7 @@ func (cr *Credit) fieldInclusion() error {
 			Value: cr.recordType,
 			Msg:   msgFieldInclusion + ", did you use Credit()?"}
 	}
-	if cr.PayorBankRoutingNumber == 0 {
+	if cr.PayorBankRoutingNumberField() == "000000000" {
 		return &FieldError{FieldName: "PayorBankRoutingNumber",
 			Value: cr.PayorBankRoutingNumberField(),
 			Msg:   msgFieldInclusion + ", did you use Credit()?"}
@@ -189,7 +194,7 @@ func (cr *Credit) fieldInclusion() error {
 	return nil
 }
 
-//AuxiliaryOnUsField gets a string of the Auxillary On-Us
+//AuxiliaryOnUsField gets a string of the AuxiliaryOnUs
 func (cr *Credit) AuxiliaryOnUsField() string {
 	return cr.alphaField(cr.AuxiliaryOnUs, 15)
 }
@@ -201,7 +206,7 @@ func (cr *Credit) ExternalProcessingCodeField() string {
 
 // PayorBankRoutingNumberField gets a string of the PayorBankRoutingNumber zero padded
 func (cr *Credit) PayorBankRoutingNumberField() string {
-	return cr.numericField(cr.PayorBankRoutingNumber, 9)
+	return cr.alphaField(cr.PayorBankRoutingNumber, 9)
 }
 
 // CreditAccountNumberOnUs gets a string of the CreditAccountNumberOnUs

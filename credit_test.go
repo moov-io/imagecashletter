@@ -22,7 +22,7 @@ func mockCredit() *Credit {
 
 	cr.AuxiliaryOnUs = "010910999940910"
 	cr.ExternalProcessingCode = ""
-	cr.PayorBankRoutingNumber = 999920060
+	cr.PayorBankRoutingNumber = "999920060"
 	cr.CreditAccountNumberOnUs = "50920060509383521210"
 	cr.ItemAmount = 102088
 	cr.ECEInstitutionItemSequenceNumber = ""
@@ -49,7 +49,7 @@ func TestMockCredit(t *testing.T) {
 	if ci.ExternalProcessingCode != "" {
 		t.Error("ExternalProcessingCode does not validate")
 	}
-	if ci.PayorBankRoutingNumber != 999920060 {
+	if ci.PayorBankRoutingNumber != "999920060" {
 		t.Error("PayorBankRoutingNumber does not validate")
 	}
 	if ci.CreditAccountNumberOnUs != "50920060509383521210" {
@@ -108,7 +108,7 @@ func TestParseCredit(t *testing.T) {
 	if record.ExternalProcessingCode != "" {
 		t.Errorf("ExternalProcessingCode Expected '' got: %v", record.ExternalProcessingCode)
 	}
-	if record.PayorBankRoutingNumber != 999920060 {
+	if record.PayorBankRoutingNumber != "999920060" {
 		t.Errorf("PostingBankRoutingNumber Expected '999920060' got: %v", record.PayorBankRoutingNumber)
 	}
 	if record.CreditAccountNumberOnUs != "50920060509383521210" {
@@ -253,7 +253,7 @@ func TestCRFIRecordType(t *testing.T) {
 // TestCRPayorBankRoutingNumber validation
 func TestCRPayorBankRoutingNumber(t *testing.T) {
 	ci := mockCredit()
-	ci.PayorBankRoutingNumber = 0
+	ci.PayorBankRoutingNumber = "000000000"
 	if err := ci.Validate(); err != nil {
 		if e, ok := err.(*FieldError); ok {
 			if e.FieldName != "PayorBankRoutingNumber" {
