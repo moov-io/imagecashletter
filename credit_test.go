@@ -13,8 +13,6 @@ import (
 func mockCredit() *Credit {
 	cr := NewCredit()
 
-	cr.Parse("61010910999940910 9999200605092006050938352121000001020881              G 3     ")
-
 	cr.AuxiliaryOnUs = "010910999940910"
 	cr.ExternalProcessingCode = ""
 	cr.PayorBankRoutingNumber = "999920060"
@@ -22,10 +20,10 @@ func mockCredit() *Credit {
 	cr.ItemAmount = 102088
 	cr.ECEInstitutionItemSequenceNumber = "1              "
 	cr.DocumentationTypeIndicator = "G"
-	cr.AccountTypeCode = ""
+	cr.AccountTypeCode = "1"
 	cr.SourceWorkCode = "3"
-	cr.WorkType = ""
-	cr.DebitCreditIndicator = ""
+	cr.WorkType = " "
+	cr.DebitCreditIndicator = " "
 
 	return cr
 }
@@ -60,30 +58,30 @@ func TestMockCredit(t *testing.T) {
 	if ci.DocumentationTypeIndicator != "G" {
 		t.Error("DocumentationTypeIndicator does not validate")
 	}
-	if ci.AccountTypeCode != "" {
+	if ci.AccountTypeCode != "1" {
 		t.Error("AccountTypeCode does not validate")
 	}
 	if ci.SourceWorkCode != "3" {
 		t.Error("SourceWorkCode does not validate")
 	}
-	if ci.WorkType != "" {
+	if ci.WorkType != " " {
 		t.Error("WorkType does not validate")
 	}
-	if ci.DebitCreditIndicator != "" {
+	if ci.DebitCreditIndicator != " " {
 		t.Error("DebitCreditIndicator does not validate")
 	}
 }
 
 func TestCreditCrash(t *testing.T) {
 	cr := &Credit{}
-	cr.Parse(`61010910999940910 9999200605092006050938352121000001020881              G 3     `)
+	cr.Parse(`61010910999940910 9999200605092006050938352121000001020881              G13     `)
 	if cr.DocumentationTypeIndicator != "G" {
 		t.Errorf("expected ci.DocumentationTypeIndicator=G")
 	}
 }
 
 func TestParseCredit(t *testing.T) {
-	var line = "61010910999940910 9999200605092006050938352121000001020881              G 3     "
+	var line = "61010910999940910 9999200605092006050938352121000001020881              G13     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -119,23 +117,23 @@ func TestParseCredit(t *testing.T) {
 	if record.DocumentationTypeIndicator != "G" {
 		t.Errorf("DocumentationTypeIndicator Expected 'G' got: %v", record.DocumentationTypeIndicator)
 	}
-	if record.AccountTypeCode != "" {
-		t.Errorf("AccountTypeCode Expected '' got: %v", record.AccountTypeCode)
+	if record.AccountTypeCode != "1" {
+		t.Errorf("AccountTypeCode Expected '1' got: %v", record.AccountTypeCode)
 	}
 	if record.SourceWorkCode != "3" {
 		t.Errorf("SourceWorkCode Expected '3' got: %v", record.SourceWorkCode)
 	}
-	if record.WorkType != "" {
-		t.Errorf("WorkType Expected '' got: %v", record.WorkType)
+	if record.WorkType != " " {
+		t.Errorf("WorkType Expected ' ' got: %v", record.WorkType)
 	}
-	if record.DebitCreditIndicator != "" {
-		t.Errorf("DebitCreditIndicator Expected '' got: %v", record.DebitCreditIndicator)
+	if record.DebitCreditIndicator != " " {
+		t.Errorf("DebitCreditIndicator Expected ' ' got: %v", record.DebitCreditIndicator)
 	}
 }
 
 // testCIString validates parsing a CreditItem
 func testCRString(t testing.TB) {
-	var line = "61010910999940910 9999200605092006050938352121000001020881              G 3     "
+	var line = "61010910999940910 9999200605092006050938352121000001020881              G13     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
