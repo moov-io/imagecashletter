@@ -32,14 +32,14 @@ type Credit struct {
 	// ItemAmount identifies amount of the credit in U.S. dollars.
 	ItemAmount int `json:"itemAmount"`
 	// InstitutionItemSequenceNumber identifies sequence number assigned by the ECE company/institution.
-	ECEInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
+	ECEInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber,omitempty"`
 	// DocumentationTypeIndicator identifies a code that indicates the type of documentation
 	// that supports the check record.
 	DocumentationTypeIndicator string `json:"documentationTypeIndicator,omitempty"`
-	// TypeAccountCode identifies a code to designate account type.
-	TypeAccountCode string `json:"typeOfAccountCode,omitempty"`
+	// AccountTypeCode identifies a code to designate account type.
+	AccountTypeCode string `json:"accountTypeCode,omitempty"`
 	// SourceWorkCode identifies a code that identifies the incoming work.
-	SourceWorkCode string `json:"sourceOfWorkCode,omitempty"`
+	SourceWorkCode string `json:"sourceWorkCode,omitempty"`
 	// WorkType identifies a code that identifies the type of work.
 	WorkType string `json:"workType,omitempty"`
 	// InstitutionItemSequenceNumber identifies a code that identifies whether this record represents
@@ -70,7 +70,7 @@ func (cr *Credit) setRecordType() {
 
 // Parse takes the input record string and parses the BundleControl values
 func (cr *Credit) Parse(record string) {
-	if utf8.RuneCountInString(record) < 56 {
+	if utf8.RuneCountInString(record) < 77 {
 		return
 	}
 
@@ -91,7 +91,7 @@ func (cr *Credit) Parse(record string) {
 	// 73
 	cr.DocumentationTypeIndicator = cr.parseStringField(record[72:73])
 	// 74
-	cr.TypeAccountCode = cr.parseStringField(record[73:74])
+	cr.AccountTypeCode = cr.parseStringField(record[73:74])
 	// 75
 	cr.SourceWorkCode = cr.parseStringField(record[74:75])
 	// 76
@@ -129,7 +129,7 @@ func (cr *Credit) String() string {
 	buf.WriteString(cr.ItemAmountField())
 	buf.WriteString(cr.ECEInstitutionItemSequenceNumberField())
 	buf.WriteString(cr.DocumentationTypeIndicatorField())
-	buf.WriteString(cr.TypeAccountCodeField())
+	buf.WriteString(cr.AccountTypeCodeField())
 	buf.WriteString(cr.SourceWorkCodeField())
 	buf.WriteString(cr.WorkTypeField())
 	buf.WriteString(cr.DebitCreditIndicatorField())
@@ -147,8 +147,15 @@ func (cr *Credit) Validate() error {
 		msg := fmt.Sprintf(msgRecordType, 61)
 		return &FieldError{FieldName: "recordType", Value: cr.recordType, Msg: msg}
 	}
-	if cr.SourceWorkCode != "3" {
-		return &FieldError{FieldName: "SourceWorkCode", Value: cr.SourceWorkCode, Msg: msgInvalid}
+	if cr.SourceWorkCode != "" {
+		if cr.SourceWorkCode != "3" {
+			return &FieldError{FieldName: "SourceWorkCode", Value: cr.SourceWorkCode, Msg: msgInvalid}
+		}
+	}
+	if cr.AccountTypeCode != "" {
+		if err := cr.isAccountTypeCode(cr.AccountTypeCode); err != nil {
+			return &FieldError{FieldName: "AccountTypeCode", Value: cr.AccountTypeCode, Msg: err.Error()}
+		}
 	}
 	if cr.DocumentationTypeIndicator != "G" {
 		return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cr.DocumentationTypeIndicator, Msg: msgInvalid}
@@ -158,10 +165,7 @@ func (cr *Credit) Validate() error {
 			Value: cr.PayorBankRoutingNumber, Msg: err.Error()}
 	}
 	// Should not contain forward or back slashes
-	if cr.AuxiliaryOnUs != "" &&
-		(strings.Count(cr.AuxiliaryOnUs, `\`) > 0 ||
-			strings.Count(cr.AuxiliaryOnUs, `/`) > 0) {
-
+	if strings.Contains(cr.AuxiliaryOnUs, `\`) || strings.Contains(cr.AuxiliaryOnUs, `/`) {
 		return &FieldError{FieldName: "AuxiliaryOnUs", Value: cr.AuxiliaryOnUsField(), Msg: msgInvalid}
 	}
 
@@ -194,7 +198,7 @@ func (cr *Credit) fieldInclusion() error {
 	return nil
 }
 
-//AuxiliaryOnUsField gets a string of the AuxiliaryOnUs
+// AuxiliaryOnUsField gets a string of the AuxiliaryOnUs
 func (cr *Credit) AuxiliaryOnUsField() string {
 	return cr.alphaField(cr.AuxiliaryOnUs, 15)
 }
@@ -209,7 +213,7 @@ func (cr *Credit) PayorBankRoutingNumberField() string {
 	return cr.alphaField(cr.PayorBankRoutingNumber, 9)
 }
 
-// CreditAccountNumberOnUs gets a string of the CreditAccountNumberOnUs
+// CreditAccountNumberOnUsField gets a string of the CreditAccountNumberOnUs
 func (cr *Credit) CreditAccountNumberOnUsField() string {
 	return cr.alphaField(cr.CreditAccountNumberOnUs, 20)
 }
@@ -229,12 +233,12 @@ func (cr *Credit) DocumentationTypeIndicatorField() string {
 	return cr.alphaField(cr.DocumentationTypeIndicator, 1)
 }
 
-// TypeOfAccountCodeField gets a string of the TypeOfAccountCode
-func (cr *Credit) TypeAccountCodeField() string {
-	return cr.alphaField(cr.TypeAccountCode, 1)
+// AccountTypeCodeField gets a string of the AccountTypeCode
+func (cr *Credit) AccountTypeCodeField() string {
+	return cr.alphaField(cr.AccountTypeCode, 1)
 }
 
-// SourceOfWorkCodeField gets a string of the SourceOfWorkCode
+// SourceWorkCodeField gets a string of the SourceOfWorkCode
 func (cr *Credit) SourceWorkCodeField() string {
 	return cr.alphaField(cr.SourceWorkCode, 1)
 }

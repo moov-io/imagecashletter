@@ -5,8 +5,6 @@
 package imagecashletter
 
 import (
-	"encoding/json"
-	"fmt"
 	"strings"
 	"testing"
 )
@@ -15,22 +13,20 @@ import (
 func mockCredit() *Credit {
 	cr := NewCredit()
 
-	cr.Parse("61010910999940910 999920060509200605093835212100000102088               G 3     ")
-
-	raw, _ := json.Marshal(&cr)
-	fmt.Println(string(raw))
+	cr.Parse("61010910999940910 9999200605092006050938352121000001020881              G 3     ")
 
 	cr.AuxiliaryOnUs = "010910999940910"
 	cr.ExternalProcessingCode = ""
 	cr.PayorBankRoutingNumber = "999920060"
 	cr.CreditAccountNumberOnUs = "50920060509383521210"
 	cr.ItemAmount = 102088
-	cr.ECEInstitutionItemSequenceNumber = ""
+	cr.ECEInstitutionItemSequenceNumber = "1              "
 	cr.DocumentationTypeIndicator = "G"
-	cr.TypeAccountCode = ""
+	cr.AccountTypeCode = ""
 	cr.SourceWorkCode = "3"
 	cr.WorkType = ""
 	cr.DebitCreditIndicator = ""
+
 	return cr
 }
 
@@ -58,14 +54,14 @@ func TestMockCredit(t *testing.T) {
 	if ci.ItemAmount != 102088 {
 		t.Error("ItemAmount does not validate")
 	}
-	if ci.ECEInstitutionItemSequenceNumber != "" {
+	if ci.ECEInstitutionItemSequenceNumber != "1              " {
 		t.Error("ECEInstitutionItemSequenceNumber does not validate")
 	}
 	if ci.DocumentationTypeIndicator != "G" {
 		t.Error("DocumentationTypeIndicator does not validate")
 	}
-	if ci.TypeAccountCode != "" {
-		t.Error("TypeAccountCode does not validate")
+	if ci.AccountTypeCode != "" {
+		t.Error("AccountTypeCode does not validate")
 	}
 	if ci.SourceWorkCode != "3" {
 		t.Error("SourceWorkCode does not validate")
@@ -80,14 +76,14 @@ func TestMockCredit(t *testing.T) {
 
 func TestCreditCrash(t *testing.T) {
 	cr := &Credit{}
-	cr.Parse(`61010910999940910 999920060509200605093835212100000102088               G 3     `)
+	cr.Parse(`61010910999940910 9999200605092006050938352121000001020881              G 3     `)
 	if cr.DocumentationTypeIndicator != "G" {
 		t.Errorf("expected ci.DocumentationTypeIndicator=G")
 	}
 }
 
 func TestParseCredit(t *testing.T) {
-	var line = "61010910999940910 999920060509200605093835212100000102088               G 3     "
+	var line = "61010910999940910 9999200605092006050938352121000001020881              G 3     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -117,14 +113,14 @@ func TestParseCredit(t *testing.T) {
 	if record.ItemAmount != 102088 {
 		t.Errorf("ItemAmount Expected '102088' got: %v", record.ItemAmount)
 	}
-	if record.ECEInstitutionItemSequenceNumber != "" {
-		t.Errorf("ECEInstitutionItemSequenceNumber Expected '' got: %v", record.ECEInstitutionItemSequenceNumber)
+	if record.ECEInstitutionItemSequenceNumber != "1              " {
+		t.Errorf("ECEInstitutionItemSequenceNumber Expected '1              ' got: %v", record.ECEInstitutionItemSequenceNumber)
 	}
 	if record.DocumentationTypeIndicator != "G" {
 		t.Errorf("DocumentationTypeIndicator Expected 'G' got: %v", record.DocumentationTypeIndicator)
 	}
-	if record.TypeAccountCode != "" {
-		t.Errorf("TypeAccountCode Expected '' got: %v", record.TypeAccountCode)
+	if record.AccountTypeCode != "" {
+		t.Errorf("AccountTypeCode Expected '' got: %v", record.AccountTypeCode)
 	}
 	if record.SourceWorkCode != "3" {
 		t.Errorf("SourceWorkCode Expected '3' got: %v", record.SourceWorkCode)
@@ -139,7 +135,7 @@ func TestParseCredit(t *testing.T) {
 
 // testCIString validates parsing a CreditItem
 func testCRString(t testing.TB) {
-	var line = "61010910999940910 999920060509200605093835212100000102088               G 3     "
+	var line = "61010910999940910 9999200605092006050938352121000001020881              G 3     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
