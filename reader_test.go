@@ -1064,7 +1064,7 @@ func TestICLCreditItemFile(t *testing.T) {
 		t.Errorf("Issue reading file: %+v \n", err)
 	}
 	// ensure we have a validated file structure
-	if ICLFile.Validate(); err != nil {
+	if err = ICLFile.Validate(); err != nil {
 		t.Errorf("Could not validate entire read file: %v", err)
 	}
 }

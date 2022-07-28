@@ -157,8 +157,10 @@ func (cr *Credit) Validate() error {
 			return &FieldError{FieldName: "AccountTypeCode", Value: cr.AccountTypeCode, Msg: err.Error()}
 		}
 	}
-	if cr.DocumentationTypeIndicator != "G" {
-		return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cr.DocumentationTypeIndicator, Msg: msgInvalid}
+	if cr.DocumentationTypeIndicator != "" {
+		if cr.DocumentationTypeIndicator != "G" {
+			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cr.DocumentationTypeIndicator, Msg: msgInvalid}
+		}
 	}
 	if err := cr.isNumeric(cr.PayorBankRoutingNumber); err != nil {
 		return &FieldError{FieldName: "PayorBankRoutingNumber",
