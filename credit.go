@@ -32,7 +32,7 @@ type Credit struct {
 	// ItemAmount identifies amount of the credit in U.S. dollars.
 	ItemAmount int `json:"itemAmount"`
 	// InstitutionItemSequenceNumber identifies sequence number assigned by the ECE company/institution.
-	ECEInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber,omitempty"`
+	ECEInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
 	// DocumentationTypeIndicator identifies a code that indicates the type of documentation
 	// that supports the check record.
 	DocumentationTypeIndicator string `json:"documentationTypeIndicator,omitempty"`
@@ -87,7 +87,7 @@ func (cr *Credit) Parse(record string) {
 	// 48–57
 	cr.ItemAmount = cr.parseNumField(record[47:57])
 	// 58–72
-	cr.ECEInstitutionItemSequenceNumber = cr.parseStringField(record[57:72])
+	cr.ECEInstitutionItemSequenceNumber = record[57:72]
 	// 73
 	cr.DocumentationTypeIndicator = cr.parseStringField(record[72:73])
 	// 74
@@ -162,6 +162,10 @@ func (cr *Credit) Validate() error {
 			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cr.DocumentationTypeIndicator, Msg: msgInvalid}
 		}
 	}
+	// Required field, but spaces only
+	if cr.ECEInstitutionItemSequenceNumber == "" || cr.ECEInstitutionItemSequenceNumber != "               " {
+		return &FieldError{FieldName: "ECEInstitutionItemSequenceNumber", Value: cr.ECEInstitutionItemSequenceNumber, Msg: msgInvalid}
+	}
 	if err := cr.isNumeric(cr.PayorBankRoutingNumber); err != nil {
 		return &FieldError{FieldName: "PayorBankRoutingNumber",
 			Value: cr.PayorBankRoutingNumber, Msg: err.Error()}
@@ -195,6 +199,11 @@ func (cr *Credit) fieldInclusion() error {
 	if cr.ItemAmount == 0 {
 		return &FieldError{FieldName: "ItemAmount",
 			Value: cr.ItemAmountField(),
+			Msg:   msgFieldInclusion + ", did you use Credit()?"}
+	}
+	if cr.ECEInstitutionItemSequenceNumber == "" {
+		return &FieldError{FieldName: "ECEInstitutionItemSequenceNumber",
+			Value: cr.ECEInstitutionItemSequenceNumber,
 			Msg:   msgFieldInclusion + ", did you use Credit()?"}
 	}
 	return nil

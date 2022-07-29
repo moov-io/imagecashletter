@@ -18,7 +18,7 @@ func mockCredit() *Credit {
 	cr.PayorBankRoutingNumber = "999920060"
 	cr.CreditAccountNumberOnUs = "50920060509383521210"
 	cr.ItemAmount = 102088
-	cr.ECEInstitutionItemSequenceNumber = "1              "
+	cr.ECEInstitutionItemSequenceNumber = "               "
 	cr.DocumentationTypeIndicator = "G"
 	cr.AccountTypeCode = "1"
 	cr.SourceWorkCode = "3"
@@ -52,7 +52,7 @@ func TestMockCredit(t *testing.T) {
 	if ci.ItemAmount != 102088 {
 		t.Error("ItemAmount does not validate")
 	}
-	if ci.ECEInstitutionItemSequenceNumber != "1              " {
+	if ci.ECEInstitutionItemSequenceNumber != "               " {
 		t.Error("ECEInstitutionItemSequenceNumber does not validate")
 	}
 	if ci.DocumentationTypeIndicator != "G" {
@@ -74,14 +74,14 @@ func TestMockCredit(t *testing.T) {
 
 func TestCreditCrash(t *testing.T) {
 	cr := &Credit{}
-	cr.Parse(`61010910999940910 9999200605092006050938352121000001020881              G13     `)
+	cr.Parse(`61010910999940910 999920060509200605093835212100000102088               G13     `)
 	if cr.DocumentationTypeIndicator != "G" {
 		t.Errorf("expected ci.DocumentationTypeIndicator=G")
 	}
 }
 
 func TestParseCredit(t *testing.T) {
-	var line = "61010910999940910 9999200605092006050938352121000001020881              G13     "
+	var line = "61010910999940910 999920060509200605093835212100000102088               G13     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
@@ -111,8 +111,8 @@ func TestParseCredit(t *testing.T) {
 	if record.ItemAmount != 102088 {
 		t.Errorf("ItemAmount Expected '102088' got: %v", record.ItemAmount)
 	}
-	if record.ECEInstitutionItemSequenceNumber != "1              " {
-		t.Errorf("ECEInstitutionItemSequenceNumber Expected '1              ' got: %v", record.ECEInstitutionItemSequenceNumber)
+	if record.ECEInstitutionItemSequenceNumber != "               " {
+		t.Errorf("ECEInstitutionItemSequenceNumber Expected '               ' got: %v", record.ECEInstitutionItemSequenceNumber)
 	}
 	if record.DocumentationTypeIndicator != "G" {
 		t.Errorf("DocumentationTypeIndicator Expected 'G' got: %v", record.DocumentationTypeIndicator)
@@ -133,7 +133,7 @@ func TestParseCredit(t *testing.T) {
 
 // testCIString validates parsing a CreditItem
 func testCRString(t testing.TB) {
-	var line = "61010910999940910 9999200605092006050938352121000001020881              G13     "
+	var line = "61010910999940910 999920060509200605093835212100000102088               G13     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
