@@ -32,7 +32,7 @@ type Credit struct {
 	// ItemAmount identifies amount of the credit in U.S. dollars.
 	ItemAmount int `json:"itemAmount"`
 	// InstitutionItemSequenceNumber identifies sequence number assigned by the ECE company/institution.
-	ECEInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber"`
+	ECEInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber,omitempty"`
 	// DocumentationTypeIndicator identifies a code that indicates the type of documentation
 	// that supports the check record.
 	DocumentationTypeIndicator string `json:"documentationTypeIndicator,omitempty"`
@@ -162,8 +162,7 @@ func (cr *Credit) Validate() error {
 			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cr.DocumentationTypeIndicator, Msg: msgInvalid}
 		}
 	}
-	// Required field, but spaces only
-	if cr.ECEInstitutionItemSequenceNumber == "" || cr.ECEInstitutionItemSequenceNumber != "               " {
+	if cr.ECEInstitutionItemSequenceNumber != "               " {
 		return &FieldError{FieldName: "ECEInstitutionItemSequenceNumber", Value: cr.ECEInstitutionItemSequenceNumber, Msg: msgInvalid}
 	}
 	if err := cr.isNumeric(cr.PayorBankRoutingNumber); err != nil {
@@ -199,11 +198,6 @@ func (cr *Credit) fieldInclusion() error {
 	if cr.ItemAmount == 0 {
 		return &FieldError{FieldName: "ItemAmount",
 			Value: cr.ItemAmountField(),
-			Msg:   msgFieldInclusion + ", did you use Credit()?"}
-	}
-	if cr.ECEInstitutionItemSequenceNumber == "" {
-		return &FieldError{FieldName: "ECEInstitutionItemSequenceNumber",
-			Value: cr.ECEInstitutionItemSequenceNumber,
 			Msg:   msgFieldInclusion + ", did you use Credit()?"}
 	}
 	return nil
