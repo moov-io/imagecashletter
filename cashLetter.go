@@ -34,6 +34,8 @@ type CashLetter struct {
 	CashLetterHeader *CashLetterHeader `json:"cashLetterHeader,omitempty"`
 	// Bundles is an array of Bundle
 	Bundles []*Bundle `json:"bundles,omitempty"`
+	// Credits is an array of Credit
+	Credits []*Credit `json:"credit,omitempty"`
 	// CreditItems is an array of CreditItem
 	CreditItems []*CreditItem `json:"creditItem,omitempty"`
 	// RoutingNumberSummary is an array of RoutingNumberSummary
@@ -304,10 +306,24 @@ func (cl *CashLetter) GetRoutingNumberSummary() []*RoutingNumberSummary {
 	return cl.RoutingNumberSummary
 }
 
+// AddCredit appends a CreditItem to the CashLetter
+func (cl *CashLetter) AddCredit(cr *Credit) []*Credit {
+	cl.Credits = append(cl.Credits, cr)
+	return cl.Credits
+}
+
 // AddCreditItem appends a CreditItem to the CashLetter
 func (cl *CashLetter) AddCreditItem(ci *CreditItem) []*CreditItem {
 	cl.CreditItems = append(cl.CreditItems, ci)
 	return cl.CreditItems
+}
+
+// GetCredits returns a slice of Credit for the CashLetter
+func (cl *CashLetter) GetCredits() []*Credit {
+	if cl == nil {
+		return nil
+	}
+	return cl.Credits
 }
 
 // GetCreditItems returns a slice of CreditItem for the CashLetter

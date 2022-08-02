@@ -637,6 +637,22 @@ func (r *Reader) ImageViewAnalysis() error {
 	return nil
 }
 
+// parseCredit takes the input record string and parses the Credit values
+func (r *Reader) parseCredit() error {
+	// Current implementation has the credit letter outside the bundle but within the cash letter
+	r.recordName = "Credit"
+	if r.currentCashLetter.CashLetterHeader == nil {
+		return r.error(&FileError{Msg: msgFileCredit})
+	}
+	cr := new(Credit)
+	cr.Parse(r.decodeLine(r.line))
+	if err := cr.Validate(); err != nil {
+		return r.error(err)
+	}
+	r.currentCashLetter.AddCredit(cr)
+	return nil
+}
+
 // parseCreditItem takes the input record string and parses the CreditItem values
 func (r *Reader) parseCreditItem() error {
 	// Current implementation has the credit letter outside the bundle but within the cash letter
