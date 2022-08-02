@@ -162,7 +162,7 @@ func (cr *Credit) Validate() error {
 			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cr.DocumentationTypeIndicator, Msg: msgInvalid}
 		}
 	}
-	if cr.ECEInstitutionItemSequenceNumber != "               " {
+	if cr.ECEInstitutionItemSequenceNumberField() != "               " {
 		return &FieldError{FieldName: "ECEInstitutionItemSequenceNumber", Value: cr.ECEInstitutionItemSequenceNumber, Msg: msgInvalid}
 	}
 	if err := cr.isNumeric(cr.PayorBankRoutingNumber); err != nil {
