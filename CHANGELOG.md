@@ -1,3 +1,15 @@
+## v0.9.0 (Released 2022-08-02)
+
+ADDITIONS
+
+- cashLetter: add credit item (record type 61)
+
+BUILD
+
+ - deps: update module github.com/moov-io/base to v0.33.0
+ - deps: update module github.com/prometheus/client_golang to v1.12.2
+ - deps: update module github.com/stretchr/testify to v1.8.0
+
 ## v0.8.0 (Released 2022-03-29)
 
 IMPROVEMENTS
