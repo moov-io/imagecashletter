@@ -209,7 +209,7 @@ func (cl *CashLetter) build() error {
 
 			for x := range rd.ReturnDetailAddendumD {
 				rd.ReturnDetailAddendumD[x].SetEndorsingBankItemSequenceNumber(rdSequenceNumber)
-				rd.ReturnDetailAddendumA[x].RecordNumber = rdAddendumDRecordNumber
+				rd.ReturnDetailAddendumD[x].RecordNumber = rdAddendumDRecordNumber
 				rdAddendumDRecordNumber++
 				if rdAddendumDRecordNumber > 99 {
 					rdAddendumDRecordNumber = 1
