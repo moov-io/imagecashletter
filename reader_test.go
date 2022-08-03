@@ -156,7 +156,7 @@ func TestRecordTypeUnknown(t *testing.T) {
 	}
 }
 
-//TestFileLineShort validates file line is short
+// TestFileLineShort validates file line is short
 func TestFileLineShort(t *testing.T) {
 	line := "1 line is only 70 characters ........................................!"
 	r := NewReader(strings.NewReader(line))
@@ -972,7 +972,7 @@ func TestIVDetailBundleError(t *testing.T) {
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
 	b := NewBundle(bh)
-	//b.AddCheckDetail(cd)
+	// b.AddCheckDetail(cd)
 	r.currentCashLetter.AddBundle(b)
 	r.addCurrentBundle(b)
 	_, err := r.Read()
@@ -1066,6 +1066,30 @@ func TestICLCreditItemFile(t *testing.T) {
 	// ensure we have a validated file structure
 	if err = ICLFile.Validate(); err != nil {
 		t.Errorf("Could not validate entire read file: %v", err)
+	}
+}
+
+// TestICLCreditRecord61File validates reading an ICL file with a Credit record (type 61)
+func TestICLCreditRecord61File(t *testing.T) {
+	fd, err := os.Open(filepath.Join("test", "testdata", "creditRecord61.icl"))
+	if err != nil {
+		t.Fatalf("Can not open local file: %s: \n", err)
+	}
+	defer fd.Close()
+
+	ICLFile, err := NewReader(fd, ReadVariableLineLengthOption()).Read()
+	if err != nil {
+		t.Errorf("Issue reading file: %+v \n", err)
+	}
+	// ensure we have a validated file structure
+	if err = ICLFile.Validate(); err != nil {
+		t.Errorf("Could not validate entire read file: %v", err)
+	}
+	if len(ICLFile.CashLetters) != 2 {
+		t.Errorf("File was missing CashLetters")
+	}
+	if len(ICLFile.CashLetters[0].Credits) != 1 {
+		t.Errorf("File was missing Credit record 61")
 	}
 }
 

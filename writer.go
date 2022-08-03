@@ -19,7 +19,7 @@ import (
 // as needed to properly encode files for their usecase.
 type Writer struct {
 	w                  *bufio.Writer
-	lineNum            int //current line being written
+	lineNum            int // current line being written
 	VariableLineLength bool
 	EbcdicEncoding     bool
 }
@@ -143,6 +143,11 @@ func (w *Writer) writeCashLetter(file *File) error {
 		}
 		for _, ci := range cl.GetCreditItems() {
 			if err := w.writeLine(ci); err != nil {
+				return err
+			}
+		}
+		for _, credit := range cl.GetCredits() {
+			if err := w.writeLine(credit); err != nil {
 				return err
 			}
 		}

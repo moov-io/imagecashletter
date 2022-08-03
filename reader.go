@@ -111,7 +111,7 @@ func DecodeEBCDIC(lineIn string) (lineOut string) {
 // ReaderOption can be used to change default behavior of Reader
 type ReaderOption func(*Reader)
 
-//ReadVariableLineLengthOption allows Reader to split imagecashletter files based on encoded line lengths
+// ReadVariableLineLengthOption allows Reader to split imagecashletter files based on encoded line lengths
 func ReadVariableLineLengthOption() ReaderOption {
 	scanVariableLengthLines := func(data []byte, atEOF bool) (advance int, token []byte, err error) {
 		if atEOF && len(data) == 0 {
@@ -144,7 +144,7 @@ func ReadVariableLineLengthOption() ReaderOption {
 	}
 }
 
-//ReadEbcdicEncodingOption allows Reader to decode scanned lines from EBCDIC to UTF-8
+// ReadEbcdicEncodingOption allows Reader to decode scanned lines from EBCDIC to UTF-8
 func ReadEbcdicEncodingOption() ReaderOption {
 	return func(r *Reader) {
 		r.decodeLine = DecodeEBCDIC
@@ -260,6 +260,10 @@ func (r *Reader) parseLine() error { //nolint:gocyclo
 		}
 	case returnAddendumDPos, returnAddendumDEbcPos:
 		if err := r.parseReturnDetailAddendumD(); err != nil {
+			return err
+		}
+	case creditPos, creditEbcPos:
+		if err := r.parseCredit(); err != nil {
 			return err
 		}
 	case creditItemPos, creditItemEbcPos:
@@ -403,7 +407,7 @@ func (r *Reader) parseCheckDetailAddendumA() error {
 		return r.error(err)
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
-	//r.currentCashLetter.currentBundle.Checks[entryIndex].CheckDetailAddendumA = cdAddendumA
+	// r.currentCashLetter.currentBundle.Checks[entryIndex].CheckDetailAddendumA = cdAddendumA
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumA(cdAddendumA)
 	return nil
 }
@@ -472,7 +476,7 @@ func (r *Reader) parseReturnDetailAddendumA() error {
 		return r.error(err)
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
-	//r.currentCashLetter.currentBundle.Returns[entryIndex].ReturnDetailAddendumA = rdAddendumA
+	// r.currentCashLetter.currentBundle.Returns[entryIndex].ReturnDetailAddendumA = rdAddendumA
 	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumA(rdAddendumA)
 	return nil
 }
