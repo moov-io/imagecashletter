@@ -27,7 +27,7 @@ func TestCorpusSymlinks(t *testing.T) {
 	for i := range fds {
 		info, err := fds[i].Info()
 		if err != nil {
-			t.Fatalf("couldn't get directry entry's info: %v", err)
+			t.Fatalf("couldn't get directory entry's info: %v", err)
 		}
 
 		if info.Mode()&os.ModeSymlink != 0 {
