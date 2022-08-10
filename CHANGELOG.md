@@ -1,3 +1,9 @@
+## v0.9.1 (Unreleased)
+
+IMPROVEMENTS
+
+- all: replace deprecated `ioutil` function calls with equivalents from `io` and `os` 
+
 ## v0.9.0 (Released 2022-08-02)
 
 ADDITIONS
