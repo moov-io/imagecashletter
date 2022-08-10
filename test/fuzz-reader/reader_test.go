@@ -5,7 +5,6 @@
 package fuzzreader
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -17,7 +16,7 @@ func TestCorpusSymlinks(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip()
 	}
-	fds, err := ioutil.ReadDir("corpus")
+	fds, err := os.ReadDir("corpus")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -26,7 +25,12 @@ func TestCorpusSymlinks(t *testing.T) {
 	}
 
 	for i := range fds {
-		if fds[i].Mode()&os.ModeSymlink != 0 {
+		info, err := fds[i].Info()
+		if err != nil {
+			t.Fatalf("couldn't get directry entry's info: %v", err)
+		}
+
+		if info.Mode()&os.ModeSymlink != 0 {
 			if path, err := os.Readlink(filepath.Join("corpus", fds[i].Name())); err != nil {
 				t.Errorf("broken symlink: %v", err)
 			} else {

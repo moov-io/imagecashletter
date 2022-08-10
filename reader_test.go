@@ -9,7 +9,6 @@ import (
 	"bytes"
 	"crypto/rand"
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -100,7 +99,7 @@ func TestICL_ReadVariableLineLengthOption(t *testing.T) {
 	if err != nil {
 		t.Errorf("Issue marshaling file: %+v \n", err)
 	}
-	expected, err := ioutil.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
+	expected, err := os.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
 	if err != nil {
 		t.Errorf("Issue loading validation criteria: %+v \n", err)
 	}
@@ -131,7 +130,7 @@ func TestICL_EBCDICEncodingOption(t *testing.T) {
 	if err != nil {
 		t.Errorf("Issue marshaling file: %+v \n", err)
 	}
-	expected, err := ioutil.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
+	expected, err := os.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
 	if err != nil {
 		t.Errorf("Issue loading validation criteria: %+v \n", err)
 	}
@@ -156,7 +155,7 @@ func TestRecordTypeUnknown(t *testing.T) {
 	}
 }
 
-//TestFileLineShort validates file line is short
+// TestFileLineShort validates file line is short
 func TestFileLineShort(t *testing.T) {
 	line := "1 line is only 70 characters ........................................!"
 	r := NewReader(strings.NewReader(line))
@@ -972,7 +971,7 @@ func TestIVDetailBundleError(t *testing.T) {
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
 	b := NewBundle(bh)
-	//b.AddCheckDetail(cd)
+	// b.AddCheckDetail(cd)
 	r.currentCashLetter.AddBundle(b)
 	r.addCurrentBundle(b)
 	_, err := r.Read()
@@ -1070,7 +1069,7 @@ func TestICLCreditItemFile(t *testing.T) {
 }
 
 func TestICLBase64ImageData(t *testing.T) {
-	bs, err := ioutil.ReadFile(filepath.Join("test", "testdata", "base64-encoded-images.json"))
+	bs, err := os.ReadFile(filepath.Join("test", "testdata", "base64-encoded-images.json"))
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -21,8 +20,7 @@ func BenchmarkTestFileWrite(b *testing.B) {
 
 // testFileWrite creates an ICL File
 func testFileWrite(t testing.TB) {
-	// tmp, err := ioutil.TempFile("", "x9-writeX9-test")
-	tmp, err := ioutil.TempFile("", "icl-writeICL-test")
+	tmp, err := os.CreateTemp("", "icl-writeICL-test")
 	if err != nil {
 		t.Fatal(err.Error())
 	}

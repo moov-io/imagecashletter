@@ -6,7 +6,6 @@ package imagecashletter
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -250,7 +249,7 @@ func TestICLWriteRoutingNumber(t *testing.T) {
 }
 
 func TestICLWrite_VariableLengthOption(t *testing.T) {
-	fileBytes, err := ioutil.ReadFile(filepath.Join("test", "testdata", "valid-ascii.x937"))
+	fileBytes, err := os.ReadFile(filepath.Join("test", "testdata", "valid-ascii.x937"))
 	if err != nil {
 		t.Fatalf("Can not open local file: %s: \n", err)
 	}
@@ -275,7 +274,7 @@ func TestICLWrite_VariableLengthOption(t *testing.T) {
 }
 
 func TestICLWrite_EbcdicEncodingOption(t *testing.T) {
-	fileBytes, err := ioutil.ReadFile(filepath.Join("test", "testdata", "valid-ebcdic.x937"))
+	fileBytes, err := os.ReadFile(filepath.Join("test", "testdata", "valid-ebcdic.x937"))
 	if err != nil {
 		t.Fatalf("Can not open local file: %s: \n", err)
 	}

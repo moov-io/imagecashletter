@@ -273,7 +273,7 @@ func (b *Bundle) ValidateReturnItems(rd *ReturnDetail) error {
 	return nil
 }
 
-//checkDetailAddendumCount validates CheckDetail AddendumCount
+// checkDetailAddendumCount validates CheckDetail AddendumCount
 func (b *Bundle) checkDetailAddendumCount() error {
 	// Check Items
 	for _, cd := range b.Checks {

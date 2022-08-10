@@ -5,7 +5,7 @@
 package imagecashletter
 
 import (
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"testing"
 )
@@ -32,7 +32,7 @@ func TestFileCreate(t *testing.T) {
 }
 
 func TestFile__FileFromJSON(t *testing.T) {
-	bs, err := ioutil.ReadFile(filepath.Join("test", "testdata", "icl-valid.json"))
+	bs, err := os.ReadFile(filepath.Join("test", "testdata", "icl-valid.json"))
 	if err != nil {
 		t.Fatal(err)
 	}
