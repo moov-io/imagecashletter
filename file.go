@@ -75,8 +75,6 @@ const (
 
 // Errors strings specific to parsing a Batch container
 var (
-	// msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
-	// specific messages
 	msgRecordLength             = "Must be at least 80 characters and found %d"
 	msgFileCashLetterInside     = "Inside of current cash letter"
 	msgFileCashLetterControl    = "Cash letter control without a current cash letter"
