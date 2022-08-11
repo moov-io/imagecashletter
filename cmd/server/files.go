@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -94,7 +94,7 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 			req.ID = base.ID()
 		}
 
-		bs, err := ioutil.ReadAll(r.Body)
+		bs, err := io.ReadAll(r.Body)
 		if err != nil {
 			err = logger.LogErrorf("error reading request body: %v", err).Err()
 			moovhttp.Problem(w, err)

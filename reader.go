@@ -111,7 +111,7 @@ func DecodeEBCDIC(lineIn string) (lineOut string) {
 // ReaderOption can be used to change default behavior of Reader
 type ReaderOption func(*Reader)
 
-//ReadVariableLineLengthOption allows Reader to split imagecashletter files based on encoded line lengths
+// ReadVariableLineLengthOption allows Reader to split imagecashletter files based on encoded line lengths
 func ReadVariableLineLengthOption() ReaderOption {
 	scanVariableLengthLines := func(data []byte, atEOF bool) (advance int, token []byte, err error) {
 		if atEOF && len(data) == 0 {
@@ -144,7 +144,7 @@ func ReadVariableLineLengthOption() ReaderOption {
 	}
 }
 
-//ReadEbcdicEncodingOption allows Reader to decode scanned lines from EBCDIC to UTF-8
+// ReadEbcdicEncodingOption allows Reader to decode scanned lines from EBCDIC to UTF-8
 func ReadEbcdicEncodingOption() ReaderOption {
 	return func(r *Reader) {
 		r.decodeLine = DecodeEBCDIC

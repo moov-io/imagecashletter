@@ -156,7 +156,7 @@ func (bc *BundleControl) fieldInclusion() error {
 	return nil
 }
 
-//BundleItemsCountField gets a string of the BundleItemsCount zero padded
+// BundleItemsCountField gets a string of the BundleItemsCount zero padded
 func (bc *BundleControl) BundleItemsCountField() string {
 	return bc.numericField(bc.BundleItemsCount, 4)
 }
