@@ -6,7 +6,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -22,7 +21,7 @@ const (
 
 func main() {
 	now := time.Now().UTC()
-	imageBytes, err := ioutil.ReadFile(filepath.Join("examples", "imagecashletter-write", "check_image.tiff"))
+	imageBytes, err := os.ReadFile(filepath.Join("examples", "imagecashletter-write", "check_image.tiff"))
 	if err != nil {
 		log.Fatalf("could not open check image: %v\n", err)
 	}

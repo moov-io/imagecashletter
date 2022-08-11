@@ -3,7 +3,7 @@ package imagecashletter
 import (
 	"bytes"
 	"encoding/binary"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -13,7 +13,7 @@ import (
 )
 
 func TestIssue138(t *testing.T) {
-	b, err := ioutil.ReadFile(filepath.Join("test", "testdata", "issue138.json"))
+	b, err := os.ReadFile(filepath.Join("test", "testdata", "issue138.json"))
 	if err != nil {
 		t.Fatalf("failed to read testdata: %v", err)
 	}

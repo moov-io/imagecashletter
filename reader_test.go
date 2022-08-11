@@ -9,7 +9,6 @@ import (
 	"bytes"
 	"crypto/rand"
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -100,7 +99,7 @@ func TestICL_ReadVariableLineLengthOption(t *testing.T) {
 	if err != nil {
 		t.Errorf("Issue marshaling file: %+v \n", err)
 	}
-	expected, err := ioutil.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
+	expected, err := os.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
 	if err != nil {
 		t.Errorf("Issue loading validation criteria: %+v \n", err)
 	}
@@ -131,7 +130,7 @@ func TestICL_EBCDICEncodingOption(t *testing.T) {
 	if err != nil {
 		t.Errorf("Issue marshaling file: %+v \n", err)
 	}
-	expected, err := ioutil.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
+	expected, err := os.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
 	if err != nil {
 		t.Errorf("Issue loading validation criteria: %+v \n", err)
 	}
@@ -1094,7 +1093,7 @@ func TestICLCreditRecord61File(t *testing.T) {
 }
 
 func TestICLBase64ImageData(t *testing.T) {
-	bs, err := ioutil.ReadFile(filepath.Join("test", "testdata", "base64-encoded-images.json"))
+	bs, err := os.ReadFile(filepath.Join("test", "testdata", "base64-encoded-images.json"))
 	if err != nil {
 		t.Fatal(err)
 	}
