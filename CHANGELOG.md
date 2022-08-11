@@ -1,8 +1,22 @@
-## v0.9.1 (Unreleased)
+## v0.9.1 (Released 2022-08-11)
+
+ADDITIONS
+
+- file: include new `Credit` (record type 61) in file, reader, and writer
 
 IMPROVEMENTS
 
-- all: replace deprecated `ioutil` function calls with equivalents from `io` and `os` 
+- all: replace deprecated `ioutil` function calls with equivalents from `io` and `os`
+
+BUG FIXES
+
+- cashLetter: fix out of range error when iterating over `ReturnDetailAddendumD` records
+
+BUILD
+
+- deps: upgrade docker build to Go 1.19
+- deps: update model github.com/prometheus/client_golang to v1.13.0
+- deps: update model golang.org/x/oauth2 to v0.0.0-20220808172628-8227340efae7
 
 ## v0.9.0 (Released 2022-08-02)
 
