@@ -262,6 +262,10 @@ func (r *Reader) parseLine() error { //nolint:gocyclo
 		if err := r.parseReturnDetailAddendumD(); err != nil {
 			return err
 		}
+	case creditPos, creditEbcPos:
+		if err := r.parseCredit(); err != nil {
+			return err
+		}
 	case creditItemPos, creditItemEbcPos:
 		if err := r.parseCreditItem(); err != nil {
 			return err
@@ -403,7 +407,7 @@ func (r *Reader) parseCheckDetailAddendumA() error {
 		return r.error(err)
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
-	//r.currentCashLetter.currentBundle.Checks[entryIndex].CheckDetailAddendumA = cdAddendumA
+	// r.currentCashLetter.currentBundle.Checks[entryIndex].CheckDetailAddendumA = cdAddendumA
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumA(cdAddendumA)
 	return nil
 }
@@ -472,7 +476,7 @@ func (r *Reader) parseReturnDetailAddendumA() error {
 		return r.error(err)
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
-	//r.currentCashLetter.currentBundle.Returns[entryIndex].ReturnDetailAddendumA = rdAddendumA
+	// r.currentCashLetter.currentBundle.Returns[entryIndex].ReturnDetailAddendumA = rdAddendumA
 	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumA(rdAddendumA)
 	return nil
 }

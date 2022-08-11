@@ -36,6 +36,7 @@ const (
 	imageViewDetailPos      = "50"
 	imageViewDataPos        = "52"
 	imageViewAnalysisPos    = "54"
+	creditPos               = "61"
 	creditItemPos           = "62"
 	bundleControlPos        = "70"
 	routingNumberSummaryPos = "85"
@@ -64,6 +65,7 @@ const (
 	imageViewDetailEbcPos      = "\xF5\xF0"
 	imageViewDataEbcPos        = "\xF5\xF2"
 	imageViewAnalysisEbcPos    = "\xF5\xF4"
+	creditEbcPos               = "\xF6\xF1"
 	creditItemEbcPos           = "\xF6\xF2"
 	bundleControlEbcPos        = "\xF7\xF0"
 	routingNumberSummaryEbcPos = "\xF8\xF5"
@@ -73,8 +75,6 @@ const (
 
 // Errors strings specific to parsing a Batch container
 var (
-	//msgFileCalculatedControlEquality = "calculated %v is out-of-balance with control %v"
-	// specific messages
 	msgRecordLength             = "Must be at least 80 characters and found %d"
 	msgFileCashLetterInside     = "Inside of current cash letter"
 	msgFileCashLetterControl    = "Cash letter control without a current cash letter"

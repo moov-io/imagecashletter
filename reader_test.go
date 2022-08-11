@@ -1068,6 +1068,30 @@ func TestICLCreditItemFile(t *testing.T) {
 	}
 }
 
+// TestICLCreditRecord61File validates reading an ICL file with a Credit record (type 61)
+func TestICLCreditRecord61File(t *testing.T) {
+	fd, err := os.Open(filepath.Join("test", "testdata", "creditRecord61.icl"))
+	if err != nil {
+		t.Fatalf("Can not open local file: %s: \n", err)
+	}
+	defer fd.Close()
+
+	ICLFile, err := NewReader(fd, ReadVariableLineLengthOption()).Read()
+	if err != nil {
+		t.Errorf("Issue reading file: %+v \n", err)
+	}
+	// ensure we have a validated file structure
+	if err = ICLFile.Validate(); err != nil {
+		t.Errorf("Could not validate entire read file: %v", err)
+	}
+	if len(ICLFile.CashLetters) != 2 {
+		t.Errorf("File was missing CashLetters")
+	}
+	if len(ICLFile.CashLetters[0].Credits) != 1 {
+		t.Errorf("File was missing Credit record 61")
+	}
+}
+
 func TestICLBase64ImageData(t *testing.T) {
 	bs, err := os.ReadFile(filepath.Join("test", "testdata", "base64-encoded-images.json"))
 	if err != nil {

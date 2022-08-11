@@ -188,6 +188,77 @@ func TestICLWriteCreditItem(t *testing.T) {
 	}
 }
 
+// TestICLWriteCreditRecord writes an ICL file with a Credit record
+func TestICLWriteCreditRecord(t *testing.T) {
+	file := NewFile().SetHeader(mockFileHeader())
+
+	// CreditItem
+	ci := mockCredit()
+
+	// Create CheckDetail
+	cd := mockCheckDetail()
+	cd.AddCheckDetailAddendumA(mockCheckDetailAddendumA())
+	cd.AddCheckDetailAddendumB(mockCheckDetailAddendumB())
+	cd.AddCheckDetailAddendumC(mockCheckDetailAddendumC())
+	cd.AddImageViewDetail(mockImageViewDetail())
+	cd.AddImageViewData(mockImageViewData())
+	cd.AddImageViewAnalysis(mockImageViewAnalysis())
+	bundle := NewBundle(mockBundleHeader())
+	bundle.AddCheckDetail(cd)
+
+	// CheckDetail 2
+	cdTwo := mockCheckDetail()
+	cdTwo.AddCheckDetailAddendumA(mockCheckDetailAddendumA())
+	cdTwo.AddCheckDetailAddendumB(mockCheckDetailAddendumB())
+	cdTwo.AddCheckDetailAddendumC(mockCheckDetailAddendumC())
+	cdTwo.AddImageViewDetail(mockImageViewDetail())
+	cdTwo.AddImageViewData(mockImageViewData())
+	cdTwo.AddImageViewAnalysis(mockImageViewAnalysis())
+	bundle.AddCheckDetail(cdTwo)
+
+	// Create CashLetter
+	cl := NewCashLetter(mockCashLetterHeader())
+	cl.AddCredit(ci)
+	cl.AddBundle(bundle)
+	if err := cl.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	file.AddCashLetter(cl)
+
+	clTwo := NewCashLetter(mockCashLetterHeader())
+	clTwo.CashLetterHeader.CashLetterID = "A2"
+	clTwo.AddBundle(bundle)
+
+	if err := clTwo.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	file.AddCashLetter(clTwo)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	b := &bytes.Buffer{}
+	f := NewWriter(b)
+
+	if err := f.Write(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	r := NewReader(strings.NewReader(b.String()))
+	_, err := r.Read()
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err = r.File.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
 // TestICLWriteRoutingNumberSummary writes an ICL file with a RoutingNumberSummary
 func TestICLWriteRoutingNumber(t *testing.T) {
 	file := NewFile().SetHeader(mockFileHeader())
