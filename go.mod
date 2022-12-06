@@ -7,11 +7,11 @@ require (
 	github.com/gdamore/encoding v1.0.0
 	github.com/go-kit/kit v0.12.0
 	github.com/gorilla/mux v1.8.0
-	github.com/moov-io/base v0.36.3
+	github.com/moov-io/base v0.37.0
 	github.com/prometheus/client_golang v1.14.0
 	github.com/stretchr/testify v1.8.1
 	github.com/vincent-petithory/dataurl v1.0.0
-	golang.org/x/oauth2 v0.2.0
+	golang.org/x/oauth2 v0.3.0
 )
 
 require (
@@ -27,9 +27,9 @@ require (
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rickar/cal/v2 v2.1.9 // indirect
-	golang.org/x/net v0.2.0 // indirect
-	golang.org/x/sys v0.2.0 // indirect
-	golang.org/x/text v0.4.0 // indirect
+	golang.org/x/net v0.3.0 // indirect
+	golang.org/x/sys v0.3.0 // indirect
+	golang.org/x/text v0.5.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
