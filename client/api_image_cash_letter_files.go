@@ -29,18 +29,16 @@ type ImageCashLetterFilesApiService service
 
 // AddICLToFileOpts Optional parameters for the method 'AddICLToFile'
 type AddICLToFileOpts struct {
-	XRequestID      optional.String
-	XIdempotencyKey optional.String
+	XRequestID optional.String
 }
 
 /*
 AddICLToFile Add cash letter to file
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param cashLetter
- * @param optional nil or *AddICLToFileOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
- * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param cashLetter
+  - @param optional nil or *AddICLToFileOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
 */
 func (a *ImageCashLetterFilesApiService) AddICLToFile(ctx _context.Context, fileID string, cashLetter CashLetter, localVarOptionals *AddICLToFileOpts) (*_nethttp.Response, error) {
 	var (
@@ -79,9 +77,6 @@ func (a *ImageCashLetterFilesApiService) AddICLToFile(ctx _context.Context, file
 	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
 		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
-	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
-		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
-	}
 	// body params
 	localVarPostBody = &cashLetter
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
@@ -113,17 +108,16 @@ func (a *ImageCashLetterFilesApiService) AddICLToFile(ctx _context.Context, file
 
 // CreateICLFileOpts Optional parameters for the method 'CreateICLFile'
 type CreateICLFileOpts struct {
-	XRequestID      optional.String
-	XIdempotencyKey optional.String
+	XRequestID optional.String
 }
 
 /*
 CreateICLFile Create file
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param createIclFile Content of the ImageCashLetter file (in json or raw text)
- * @param optional nil or *CreateICLFileOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
- * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param createIclFile Content of the ImageCashLetter file (in json or raw text)
+  - @param optional nil or *CreateICLFileOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+
 @return IclFile
 */
 func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, createIclFile CreateIclFile, localVarOptionals *CreateICLFileOpts) (IclFile, *_nethttp.Response, error) {
@@ -162,9 +156,6 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 	}
 	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
 		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
-	}
-	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
-		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
 	}
 	// body params
 	localVarPostBody = &createIclFile
@@ -231,10 +222,10 @@ type DeleteICLFileOpts struct {
 /*
 DeleteICLFile Delete file
 Permanently deletes a File and associated CashLetters and Bundles. It cannot be undone.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param optional nil or *DeleteICLFileOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param optional nil or *DeleteICLFileOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
 */
 func (a *ImageCashLetterFilesApiService) DeleteICLFile(ctx _context.Context, fileID string, localVarOptionals *DeleteICLFileOpts) (*_nethttp.Response, error) {
 	var (
@@ -307,11 +298,11 @@ type DeleteICLFromFileOpts struct {
 
 /*
 DeleteICLFromFile Delete cash letter from file
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param cashLetterID CashLetter ID
- * @param optional nil or *DeleteICLFromFileOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param cashLetterID CashLetter ID
+  - @param optional nil or *DeleteICLFromFileOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
 */
 func (a *ImageCashLetterFilesApiService) DeleteICLFromFile(ctx _context.Context, fileID string, cashLetterID string, localVarOptionals *DeleteICLFromFileOpts) (*_nethttp.Response, error) {
 	var (
@@ -386,10 +377,11 @@ type GetICLFileByIDOpts struct {
 /*
 GetICLFileByID Retrieve file
 Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param optional nil or *GetICLFileByIDOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param optional nil or *GetICLFileByIDOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+
 @return IclFile
 */
 func (a *ImageCashLetterFilesApiService) GetICLFileByID(ctx _context.Context, fileID string, localVarOptionals *GetICLFileByIDOpts) (IclFile, *_nethttp.Response, error) {
@@ -484,10 +476,11 @@ type GetICLFileContentsOpts struct {
 /*
 GetICLFileContents Get file contents
 Assembles the existing file records (Cash Letters, Bundles, and Controls), computes sequence numbers and totals. Returns plaintext file.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param optional nil or *GetICLFileContentsOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param optional nil or *GetICLFileContentsOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+
 @return string
 */
 func (a *ImageCashLetterFilesApiService) GetICLFileContents(ctx _context.Context, fileID string, localVarOptionals *GetICLFileContentsOpts) (string, *_nethttp.Response, error) {
@@ -581,9 +574,10 @@ type GetICLFilesOpts struct {
 
 /*
 GetICLFiles List files
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *GetICLFilesOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param optional nil or *GetICLFilesOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+
 @return []IclFile
 */
 func (a *ImageCashLetterFilesApiService) GetICLFiles(ctx _context.Context, localVarOptionals *GetICLFilesOpts) ([]IclFile, *_nethttp.Response, error) {
@@ -670,7 +664,7 @@ func (a *ImageCashLetterFilesApiService) GetICLFiles(ctx _context.Context, local
 
 /*
 Ping Ping ImageCashLetter service
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 */
 func (a *ImageCashLetterFilesApiService) Ping(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
@@ -734,19 +728,18 @@ func (a *ImageCashLetterFilesApiService) Ping(ctx _context.Context) (*_nethttp.R
 
 // UpdateICLFileOpts Optional parameters for the method 'UpdateICLFile'
 type UpdateICLFileOpts struct {
-	XRequestID      optional.String
-	XIdempotencyKey optional.String
+	XRequestID optional.String
 }
 
 /*
 UpdateICLFile Update file header
 Updates the specified File Header by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param iclFileHeader
- * @param optional nil or *UpdateICLFileOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
- * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param iclFileHeader
+  - @param optional nil or *UpdateICLFileOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+
 @return IclFile
 */
 func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx _context.Context, fileID string, iclFileHeader IclFileHeader, localVarOptionals *UpdateICLFileOpts) (IclFile, *_nethttp.Response, error) {
@@ -786,9 +779,6 @@ func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx _context.Context, fil
 	}
 	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
 		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
-	}
-	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
-		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
 	}
 	// body params
 	localVarPostBody = &iclFileHeader
@@ -855,10 +845,11 @@ type ValidateICLFileOpts struct {
 /*
 ValidateICLFile Validate file
 Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param optional nil or *ValidateICLFileOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param optional nil or *ValidateICLFileOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+
 @return IclFile
 */
 func (a *ImageCashLetterFilesApiService) ValidateICLFile(ctx _context.Context, fileID string, localVarOptionals *ValidateICLFileOpts) (IclFile, *_nethttp.Response, error) {

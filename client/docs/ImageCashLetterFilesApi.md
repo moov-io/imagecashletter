@@ -43,7 +43,6 @@ Name | Type | Description  | Notes
 
 
  **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
- **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests. | 
 
 ### Return type
 
@@ -87,7 +86,6 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
- **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests. | 
 
 ### Return type
 
@@ -384,7 +382,6 @@ Name | Type | Description  | Notes
 
 
  **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
- **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests. | 
 
 ### Return type
 

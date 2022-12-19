@@ -67,13 +67,6 @@ paths:
           example: rs4f9915
           schema:
             type: string
-        - name: X-Idempotency-Key
-          in: header
-          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
-          example: a4f88150
-          required: false
-          schema:
-            type: string
       requestBody:
         description: Content of the ImageCashLetter file (in json or raw text)
         required: true
@@ -148,13 +141,6 @@ paths:
           in: header
           description: Optional Request ID allows application developer to trace requests through the system's logs
           example: rs4f9915
-          schema:
-            type: string
-        - name: X-Idempotency-Key
-          in: header
-          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
-          example: a4f88150
-          required: false
           schema:
             type: string
         - name: fileID
@@ -293,13 +279,6 @@ paths:
           in: header
           description: Optional Request ID allows application developer to trace requests through the system's logs
           example: rs4f9915
-          schema:
-            type: string
-        - name: X-Idempotency-Key
-          in: header
-          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
-          example: a4f88150
-          required: false
           schema:
             type: string
         - name: fileID
@@ -1851,7 +1830,7 @@ components:
 
             Agreement not required:
             * `00` - Group 4 facsimile compression (ITU-T Rec. T.563/CCITT Rec. T.6)
-            
+
             Agreement required:
             * `01` - JPEG Baseline (JPEG Interchange Format) (ITU-T Rec. T.81/ISO/IEC 10918)
             * `02` - ABIC

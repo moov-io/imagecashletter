@@ -12,10 +12,9 @@ import (
 	"strings"
 
 	moovhttp "github.com/moov-io/base/http"
-	// "github.com/moov-io/base/idempotent/lru"
+	"github.com/moov-io/base/log"
 
 	"github.com/go-kit/kit/metrics/prometheus"
-	"github.com/moov-io/base/log"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 )
 
@@ -24,8 +23,6 @@ var (
 		Name: "http_response_duration_seconds",
 		Help: "Histogram representing the http response durations",
 	}, []string{"route"})
-
-	// inmemIdempotentRecorder = lru.New()
 )
 
 func wrapResponseWriter(logger log.Logger, w http.ResponseWriter, r *http.Request) http.ResponseWriter {
