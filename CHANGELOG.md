@@ -1,3 +1,19 @@
+## v0.9.2 (Released 2023-03-07)
+
+IMPROVEMENTS
+
+- cmd/server: use READER_BUFFER_SIZE to override default bufio buffer size
+
+BUILD
+
+- build(deps): bump activesupport from 6.0.3.4 to 6.0.6.1 in /docs
+- build(deps): bump golang.org/x/net from 0.6.0 to 0.7.0
+- build(deps): bump nokogiri from 1.13.6 to 1.13.10 in /docs
+- fix(deps): update module github.com/moov-io/base to v0.39.0
+- fix(deps): update module github.com/prometheus/client_golang to v1.13.1
+- fix(deps): update module github.com/stretchr/testify to v1.8.2
+- fix(deps): update module golang.org/x/oauth2 to v0.6.0
+
 ## v0.9.1 (Released 2022-08-11)
 
 ADDITIONS
