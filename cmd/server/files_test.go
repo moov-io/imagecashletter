@@ -78,6 +78,18 @@ func TestFiles_getFiles(t *testing.T) {
 	})
 }
 
+func TestFiles_determineBufferSize(t *testing.T) {
+	env := t.Name()
+
+	size := determineBufferSize(env, 10001)
+	require.Equal(t, 10001, size)
+
+	t.Setenv(env, "452181")
+
+	size = determineBufferSize(env, 10001)
+	require.Equal(t, 452181, size)
+}
+
 func TestFiles_createFile(t *testing.T) {
 	w := httptest.NewRecorder()
 	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "valid-ebcdic.x937"))

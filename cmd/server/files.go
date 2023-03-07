@@ -5,12 +5,15 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
 
 	"github.com/moov-io/base"
@@ -81,6 +84,19 @@ func getFiles(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	}
 }
 
+var (
+	maxReaderBufferSize = determineBufferSize("READER_BUFFER_SIZE", bufio.MaxScanTokenSize)
+)
+
+func determineBufferSize(env string, nominal int) int {
+	v, exists := os.LookupEnv(env)
+	if exists {
+		n, _ := strconv.ParseInt(v, 10, 32)
+		return int(n)
+	}
+	return nominal
+}
+
 func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestID := moovhttp.GetRequestID(r); requestID != "" {
@@ -112,7 +128,13 @@ func createFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 				req = file
 			}
 		} else {
-			f, err := imagecashletter.NewReader(bytes.NewReader(bs), imagecashletter.ReadVariableLineLengthOption(), imagecashletter.ReadEbcdicEncodingOption()).Read()
+			reader := bytes.NewReader(bs)
+			opts := []imagecashletter.ReaderOption{
+				imagecashletter.ReadVariableLineLengthOption(),
+				imagecashletter.ReadEbcdicEncodingOption(),
+				imagecashletter.BufferSizeOption(maxReaderBufferSize),
+			}
+			f, err := imagecashletter.NewReader(reader, opts...).Read()
 			if err != nil {
 				err = logger.LogErrorf("error reading image cache letter: %v", err).Err()
 				moovhttp.Problem(w, err)
