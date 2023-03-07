@@ -149,6 +149,7 @@ The following environmental variables can be set to configure behavior in ImageC
 
 | Environmental Variable | Description | Default |
 |-----|-----|-----|
+| `READER_BUFFER_SIZE` | Size of buffer to use with `bufio.Scanner`. | Check `bufio.MaxScanTokenSize` |
 | `HTTPS_CERT_FILE` | Filepath containing a certificate (or intermediate chain) to be served by the HTTP server. Requires all traffic be over secure HTTP. | Empty |
 | `HTTPS_KEY_FILE`  | Filepath of a private key matching the leaf certificate from `HTTPS_CERT_FILE`. | Empty |
 
