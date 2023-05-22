@@ -20,6 +20,12 @@ var (
 
 	// output formats
 	flagJson = flag.Bool("json", false, "Output file in json")
+
+	flagPretty        = flag.Bool("pretty", false, "Display all values in their human readable format")
+	flagPrettyAmounts = flag.Bool("pretty.amounts", false, "Display human readable amounts instead of exact values")
+
+	flagSkipValidation = flag.Bool("skip-validation", false, "Skip all validation checks")
+	flagValidateOpts   = flag.String("validate", "", "Path to config file in json format to enable validation opts")
 )
 
 // main creates an ICL File with 2 CashLetters
@@ -71,6 +77,12 @@ func write(path string) {
 
 	file := imagecashletter.NewFile()
 	file.SetHeader(fh)
+
+	// Read validation options from the command
+	validateOpts := readValidationOpts(*flagValidateOpts)
+	if validateOpts != nil {
+		file.SetValidation(validateOpts)
+	}
 
 	// Create 4 CashLetters
 	for i := 0; i < 4; i++ {
@@ -283,4 +295,32 @@ func write(path string) {
 
 	fmt.Printf("Wrote %s\n", path)
 
+}
+
+func readValidationOpts(path string) *imagecashletter.ValidateOpts {
+	if path != "" {
+		// read config file
+		bs, readErr := os.ReadFile(path)
+		if readErr != nil {
+			fmt.Printf("ERROR: reading validate opts failed: %v\n", readErr)
+			os.Exit(1)
+		}
+
+		var opts imagecashletter.ValidateOpts
+		if err := json.Unmarshal(bs, &opts); err != nil {
+			fmt.Printf("ERROR: unmarshal of validate opts failed: %v\n", err)
+			os.Exit(1)
+		}
+		if *flagSkipValidation {
+			opts.SkipAll = true
+		}
+		return &opts
+	}
+
+	if *flagSkipValidation {
+		var opts imagecashletter.ValidateOpts
+		opts.SkipAll = true
+	}
+
+	return nil
 }

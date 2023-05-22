@@ -243,7 +243,13 @@ func (cd *CheckDetail) String() string {
 
 // Validate performs imagecashletter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
-func (cd *CheckDetail) Validate() error {
+func (cd *CheckDetail) Validate(opts ...*ValidateOpts) error {
+
+	var opt *ValidateOpts
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
 	if err := cd.fieldInclusion(); err != nil {
 		return err
 	}
@@ -284,7 +290,7 @@ func (cd *CheckDetail) Validate() error {
 		}
 	}
 	// Conditional
-	if cd.ArchiveTypeIndicator != "" {
+	if cd.ArchiveTypeIndicator != "" && opt.IsArchiveTypeIndicator() {
 		if err := cd.isArchiveTypeIndicator(cd.ArchiveTypeIndicator); err != nil {
 			return &FieldError{FieldName: "ArchiveTypeIndicator", Value: cd.ArchiveTypeIndicator, Msg: err.Error()}
 		}

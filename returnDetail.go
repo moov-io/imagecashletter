@@ -265,7 +265,13 @@ func (rd *ReturnDetail) String() string {
 
 // Validate performs image cash letter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
-func (rd *ReturnDetail) Validate() error {
+func (rd *ReturnDetail) Validate(opts ...*ValidateOpts) error {
+
+	var opt *ValidateOpts
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
 	if err := rd.fieldInclusion(); err != nil {
 		return err
 	}
@@ -288,7 +294,7 @@ func (rd *ReturnDetail) Validate() error {
 			return &FieldError{FieldName: "ReturnNotificationIndicator", Value: rd.ReturnNotificationIndicatorField(), Msg: err.Error()}
 		}
 	}
-	if rd.ArchiveTypeIndicator != "" {
+	if rd.ArchiveTypeIndicator != "" && opt.IsArchiveTypeIndicator() {
 		if err := rd.isArchiveTypeIndicator(rd.ArchiveTypeIndicator); err != nil {
 			return &FieldError{FieldName: "ArchiveTypeIndicator", Value: rd.ArchiveTypeIndicatorField(), Msg: err.Error()}
 		}
