@@ -320,6 +320,7 @@ func readValidationOpts(path string) *imagecashletter.ValidateOpts {
 	if *flagSkipValidation {
 		var opts imagecashletter.ValidateOpts
 		opts.SkipAll = true
+		return &opts
 	}
 
 	return nil
