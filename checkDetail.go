@@ -290,7 +290,7 @@ func (cd *CheckDetail) Validate(opts ...*ValidateOpts) error {
 		}
 	}
 	// Conditional
-	if cd.ArchiveTypeIndicator != "" && opt.IsArchiveTypeIndicator() {
+	if cd.ArchiveTypeIndicator != "" && !(opt != nil && opt.AllowInvalidArchiveTypeIndicator) {
 		if err := cd.isArchiveTypeIndicator(cd.ArchiveTypeIndicator); err != nil {
 			return &FieldError{FieldName: "ArchiveTypeIndicator", Value: cd.ArchiveTypeIndicator, Msg: err.Error()}
 		}

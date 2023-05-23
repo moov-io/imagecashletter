@@ -294,7 +294,7 @@ func (rd *ReturnDetail) Validate(opts ...*ValidateOpts) error {
 			return &FieldError{FieldName: "ReturnNotificationIndicator", Value: rd.ReturnNotificationIndicatorField(), Msg: err.Error()}
 		}
 	}
-	if rd.ArchiveTypeIndicator != "" && opt.IsArchiveTypeIndicator() {
+	if rd.ArchiveTypeIndicator != "" && !(opt != nil && opt.AllowInvalidArchiveTypeIndicator) {
 		if err := rd.isArchiveTypeIndicator(rd.ArchiveTypeIndicator); err != nil {
 			return &FieldError{FieldName: "ArchiveTypeIndicator", Value: rd.ArchiveTypeIndicatorField(), Msg: err.Error()}
 		}

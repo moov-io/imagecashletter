@@ -298,7 +298,7 @@ func TestCDArchiveTypeIndicator(t *testing.T) {
 func TestCDArchiveTypeIndicatorWithValidationOption(t *testing.T) {
 	cd := mockCheckDetail()
 	cd.ArchiveTypeIndicator = "W"
-	if err := cd.Validate(&ValidateOpts{ArchiveTypeIndicator: false}); err != nil {
+	if err := cd.Validate(&ValidateOpts{AllowInvalidArchiveTypeIndicator: true}); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }

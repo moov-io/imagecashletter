@@ -21,8 +21,8 @@ var (
 	// output formats
 	flagJson = flag.Bool("json", false, "Output file in json")
 
-	flagPretty        = flag.Bool("pretty", false, "Display all values in their human readable format")
-	flagPrettyAmounts = flag.Bool("pretty.amounts", false, "Display human readable amounts instead of exact values")
+	//flagPretty        = flag.Bool("pretty", false, "Display all values in their human readable format")
+	//flagPrettyAmounts = flag.Bool("pretty.amounts", false, "Display human readable amounts instead of exact values")
 
 	flagSkipValidation = flag.Bool("skip-validation", false, "Skip all validation checks")
 	flagValidateOpts   = flag.String("validate", "", "Path to config file in json format to enable validation opts")
