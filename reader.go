@@ -384,7 +384,7 @@ func (r *Reader) parseCheckDetail() error {
 	cd := new(CheckDetail)
 	cd.Parse(r.decodeLine(r.line))
 	// Ensure valid CheckDetail
-	if err := cd.Validate(r.File.ValidateOpts()); err != nil {
+	if err := cd.ValidateWithOpts(*r.File.ValidateOpts()); err != nil {
 		return r.error(err)
 	}
 	// Add CheckDetail

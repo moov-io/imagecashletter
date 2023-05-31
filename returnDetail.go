@@ -265,12 +265,12 @@ func (rd *ReturnDetail) String() string {
 
 // Validate performs image cash letter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
-func (rd *ReturnDetail) Validate(opts ...*ValidateOpts) error {
+func (rd *ReturnDetail) Validate() error {
+	return rd.ValidateWithOpts(ValidateOpts{}) // all options should be defined so the default value (false) results in the default (current) behavior
+}
 
-	var opt *ValidateOpts
-	if len(opts) > 0 {
-		opt = opts[0]
-	}
+// ValidateWithOpts performs imagecashletter format rule checks with validate opts
+func (rd *ReturnDetail) ValidateWithOpts(opts ValidateOpts) error {
 
 	if err := rd.fieldInclusion(); err != nil {
 		return err
@@ -294,11 +294,15 @@ func (rd *ReturnDetail) Validate(opts ...*ValidateOpts) error {
 			return &FieldError{FieldName: "ReturnNotificationIndicator", Value: rd.ReturnNotificationIndicatorField(), Msg: err.Error()}
 		}
 	}
-	if rd.ArchiveTypeIndicator != "" && !(opt != nil && opt.AllowInvalidArchiveTypeIndicator) {
-		if err := rd.isArchiveTypeIndicator(rd.ArchiveTypeIndicator); err != nil {
-			return &FieldError{FieldName: "ArchiveTypeIndicator", Value: rd.ArchiveTypeIndicatorField(), Msg: err.Error()}
+
+	if !opts.SkipAll {
+		if rd.ArchiveTypeIndicator != "" && !opts.AllowInvalidArchiveTypeIndicator {
+			if err := rd.isArchiveTypeIndicator(rd.ArchiveTypeIndicator); err != nil {
+				return &FieldError{FieldName: "ArchiveTypeIndicator", Value: rd.ArchiveTypeIndicatorField(), Msg: err.Error()}
+			}
 		}
 	}
+
 	if rd.TimesReturnedField() != " " && rd.TimesReturnedField() != "" {
 		if err := rd.isTimesReturned(rd.TimesReturned); err != nil {
 			return &FieldError{FieldName: "TimesReturned", Value: rd.TimesReturnedField(), Msg: err.Error()}

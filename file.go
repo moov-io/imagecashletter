@@ -97,7 +97,7 @@ type ValidateOpts struct {
 	SkipAll bool `json:"skipAll"`
 
 	// AllowInvalidArchiveTypeIndicator can be set to disable  archiveTypeIndicator validation
-	AllowInvalidArchiveTypeIndicator bool `json:"ArchiveTypeIndicator"`
+	AllowInvalidArchiveTypeIndicator bool `json:"allowInvalidArchiveType"`
 }
 
 // FileError is an error describing issues validating a file
@@ -345,5 +345,8 @@ func (f *File) SetValidation(opts *ValidateOpts) {
 
 // ValidateOpts returns Validation option
 func (f *File) ValidateOpts() *ValidateOpts {
+	if f.validateOpts == nil {
+		return &ValidateOpts{}
+	}
 	return f.validateOpts
 }

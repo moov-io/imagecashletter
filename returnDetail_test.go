@@ -252,7 +252,7 @@ func TestRDArchiveTypeIndicator(t *testing.T) {
 func TestRDArchiveTypeIndicatorWithValidationOption(t *testing.T) {
 	rd := mockReturnDetail()
 	rd.ArchiveTypeIndicator = "W"
-	if err := rd.Validate(&ValidateOpts{AllowInvalidArchiveTypeIndicator: true}); err != nil {
+	if err := rd.ValidateWithOpts(ValidateOpts{AllowInvalidArchiveTypeIndicator: true}); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
