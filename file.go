@@ -345,8 +345,5 @@ func (f *File) SetValidation(opts *ValidateOpts) {
 
 // ValidateOpts returns Validation option
 func (f *File) ValidateOpts() *ValidateOpts {
-	if f.validateOpts == nil {
-		return &ValidateOpts{}
-	}
 	return f.validateOpts
 }
