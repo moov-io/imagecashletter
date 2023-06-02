@@ -34,7 +34,9 @@ func parseContents(input string) (string, error) {
 	).Read()
 
 	var buf bytes.Buffer
-	json.NewEncoder(&buf).Encode(file)
+	if err2 := json.NewEncoder(&buf).Encode(file); err2 != nil {
+		err = fmt.Errorf("original error: %v and json encoder error: %v", err, err2)
+	}
 
 	return buf.String(), err
 }
@@ -42,7 +44,10 @@ func parseContents(input string) (string, error) {
 func readAsJSON(input string) (string, error) {
 	file, err := imagecashletter.FileFromJSON([]byte(input))
 
-	pretty, _ := json.MarshalIndent(file, "", " ")
+	pretty, err2 := json.MarshalIndent(file, "", " ")
+	if err2 != nil {
+		err = fmt.Errorf("original error: %v and json indent encoding error: %v", err, err2)
+	}
 
 	return string(pretty), err
 }

@@ -20,7 +20,7 @@ type ImageViewData struct {
 	ID string `json:"id"`
 	// recordType defines the type of record.
 	recordType string
-	// EceInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the
+	// EceInstitutionRoutingNumber contains the routing and transit number of the institution that creates the
 	// bundle header.  Format: TTTTAAAAC, where:
 	// TTTT Federal Reserve Prefix
 	// AAAA ABA Institution Identifier

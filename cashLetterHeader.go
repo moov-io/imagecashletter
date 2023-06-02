@@ -55,7 +55,7 @@ type CashLetterHeader struct {
 	//  C Check Digit
 	//	For a number that identifies a non-financial institution: NNNNNNNNN
 	DestinationRoutingNumber string `json:"destinationRoutingNumber"`
-	// ECEInstitutionRoutingNumber contains the routing and transit number of the institution that
+	// ECEInstitutionRoutingNumber contains the routing and transit number of the institution
 	// that creates the Cash Letter Header Record.  Format: TTTTAAAAC, where:
 	//  TTTT Federal Reserve Prefix
 	//  AAAA ABA Institution Identifier
