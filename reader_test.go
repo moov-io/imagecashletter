@@ -14,6 +14,8 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // TestICLFileRead validates reading an ICL file
@@ -103,9 +105,7 @@ func TestICL_ReadVariableLineLengthOption(t *testing.T) {
 	if err != nil {
 		t.Errorf("Issue loading validation criteria: %+v \n", err)
 	}
-	if !bytes.Equal(actual, expected) {
-		t.Errorf("Read file does not match expected JSON")
-	}
+	require.Equal(t, expected, actual)
 }
 
 func TestICL_EBCDICEncodingOption(t *testing.T) {
@@ -134,9 +134,7 @@ func TestICL_EBCDICEncodingOption(t *testing.T) {
 	if err != nil {
 		t.Errorf("Issue loading validation criteria: %+v \n", err)
 	}
-	if !bytes.Equal(actual, expected) {
-		t.Errorf("Read file does not match expected JSON")
-	}
+	require.Equal(t, expected, actual)
 }
 
 // TestRecordTypeUnknown validates record type unknown
