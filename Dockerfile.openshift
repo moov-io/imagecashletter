@@ -15,6 +15,10 @@ LABEL version=$VERSION
 
 COPY --from=builder /opt/app-root/src/bin/server /bin/server
 
-EXPOSE 8080
-EXPOSE 9090
+ENV HTTP_PORT=8083
+ENV HEALTH_PORT=9093
+
+EXPOSE ${HTTP_PORT}/tcp
+EXPOSE ${HEALTH_PORT}/tcp
+
 ENTRYPOINT ["/bin/server"]
