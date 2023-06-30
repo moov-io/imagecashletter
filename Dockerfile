@@ -11,6 +11,10 @@ RUN apt-get update && apt-get install -y ca-certificates
 COPY --from=builder /go/src/github.com/moov-io/imagecashletter/bin/server /bin/server
 # USER moov
 
-EXPOSE 8080
-EXPOSE 9090
+ENV HTTP_PORT=8083
+ENV HEALTH_PORT=9093
+
+EXPOSE ${HTTP_PORT}/tcp
+EXPOSE ${HEALTH_PORT}/tcp
+
 ENTRYPOINT ["/bin/server"]
