@@ -34,6 +34,9 @@ jobs:
       if: runner.os == 'Linux'
       run: bash <(curl -s https://codecov.io/bash)
 
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    steps:
     - name: Docker Build
-      if: runner.os == 'Linux'
       run: make docker
