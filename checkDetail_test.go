@@ -294,6 +294,16 @@ func TestCDArchiveTypeIndicator(t *testing.T) {
 	}
 }
 
+// TestCDArchiveTypeIndicatorWithValidationOption validation
+func TestCDArchiveTypeIndicatorWithValidationOption(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.ArchiveTypeIndicator = "W"
+	cd.SetValidation(&ValidateOpts{AllowInvalidArchiveTypeIndicator: true})
+	if err := cd.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
 // Field Inclusion
 
 // TestCDFIRecordType validation

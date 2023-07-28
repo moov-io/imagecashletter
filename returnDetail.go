@@ -147,6 +147,8 @@ type ReturnDetail struct {
 	validator
 	// converters is composed for image cash letter to golang Converters
 	converters
+
+	validateOpts *ValidateOpts
 }
 
 // CustomerReturnCode are customer return reason codes as defined in Part 6.2 of the ANSI X9.100-188-2018 Return
@@ -173,6 +175,14 @@ func (rd *ReturnDetail) setRecordType() {
 		return
 	}
 	rd.recordType = "31"
+}
+
+// SetValidation stores ValidateOpts on the CheckDetail which are to be used to override
+func (rd *ReturnDetail) SetValidation(opts *ValidateOpts) {
+	if rd == nil {
+		return
+	}
+	rd.validateOpts = opts
 }
 
 // Parse takes the input record string and parses the ReturnDetail values
@@ -266,6 +276,7 @@ func (rd *ReturnDetail) String() string {
 // Validate performs image cash letter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (rd *ReturnDetail) Validate() error {
+
 	if err := rd.fieldInclusion(); err != nil {
 		return err
 	}
@@ -289,8 +300,10 @@ func (rd *ReturnDetail) Validate() error {
 		}
 	}
 	if rd.ArchiveTypeIndicator != "" {
-		if err := rd.isArchiveTypeIndicator(rd.ArchiveTypeIndicator); err != nil {
-			return &FieldError{FieldName: "ArchiveTypeIndicator", Value: rd.ArchiveTypeIndicatorField(), Msg: err.Error()}
+		if rd.validateOpts == nil || rd.validateOpts.SkipAll || !rd.validateOpts.AllowInvalidArchiveTypeIndicator {
+			if err := rd.isArchiveTypeIndicator(rd.ArchiveTypeIndicator); err != nil {
+				return &FieldError{FieldName: "ArchiveTypeIndicator", Value: rd.ArchiveTypeIndicatorField(), Msg: err.Error()}
+			}
 		}
 	}
 	if rd.TimesReturnedField() != " " && rd.TimesReturnedField() != "" {

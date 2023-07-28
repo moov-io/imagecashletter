@@ -383,6 +383,8 @@ func (r *Reader) parseCheckDetail() error {
 	}
 	cd := new(CheckDetail)
 	cd.Parse(r.decodeLine(r.line))
+	// setting validate opts based on file
+	cd.SetValidation(r.File.ValidateOpts())
 	// Ensure valid CheckDetail
 	if err := cd.Validate(); err != nil {
 		return r.error(err)
@@ -454,6 +456,8 @@ func (r *Reader) parseReturnDetail() error {
 	}
 	rd := new(ReturnDetail)
 	rd.Parse(r.decodeLine(r.line))
+	// setting validate opts based on file
+	rd.SetValidation(r.File.ValidateOpts())
 	if err := rd.Validate(); err != nil {
 		return r.error(err)
 	}

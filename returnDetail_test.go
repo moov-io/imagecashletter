@@ -248,6 +248,16 @@ func TestRDArchiveTypeIndicator(t *testing.T) {
 	}
 }
 
+// TestRDArchiveTypeIndicatorWithValidationOption validation
+func TestRDArchiveTypeIndicatorWithValidationOption(t *testing.T) {
+	rd := mockReturnDetail()
+	rd.ArchiveTypeIndicator = "W"
+	rd.SetValidation(&ValidateOpts{AllowInvalidArchiveTypeIndicator: true})
+	if err := rd.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
 // TestRDTimesReturned validation
 func TestRDTimesReturned(t *testing.T) {
 	rd := mockReturnDetail()

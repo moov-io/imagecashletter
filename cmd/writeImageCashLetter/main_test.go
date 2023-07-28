@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 	"testing"
+
+	"github.com/moov-io/imagecashletter"
 )
 
 // TestFileCreate tests creating an ICL File
@@ -35,4 +38,36 @@ func testFileWrite(t testing.TB) {
 	if s.Size() <= 0 {
 		t.Fatal("expected non-empty file")
 	}
+}
+
+// TestReadValidationOpts
+func TestReadValidationOpts(t *testing.T) {
+	tmp, err := os.CreateTemp("", "config")
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	defer os.Remove(tmp.Name())
+
+	f, err := os.Create(tmp.Name())
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	buf, _ := json.Marshal(&imagecashletter.ValidateOpts{})
+	f.Write(buf)
+	f.Close()
+
+	if opt := readValidationOpts(tmp.Name()); opt == nil {
+		t.Fatal("unable to create config")
+	}
+
+	if opt := readValidationOpts(""); opt != nil {
+		t.Fatal("does not to create any config")
+	}
+
+	*flagSkipValidation = true
+	if opt := readValidationOpts(""); opt == nil {
+		t.Fatal("unable to create config")
+	}
+
 }

@@ -151,6 +151,8 @@ type CheckDetail struct {
 	validator
 	// converters is composed for imagecashletter to golang Converters
 	converters
+
+	validateOpts *ValidateOpts
 }
 
 // NewCheckDetail returns a new CheckDetail with default values for non exported fields
@@ -165,6 +167,14 @@ func (cd *CheckDetail) setRecordType() {
 		return
 	}
 	cd.recordType = "25"
+}
+
+// SetValidation stores ValidateOpts on the CheckDetail which are to be used to override
+func (cd *CheckDetail) SetValidation(opts *ValidateOpts) {
+	if cd == nil {
+		return
+	}
+	cd.validateOpts = opts
 }
 
 // Parse takes the input record string and parses the CheckDetail values
@@ -285,10 +295,13 @@ func (cd *CheckDetail) Validate() error {
 	}
 	// Conditional
 	if cd.ArchiveTypeIndicator != "" {
-		if err := cd.isArchiveTypeIndicator(cd.ArchiveTypeIndicator); err != nil {
-			return &FieldError{FieldName: "ArchiveTypeIndicator", Value: cd.ArchiveTypeIndicator, Msg: err.Error()}
+		if cd.validateOpts == nil || cd.validateOpts.SkipAll || !cd.validateOpts.AllowInvalidArchiveTypeIndicator {
+			if err := cd.isArchiveTypeIndicator(cd.ArchiveTypeIndicator); err != nil {
+				return &FieldError{FieldName: "ArchiveTypeIndicator", Value: cd.ArchiveTypeIndicator, Msg: err.Error()}
+			}
 		}
 	}
+
 	return nil
 }
 
