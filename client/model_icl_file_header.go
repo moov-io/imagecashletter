@@ -20,7 +20,7 @@ type IclFileHeader struct {
 	// StandardLevel identifies the standard level of the file.  * `03` - DSTU X9.37-2003 * `30` - X9.100-187-2008 * `35` - X9.100-187-2013 and X9.100-187-2016
 	StandardLevel string `json:"standardLevel"`
 	// TestIndicator identifies whether the file is a test or production file.  * `T` - Test File * `P` - Production File
-	TestIndicator string `json:"testIndicator,omitempty"`
+	TestIndicator string `json:"testIndicator"`
 	// ImmediateDestination is the routing and transit number of the Federal Reserve Bank (FRB) or receiver to which the file is being sent.
 	ImmediateDestination string `json:"immediateDestination"`
 	// ImmediateOrigin is the routing and transit number of the Federal Reserve Bank (FRB) or originator from which the file is being sent.

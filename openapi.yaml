@@ -477,7 +477,7 @@ components:
           example: '1'
       required:
         - standardLevel
-        - testFileIndicator
+        - testIndicator
         - resendIndicator
         - immediateDestination
         - immediateOrigin
