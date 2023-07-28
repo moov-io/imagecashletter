@@ -11,7 +11,6 @@ package openapi
 
 import (
 	_context "context"
-	"fmt"
 	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
@@ -51,7 +50,7 @@ func (a *ImageCashLetterFilesApiService) AddICLToFile(ctx _context.Context, file
 
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/files/{fileID}/cashLetters"
-	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(fmt.Sprintf("%v", fileID)), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(parameterToString(fileID, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -132,7 +131,6 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/files/create"
-
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -179,16 +177,6 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 201 {
-			var v IclFile
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
 			var v Error
@@ -238,7 +226,7 @@ func (a *ImageCashLetterFilesApiService) DeleteICLFile(ctx _context.Context, fil
 
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/files/{fileID}"
-	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(fmt.Sprintf("%v", fileID)), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(parameterToString(fileID, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -315,8 +303,9 @@ func (a *ImageCashLetterFilesApiService) DeleteICLFromFile(ctx _context.Context,
 
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/files/{fileID}/cashLetters/{cashLetterID}"
-	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(fmt.Sprintf("%v", fileID)), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"cashLetterID"+"}", _neturl.QueryEscape(fmt.Sprintf("%v", cashLetterID)), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(parameterToString(fileID, "")), -1)
+
+	localVarPath = strings.Replace(localVarPath, "{"+"cashLetterID"+"}", _neturl.QueryEscape(parameterToString(cashLetterID, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -396,7 +385,7 @@ func (a *ImageCashLetterFilesApiService) GetICLFileByID(ctx _context.Context, fi
 
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/files/{fileID}"
-	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(fmt.Sprintf("%v", fileID)), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(parameterToString(fileID, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -443,16 +432,6 @@ func (a *ImageCashLetterFilesApiService) GetICLFileByID(ctx _context.Context, fi
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		if localVarHTTPResponse.StatusCode == 200 {
-			var v IclFile
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -495,7 +474,7 @@ func (a *ImageCashLetterFilesApiService) GetICLFileContents(ctx _context.Context
 
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/files/{fileID}/contents"
-	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(fmt.Sprintf("%v", fileID)), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(parameterToString(fileID, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -542,16 +521,6 @@ func (a *ImageCashLetterFilesApiService) GetICLFileContents(ctx _context.Context
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		if localVarHTTPResponse.StatusCode == 200 {
-			var v string
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -592,7 +561,6 @@ func (a *ImageCashLetterFilesApiService) GetICLFiles(ctx _context.Context, local
 
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/files"
-
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -638,15 +606,6 @@ func (a *ImageCashLetterFilesApiService) GetICLFiles(ctx _context.Context, local
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		if localVarHTTPResponse.StatusCode == 200 {
-			var v []IclFile
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -677,7 +636,6 @@ func (a *ImageCashLetterFilesApiService) Ping(ctx _context.Context) (*_nethttp.R
 
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/ping"
-
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -754,7 +712,7 @@ func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx _context.Context, fil
 
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/files/{fileID}"
-	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(fmt.Sprintf("%v", fileID)), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(parameterToString(fileID, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -802,16 +760,6 @@ func (a *ImageCashLetterFilesApiService) UpdateICLFile(ctx _context.Context, fil
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 201 {
-			var v IclFile
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 400 {
 			var v Error
@@ -864,7 +812,7 @@ func (a *ImageCashLetterFilesApiService) ValidateICLFile(ctx _context.Context, f
 
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/files/{fileID}/validate"
-	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(fmt.Sprintf("%v", fileID)), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", _neturl.QueryEscape(parameterToString(fileID, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -910,16 +858,6 @@ func (a *ImageCashLetterFilesApiService) ValidateICLFile(ctx _context.Context, f
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 200 {
-			var v IclFile
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
