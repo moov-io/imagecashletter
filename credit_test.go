@@ -7,6 +7,9 @@ package imagecashletter
 import (
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // mockCredit creates a Credit
@@ -31,104 +34,54 @@ func mockCredit() *Credit {
 // TestMockCredit creates a CreditItem
 func TestMockCredit(t *testing.T) {
 	ci := mockCredit()
-	if err := ci.Validate(); err != nil {
-		t.Error("mockCredit does not validate and will break other tests: ", err)
-	}
-	if ci.recordType != "61" {
-		t.Error("recordType does not validate")
-	}
-	if ci.AuxiliaryOnUs != "010910999940910" {
-		t.Error("AuxiliaryOnUs does not validate")
-	}
-	if ci.ExternalProcessingCode != "" {
-		t.Error("ExternalProcessingCode does not validate")
-	}
-	if ci.PayorBankRoutingNumber != "999920060" {
-		t.Error("PayorBankRoutingNumber does not validate")
-	}
-	if ci.CreditAccountNumberOnUs != "50920060509383521210" {
-		t.Error("CreditAccountNumberOnUs does not validate")
-	}
-	if ci.ItemAmount != 102088 {
-		t.Error("ItemAmount does not validate")
-	}
-	if ci.ECEInstitutionItemSequenceNumber != "               " {
-		t.Error("ECEInstitutionItemSequenceNumber does not validate")
-	}
-	if ci.DocumentationTypeIndicator != "G" {
-		t.Error("DocumentationTypeIndicator does not validate")
-	}
-	if ci.AccountTypeCode != "1" {
-		t.Error("AccountTypeCode does not validate")
-	}
-	if ci.SourceWorkCode != "3" {
-		t.Error("SourceWorkCode does not validate")
-	}
-	if ci.WorkType != " " {
-		t.Error("WorkType does not validate")
-	}
-	if ci.DebitCreditIndicator != " " {
-		t.Error("DebitCreditIndicator does not validate")
-	}
+
+	require.NoError(t, ci.Validate(), "mockCredit does not validate and will break other tests")
+	assert.Equal(t, "61", ci.recordType)
+	assert.Equal(t, "010910999940910", ci.AuxiliaryOnUs)
+	assert.Equal(t, "", ci.ExternalProcessingCode)
+	assert.Equal(t, "999920060", ci.PayorBankRoutingNumber)
+	assert.Equal(t, "50920060509383521210", ci.CreditAccountNumberOnUs)
+	assert.Equal(t, 102088, ci.ItemAmount)
+	assert.Equal(t, "               ", ci.ECEInstitutionItemSequenceNumber)
+	assert.Equal(t, "G", ci.DocumentationTypeIndicator)
+	assert.Equal(t, "1", ci.AccountTypeCode)
+	assert.Equal(t, "3", ci.SourceWorkCode)
+	assert.Equal(t, " ", ci.WorkType)
+	assert.Equal(t, " ", ci.DebitCreditIndicator)
 }
 
 func TestCreditCrash(t *testing.T) {
 	cr := &Credit{}
 	cr.Parse(`61010910999940910 999920060509200605093835212100000102088               G13     `)
-	if cr.DocumentationTypeIndicator != "G" {
-		t.Errorf("expected ci.DocumentationTypeIndicator=G")
-	}
+	assert.Equal(t, "G", cr.DocumentationTypeIndicator)
 }
 
 func TestParseCredit(t *testing.T) {
-	var line = "61010910999940910 999920060509200605093835212100000102088               G13     "
+	var line = "61010910999940910 99992006050920060509383521210000010208812345          G13     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	cr := mockCredit()
 	r.currentCashLetter.AddCredit(cr)
-	if err := r.parseCredit(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	record := r.currentCashLetter.GetCredits()[0]
+	require.NoError(t, r.parseCredit())
+	require.Len(t, r.currentCashLetter.Credits, 2)
 
-	if record.recordType != "61" {
-		t.Errorf("RecordType Expected '61' got: %v", record.recordType)
-	}
-	if record.AuxiliaryOnUs != "010910999940910" {
-		t.Errorf("AuxiliaryOnUs Expected '010910999940910' got: %v", record.AuxiliaryOnUs)
-	}
-	if record.ExternalProcessingCode != "" {
-		t.Errorf("ExternalProcessingCode Expected '' got: %v", record.ExternalProcessingCode)
-	}
-	if record.PayorBankRoutingNumber != "999920060" {
-		t.Errorf("PostingBankRoutingNumber Expected '999920060' got: %v", record.PayorBankRoutingNumber)
-	}
-	if record.CreditAccountNumberOnUs != "50920060509383521210" {
-		t.Errorf("OnUs Expected '50920060509383521210' got: %v", record.CreditAccountNumberOnUs)
-	}
-	if record.ItemAmount != 102088 {
-		t.Errorf("ItemAmount Expected '102088' got: %v", record.ItemAmount)
-	}
-	if record.ECEInstitutionItemSequenceNumber != "               " {
-		t.Errorf("ECEInstitutionItemSequenceNumber Expected '               ' got: %v", record.ECEInstitutionItemSequenceNumber)
-	}
-	if record.DocumentationTypeIndicator != "G" {
-		t.Errorf("DocumentationTypeIndicator Expected 'G' got: %v", record.DocumentationTypeIndicator)
-	}
-	if record.AccountTypeCode != "1" {
-		t.Errorf("AccountTypeCode Expected '1' got: %v", record.AccountTypeCode)
-	}
-	if record.SourceWorkCode != "3" {
-		t.Errorf("SourceWorkCode Expected '3' got: %v", record.SourceWorkCode)
-	}
-	if record.WorkType != " " {
-		t.Errorf("WorkType Expected ' ' got: %v", record.WorkType)
-	}
-	if record.DebitCreditIndicator != " " {
-		t.Errorf("DebitCreditIndicator Expected ' ' got: %v", record.DebitCreditIndicator)
-	}
+	record := r.currentCashLetter.GetCredits()[0]
+	assert.Equal(t, "61", record.recordType)
+	assert.Equal(t, "010910999940910", record.AuxiliaryOnUs)
+	assert.Equal(t, "", record.ExternalProcessingCode)
+	assert.Equal(t, "999920060", record.PayorBankRoutingNumber)
+	assert.Equal(t, "50920060509383521210", record.CreditAccountNumberOnUs)
+	assert.Equal(t, 102088, record.ItemAmount)
+	assert.Equal(t, "               ", record.ECEInstitutionItemSequenceNumber)
+	assert.Equal(t, "G", record.DocumentationTypeIndicator)
+	assert.Equal(t, "1", record.AccountTypeCode)
+	assert.Equal(t, "3", record.SourceWorkCode)
+	assert.Equal(t, " ", record.WorkType)
+	assert.Equal(t, " ", record.DebitCreditIndicator)
+
+	assert.Equal(t, "12345          ", r.currentCashLetter.GetCredits()[1].ECEInstitutionItemSequenceNumber)
 }
 
 // testCIString validates parsing a CreditItem
@@ -140,14 +93,10 @@ func testCRString(t testing.TB) {
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	cr := mockCredit()
 	r.currentCashLetter.AddCredit(cr)
-	if err := r.parseCredit(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, r.parseCredit())
+	require.Len(t, r.currentCashLetter.Credits, 2)
 	record := r.currentCashLetter.GetCredits()[0]
-
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	assert.Equal(t, line, record.String())
 }
 
 // TestCRString tests validating that a known parsed CheckDetail can return to a string of the same value
@@ -168,65 +117,45 @@ func BenchmarkCRString(b *testing.B) {
 func TestCRRecordType(t *testing.T) {
 	ci := mockCredit()
 	ci.recordType = "00"
-	if err := ci.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	var err *FieldError
+	require.ErrorAs(t, ci.Validate(), &err)
+	assert.Equal(t, "recordType", err.FieldName)
 }
 
 // TestCRDocumentationTypeIndicator validation
 func TestCRDocumentationTypeIndicator(t *testing.T) {
 	ci := mockCredit()
 	ci.DocumentationTypeIndicator = "P"
-	if err := ci.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "DocumentationTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	var err *FieldError
+	require.ErrorAs(t, ci.Validate(), &err)
+	assert.Equal(t, "DocumentationTypeIndicator", err.FieldName)
 }
 
 // TestCRDocumentationTypeIndicatorZ validation
 func TestCRDocumentationTypeIndicatorZ(t *testing.T) {
 	ci := mockCredit()
 	ci.DocumentationTypeIndicator = "Z"
-	if err := ci.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "DocumentationTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	var err *FieldError
+	require.ErrorAs(t, ci.Validate(), &err)
+	assert.Equal(t, "DocumentationTypeIndicator", err.FieldName)
 }
 
 // TestCRDocumentationTypeIndicatorM validation
 func TestCRDocumentationTypeIndicatorM(t *testing.T) {
 	ci := mockCredit()
 	ci.DocumentationTypeIndicator = "M"
-	if err := ci.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "DocumentationTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	var err *FieldError
+	require.ErrorAs(t, ci.Validate(), &err)
+	assert.Equal(t, "DocumentationTypeIndicator", err.FieldName)
 }
 
 // TestCRSourceWorkCode validation
 func TestCRSourceWorkCode(t *testing.T) {
 	ci := mockCredit()
 	ci.SourceWorkCode = "99"
-	if err := ci.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "SourceWorkCode" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	var err *FieldError
+	require.ErrorAs(t, ci.Validate(), &err)
+	assert.Equal(t, "SourceWorkCode", err.FieldName)
 }
 
 // Field Inclusion
@@ -235,50 +164,55 @@ func TestCRSourceWorkCode(t *testing.T) {
 func TestCRFIRecordType(t *testing.T) {
 	ci := mockCredit()
 	ci.recordType = ""
-	if err := ci.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	var err *FieldError
+	require.ErrorAs(t, ci.Validate(), &err)
+	assert.Equal(t, "recordType", err.FieldName)
 }
 
 // TestCRPayorBankRoutingNumber validation
 func TestCRPayorBankRoutingNumber(t *testing.T) {
 	ci := mockCredit()
 	ci.PayorBankRoutingNumber = "000000000"
-	if err := ci.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PayorBankRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	var err *FieldError
+	require.ErrorAs(t, ci.Validate(), &err)
+	assert.Equal(t, "PayorBankRoutingNumber", err.FieldName)
 }
 
 // TestCRCreditAccountNumberOnUs validation
 func TestCRCreditAccountNumberOnUs(t *testing.T) {
 	ci := mockCredit()
 	ci.CreditAccountNumberOnUs = ""
-	if err := ci.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CreditAccountNumberOnUs" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	var err *FieldError
+	require.ErrorAs(t, ci.Validate(), &err)
+	assert.Equal(t, "CreditAccountNumberOnUs", err.FieldName)
 }
 
 // TestCRItemAmount validation
 func TestCRItemAmount(t *testing.T) {
 	ci := mockCredit()
 	ci.ItemAmount = 0
-	if err := ci.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ItemAmount" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	var err *FieldError
+	require.ErrorAs(t, ci.Validate(), &err)
+	assert.Equal(t, "ItemAmount", err.FieldName)
+}
+
+func TestCredit_ECEInstitutionItemSequenceNumber(t *testing.T) {
+	// valid ECEInstitutionItemSequenceNumber
+	cr := mockCredit()
+	cr.ECEInstitutionItemSequenceNumber = "123456789012345"
+	require.NoError(t, cr.Validate())
+
+	// empty ECEInstitutionItemSequenceNumber
+	cr = mockCredit()
+	cr.ECEInstitutionItemSequenceNumber = ""
+	require.NoError(t, cr.Validate())
+
+	// invalid ECEInstitutionItemSequenceNumber
+	cr = mockCredit()
+	cr.ECEInstitutionItemSequenceNumber = "®©"
+	validateErr := cr.Validate()
+	require.Error(t, validateErr)
+	var err *FieldError
+	require.ErrorAs(t, validateErr, &err)
+	require.Equal(t, "ECEInstitutionItemSequenceNumber", err.FieldName)
 }
