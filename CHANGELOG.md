@@ -1,3 +1,21 @@
+## v0.9.3 (Released 2023-07-31)
+
+BUILD
+
+- build: update minimum Go version to 1.20
+- build: expose ports for HTTP API and health check
+- deps: update openapi codegen to v4.3.1
+- deps: update module github.com/moov-io/base to v0.45.1
+- deps: update module github.com/prometheus/client_golang to v1.16.0
+- deps: update module github.com/stretchr/testify to v1.8.4
+- deps: update module golang.org/x/oauth2 to v0.10.0
+- deps: bump activesupport to 7.0.4.3 in /docs
+
+BUG FIXES
+
+- client: rename File Header field `testFileIndicator` to `testIndicator` (See [PR #307](https://github.com/moov-io/imagecashletter/pull/307) by [@DennyWeinberg](https://github.com/DennyWeinberg))
+- credit: fix validation of `ECEInstitutionItemSequenceNumber`
+
 ## v0.9.2 (Released 2023-03-07)
 
 IMPROVEMENTS
