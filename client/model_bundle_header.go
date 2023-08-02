@@ -22,7 +22,7 @@ type BundleHeader struct {
 	// DestinationRoutingNumber contains the routing and transit number of the institution that receives and processes the cash letter or the bundle.
 	DestinationRoutingNumber string `json:"destinationRoutingNumber,omitempty"`
 	// ECEInstitutionRoutingNumber contains the routing and transit number of the institution that that creates the bundle header.
-	ECEInstitutionRoutingNumber string `json:"eCEInstitutionRoutingNumber,omitempty"`
+	ECEInstitutionRoutingNumber string `json:"eceInstitutionRoutingNumber,omitempty"`
 	// BundleBusinessDate is the business date of the bundle.
 	BundleBusinessDate time.Time `json:"bundleBusinessDate,omitempty"`
 	// BundleCreationDate is the date that the bundle is created.

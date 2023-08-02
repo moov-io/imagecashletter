@@ -22,7 +22,7 @@ type CashLetterHeader struct {
 	// DestinationRoutingNumber is the routing and transit number of the institution that receives and processes the cash letter or the bundle.
 	DestinationRoutingNumber string `json:"destinationRoutingNumber,omitempty"`
 	// ECEInstitutionRoutingNumber is the routing and transit number of the institution that creates the Cash Letter Header record.
-	ECEInstitutionRoutingNumber string `json:"eCEInstitutionRoutingNumber,omitempty"`
+	ECEInstitutionRoutingNumber string `json:"eceInstitutionRoutingNumber,omitempty"`
 	// cashLetterBusinessDate is the business date of the cash letter.
 	CashLetterBusinessDate time.Time `json:"cashLetterBusinessDate,omitempty"`
 	// cashLetterCreationDate is the date that the cash letter is created.

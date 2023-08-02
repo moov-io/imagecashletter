@@ -18,7 +18,7 @@ type ImageViewData struct {
 	// ImageViewData ID
 	ID string `json:"ID,omitempty"`
 	// ECEInstitutionRoutingNumber contains the routing and transit number of the institution that creates the bundle header.  This number is imported from the Bundle Header Record (Clause 9.4) associated with the image view conveyed in this Image View Data Property.
-	ECEInstitutionRoutingNumber string `json:"eCEInstitutionRoutingNumber,omitempty"`
+	ECEInstitutionRoutingNumber string `json:"eceInstitutionRoutingNumber,omitempty"`
 	// BundleBusinessDate is the business date of the bundle.
 	BundleBusinessDate time.Time `json:"bundleBusinessDate,omitempty"`
 	// CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which the bundle is created.
