@@ -601,7 +601,7 @@ components:
           maxLength: 9
           description: DestinationRoutingNumber is the routing and transit number of the institution that receives and processes the cash letter or the bundle.
           example: '999282654'
-        eCEInstitutionRoutingNumber:
+        eceInstitutionRoutingNumber:
           type: string
           maxLength: 9
           description: ECEInstitutionRoutingNumber is the routing and transit number of the institution that creates the Cash Letter Header record.
@@ -738,7 +738,7 @@ components:
           type: integer
           description: CashLetterImagesCount identifies the total number of ImageViewDetail(s) within the CashLetter.
           example: 1
-        eCEInstitutionName:
+        eceInstitutionName:
           type: string
           maxLength: 18
           description: ECEInstitutionName identifies the short name of the institution that creates the CashLetterControl.
@@ -820,7 +820,7 @@ components:
           description: DestinationRoutingNumber contains the routing and transit number of the institution that
             receives and processes the cash letter or the bundle.
           example: '231987654'
-        eCEInstitutionRoutingNumber:
+        eceInstitutionRoutingNumber:
           type: string
           maxLength: 9
           description: ECEInstitutionRoutingNumber contains the routing and transit number of the institution that
@@ -953,7 +953,7 @@ components:
           description: Amount identifies the amount of the check.  All amounts fields have two implied decimal points.
               e.g., 100000 is $1,000.00.
           example: 100000
-        eCEInstitutionItemSequenceNumber:
+        eceInstitutionItemSequenceNumber:
           type: string
           maxLength: 15
           description: ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the Check.
@@ -1239,7 +1239,7 @@ components:
             BundleBusinessDate.  For items presented in paper cash letters, the year, month, and day that the cash
             letter was created.
           example: '2018-10-03T00:00:00Z'
-        eCEInstitutionItemSequenceNumber:
+        eceInstitutionItemSequenceNumber:
           type: string
           maxLength: 15
           description: ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail.
@@ -2002,7 +2002,7 @@ components:
           type: string
           description: ImageViewData ID
           example: 'd1e26288'
-        eCEInstitutionRoutingNumber:
+        eceInstitutionRoutingNumber:
           type: string
           maxLength: 9
           description: ECEInstitutionRoutingNumber contains the routing and transit number of the institution that creates the

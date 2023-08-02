@@ -466,7 +466,7 @@ components:
             userField: V
             originatorContactName: John Smith
             ID: d1e26288
-            eCEInstitutionRoutingNumber: "217876527"
+            eceInstitutionRoutingNumber: "217876527"
             documentationTypeIndicator: A
           bundles:
           - bundleHeader:
@@ -479,7 +479,7 @@ components:
               ID: d1e26288
               bundleBusinessDate: 2018-10-03T00:00:00Z
               returnLocationRoutingNumber: "987654320"
-              eCEInstitutionRoutingNumber: "233431587"
+              eceInstitutionRoutingNumber: "233431587"
               cycleNumber: "01"
             checks:
             - bOFDIndicator: Y
@@ -501,7 +501,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -520,14 +520,14 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               returnAcceptanceIndicator: "1"
               archiveTypeIndicator: A
               onUs: "5558881"
               addendumCount: 3
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
               auxiliaryOnUs: "1001"
               itemAmount: 100000
@@ -706,7 +706,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -725,14 +725,14 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               returnAcceptanceIndicator: "1"
               archiveTypeIndicator: A
               onUs: "5558881"
               addendumCount: 3
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
               auxiliaryOnUs: "1001"
               itemAmount: 100000
@@ -918,7 +918,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -937,7 +937,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               forwardBundleDate: 2018-10-03T00:00:00Z
@@ -982,7 +982,7 @@ components:
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
               returnDetailAddendumD:
@@ -1135,7 +1135,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -1154,7 +1154,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               forwardBundleDate: 2018-10-03T00:00:00Z
@@ -1199,7 +1199,7 @@ components:
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
               returnDetailAddendumD:
@@ -1345,7 +1345,7 @@ components:
               ID: d1e26288
               bundleBusinessDate: 2018-10-03T00:00:00Z
               returnLocationRoutingNumber: "987654320"
-              eCEInstitutionRoutingNumber: "233431587"
+              eceInstitutionRoutingNumber: "233431587"
               cycleNumber: "01"
             checks:
             - bOFDIndicator: Y
@@ -1367,7 +1367,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -1386,14 +1386,14 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               returnAcceptanceIndicator: "1"
               archiveTypeIndicator: A
               onUs: "5558881"
               addendumCount: 3
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
               auxiliaryOnUs: "1001"
               itemAmount: 100000
@@ -1572,7 +1572,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -1591,14 +1591,14 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               returnAcceptanceIndicator: "1"
               archiveTypeIndicator: A
               onUs: "5558881"
               addendumCount: 3
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
               auxiliaryOnUs: "1001"
               itemAmount: 100000
@@ -1784,7 +1784,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -1803,7 +1803,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               forwardBundleDate: 2018-10-03T00:00:00Z
@@ -1848,7 +1848,7 @@ components:
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
               returnDetailAddendumD:
@@ -2001,7 +2001,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -2020,7 +2020,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               forwardBundleDate: 2018-10-03T00:00:00Z
@@ -2065,7 +2065,7 @@ components:
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
               returnDetailAddendumD:
@@ -2215,7 +2215,7 @@ components:
           cashLetterControl:
             cashLetterTotalAmount: 100
             cashLetterItemsCount: 1
-            eCEInstitutionName: Citadel
+            eceInstitutionName: Citadel
             cashLetterBundleCount: 1
             cashLetterImagesCount: 1
             ID: d1e26288
@@ -2258,7 +2258,7 @@ components:
             userField: V
             originatorContactName: John Smith
             ID: d1e26288
-            eCEInstitutionRoutingNumber: "217876527"
+            eceInstitutionRoutingNumber: "217876527"
             documentationTypeIndicator: A
           bundles:
           - bundleHeader:
@@ -2271,7 +2271,7 @@ components:
               ID: d1e26288
               bundleBusinessDate: 2018-10-03T00:00:00Z
               returnLocationRoutingNumber: "987654320"
-              eCEInstitutionRoutingNumber: "233431587"
+              eceInstitutionRoutingNumber: "233431587"
               cycleNumber: "01"
             checks:
             - bOFDIndicator: Y
@@ -2293,7 +2293,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -2312,14 +2312,14 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               returnAcceptanceIndicator: "1"
               archiveTypeIndicator: A
               onUs: "5558881"
               addendumCount: 3
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
               auxiliaryOnUs: "1001"
               itemAmount: 100000
@@ -2498,7 +2498,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -2517,14 +2517,14 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               returnAcceptanceIndicator: "1"
               archiveTypeIndicator: A
               onUs: "5558881"
               addendumCount: 3
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
               auxiliaryOnUs: "1001"
               itemAmount: 100000
@@ -2710,7 +2710,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -2729,7 +2729,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               forwardBundleDate: 2018-10-03T00:00:00Z
@@ -2774,7 +2774,7 @@ components:
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
               returnDetailAddendumD:
@@ -2927,7 +2927,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -2946,7 +2946,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               forwardBundleDate: 2018-10-03T00:00:00Z
@@ -2991,7 +2991,7 @@ components:
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
               returnDetailAddendumD:
@@ -3137,7 +3137,7 @@ components:
               ID: d1e26288
               bundleBusinessDate: 2018-10-03T00:00:00Z
               returnLocationRoutingNumber: "987654320"
-              eCEInstitutionRoutingNumber: "233431587"
+              eceInstitutionRoutingNumber: "233431587"
               cycleNumber: "01"
             checks:
             - bOFDIndicator: Y
@@ -3159,7 +3159,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -3178,14 +3178,14 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               returnAcceptanceIndicator: "1"
               archiveTypeIndicator: A
               onUs: "5558881"
               addendumCount: 3
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
               auxiliaryOnUs: "1001"
               itemAmount: 100000
@@ -3364,7 +3364,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -3383,14 +3383,14 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               returnAcceptanceIndicator: "1"
               archiveTypeIndicator: A
               onUs: "5558881"
               addendumCount: 3
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "1"
               auxiliaryOnUs: "1001"
               itemAmount: 100000
@@ -3576,7 +3576,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -3595,7 +3595,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               forwardBundleDate: 2018-10-03T00:00:00Z
@@ -3640,7 +3640,7 @@ components:
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
               returnDetailAddendumD:
@@ -3793,7 +3793,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               - ivData.LengthImageData: "0000001"
@@ -3812,7 +3812,7 @@ components:
                 bundleBusinessDate: 2018-10-03T00:00:00Z
                 ivData.ClippingOrigin: 1
                 ivData.ImageData: "0101"
-                eCEInstitutionRoutingNumber: "2318769876"
+                eceInstitutionRoutingNumber: "2318769876"
                 cycleNumber: "1"
                 ivData.SecurityAuthenticatorName: Name
               forwardBundleDate: 2018-10-03T00:00:00Z
@@ -3857,7 +3857,7 @@ components:
                 ID: d1e26288
                 returnLocationRoutingNumber: "231486745"
                 bOFDItemSequenceNumber: "1"
-              eCEInstitutionItemSequenceNumber: "24531"
+              eceInstitutionItemSequenceNumber: "24531"
               externalProcessingCode: "9"
               timesReturned: 0
               returnDetailAddendumD:
@@ -4007,7 +4007,7 @@ components:
           cashLetterControl:
             cashLetterTotalAmount: 100
             cashLetterItemsCount: 1
-            eCEInstitutionName: Citadel
+            eceInstitutionName: Citadel
             cashLetterBundleCount: 1
             cashLetterImagesCount: 1
             ID: d1e26288
@@ -4033,7 +4033,7 @@ components:
             ID: d1e26288
             bundleBusinessDate: 2018-10-03T00:00:00Z
             returnLocationRoutingNumber: "987654320"
-            eCEInstitutionRoutingNumber: "233431587"
+            eceInstitutionRoutingNumber: "233431587"
             cycleNumber: "01"
           checks:
           - bOFDIndicator: Y
@@ -4055,7 +4055,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -4074,14 +4074,14 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             returnAcceptanceIndicator: "1"
             archiveTypeIndicator: A
             onUs: "5558881"
             addendumCount: 3
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
             auxiliaryOnUs: "1001"
             itemAmount: 100000
@@ -4260,7 +4260,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -4279,14 +4279,14 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             returnAcceptanceIndicator: "1"
             archiveTypeIndicator: A
             onUs: "5558881"
             addendumCount: 3
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
             auxiliaryOnUs: "1001"
             itemAmount: 100000
@@ -4472,7 +4472,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -4491,7 +4491,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             forwardBundleDate: 2018-10-03T00:00:00Z
@@ -4536,7 +4536,7 @@ components:
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
             returnDetailAddendumD:
@@ -4689,7 +4689,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -4708,7 +4708,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             forwardBundleDate: 2018-10-03T00:00:00Z
@@ -4753,7 +4753,7 @@ components:
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
             returnDetailAddendumD:
@@ -4899,7 +4899,7 @@ components:
             ID: d1e26288
             bundleBusinessDate: 2018-10-03T00:00:00Z
             returnLocationRoutingNumber: "987654320"
-            eCEInstitutionRoutingNumber: "233431587"
+            eceInstitutionRoutingNumber: "233431587"
             cycleNumber: "01"
           checks:
           - bOFDIndicator: Y
@@ -4921,7 +4921,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -4940,14 +4940,14 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             returnAcceptanceIndicator: "1"
             archiveTypeIndicator: A
             onUs: "5558881"
             addendumCount: 3
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
             auxiliaryOnUs: "1001"
             itemAmount: 100000
@@ -5126,7 +5126,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -5145,14 +5145,14 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             returnAcceptanceIndicator: "1"
             archiveTypeIndicator: A
             onUs: "5558881"
             addendumCount: 3
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
             auxiliaryOnUs: "1001"
             itemAmount: 100000
@@ -5338,7 +5338,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -5357,7 +5357,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             forwardBundleDate: 2018-10-03T00:00:00Z
@@ -5402,7 +5402,7 @@ components:
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
             returnDetailAddendumD:
@@ -5555,7 +5555,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -5574,7 +5574,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             forwardBundleDate: 2018-10-03T00:00:00Z
@@ -5619,7 +5619,7 @@ components:
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
             returnDetailAddendumD:
@@ -6034,7 +6034,7 @@ components:
           userField: V
           originatorContactName: John Smith
           ID: d1e26288
-          eCEInstitutionRoutingNumber: "217876527"
+          eceInstitutionRoutingNumber: "217876527"
           documentationTypeIndicator: A
         bundles:
         - bundleHeader:
@@ -6047,7 +6047,7 @@ components:
             ID: d1e26288
             bundleBusinessDate: 2018-10-03T00:00:00Z
             returnLocationRoutingNumber: "987654320"
-            eCEInstitutionRoutingNumber: "233431587"
+            eceInstitutionRoutingNumber: "233431587"
             cycleNumber: "01"
           checks:
           - bOFDIndicator: Y
@@ -6069,7 +6069,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -6088,14 +6088,14 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             returnAcceptanceIndicator: "1"
             archiveTypeIndicator: A
             onUs: "5558881"
             addendumCount: 3
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
             auxiliaryOnUs: "1001"
             itemAmount: 100000
@@ -6274,7 +6274,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -6293,14 +6293,14 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             returnAcceptanceIndicator: "1"
             archiveTypeIndicator: A
             onUs: "5558881"
             addendumCount: 3
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
             auxiliaryOnUs: "1001"
             itemAmount: 100000
@@ -6486,7 +6486,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -6505,7 +6505,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             forwardBundleDate: 2018-10-03T00:00:00Z
@@ -6550,7 +6550,7 @@ components:
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
             returnDetailAddendumD:
@@ -6703,7 +6703,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -6722,7 +6722,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             forwardBundleDate: 2018-10-03T00:00:00Z
@@ -6767,7 +6767,7 @@ components:
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
             returnDetailAddendumD:
@@ -6913,7 +6913,7 @@ components:
             ID: d1e26288
             bundleBusinessDate: 2018-10-03T00:00:00Z
             returnLocationRoutingNumber: "987654320"
-            eCEInstitutionRoutingNumber: "233431587"
+            eceInstitutionRoutingNumber: "233431587"
             cycleNumber: "01"
           checks:
           - bOFDIndicator: Y
@@ -6935,7 +6935,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -6954,14 +6954,14 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             returnAcceptanceIndicator: "1"
             archiveTypeIndicator: A
             onUs: "5558881"
             addendumCount: 3
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
             auxiliaryOnUs: "1001"
             itemAmount: 100000
@@ -7140,7 +7140,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -7159,14 +7159,14 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             returnAcceptanceIndicator: "1"
             archiveTypeIndicator: A
             onUs: "5558881"
             addendumCount: 3
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "1"
             auxiliaryOnUs: "1001"
             itemAmount: 100000
@@ -7352,7 +7352,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -7371,7 +7371,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             forwardBundleDate: 2018-10-03T00:00:00Z
@@ -7416,7 +7416,7 @@ components:
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
             returnDetailAddendumD:
@@ -7569,7 +7569,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             - ivData.LengthImageData: "0000001"
@@ -7588,7 +7588,7 @@ components:
               bundleBusinessDate: 2018-10-03T00:00:00Z
               ivData.ClippingOrigin: 1
               ivData.ImageData: "0101"
-              eCEInstitutionRoutingNumber: "2318769876"
+              eceInstitutionRoutingNumber: "2318769876"
               cycleNumber: "1"
               ivData.SecurityAuthenticatorName: Name
             forwardBundleDate: 2018-10-03T00:00:00Z
@@ -7633,7 +7633,7 @@ components:
               ID: d1e26288
               returnLocationRoutingNumber: "231486745"
               bOFDItemSequenceNumber: "1"
-            eCEInstitutionItemSequenceNumber: "24531"
+            eceInstitutionItemSequenceNumber: "24531"
             externalProcessingCode: "9"
             timesReturned: 0
             returnDetailAddendumD:
@@ -7783,7 +7783,7 @@ components:
         cashLetterControl:
           cashLetterTotalAmount: 100
           cashLetterItemsCount: 1
-          eCEInstitutionName: Citadel
+          eceInstitutionName: Citadel
           cashLetterBundleCount: 1
           cashLetterImagesCount: 1
           ID: d1e26288
@@ -7821,7 +7821,7 @@ components:
         userField: V
         originatorContactName: John Smith
         ID: d1e26288
-        eCEInstitutionRoutingNumber: "217876527"
+        eceInstitutionRoutingNumber: "217876527"
         documentationTypeIndicator: A
       properties:
         ID:
@@ -7861,7 +7861,7 @@ components:
           example: "999282654"
           maxLength: 9
           type: string
-        eCEInstitutionRoutingNumber:
+        eceInstitutionRoutingNumber:
           description: ECEInstitutionRoutingNumber is the routing and transit number
             of the institution that creates the Cash Letter Header record.
           example: "217876527"
@@ -7988,7 +7988,7 @@ components:
       example:
         cashLetterTotalAmount: 100
         cashLetterItemsCount: 1
-        eCEInstitutionName: Citadel
+        eceInstitutionName: Citadel
         cashLetterBundleCount: 1
         cashLetterImagesCount: 1
         ID: d1e26288
@@ -8019,7 +8019,7 @@ components:
             within the CashLetter.
           example: 1
           type: integer
-        eCEInstitutionName:
+        eceInstitutionName:
           description: ECEInstitutionName identifies the short name of the institution
             that creates the CashLetterControl.
           example: Citadel
@@ -8064,7 +8064,7 @@ components:
           ID: d1e26288
           bundleBusinessDate: 2018-10-03T00:00:00Z
           returnLocationRoutingNumber: "987654320"
-          eCEInstitutionRoutingNumber: "233431587"
+          eceInstitutionRoutingNumber: "233431587"
           cycleNumber: "01"
         checks:
         - bOFDIndicator: Y
@@ -8086,7 +8086,7 @@ components:
             bundleBusinessDate: 2018-10-03T00:00:00Z
             ivData.ClippingOrigin: 1
             ivData.ImageData: "0101"
-            eCEInstitutionRoutingNumber: "2318769876"
+            eceInstitutionRoutingNumber: "2318769876"
             cycleNumber: "1"
             ivData.SecurityAuthenticatorName: Name
           - ivData.LengthImageData: "0000001"
@@ -8105,14 +8105,14 @@ components:
             bundleBusinessDate: 2018-10-03T00:00:00Z
             ivData.ClippingOrigin: 1
             ivData.ImageData: "0101"
-            eCEInstitutionRoutingNumber: "2318769876"
+            eceInstitutionRoutingNumber: "2318769876"
             cycleNumber: "1"
             ivData.SecurityAuthenticatorName: Name
           returnAcceptanceIndicator: "1"
           archiveTypeIndicator: A
           onUs: "5558881"
           addendumCount: 3
-          eCEInstitutionItemSequenceNumber: "24531"
+          eceInstitutionItemSequenceNumber: "24531"
           externalProcessingCode: "1"
           auxiliaryOnUs: "1001"
           itemAmount: 100000
@@ -8291,7 +8291,7 @@ components:
             bundleBusinessDate: 2018-10-03T00:00:00Z
             ivData.ClippingOrigin: 1
             ivData.ImageData: "0101"
-            eCEInstitutionRoutingNumber: "2318769876"
+            eceInstitutionRoutingNumber: "2318769876"
             cycleNumber: "1"
             ivData.SecurityAuthenticatorName: Name
           - ivData.LengthImageData: "0000001"
@@ -8310,14 +8310,14 @@ components:
             bundleBusinessDate: 2018-10-03T00:00:00Z
             ivData.ClippingOrigin: 1
             ivData.ImageData: "0101"
-            eCEInstitutionRoutingNumber: "2318769876"
+            eceInstitutionRoutingNumber: "2318769876"
             cycleNumber: "1"
             ivData.SecurityAuthenticatorName: Name
           returnAcceptanceIndicator: "1"
           archiveTypeIndicator: A
           onUs: "5558881"
           addendumCount: 3
-          eCEInstitutionItemSequenceNumber: "24531"
+          eceInstitutionItemSequenceNumber: "24531"
           externalProcessingCode: "1"
           auxiliaryOnUs: "1001"
           itemAmount: 100000
@@ -8503,7 +8503,7 @@ components:
             bundleBusinessDate: 2018-10-03T00:00:00Z
             ivData.ClippingOrigin: 1
             ivData.ImageData: "0101"
-            eCEInstitutionRoutingNumber: "2318769876"
+            eceInstitutionRoutingNumber: "2318769876"
             cycleNumber: "1"
             ivData.SecurityAuthenticatorName: Name
           - ivData.LengthImageData: "0000001"
@@ -8522,7 +8522,7 @@ components:
             bundleBusinessDate: 2018-10-03T00:00:00Z
             ivData.ClippingOrigin: 1
             ivData.ImageData: "0101"
-            eCEInstitutionRoutingNumber: "2318769876"
+            eceInstitutionRoutingNumber: "2318769876"
             cycleNumber: "1"
             ivData.SecurityAuthenticatorName: Name
           forwardBundleDate: 2018-10-03T00:00:00Z
@@ -8567,7 +8567,7 @@ components:
             ID: d1e26288
             returnLocationRoutingNumber: "231486745"
             bOFDItemSequenceNumber: "1"
-          eCEInstitutionItemSequenceNumber: "24531"
+          eceInstitutionItemSequenceNumber: "24531"
           externalProcessingCode: "9"
           timesReturned: 0
           returnDetailAddendumD:
@@ -8720,7 +8720,7 @@ components:
             bundleBusinessDate: 2018-10-03T00:00:00Z
             ivData.ClippingOrigin: 1
             ivData.ImageData: "0101"
-            eCEInstitutionRoutingNumber: "2318769876"
+            eceInstitutionRoutingNumber: "2318769876"
             cycleNumber: "1"
             ivData.SecurityAuthenticatorName: Name
           - ivData.LengthImageData: "0000001"
@@ -8739,7 +8739,7 @@ components:
             bundleBusinessDate: 2018-10-03T00:00:00Z
             ivData.ClippingOrigin: 1
             ivData.ImageData: "0101"
-            eCEInstitutionRoutingNumber: "2318769876"
+            eceInstitutionRoutingNumber: "2318769876"
             cycleNumber: "1"
             ivData.SecurityAuthenticatorName: Name
           forwardBundleDate: 2018-10-03T00:00:00Z
@@ -8784,7 +8784,7 @@ components:
             ID: d1e26288
             returnLocationRoutingNumber: "231486745"
             bOFDItemSequenceNumber: "1"
-          eCEInstitutionItemSequenceNumber: "24531"
+          eceInstitutionItemSequenceNumber: "24531"
           externalProcessingCode: "9"
           timesReturned: 0
           returnDetailAddendumD:
@@ -8944,7 +8944,7 @@ components:
         ID: d1e26288
         bundleBusinessDate: 2018-10-03T00:00:00Z
         returnLocationRoutingNumber: "987654320"
-        eCEInstitutionRoutingNumber: "233431587"
+        eceInstitutionRoutingNumber: "233431587"
         cycleNumber: "01"
       properties:
         ID:
@@ -8982,7 +8982,7 @@ components:
           example: "231987654"
           maxLength: 9
           type: string
-        eCEInstitutionRoutingNumber:
+        eceInstitutionRoutingNumber:
           description: ECEInstitutionRoutingNumber contains the routing and transit
             number of the institution that that creates the bundle header.
           example: "233431587"
@@ -9106,7 +9106,7 @@ components:
           bundleBusinessDate: 2018-10-03T00:00:00Z
           ivData.ClippingOrigin: 1
           ivData.ImageData: "0101"
-          eCEInstitutionRoutingNumber: "2318769876"
+          eceInstitutionRoutingNumber: "2318769876"
           cycleNumber: "1"
           ivData.SecurityAuthenticatorName: Name
         - ivData.LengthImageData: "0000001"
@@ -9125,14 +9125,14 @@ components:
           bundleBusinessDate: 2018-10-03T00:00:00Z
           ivData.ClippingOrigin: 1
           ivData.ImageData: "0101"
-          eCEInstitutionRoutingNumber: "2318769876"
+          eceInstitutionRoutingNumber: "2318769876"
           cycleNumber: "1"
           ivData.SecurityAuthenticatorName: Name
         returnAcceptanceIndicator: "1"
         archiveTypeIndicator: A
         onUs: "5558881"
         addendumCount: 3
-        eCEInstitutionItemSequenceNumber: "24531"
+        eceInstitutionItemSequenceNumber: "24531"
         externalProcessingCode: "1"
         auxiliaryOnUs: "1001"
         itemAmount: 100000
@@ -9340,7 +9340,7 @@ components:
             have two implied decimal points. e.g., 100000 is $1,000.00.
           example: 100000
           type: integer
-        eCEInstitutionItemSequenceNumber:
+        eceInstitutionItemSequenceNumber:
           description: ECEInstitutionItemSequenceNumber identifies a number assigned
             by the institution that creates the Check. Field must contain a numeric
             value. It cannot be all blanks.
@@ -9552,7 +9552,7 @@ components:
           bundleBusinessDate: 2018-10-03T00:00:00Z
           ivData.ClippingOrigin: 1
           ivData.ImageData: "0101"
-          eCEInstitutionRoutingNumber: "2318769876"
+          eceInstitutionRoutingNumber: "2318769876"
           cycleNumber: "1"
           ivData.SecurityAuthenticatorName: Name
         - ivData.LengthImageData: "0000001"
@@ -9571,7 +9571,7 @@ components:
           bundleBusinessDate: 2018-10-03T00:00:00Z
           ivData.ClippingOrigin: 1
           ivData.ImageData: "0101"
-          eCEInstitutionRoutingNumber: "2318769876"
+          eceInstitutionRoutingNumber: "2318769876"
           cycleNumber: "1"
           ivData.SecurityAuthenticatorName: Name
         forwardBundleDate: 2018-10-03T00:00:00Z
@@ -9616,7 +9616,7 @@ components:
           ID: d1e26288
           returnLocationRoutingNumber: "231486745"
           bOFDItemSequenceNumber: "1"
-        eCEInstitutionItemSequenceNumber: "24531"
+        eceInstitutionItemSequenceNumber: "24531"
         externalProcessingCode: "9"
         timesReturned: 0
         returnDetailAddendumD:
@@ -9849,7 +9849,7 @@ components:
           example: 2018-10-03T00:00:00Z
           format: date-time
           type: string
-        eCEInstitutionItemSequenceNumber:
+        eceInstitutionItemSequenceNumber:
           description: ECEInstitutionItemSequenceNumber identifies a number assigned
             by the institution that creates the CheckDetail. Field must contain a
             numeric value. It cannot be all blanks.
@@ -10718,7 +10718,7 @@ components:
         bundleBusinessDate: 2018-10-03T00:00:00Z
         ivData.ClippingOrigin: 1
         ivData.ImageData: "0101"
-        eCEInstitutionRoutingNumber: "2318769876"
+        eceInstitutionRoutingNumber: "2318769876"
         cycleNumber: "1"
         ivData.SecurityAuthenticatorName: Name
       properties:
@@ -10726,7 +10726,7 @@ components:
           description: ImageViewData ID
           example: d1e26288
           type: string
-        eCEInstitutionRoutingNumber:
+        eceInstitutionRoutingNumber:
           description: ECEInstitutionRoutingNumber contains the routing and transit
             number of the institution that creates the bundle header.  This number
             is imported from the Bundle Header Record (Clause 9.4) associated with
