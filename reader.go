@@ -30,6 +30,10 @@ func (e *ParseError) Error() string {
 	return fmt.Sprintf("line:%d record:%s %T %s", e.Line, e.Record, e.Err, e.Err)
 }
 
+func (e *ParseError) Unwrap() error {
+	return e.Err
+}
+
 // Reader reads records from a ACH-encoded file.
 type Reader struct {
 	// r handles the IO.Reader sent to be parser.
