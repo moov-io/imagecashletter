@@ -99,7 +99,7 @@ func TestMockImageViewData(t *testing.T) {
 
 // testIVDataString validates that a known parsed ImageViewData can return to a string of the same value
 func testIVDataString(t testing.TB) {
-	//var line = "5212345678020140410  44000000                                                       0                00000    0005591"
+	// var line = "5212345678020140410  44000000                                                       0                00000    0005591"
 	var line = "5212104288220180915  1                                                              0                00000    0000001 "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -285,7 +285,7 @@ func TestIVDataFIBundleBusinessDate(t *testing.T) {
 	}
 }
 
-func TestImageViewData__Base64String(t *testing.T) {
+func TestImageViewData_Base64String(t *testing.T) {
 	data := base64Encode("hello, world")
 
 	ivData := mockImageViewData()

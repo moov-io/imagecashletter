@@ -369,7 +369,7 @@ func TestICLWrite_EbcdicEncodingOption(t *testing.T) {
 	}
 }
 
-func TestWriter__CollateErr(t *testing.T) {
+func TestWriter_CollateErr(t *testing.T) {
 	cd := &CheckDetail{
 		// Create a CheckDetail without a corresponding ImageData or ImageViewAnalysis
 		// so when we attempt to collate them it doesn't crash.

@@ -12,9 +12,9 @@ import (
 	"testing"
 )
 
-// TestImageCashLetter__ReadCrashers will attempt to parse files which have previously been reported
+// TestImageCashLetter_ReadCrashers will attempt to parse files which have previously been reported
 // as crashing. These files are typically generated via fuzzing, but might also be reported by users.
-func TestImageCashLetter__ReadCrashers(t *testing.T) {
+func TestImageCashLetter_ReadCrashers(t *testing.T) {
 	root := filepath.Join("test", "testdata", "crashers")
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if (err != nil && err != filepath.SkipDir) || info == nil || info.IsDir() {

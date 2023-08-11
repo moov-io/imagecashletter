@@ -6,20 +6,15 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
-func TestHTTP__cleanMetricsPath(t *testing.T) {
-	if v := cleanMetricsPath("/v1/customers/companies/1234"); v != "v1-customers-companies" {
-		t.Errorf("got %q", v)
-	}
-	if v := cleanMetricsPath("/v1/customers/ping"); v != "v1-customers-ping" {
-		t.Errorf("got %q", v)
-	}
-	if v := cleanMetricsPath("/v1/customers/customers/19636f90bc95779e2488b0f7a45c4b68958a2ddd"); v != "v1-customers-customers" {
-		t.Errorf("got %q", v)
-	}
+func TestHTTP_cleanMetricsPath(t *testing.T) {
+	require.Equal(t, "v1-customers-companies", cleanMetricsPath("/v1/customers/companies/1234"))
+	require.Equal(t, "v1-customers-ping", cleanMetricsPath("/v1/customers/ping"))
+	require.Equal(t, "v1-customers-customers", cleanMetricsPath("/v1/customers/customers/19636f90bc95779e2488b0f7a45c4b68958a2ddd"))
+
 	// A value which looks like moov/base.ID, but is off by one character (last letter)
-	if v := cleanMetricsPath("/v1/customers/customers/19636f90bc95779e2488b0f7a45c4b68958a2ddz"); v != "v1-customers-customers-19636f90bc95779e2488b0f7a45c4b68958a2ddz" {
-		t.Errorf("got %q", v)
-	}
+	require.Equal(t, "v1-customers-customers-19636f90bc95779e2488b0f7a45c4b68958a2ddz", cleanMetricsPath("/v1/customers/customers/19636f90bc95779e2488b0f7a45c4b68958a2ddz"))
 }
