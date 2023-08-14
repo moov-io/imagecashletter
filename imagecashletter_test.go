@@ -5,11 +5,14 @@
 package imagecashletter
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // TestImageCashLetter_ReadCrashers will attempt to parse files which have previously been reported
@@ -17,7 +20,7 @@ import (
 func TestImageCashLetter_ReadCrashers(t *testing.T) {
 	root := filepath.Join("test", "testdata", "crashers")
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		if (err != nil && err != filepath.SkipDir) || info == nil || info.IsDir() {
+		if (err != nil && !errors.Is(err, filepath.SkipDir)) || info == nil || info.IsDir() {
 			return nil // Ignore SkipDir and directories
 		}
 		if strings.HasSuffix(path, ".output") {
@@ -30,13 +33,16 @@ func TestImageCashLetter_ReadCrashers(t *testing.T) {
 		}
 
 		// Read out test file with multiple option patterns and ensure we don't panic
-		NewReader(fd).Read()
-		NewReader(fd, ReadVariableLineLengthOption()).Read()
+		require.NotPanics(t, func() {
+			_, _ = NewReader(fd).Read()
+			_, _ = NewReader(fd, ReadVariableLineLengthOption()).Read()
+		})
 
-		t.Logf("read and parsed %s", fd.Name())
+		if testing.Verbose() {
+			t.Logf("read and parsed %s", fd.Name())
+		}
+
 		return nil
 	})
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 }

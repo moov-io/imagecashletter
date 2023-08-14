@@ -5,10 +5,11 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockCashLetterHeader creates a CashLetterHeader
@@ -34,48 +35,20 @@ func mockCashLetterHeader() *CashLetterHeader {
 // TestMockCashLetterHeader creates a CashLetterHeader
 func TestMockCashLetterHeader(t *testing.T) {
 	clh := mockCashLetterHeader()
-	if err := clh.Validate(); err != nil {
-		t.Error("mockCashLetterHeader does not validate and will break other tests: ", err)
-	}
-	if clh.recordType != "10" {
-		t.Error("recordType does not validate")
-	}
-	if clh.CollectionTypeIndicator != "01" {
-		t.Error("CollectionTypeIndicator does not validate")
-	}
-	if clh.DestinationRoutingNumber != "231380104" {
-		t.Error("DestinationRoutingNumber does not validate")
-	}
-	if clh.ECEInstitutionRoutingNumber != "121042882" {
-		t.Error("ECEInstitutionRoutingNumber does not validate")
-	}
-	if clh.RecordTypeIndicator != "I" {
-		t.Error("RecordTypeIndicator does not validate")
-	}
-	if clh.DocumentationTypeIndicator != "G" {
-		t.Error("DocumentationTypeIndicator does not validate")
-	}
-	if clh.CashLetterID != "A1" {
-		t.Error("CashLetterID does not validate")
-	}
-	if clh.OriginatorContactName != "Contact Name" {
-		t.Error("OriginatorContactName does not validate")
-	}
-	if clh.OriginatorContactPhoneNumber != "5558675552" {
-		t.Error("OriginatorContactPhoneNumber does not validate")
-	}
-	if clh.FedWorkType != "" {
-		t.Error("FedWorkType does not validate")
-	}
-	if clh.ReturnsIndicator != "" {
-		t.Error("ReturnsIndicator does not validate")
-	}
-	if clh.UserField != "" {
-		t.Error("UserField does not validate")
-	}
-	if clh.reserved != "" {
-		t.Error("Reserved does not validate")
-	}
+	require.NoError(t, clh.Validate())
+	require.Equal(t, "10", clh.recordType)
+	require.Equal(t, "01", clh.CollectionTypeIndicator)
+	require.Equal(t, "231380104", clh.DestinationRoutingNumber)
+	require.Equal(t, "121042882", clh.ECEInstitutionRoutingNumber)
+	require.Equal(t, "I", clh.RecordTypeIndicator)
+	require.Equal(t, "G", clh.DocumentationTypeIndicator)
+	require.Equal(t, "A1", clh.CashLetterID)
+	require.Equal(t, "Contact Name", clh.OriginatorContactName)
+	require.Equal(t, "5558675552", clh.OriginatorContactPhoneNumber)
+	require.Equal(t, "", clh.FedWorkType)
+	require.Equal(t, "", clh.ReturnsIndicator)
+	require.Equal(t, "", clh.UserField)
+	require.Equal(t, "", clh.reserved)
 }
 
 // TestParseCashLetterHeader validates parsing a CashLetterHeader
@@ -83,60 +56,25 @@ func TestParseCashLetterHeader(t *testing.T) {
 	var line = "100123138010412104288220180905201809051523IGA1      Contact Name  5558675552    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	if err := r.parseCashLetterHeader(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseCashLetterHeader())
 	record := r.currentCashLetter.CashLetterHeader
 
-	if record.recordType != "10" {
-		t.Errorf("RecordType Expected '10' got: %v", record.recordType)
-	}
-	if record.CollectionTypeIndicatorField() != "01" {
-		t.Errorf("CollectionTypeIndicator Expected '01' got: %v", record.CollectionTypeIndicatorField())
-	}
-	if record.DestinationRoutingNumberField() != "231380104" {
-		t.Errorf("DestinationRoutingNumber '231380104' got: %v", record.DestinationRoutingNumberField())
-	}
-	if record.ECEInstitutionRoutingNumberField() != "121042882" {
-		t.Errorf("ECEInstitutionRoutingNumber Expected '121042882' got: %v", record.ECEInstitutionRoutingNumberField())
-	}
-	if record.CashLetterBusinessDateField() != "20180905" {
-		t.Errorf("CashLetterBusinessDate Expected '20180905' got:'%v'", record.CashLetterBusinessDateField())
-	}
-	if record.CashLetterCreationDateField() != "20180905" {
-		t.Errorf("CashLetterCreationDate Expected '20180905' got:'%v'", record.CashLetterCreationDateField())
-	}
-	if record.CashLetterCreationTimeField() != "1523" {
-		t.Errorf("CashLetterCreationTime Expected '1523' got:'%v'", record.CashLetterCreationTimeField())
-	}
-	if record.RecordTypeIndicatorField() != "I" {
-		t.Errorf("RecordTypeIndicator Expected 'I' got: %v", record.RecordTypeIndicatorField())
-	}
-	if record.DocumentationTypeIndicatorField() != "G" {
-		t.Errorf("DocumentationTypeIndicator Expected 'G' got:'%v'", record.DocumentationTypeIndicatorField())
-	}
-	if record.CashLetterIDField() != "A1      " {
-		t.Errorf("CashLetterID Expected 'A1      ' got:'%v'", record.CashLetterIDField())
-	}
-	if record.OriginatorContactNameField() != "Contact Name  " {
-		t.Errorf("OriginatorContactName Expected 'Contact Name  ' got: '%v'", record.OriginatorContactNameField())
-	}
-	if record.OriginatorContactPhoneNumberField() != "5558675552" {
-		t.Errorf("OriginatorContactPhoneNumber Expected '5558675552' got: '%v'", record.OriginatorContactPhoneNumberField())
-	}
-	if record.FedWorkTypeField() != " " {
-		t.Errorf("FedWorkType Expected ' ' got:'%v'", record.FedWorkTypeField())
-	}
-	if record.ReturnsIndicatorField() != " " {
-		t.Errorf("ReturnsIndicator ' ' got:'%v'", record.ReturnsIndicatorField())
-	}
-	if record.UserFieldField() != " " {
-		t.Errorf("UserField Expected ' ' got:'%v'", record.UserFieldField())
-	}
-	if record.reservedField() != " " {
-		t.Errorf("reserved Expected ' ' got:'%v'", record.reservedField())
-	}
+	require.Equal(t, "10", record.recordType)
+	require.Equal(t, "01", record.CollectionTypeIndicatorField())
+	require.Equal(t, "231380104", record.DestinationRoutingNumberField())
+	require.Equal(t, "121042882", record.ECEInstitutionRoutingNumberField())
+	require.Equal(t, "20180905", record.CashLetterBusinessDateField())
+	require.Equal(t, "20180905", record.CashLetterCreationDateField())
+	require.Equal(t, "1523", record.CashLetterCreationTimeField())
+	require.Equal(t, "I", record.RecordTypeIndicatorField())
+	require.Equal(t, "G", record.DocumentationTypeIndicatorField())
+	require.Equal(t, "A1      ", record.CashLetterIDField())
+	require.Equal(t, "Contact Name  ", record.OriginatorContactNameField())
+	require.Equal(t, "5558675552", record.OriginatorContactPhoneNumberField())
+	require.Equal(t, " ", record.FedWorkTypeField())
+	require.Equal(t, " ", record.ReturnsIndicatorField())
+	require.Equal(t, " ", record.UserFieldField())
+	require.Equal(t, " ", record.reservedField())
 }
 
 // testCLHString validates that a known parsed CashLetterHeader can return to a string of the same value
@@ -144,14 +82,9 @@ func testCLHString(t testing.TB) {
 	var line = "100123138010412104288220180905201809051523IGA1      Contact Name  5558675552    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	if err := r.parseCashLetterHeader(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseCashLetterHeader())
 	record := r.currentCashLetter.CashLetterHeader
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestCLHString tests validating that a known parsed CashLetterHeader can return to a string of the same value
@@ -172,273 +105,210 @@ func BenchmarkCLHString(b *testing.B) {
 func TestCLHRecordType(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.recordType = "00"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestCHCollectionTypeIndicator validation
 func TestCHCollectionTypeIndicator(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.CollectionTypeIndicator = "87"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CollectionTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CollectionTypeIndicator", e.FieldName)
 }
 
 // TestRecordTypeIndicator validation
 func TestRecordTypeIndicator(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.RecordTypeIndicator = "W"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "RecordTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "RecordTypeIndicator", e.FieldName)
 }
 
 // TestDocumentationTypeIndicator validation
 func TestDocumentationTypeIndicator(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.DocumentationTypeIndicator = "WAZ"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "DocumentationTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "DocumentationTypeIndicator", e.FieldName)
 }
 
 // TestCashLetterID validation
 func TestCashLetterID(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.CashLetterID = "--"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CashLetterID" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CashLetterID", e.FieldName)
 }
 
 // TestOriginatorContactName validation
 func TestOriginatorContactName(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.OriginatorContactName = "®©"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OriginatorContactName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OriginatorContactName", e.FieldName)
 }
 
 // TestOriginatorContactPhoneNumber validation
 func TestOriginatorContactPhoneNumber(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.OriginatorContactPhoneNumber = "--"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OriginatorContactPhoneNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OriginatorContactPhoneNumber", e.FieldName)
 }
 
 // TestFedWorkType validation
 func TestFedWorkType(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.FedWorkType = "--"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "FedWorkType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "FedWorkType", e.FieldName)
 }
 
 // TestReturnsIndicator validation
 func TestReturnsIndicator(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.ReturnsIndicator = "A"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ReturnsIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ReturnsIndicator", e.FieldName)
 }
 
 // TestCLHUserField validation
 func TestCLHUserFieldI(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.UserField = "®©"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserField" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserField", e.FieldName)
 }
 
 // TestCLHFieldInclusionRecordType validates FieldInclusion
 func TestCLHFieldInclusionRecordType(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.recordType = ""
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestFieldInclusionCollectionTypeIndicator validates FieldInclusion
 func TestFieldInclusionCollectionTypeIndicator(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.CollectionTypeIndicator = ""
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CollectionTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CollectionTypeIndicator", e.FieldName)
 }
 
 // TestFieldInclusionRecordTypeIndicator validates FieldInclusion
 func TestFieldInclusionRecordTypeIndicator(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.RecordTypeIndicator = ""
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "RecordTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "RecordTypeIndicator", e.FieldName)
 }
 
 // TestFieldInclusionDestinationRoutingNumber validates FieldInclusion
 func TestFieldInclusionDestinationRoutingNumber(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.DestinationRoutingNumber = ""
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "DestinationRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "DestinationRoutingNumber", e.FieldName)
 }
 
 // TestFieldInclusionDestinationRoutingZerovalidates FieldInclusion
 func TestFieldInclusionDestinationRoutingNumberZero(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.DestinationRoutingNumber = "000000000"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "DestinationRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "DestinationRoutingNumber", e.FieldName)
 }
 
 // TestFieldInclusionECEInstitutionRoutingNumber validates FieldInclusion
 func TestFieldInclusionECEInstitutionRoutingNumber(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.ECEInstitutionRoutingNumber = ""
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ECEInstitutionRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ECEInstitutionRoutingNumber", e.FieldName)
 }
 
 // TestFieldInclusionECEInstitutionRoutingNumberZero validates FieldInclusion
 func TestFieldInclusionECEInstitutionRoutingNumberZero(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.ECEInstitutionRoutingNumber = "000000000"
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ECEInstitutionRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ECEInstitutionRoutingNumber", e.FieldName)
 }
 
 // TestFieldInclusionCashLetterBusinessDate validates FieldInclusion
 func TestFieldInclusionCashLetterBusinessDate(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.CashLetterBusinessDate = time.Time{}
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CashLetterBusinessDate" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CashLetterBusinessDate", e.FieldName)
 }
 
 // TestFieldInclusionCashLetterCreationDate validates FieldInclusion
 func TestFieldInclusionCashLetterCreationDate(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.CashLetterCreationDate = time.Time{}
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CashLetterCreationDate" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CashLetterCreationDate", e.FieldName)
 }
 
 // TestFieldInclusionCashLetterCreationTime validates FieldInclusion
 func TestFieldInclusionCashLetterCreationTime(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.CashLetterCreationTime = time.Time{}
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CashLetterCreationTime" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CashLetterCreationTime", e.FieldName)
 }
 
 // TestFieldInclusionCashLetterID validates FieldInclusion
 func TestFieldInclusionCashLetterID(t *testing.T) {
 	clh := mockCashLetterHeader()
 	clh.CashLetterID = ""
-	if err := clh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CashLetterID" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CashLetterID", e.FieldName)
 }
 
 // TestCashLetterHeaderRuneCountInString validates RuneCountInString
@@ -447,7 +317,5 @@ func TestCashLetterHeaderRuneCountInString(t *testing.T) {
 	var line = "10"
 	clh.Parse(line)
 
-	if clh.CollectionTypeIndicator != "" {
-		t.Error("Parsed with an invalid RuneCountInString")
-	}
+	require.Equal(t, "", clh.CollectionTypeIndicator)
 }

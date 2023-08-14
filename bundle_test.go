@@ -4,81 +4,81 @@
 
 package imagecashletter
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/require"
+)
 
 // mockBundleChecks
 func mockBundleChecks() *Bundle {
-	mockBundleChecks := &Bundle{}
-	mockBundleChecks.SetHeader(mockBundleHeader())
-	mockBundleChecks.AddCheckDetail(mockCheckDetail())
-	mockBundleChecks.Checks[0].AddCheckDetailAddendumA(mockCheckDetailAddendumA())
-	mockBundleChecks.Checks[0].AddCheckDetailAddendumB(mockCheckDetailAddendumB())
-	mockBundleChecks.Checks[0].AddCheckDetailAddendumC(mockCheckDetailAddendumC())
-	mockBundleChecks.Checks[0].AddImageViewDetail(mockImageViewDetail())
-	mockBundleChecks.Checks[0].AddImageViewData(mockImageViewData())
-	mockBundleChecks.Checks[0].AddImageViewAnalysis(mockImageViewAnalysis())
-	if err := mockBundleChecks.build(); err != nil {
+	bundle := &Bundle{}
+	bundle.SetHeader(mockBundleHeader())
+	bundle.AddCheckDetail(mockCheckDetail())
+	bundle.Checks[0].AddCheckDetailAddendumA(mockCheckDetailAddendumA())
+	bundle.Checks[0].AddCheckDetailAddendumB(mockCheckDetailAddendumB())
+	bundle.Checks[0].AddCheckDetailAddendumC(mockCheckDetailAddendumC())
+	bundle.Checks[0].AddImageViewDetail(mockImageViewDetail())
+	bundle.Checks[0].AddImageViewData(mockImageViewData())
+	bundle.Checks[0].AddImageViewAnalysis(mockImageViewAnalysis())
+	if err := bundle.build(); err != nil {
 		panic(err)
 	}
-	return mockBundleChecks
+	return bundle
 }
 
 // mockBundleReturns
 func mockBundleReturns() *Bundle {
-	mockBundleReturns := &Bundle{}
-	mockBundleReturns.SetHeader(mockBundleHeader())
-	mockBundleReturns.AddReturnDetail(mockReturnDetail())
-	mockBundleReturns.Returns[0].AddReturnDetailAddendumA(mockReturnDetailAddendumA())
-	mockBundleReturns.Returns[0].AddReturnDetailAddendumB(mockReturnDetailAddendumB())
-	mockBundleReturns.Returns[0].AddReturnDetailAddendumC(mockReturnDetailAddendumC())
-	mockBundleReturns.Returns[0].AddReturnDetailAddendumD(mockReturnDetailAddendumD())
-	mockBundleReturns.Returns[0].AddImageViewDetail(mockImageViewDetail())
-	mockBundleReturns.Returns[0].AddImageViewData(mockImageViewData())
-	mockBundleReturns.Returns[0].AddImageViewAnalysis(mockImageViewAnalysis())
-	if err := mockBundleReturns.build(); err != nil {
+	bundle := &Bundle{}
+	bundle.SetHeader(mockBundleHeader())
+	bundle.AddReturnDetail(mockReturnDetail())
+	bundle.Returns[0].AddReturnDetailAddendumA(mockReturnDetailAddendumA())
+	bundle.Returns[0].AddReturnDetailAddendumB(mockReturnDetailAddendumB())
+	bundle.Returns[0].AddReturnDetailAddendumC(mockReturnDetailAddendumC())
+	bundle.Returns[0].AddReturnDetailAddendumD(mockReturnDetailAddendumD())
+	bundle.Returns[0].AddImageViewDetail(mockImageViewDetail())
+	bundle.Returns[0].AddImageViewData(mockImageViewData())
+	bundle.Returns[0].AddImageViewAnalysis(mockImageViewAnalysis())
+	if err := bundle.build(); err != nil {
 		panic(err)
 	}
-	return mockBundleReturns
+	return bundle
 }
 
 // TestMockBundleChecks creates a Bundle of checks
 func TestMockBundleChecks(t *testing.T) {
 	bundle := mockBundleChecks()
-	if err := bundle.Validate(); err != nil {
-		t.Error("Bundle does not validate and will break other tests: ", err)
-	}
+	require.NoError(t, bundle.Validate())
 
 	bundle = nil // ensure we don't panic
-	if v := bundle.GetChecks(); v != nil {
-		t.Errorf("unexpected %v", v)
-	}
+	require.NotPanics(t, func() {
+		checks := bundle.GetChecks()
+		require.Nil(t, checks)
+	})
 }
 
 // TestMockBundleReturns creates a Bundle of returns
 func TestMockBundleReturns(t *testing.T) {
 	bundle := mockBundleReturns()
-	if err := bundle.Validate(); err != nil {
-		t.Error("Bundle does not validate and will break other tests: ", err)
-	}
+	require.NoError(t, bundle.Validate())
 
 	bundle = nil // ensure we don't panic
-	if v := bundle.GetReturns(); v != nil {
-		t.Errorf("unexpected %v", v)
-	}
+	require.NotPanics(t, func() {
+		returns := bundle.GetReturns()
+		require.Nil(t, returns)
+	})
 }
 
 func TestBundleValidate(t *testing.T) {
 	header := mockBundleHeader()
 	bundle := NewBundle(header)
-	if err := bundle.Validate(); err == nil {
-		t.Error("expected error, but got nothing")
-	}
+	require.Error(t, bundle.Validate())
 }
 
 // TestCheckDetailAddendumCount validates CheckDetail AddendumCount
 func TestCheckDetailAddendumCount(t *testing.T) {
 	cd := mockCheckDetail()
-	cd.AddendumCount = 2
+	cd.AddendumCount = 2 // incorrect count should cause error
 	cd.AddCheckDetailAddendumA(mockCheckDetailAddendumA())
 	cd.AddCheckDetailAddendumB(mockCheckDetailAddendumB())
 	cd.AddCheckDetailAddendumC(mockCheckDetailAddendumC())
@@ -88,19 +88,16 @@ func TestCheckDetailAddendumCount(t *testing.T) {
 	bundle := NewBundle(mockBundleHeader())
 	bundle.AddCheckDetail(cd)
 
-	if err := bundle.Validate(); err != nil {
-		if e, ok := err.(*BundleError); ok {
-			if e.FieldName != "AddendumCount" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bundle.Validate()
+	var bundleErr *BundleError
+	require.ErrorAs(t, err, &bundleErr)
+	require.Equal(t, "AddendumCount", bundleErr.FieldName)
 }
 
 // TestCheckDetailAddendumACount validates CheckDetailAddendumA AddendaCount
 func TestCheckDetailAddendumACount(t *testing.T) {
 	cd := mockCheckDetail()
-	cd.AddendumCount = 12
+	cd.AddendumCount = 12 // incorrect count should cause error
 	for i := 0; i < 10; i++ {
 		cd.AddCheckDetailAddendumA(mockCheckDetailAddendumA())
 	}
@@ -112,13 +109,10 @@ func TestCheckDetailAddendumACount(t *testing.T) {
 	bundle := NewBundle(mockBundleHeader())
 	bundle.AddCheckDetail(cd)
 
-	if err := bundle.Validate(); err != nil {
-		if e, ok := err.(*BundleError); ok {
-			if e.FieldName != "CheckDetailAddendumA" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bundle.Validate()
+	var bundleErr *BundleError
+	require.ErrorAs(t, err, &bundleErr)
+	require.Equal(t, "CheckDetailAddendumA", bundleErr.FieldName)
 }
 
 // TestCheckDetailAddendumBCount validates CheckDetailAddendumB AddendaCount
@@ -135,13 +129,10 @@ func TestCheckDetailAddendumBCount(t *testing.T) {
 	bundle := NewBundle(mockBundleHeader())
 	bundle.AddCheckDetail(cd)
 
-	if err := bundle.Validate(); err != nil {
-		if e, ok := err.(*BundleError); ok {
-			if e.FieldName != "CheckDetailAddendumB" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bundle.Validate()
+	var bundleErr *BundleError
+	require.ErrorAs(t, err, &bundleErr)
+	require.Equal(t, "CheckDetailAddendumB", bundleErr.FieldName)
 }
 
 // TestCheckDetailAddendumCCount validates CheckDetailAddendumC AddendaCount
@@ -159,13 +150,10 @@ func TestCheckDetailAddendumCCount(t *testing.T) {
 	bundle := NewBundle(mockBundleHeader())
 	bundle.AddCheckDetail(cd)
 
-	if err := bundle.Validate(); err != nil {
-		if e, ok := err.(*BundleError); ok {
-			if e.FieldName != "CheckDetailAddendumC" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bundle.Validate()
+	var bundleErr *BundleError
+	require.ErrorAs(t, err, &bundleErr)
+	require.Equal(t, "CheckDetailAddendumC", bundleErr.FieldName)
 }
 
 // TestReturnDetailAddendumCount validates ReturnDetail AddendumCount
@@ -182,13 +170,11 @@ func TestReturnDetailAddendumCount(t *testing.T) {
 	rd.AddImageViewAnalysis(mockImageViewAnalysis())
 	returnBundle := NewBundle(mockBundleHeader())
 	returnBundle.AddReturnDetail(rd)
-	if err := returnBundle.Validate(); err != nil {
-		if e, ok := err.(*BundleError); ok {
-			if e.FieldName != "AddendumCount" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+
+	err := returnBundle.Validate()
+	var bundleErr *BundleError
+	require.ErrorAs(t, err, &bundleErr)
+	require.Equal(t, "AddendumCount", bundleErr.FieldName)
 }
 
 // TestReturnDetailAddendumACount validates ReturnDetailAddendumA Count
@@ -207,13 +193,11 @@ func TestReturnDetailAddendumACount(t *testing.T) {
 	rd.AddImageViewAnalysis(mockImageViewAnalysis())
 	returnBundle := NewBundle(mockBundleHeader())
 	returnBundle.AddReturnDetail(rd)
-	if err := returnBundle.Validate(); err != nil {
-		if e, ok := err.(*BundleError); ok {
-			if e.FieldName != "ReturnDetailAddendumA" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+
+	err := returnBundle.Validate()
+	var bundleErr *BundleError
+	require.ErrorAs(t, err, &bundleErr)
+	require.Equal(t, "ReturnDetailAddendumA", bundleErr.FieldName)
 }
 
 // TestReturnDetailAddendumBCount validates ReturnDetailAddendumB Count
@@ -231,13 +215,11 @@ func TestReturnDetailAddendumBCount(t *testing.T) {
 	rd.AddImageViewAnalysis(mockImageViewAnalysis())
 	returnBundle := NewBundle(mockBundleHeader())
 	returnBundle.AddReturnDetail(rd)
-	if err := returnBundle.Validate(); err != nil {
-		if e, ok := err.(*BundleError); ok {
-			if e.FieldName != "ReturnDetailAddendumB" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+
+	err := returnBundle.Validate()
+	var bundleErr *BundleError
+	require.ErrorAs(t, err, &bundleErr)
+	require.Equal(t, "ReturnDetailAddendumB", bundleErr.FieldName)
 }
 
 // TestReturnDetailAddendumCCount validates ReturnDetailAddendumC Count
@@ -255,13 +237,11 @@ func TestReturnDetailAddendumCCount(t *testing.T) {
 	rd.AddImageViewAnalysis(mockImageViewAnalysis())
 	returnBundle := NewBundle(mockBundleHeader())
 	returnBundle.AddReturnDetail(rd)
-	if err := returnBundle.Validate(); err != nil {
-		if e, ok := err.(*BundleError); ok {
-			if e.FieldName != "ReturnDetailAddendumC" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+
+	err := returnBundle.Validate()
+	var bundleErr *BundleError
+	require.ErrorAs(t, err, &bundleErr)
+	require.Equal(t, "ReturnDetailAddendumC", bundleErr.FieldName)
 }
 
 // TestReturnDetailAddendumDCount validates ReturnDetailAddendumD Count
@@ -280,11 +260,9 @@ func TestReturnDetailAddendumDCount(t *testing.T) {
 	rd.AddImageViewAnalysis(mockImageViewAnalysis())
 	returnBundle := NewBundle(mockBundleHeader())
 	returnBundle.AddReturnDetail(rd)
-	if err := returnBundle.Validate(); err != nil {
-		if e, ok := err.(*BundleError); ok {
-			if e.FieldName != "ReturnDetailAddendumD" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+
+	err := returnBundle.Validate()
+	var bundleErr *BundleError
+	require.ErrorAs(t, err, &bundleErr)
+	require.Equal(t, "ReturnDetailAddendumD", bundleErr.FieldName)
 }

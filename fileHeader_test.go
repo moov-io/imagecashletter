@@ -5,10 +5,11 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockFileHeader creates a FileHeader
@@ -33,45 +34,19 @@ func mockFileHeader() FileHeader {
 // testMockFileHeader creates a FileHeader
 func testMockFileHeader(t testing.TB) {
 	fh := mockFileHeader()
-	if err := fh.Validate(); err != nil {
-		t.Error("mockFileHeader does not validate and will break other tests: ", err)
-	}
-	if fh.recordType != "01" {
-		t.Error("recordType does not validate")
-	}
-	if fh.StandardLevel != "35" {
-		t.Error("StandardLevel does not validate")
-	}
-	if fh.TestFileIndicator != "T" {
-		t.Error("TestFileIndicator does not validate")
-	}
-	if fh.ResendIndicator != "N" {
-		t.Error("ResendIndicator does not validate")
-	}
-	if fh.ImmediateDestination != "231380104" {
-		t.Error("DestinationRoutingNumber does not validate")
-	}
-	if fh.ImmediateOrigin != "121042882" {
-		t.Error("ECEInstitutionRoutingNumber does not validate")
-	}
-	if fh.ImmediateDestinationName != "Citadel" {
-		t.Error("ImmediateDestinationName does not validate")
-	}
-	if fh.ImmediateOriginName != "Wells Fargo" {
-		t.Error("ImmediateOriginName does not validate")
-	}
-	if fh.FileIDModifier != "" {
-		t.Error("FileIDModifier does not validate")
-	}
-	if fh.CountryCode != "US" {
-		t.Error("CountryCode does not validate")
-	}
-	if fh.UserField != "" {
-		t.Error("UserField does not validate")
-	}
-	if fh.CompanionDocumentIndicator != "" {
-		t.Error("CompanionDocumentIndicator does not validate")
-	}
+	require.NoError(t, fh.Validate())
+	require.Equal(t, "01", fh.recordType)
+	require.Equal(t, "35", fh.StandardLevel)
+	require.Equal(t, "T", fh.TestFileIndicator)
+	require.Equal(t, "N", fh.ResendIndicator)
+	require.Equal(t, "231380104", fh.ImmediateDestination)
+	require.Equal(t, "121042882", fh.ImmediateOrigin)
+	require.Equal(t, "Citadel", fh.ImmediateDestinationName)
+	require.Equal(t, "Wells Fargo", fh.ImmediateOriginName)
+	require.Equal(t, "", fh.FileIDModifier)
+	require.Equal(t, "US", fh.CountryCode)
+	require.Equal(t, "", fh.UserField)
+	require.Equal(t, "", fh.CompanionDocumentIndicator)
 }
 
 // TestMockFileHeader tests creating a FileHeader
@@ -92,54 +67,23 @@ func parseFileHeader(t testing.TB) {
 	var line = "0135T231380104121042882201809051523NCitadel           Wells Fargo        US     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	if err := r.parseFileHeader(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseFileHeader())
 	record := r.File.Header
 
-	if record.recordType != "01" {
-		t.Errorf("RecordType Expected '01' got: %v", record.recordType)
-	}
-	if record.StandardLevelField() != "35" {
-		t.Errorf("StandardLevel Expected '35' got: %v", record.StandardLevelField())
-	}
-	if record.TestFileIndicatorField() != "T" {
-		t.Errorf("TestFileIndicator 'T' got: %v", record.TestFileIndicatorField())
-	}
-	if record.ImmediateDestinationField() != "231380104" {
-		t.Errorf("ImmediateDestination Expected '231380104' got: %v", record.ImmediateDestinationField())
-	}
-	if record.ImmediateOriginField() != "121042882" {
-		t.Errorf("ImmediateOrigin Expected '121042882' got: %v", record.ImmediateOriginField())
-	}
-	if record.FileCreationDateField() != "20180905" {
-		t.Errorf("FileCreationDate Expected '20180905' got:'%v'", record.FileCreationDateField())
-	}
-	if record.FileCreationTimeField() != "1523" {
-		t.Errorf("FileCreationTime Expected '1523' got:'%v'", record.FileCreationTimeField())
-	}
-	if record.ResendIndicatorField() != "N" {
-		t.Errorf("ResendIndicator Expected 'N' got: %v", record.ResendIndicatorField())
-	}
-	if record.ImmediateDestinationNameField() != "Citadel           " {
-		t.Errorf("ImmediateDestinationName Expected 'Citadel           ' got:'%v'", record.ImmediateDestinationNameField())
-	}
-	if record.ImmediateOriginNameField() != "Wells Fargo       " {
-		t.Errorf("ImmediateOriginName Expected 'Wells Fargo       ' got: '%v'", record.ImmediateOriginNameField())
-	}
-	if record.FileIDModifierField() != " " {
-		t.Errorf("FileIDModifier Expected ' ' got:'%v'", record.FileIDModifierField())
-	}
-	if record.CountryCodeField() != "US" {
-		t.Errorf("CountryCode Expected 'US' got:'%v'", record.CountryCodeField())
-	}
-	if record.UserFieldField() != "    " {
-		t.Errorf("UserField Expected '    ' got:'%v'", record.UserFieldField())
-	}
-	if record.CompanionDocumentIndicatorField() != " " {
-		t.Errorf("CompanionDocumentIndicator Expected ' ' got:'%v'", record.CompanionDocumentIndicatorField())
-	}
+	require.Equal(t, "01", record.recordType)
+	require.Equal(t, "35", record.StandardLevelField())
+	require.Equal(t, "T", record.TestFileIndicatorField())
+	require.Equal(t, "231380104", record.ImmediateDestinationField())
+	require.Equal(t, "121042882", record.ImmediateOriginField())
+	require.Equal(t, "20180905", record.FileCreationDateField())
+	require.Equal(t, "1523", record.FileCreationTimeField())
+	require.Equal(t, "N", record.ResendIndicatorField())
+	require.Equal(t, "Citadel           ", record.ImmediateDestinationNameField())
+	require.Equal(t, "Wells Fargo       ", record.ImmediateOriginNameField())
+	require.Equal(t, " ", record.FileIDModifierField())
+	require.Equal(t, "US", record.CountryCodeField())
+	require.Equal(t, "    ", record.UserFieldField())
+	require.Equal(t, " ", record.CompanionDocumentIndicatorField())
 }
 
 // TestParseFileHeader tests validating parsing a FileHeader
@@ -160,15 +104,10 @@ func testFHString(t testing.TB) {
 	var line = "0135T231380104121042882201809051523NCitadel           Wells Fargo        US     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	if err := r.parseFileHeader(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseFileHeader())
 	record := r.File.Header
 
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestFHString tests validating that a known parsed FileHeader can return to a string of the same value
@@ -189,104 +128,80 @@ func BenchmarkFHString(b *testing.B) {
 func TestFHRecordType(t *testing.T) {
 	fh := mockFileHeader()
 	fh.recordType = "00"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestStandardLevel validation
 func TestStandardLevel(t *testing.T) {
 	fh := mockFileHeader()
 	fh.StandardLevel = "01"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "StandardLevel" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "StandardLevel", e.FieldName)
 }
 
 // TestTestFileIndicator validation
 func TestTestFileIndicator(t *testing.T) {
 	fh := mockFileHeader()
 	fh.TestFileIndicator = "S"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "TestFileIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "TestFileIndicator", e.FieldName)
 }
 
 // TestResendIndicator validation
 func TestResendIndicator(t *testing.T) {
 	fh := mockFileHeader()
 	fh.ResendIndicator = "R"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ResendIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ResendIndicator", e.FieldName)
 }
 
 // TestImmediateDestinationName validation
 func TestImmediateDestinationName(t *testing.T) {
 	fh := mockFileHeader()
 	fh.ImmediateDestinationName = "®©"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImmediateDestinationName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImmediateDestinationName", e.FieldName)
 }
 
 // TestImmediateOriginName validation
 func TestImmediateOriginName(t *testing.T) {
 	fh := mockFileHeader()
 	fh.ImmediateOriginName = "®©"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImmediateOriginName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImmediateOriginName", e.FieldName)
 }
 
 // TestFileIDModifier validation
 func TestFileIDModifier(t *testing.T) {
 	fh := mockFileHeader()
 	fh.FileIDModifier = "--"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "FileIDModifier" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "FileIDModifier", e.FieldName)
 }
 
 // TestCountryCode validation
 func TestCountryCode(t *testing.T) {
 	fh := mockFileHeader()
 	fh.CompanionDocumentIndicator = "D"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CompanionDocumentIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CompanionDocumentIndicator", e.FieldName)
 }
 
 // TestCACountryCode validation
@@ -294,156 +209,120 @@ func TestCACountryCode(t *testing.T) {
 	fh := mockFileHeader()
 	fh.CountryCode = "CA"
 	fh.CompanionDocumentIndicator = "1"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CompanionDocumentIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CompanionDocumentIndicator", e.FieldName)
 }
 
 // TestUserField validation
 func TestUserFieldI(t *testing.T) {
 	fh := mockFileHeader()
 	fh.UserField = "®©"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserField" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserField", e.FieldName)
 }
 
 // TestFHFieldInclusionRecordType validates FieldInclusion
 func TestFHFieldInclusionRecordType(t *testing.T) {
 	fh := mockFileHeader()
 	fh.recordType = ""
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestFHFieldInclusionStandardLevel validates FieldInclusion
 func TestFHFieldInclusionStandardLevel(t *testing.T) {
 	fh := mockFileHeader()
 	fh.StandardLevel = ""
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "StandardLevel" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "StandardLevel", e.FieldName)
 }
 
 // TestFHFieldInclusionTestFileIndicator validates FieldInclusion
 func TestFHFieldInclusionTestFileIndicator(t *testing.T) {
 	fh := mockFileHeader()
 	fh.TestFileIndicator = ""
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "TestFileIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "TestFileIndicator", e.FieldName)
 }
 
 // TestFHFieldInclusionResendIndicator validates FieldInclusion
 func TestFHFieldInclusionResendIndicator(t *testing.T) {
 	fh := mockFileHeader()
 	fh.ResendIndicator = ""
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ResendIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ResendIndicator", e.FieldName)
 }
 
 // TestFHFieldInclusionImmediateDestination validates FieldInclusion
 func TestFHFieldInclusionImmediateDestination(t *testing.T) {
 	fh := mockFileHeader()
 	fh.ImmediateDestination = ""
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImmediateDestination" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImmediateDestination", e.FieldName)
 }
 
 // TestFHFieldInclusionImmediateDestinationZero validates FieldInclusion
 func TestFHFieldInclusionImmediateDestinationZero(t *testing.T) {
 	fh := mockFileHeader()
 	fh.ImmediateDestination = "000000000"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImmediateDestination" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImmediateDestination", e.FieldName)
 }
 
 // TestFHFieldInclusionImmediateOrigin validates FieldInclusion
 func TestFHFieldInclusionImmediateOrigin(t *testing.T) {
 	fh := mockFileHeader()
 	fh.ImmediateOrigin = ""
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImmediateOrigin" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImmediateOrigin", e.FieldName)
 }
 
 // TestFHFieldInclusionImmediateOriginZero validates FieldInclusion
 func TestFHFieldInclusionImmediateOriginZero(t *testing.T) {
 	fh := mockFileHeader()
 	fh.ImmediateOrigin = "000000000"
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImmediateOrigin" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImmediateOrigin", e.FieldName)
 }
 
 // TestFHFieldInclusionCreationDate validates FieldInclusion
 func TestFHFieldInclusionCreationDate(t *testing.T) {
 	fh := mockFileHeader()
 	fh.FileCreationDate = time.Time{}
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "FileCreationDate" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "FileCreationDate", e.FieldName)
 }
 
 // TestFHFieldInclusionCreationTime validates FieldInclusion
 func TestFHFieldInclusionCreationTime(t *testing.T) {
 	fh := mockFileHeader()
 	fh.FileCreationTime = time.Time{}
-	if err := fh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "FileCreationTime" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "FileCreationTime", e.FieldName)
 }
 
 // TestFileHeaderRuneCountInString validates RuneCountInString
@@ -452,7 +331,5 @@ func TestFileHeaderRuneCountInString(t *testing.T) {
 	var line = "01"
 	fh.Parse(line)
 
-	if fh.ImmediateOrigin != "" {
-		t.Error("Parsed with an invalid RuneCountInString")
-	}
+	require.Equal(t, "", fh.ImmediateOrigin)
 }

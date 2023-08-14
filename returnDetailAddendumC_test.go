@@ -5,9 +5,10 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockReturnDetailAddendumC creates a ReturnDetailAddendumC
@@ -25,45 +26,23 @@ func mockReturnDetailAddendumC() ReturnDetailAddendumC {
 func TestReturnDetailAddendumCParseErr(t *testing.T) {
 	var r ReturnDetailAddendumC
 	r.Parse("ASdsadasda")
-	if r.ImageReferenceKeyIndicator != 0 {
-		t.Errorf("r.ImageReferenceKeyIndicator=%d", r.ImageReferenceKeyIndicator)
-	}
+	require.Equal(t, 0, r.ImageReferenceKeyIndicator)
 	r.Parse("3411A             00340                                 RD Addendum C")
-	if r.ImageReferenceKeyIndicator != 1 {
-		t.Errorf("r.ImageReferenceKeyIndicator=%d", r.ImageReferenceKeyIndicator)
-	}
-	if r.ImageReferenceKey != "" {
-		t.Errorf("r.ImageReferenceKey=%s", r.ImageReferenceKey)
-	}
+	require.Equal(t, 1, r.ImageReferenceKeyIndicator)
+	require.Equal(t, "", r.ImageReferenceKey)
 }
 
 // TestMockReturnDetailAddendumCcreates a ReturnDetailAddendumC
 func TestMockReturnDetailAddendumC(t *testing.T) {
 	rdAddendumC := mockReturnDetailAddendumC()
-	if err := rdAddendumC.Validate(); err != nil {
-		t.Error("MockReturnDetailAddendumC does not validate and will break other tests: ", err)
-	}
-	if rdAddendumC.recordType != "34" {
-		t.Error("recordType does not validate")
-	}
-	if rdAddendumC.ImageReferenceKeyIndicator != 1 {
-		t.Error("ImageReferenceKeyIndicator does not validate")
-	}
-	if rdAddendumC.MicrofilmArchiveSequenceNumber != "1A" {
-		t.Error("MicrofilmArchiveSequenceNumber does not validate")
-	}
-	if rdAddendumC.LengthImageReferenceKey != "0034" {
-		t.Error("LengthImageReferenceKey does not validate")
-	}
-	if rdAddendumC.ImageReferenceKey != "0" {
-		t.Error("ImageReferenceKey does not validate")
-	}
-	if rdAddendumC.Description != "RD Addendum C" {
-		t.Error("Description does not validate")
-	}
-	if rdAddendumC.UserField != "" {
-		t.Error("UserField does not validate")
-	}
+	require.NoError(t, rdAddendumC.Validate())
+	require.Equal(t, "34", rdAddendumC.recordType)
+	require.Equal(t, 1, rdAddendumC.ImageReferenceKeyIndicator)
+	require.Equal(t, "1A", rdAddendumC.MicrofilmArchiveSequenceNumber)
+	require.Equal(t, "0034", rdAddendumC.LengthImageReferenceKey)
+	require.Equal(t, "0", rdAddendumC.ImageReferenceKey)
+	require.Equal(t, "RD Addendum C", rdAddendumC.Description)
+	require.Equal(t, "", rdAddendumC.UserField)
 }
 
 // TestParseReturnDetailAddendumC validates parsing a ReturnDetailAddendumC
@@ -80,38 +59,16 @@ func TestParseReturnDetailAddendumC(t *testing.T) {
 	cd := mockReturnDetail()
 	r.currentCashLetter.currentBundle.AddReturnDetail(cd)
 
-	if err := r.parseReturnDetailAddendumC(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseReturnDetailAddendumC())
 	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumC[0]
-	if record.recordType != "34" {
-		t.Errorf("RecordType Expected '34' got: %v", record.recordType)
-	}
-	if record.ImageReferenceKeyIndicatorField() != "1" {
-		t.Errorf("ImageReferenceKeyIndicator Expected '1' got: %v",
-			record.ImageReferenceKeyIndicatorField())
-	}
-	if record.MicrofilmArchiveSequenceNumberField() != "1A             " {
-		t.Errorf("MicrofilmArchiveSequenceNumber Expected '1A             ' got: %v",
-			record.MicrofilmArchiveSequenceNumberField())
-	}
-	if record.LengthImageReferenceKeyField() != "0034" {
-		t.Errorf("ImageReferenceKeyLength Expected '0034' got: %v", record.LengthImageReferenceKeyField())
-	}
-	if record.ImageReferenceKeyField() != "0                                 " {
-		t.Errorf("ImageReferenceKey Expected '0                                 ' got: %v",
-			record.ImageReferenceKeyField())
-	}
-	if record.DescriptionField() != "RD Addendum C  " {
-		t.Errorf("Description Expected 'RD Addendum C  ' got: %v", record.DescriptionField())
-	}
-	if record.UserFieldField() != "    " {
-		t.Errorf("UserField Expected '    ' got: %v", record.UserFieldField())
-	}
-	if record.reservedField() != "     " {
-		t.Errorf("reserved Expected '     ' got: %v", record.reservedField())
-	}
+	require.Equal(t, "34", record.recordType)
+	require.Equal(t, "1", record.ImageReferenceKeyIndicatorField())
+	require.Equal(t, "1A             ", record.MicrofilmArchiveSequenceNumberField())
+	require.Equal(t, "0034", record.LengthImageReferenceKeyField())
+	require.Equal(t, "0                                 ", record.ImageReferenceKeyField())
+	require.Equal(t, "RD Addendum C  ", record.DescriptionField())
+	require.Equal(t, "    ", record.UserFieldField())
+	require.Equal(t, "     ", record.reservedField())
 }
 
 // testRDAddendumCString validates that a known parsed ReturnDetailAddendumC can return to a string of the same value
@@ -128,15 +85,10 @@ func testRDAddendumCString(t testing.TB) {
 	cd := mockReturnDetail()
 	r.currentCashLetter.currentBundle.AddReturnDetail(cd)
 
-	if err := r.parseReturnDetailAddendumC(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseReturnDetailAddendumC())
 	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumC[0]
 
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestRDAddendumCString tests validating that a known parsed ReturnDetailAddendumC can return to a string of the
@@ -158,65 +110,50 @@ func BenchmarkRDAddendumCString(b *testing.B) {
 func TestRDAddendumCRecordType(t *testing.T) {
 	rdAddendumC := mockReturnDetailAddendumC()
 	rdAddendumC.recordType = "00"
-	if err := rdAddendumC.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumC.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestRDAddendumCImageReferenceKeyIndicator validation
 func TestRDAddendumCImageReferenceKeyIndicator(t *testing.T) {
 	rdAddendumC := mockReturnDetailAddendumC()
 	rdAddendumC.ImageReferenceKeyIndicator = 5
-	if err := rdAddendumC.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImageReferenceKeyIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumC.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImageReferenceKeyIndicator", e.FieldName)
 }
 
 // TestRDAddendumCImageReferenceKey validation
 func TestRDAddendumCImageReferenceKey(t *testing.T) {
 	rdAddendumC := mockReturnDetailAddendumC()
 	rdAddendumC.ImageReferenceKey = "®©"
-	if err := rdAddendumC.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImageReferenceKey" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumC.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImageReferenceKey", e.FieldName)
 }
 
 // TestRDAddendumCDescription validation
 func TestRDAddendumCDescription(t *testing.T) {
 	rdAddendumC := mockReturnDetailAddendumC()
 	rdAddendumC.Description = "®©"
-	if err := rdAddendumC.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "Description" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumC.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "Description", e.FieldName)
 }
 
 // TestRDAddendumCUserField validation
 func TestRDAddendumCUserField(t *testing.T) {
 	rdAddendumC := mockReturnDetailAddendumC()
 	rdAddendumC.UserField = "®©"
-	if err := rdAddendumC.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserField" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumC.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserField", e.FieldName)
 }
 
 // Field Inclusion
@@ -225,26 +162,20 @@ func TestRDAddendumCUserField(t *testing.T) {
 func TestRDAddendumCFIRecordType(t *testing.T) {
 	rdAddendumC := mockReturnDetailAddendumC()
 	rdAddendumC.recordType = ""
-	if err := rdAddendumC.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumC.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestRDAddendumCFIMicrofilmArchiveSequenceNumber validation
 func TestRDAddendumCFIMicrofilmArchiveSequenceNumber(t *testing.T) {
 	rdAddendumC := mockReturnDetailAddendumC()
 	rdAddendumC.MicrofilmArchiveSequenceNumber = "               "
-	if err := rdAddendumC.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "MicrofilmArchiveSequenceNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumC.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "MicrofilmArchiveSequenceNumber", e.FieldName)
 }
 
 // TestRDAddendumCRuneCountInString validates RuneCountInString
@@ -253,7 +184,5 @@ func TestRDAddendumCRuneCountInString(t *testing.T) {
 	var line = "34"
 	rdAddendumC.Parse(line)
 
-	if rdAddendumC.Description != "" {
-		t.Error("Parsed with an invalid RuneCountInString")
-	}
+	require.Equal(t, "", rdAddendumC.Description)
 }

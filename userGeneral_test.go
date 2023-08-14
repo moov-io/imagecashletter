@@ -7,6 +7,8 @@ package imagecashletter
 import (
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockUserGeneral creates a UserGeneral
@@ -25,41 +27,21 @@ func mockUserGeneral() *UserGeneral {
 func TestUserGeneralParseErr(t *testing.T) {
 	var ug UserGeneral
 	ug.Parse("askdhfaskjas")
-	if ug.OwnerIdentifierIndicator != 0 {
-		t.Errorf("ug.OwnerIdentifierIndicator=%d", ug.OwnerIdentifierIndicator)
-	}
+	require.Equal(t, 0, ug.OwnerIdentifierIndicator)
 }
 
 // TestMockUserGeneral creates a UserGeneral
 func TestMockUserGeneral(t *testing.T) {
 	ug := mockUserGeneral()
-	if err := ug.Validate(); err != nil {
-		t.Error("mockUserGeneral does not validate and will break other tests: ", err)
-	}
-	if ug.recordType != "68" {
-		t.Error("recordType does not validate")
-	}
-	if ug.OwnerIdentifierIndicator != 3 {
-		t.Error("OwnerIdentifierIndicator does not validate")
-	}
-	if ug.OwnerIdentifier != "230918276" {
-		t.Error("OwnerIdentifier does not validate")
-	}
-	if ug.OwnerIdentifierModifier != "ZZ1" {
-		t.Error("OwnerIdentifierModifier does not validate")
-	}
-	if ug.UserRecordFormatType != "000" {
-		t.Error("UserRecordFormatType does not validate")
-	}
-	if ug.FormatTypeVersionLevel != "1" {
-		t.Error("FormatTypeVersionLevel does not validate")
-	}
-	if ug.LengthUserData != "0000038" {
-		t.Error("LengthUserData does not validate")
-	}
-	if ug.UserData != "This is a payment for your information" {
-		t.Error("UserData does not validate")
-	}
+	require.NoError(t, ug.Validate())
+	require.Equal(t, "68", ug.recordType)
+	require.Equal(t, 3, ug.OwnerIdentifierIndicator)
+	require.Equal(t, "230918276", ug.OwnerIdentifier)
+	require.Equal(t, "ZZ1", ug.OwnerIdentifierModifier)
+	require.Equal(t, "000", ug.UserRecordFormatType)
+	require.Equal(t, "1", ug.FormatTypeVersionLevel)
+	require.Equal(t, "0000038", ug.LengthUserData)
+	require.Equal(t, "This is a payment for your information", ug.UserData)
 }
 
 // TestUGString validation
@@ -70,143 +52,109 @@ func TestUGString(t *testing.T) {
 	r.line = line
 	ug.Parse(r.line)
 
-	if ug.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, ug.String())
 }
 
 // TestUGParse validation
 func TestUGParse(t *testing.T) {
 	ug := mockUserGeneral()
-	if err := ug.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, ug.Validate())
 	line := ug.String()
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	ug.Parse(r.line)
 
-	if err := ug.Validate(); err == nil {
-	} else {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, ug.Validate())
 }
 
 // TestUGRecordType validation
 func TestUGRecordType(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.recordType = "00"
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestUGUserRecordFormatType validation
 func TestUGUserRecordFormatType(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.UserRecordFormatType = "001"
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserRecordFormatType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserRecordFormatType", e.FieldName)
 }
 
 // TestUGOwnerIdentifierIndicator validation
 func TestUGOwnerIdentifierIndicator(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.OwnerIdentifierIndicator = 9
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OwnerIdentifierIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OwnerIdentifierIndicator", e.FieldName)
 }
 
 // TestUGOwnerIdentifierModifier validation
 func TestUGOwnerIdentifierModifier(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.OwnerIdentifierModifier = "®©"
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OwnerIdentifierModifier" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OwnerIdentifierModifier", e.FieldName)
 }
 
 // TestUGUserRecordFormatTypeChar validation
 func TestUGUserRecordFormatTypeChar(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.UserRecordFormatType = "®©"
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserRecordFormatType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserRecordFormatType", e.FieldName)
 }
 
 // TestUGFormatTypeVersionLevel validation
 func TestUGFormatTypeVersionLevel(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.FormatTypeVersionLevel = "W"
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "FormatTypeVersionLevel" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "FormatTypeVersionLevel", e.FieldName)
 }
 
 // TestUGLengthUserData validation
 func TestUGLengthUserData(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.LengthUserData = "W"
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "LengthUserData" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "LengthUserData", e.FieldName)
 }
 
 // TestUGUserData validation
 func TestUGUserData(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.UserData = "A®©X"
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserData" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserData", e.FieldName)
 }
 
 // TestUGOwnerIdentifierIndicatorZero validation
 func TestUGOwnerIdentifierIndicatorZero(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.OwnerIdentifierIndicator = 0
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OwnerIdentifier" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OwnerIdentifier", e.FieldName)
 }
 
 // TestUGOwnerIdentifierIndicator123 validation
@@ -214,13 +162,10 @@ func TestUGOwnerIdentifierIndicator123(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.OwnerIdentifierIndicator = 1
 	ug.OwnerIdentifier = "W"
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OwnerIdentifier" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OwnerIdentifier", e.FieldName)
 }
 
 // TestUGOwnerIdentifierIndicatorFour validation
@@ -228,13 +173,10 @@ func TestUGOwnerIdentifierIndicatorFour(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.OwnerIdentifierIndicator = 4
 	ug.OwnerIdentifier = "®©"
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OwnerIdentifier" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OwnerIdentifier", e.FieldName)
 }
 
 // Field Inclusion
@@ -243,63 +185,48 @@ func TestUGOwnerIdentifierIndicatorFour(t *testing.T) {
 func TestUGFIRecordType(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.recordType = ""
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestUGFIUserRecordFormatType validation
 func TestUGFIUserRecordFormatType(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.UserRecordFormatType = ""
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserRecordFormatType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserRecordFormatType", e.FieldName)
 }
 
 // TestUGFIFormatTypeVersionLevel validation
 func TestUGFIFormatTypeVersionLevel(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.FormatTypeVersionLevel = ""
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "FormatTypeVersionLevel" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "FormatTypeVersionLevel", e.FieldName)
 }
 
 // TestUGFILengthUserData validation
 func TestUGFILengthUserData(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.LengthUserData = ""
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "LengthUserData" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "LengthUserData", e.FieldName)
 }
 
 // TestUGFIUserData validation
 func TestUGFIUserData(t *testing.T) {
 	ug := mockUserGeneral()
 	ug.UserData = ""
-	if err := ug.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserData" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ug.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserData", e.FieldName)
 }

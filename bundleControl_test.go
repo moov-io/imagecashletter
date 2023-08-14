@@ -5,9 +5,10 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockBundleControl creates a BundleControl
@@ -25,30 +26,14 @@ func mockBundleControl() *BundleControl {
 // TestMockBundleControl creates an BundleControl
 func TestMockBundleControl(t *testing.T) {
 	bc := mockBundleControl()
-	if err := bc.Validate(); err != nil {
-		t.Error("mockBundleControl does not validate and will break other tests: ", err)
-	}
-	if bc.recordType != "70" {
-		t.Error("recordType does not validate")
-	}
-	if bc.BundleItemsCount != 7 {
-		t.Error("BundleItemsCount does not validate")
-	}
-	if bc.BundleTotalAmount != 100000 {
-		t.Error("BundleTotalAmount does not validate")
-	}
-	if bc.MICRValidTotalAmount != 100000 {
-		t.Error("MICRValidTotalAmount does not validate")
-	}
-	if bc.BundleImagesCount != 1 {
-		t.Error("BundleImagesCount does not validate")
-	}
-	if bc.UserField != "" {
-		t.Error("UserField does not validate")
-	}
-	if bc.CreditTotalIndicator != 0 {
-		t.Error("CreditTotalIndicator does not validate")
-	}
+	require.NoError(t, bc.Validate())
+	require.Equal(t, "70", bc.recordType)
+	require.Equal(t, 7, bc.BundleItemsCount)
+	require.Equal(t, 100000, bc.BundleTotalAmount)
+	require.Equal(t, 100000, bc.MICRValidTotalAmount)
+	require.Equal(t, 1, bc.BundleImagesCount)
+	require.Empty(t, bc.UserField)
+	require.Equal(t, 0, bc.CreditTotalIndicator)
 }
 
 // TestParseBundleControl parses a known BundleControl record string
@@ -61,61 +46,29 @@ func TestParseBundleControl(t *testing.T) {
 	bh := mockBundleHeader()
 	r.currentCashLetter.AddBundle(NewBundle(bh))
 	r.addCurrentBundle(NewBundle(bh))
-	err := r.parseBundleControl()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseBundleControl())
 	record := r.currentCashLetter.currentBundle.BundleControl
 
-	if record.recordType != "70" {
-		t.Errorf("RecordType Expected '70' got: %v", record.recordType)
-	}
-	if record.BundleItemsCountField() != "0001" {
-		t.Errorf("BundleItemsCountCount Expected '0001' got: %v", record.BundleItemsCountField())
-	}
-	if record.BundleTotalAmountField() != "000000100000" {
-		t.Errorf("BundleTotalAmount Expected '000000100000' got: %v", record.BundleTotalAmountField())
-	}
-	if record.MICRValidTotalAmountField() != "000000000000" {
-		t.Errorf("MICRValidTotalAmount Expected '000000000000' got: %v", record.MICRValidTotalAmountField())
-	}
-	if record.BundleImagesCountField() != "00000" {
-		t.Errorf("BundleImagesCount Expected '00000' got: %v", record.BundleImagesCountField())
-	}
-	if record.UserFieldField() != "                    " {
-		t.Errorf("UserField Expected '                    ' got: %v", record.UserFieldField())
-	}
-	if record.CreditTotalIndicatorField() != "0" {
-		t.Errorf("CreditTotalIndicator Expected '0' got: %v", record.CreditTotalIndicatorField())
-	}
-	if record.reservedField() != "                        " {
-		t.Errorf("Reserved Expected '                        ' got: %v", record.reservedField())
-	}
+	require.Equal(t, "70", record.recordType)
+	require.Equal(t, "0001", record.BundleItemsCountField())
+	require.Equal(t, "000000100000", record.BundleTotalAmountField())
+	require.Equal(t, "000000000000", record.MICRValidTotalAmountField())
+	require.Equal(t, "00000", record.BundleImagesCountField())
+	require.Equal(t, "                    ", record.UserFieldField())
+	require.Equal(t, "0", record.CreditTotalIndicatorField())
+	require.Equal(t, "                        ", record.reservedField())
 }
 
 func TestParseBundleControlError(t *testing.T) {
 	bc := NewBundleControl()
 	bc.Parse(" invalid line ")
 
-	if bc.BundleItemsCount != 0 {
-		t.Errorf("unexpcted BundleItemsCount=%d", bc.BundleItemsCount)
-	}
-	if bc.BundleTotalAmount != 0 {
-		t.Errorf("unexpcted BundleTotalAmount=%d", bc.BundleTotalAmount)
-	}
-	if bc.MICRValidTotalAmount != 0 {
-		t.Errorf("unexpcted MICRValidTotalAmount=%d", bc.MICRValidTotalAmount)
-	}
-	if bc.BundleImagesCount != 0 {
-		t.Errorf("unexpcted BundleImagesCount=%d", bc.BundleImagesCount)
-	}
-	if bc.UserField != "" {
-		t.Errorf("unexpcted UserField=%s", bc.UserField)
-	}
-	if bc.CreditTotalIndicator != 0 {
-		t.Errorf("unexpcted CreditTotalIndicator=%d", bc.CreditTotalIndicator)
-	}
+	require.Equal(t, 0, bc.BundleItemsCount)
+	require.Equal(t, 0, bc.BundleTotalAmount)
+	require.Equal(t, 0, bc.MICRValidTotalAmount)
+	require.Equal(t, 0, bc.BundleImagesCount)
+	require.Empty(t, bc.UserField)
+	require.Equal(t, 0, bc.CreditTotalIndicator)
 }
 
 // testBCString validates that a known parsed BundleControl can be return to a string of the same value
@@ -128,15 +81,9 @@ func testBCString(t testing.TB) {
 	bh := mockBundleHeader()
 	r.currentCashLetter.AddBundle(NewBundle(bh))
 	r.addCurrentBundle(NewBundle(bh))
-	err := r.parseBundleControl()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseBundleControl())
 	record := r.currentCashLetter.currentBundle.BundleControl
-	if record.String() != line {
-		t.Errorf("\nStrings do not match %s\n %s", line, record.String())
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestBCString tests validating that a known parsed BundleControl can be return to a string of the same value
@@ -156,78 +103,60 @@ func BenchmarkBCString(b *testing.B) {
 func TestBCRecordType(t *testing.T) {
 	bc := mockBundleControl()
 	bc.recordType = "00"
-	if err := bc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bc.Validate()
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "recordType", fieldErr.FieldName)
 }
 
 // TestBCUserField validation
 func TestBCUserFieldI(t *testing.T) {
 	bc := mockBundleControl()
 	bc.UserField = "®©"
-	if err := bc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserField" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bc.Validate()
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "UserField", fieldErr.FieldName)
 }
 
 // TestBCCreditTotalIndicator validation
 func TestBCCreditTotalIndicator(t *testing.T) {
 	bc := mockBundleControl()
 	bc.CreditTotalIndicator = 9
-	if err := bc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CreditTotalIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bc.Validate()
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "CreditTotalIndicator", fieldErr.FieldName)
 }
 
 // TestBCFieldInclusionRecordType validates FieldInclusion
 func TestBCFieldInclusionRecordType(t *testing.T) {
 	bc := mockBundleControl()
 	bc.recordType = ""
-	if err := bc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bc.Validate()
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "recordType", fieldErr.FieldName)
 }
 
 // TestFieldInclusionBundleItemsCount validates FieldInclusion
 func TestFieldInclusionBundleItemsCount(t *testing.T) {
 	bc := mockBundleControl()
 	bc.BundleItemsCount = 0
-	if err := bc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BundleItemsCount" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bc.Validate()
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "BundleItemsCount", fieldErr.FieldName)
 }
 
 // TestFieldInclusionBundleTotalAmount validates FieldInclusion
 func TestFieldInclusionBundleTotalAmount(t *testing.T) {
 	bc := mockBundleControl()
 	bc.BundleTotalAmount = 0
-	if err := bc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BundleTotalAmount" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bc.Validate()
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "BundleTotalAmount", fieldErr.FieldName)
 }
 
 // TestBundleControlRuneCountInString validates RuneCountInString
@@ -236,7 +165,5 @@ func TestBundleControlRuneCountInString(t *testing.T) {
 	var line = "70"
 	bc.Parse(line)
 
-	if bc.BundleItemsCount != 0 {
-		t.Error("Parsed with an invalid RuneCountInString")
-	}
+	require.Equal(t, 0, bc.BundleItemsCount)
 }

@@ -573,7 +573,7 @@ func (ivAnalysis *ImageViewAnalysis) ConvenienceAmountUsabilityField() string {
 
 // AmountInWordsUsabilityField gets a string of the AmountInWordsUsability field
 func (ivAnalysis *ImageViewAnalysis) AmountInWordsUsabilityField() string {
-	return ivAnalysis.numericField(ivAnalysis.ConvenienceAmountUsability, 1)
+	return ivAnalysis.numericField(ivAnalysis.AmountInWordsUsability, 1)
 }
 
 // SignatureUsabilityField gets a string of the SignatureUsability  field

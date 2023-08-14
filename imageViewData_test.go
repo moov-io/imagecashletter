@@ -5,13 +5,12 @@
 package imagecashletter
 
 import (
-	"bytes"
 	"encoding/base64"
-	"log"
 	"strings"
 	"testing"
 	"time"
-	"unicode/utf8"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockImageViewData crates an imageViewData
@@ -41,65 +40,28 @@ func mockImageViewData() ImageViewData {
 // testMockImageViewData creates an ImageViewData
 func TestMockImageViewData(t *testing.T) {
 	ivData := mockImageViewData()
-	if err := ivData.Validate(); err != nil {
-		t.Error("mockImageViewData does not validate and will break other tests: ", err)
-	}
-	if ivData.EceInstitutionRoutingNumber != "121042882" {
-		t.Error("EceInstitutionRoutingNumber does not validate")
-	}
-	if ivData.CycleNumber != "1" {
-		t.Error("CycleNumber does not validate")
-	}
-	if ivData.EceInstitutionItemSequenceNumber != "1             " {
-		t.Error(" does not validate")
-	}
-	if ivData.SecurityOriginatorName != "Sec Orig Name" {
-		t.Error("EceInstitutionItemSequenceNumber does not validate")
-	}
-	if ivData.SecurityAuthenticatorName != "Sec Auth Name" {
-		t.Error("SecurityAuthenticatorName does not validate")
-	}
-	if ivData.SecurityKeyName != "SECURE" {
-		t.Error("SecurityKeyName does not validate")
-	}
-	if ivData.ClippingOrigin != 0 {
-		t.Error("ClippingOrigin does not validate")
-	}
-	if ivData.ClippingCoordinateH1 != "" {
-		t.Error(" does not validate")
-	}
-	if ivData.ClippingCoordinateH2 != "" {
-		t.Error("ClippingCoordinateH2 does not validate")
-	}
-	if ivData.ClippingCoordinateV1 != "" {
-		t.Error("ClippingCoordinateV1 does not validate")
-	}
-	if ivData.ClippingCoordinateV2 != "" {
-		t.Error("ClippingCoordinateV2 does not validate")
-	}
-	if ivData.LengthImageReferenceKey != "0000" {
-		t.Error("LengthImageReferenceKey does not validate")
-	}
-	if ivData.ImageReferenceKey != "" {
-		t.Error("ImageReferenceKey does not validate")
-	}
-	if ivData.LengthDigitalSignature != "0    " {
-		t.Error("LengthDigitalSignature does not validate")
-	}
-	if bytes.Compare(ivData.DigitalSignature, []byte("")) < 0 {
-		t.Error("DigitalSignature does not validate")
-	}
-	if ivData.LengthImageData != "0000001" {
-		t.Error("LengthImageData does not validate")
-	}
-	if bytes.Compare(ivData.ImageData, []byte("")) < 0 {
-		t.Error("ImageData does not validate")
-	}
+	require.NoError(t, ivData.Validate())
+	require.Equal(t, "121042882", ivData.EceInstitutionRoutingNumber)
+	require.Equal(t, "1", ivData.CycleNumber)
+	require.Equal(t, "1             ", ivData.EceInstitutionItemSequenceNumber)
+	require.Equal(t, "Sec Orig Name", ivData.SecurityOriginatorName)
+	require.Equal(t, "Sec Auth Name", ivData.SecurityAuthenticatorName)
+	require.Equal(t, "SECURE", ivData.SecurityKeyName)
+	require.Equal(t, 0, ivData.ClippingOrigin)
+	require.Empty(t, ivData.ClippingCoordinateH1)
+	require.Empty(t, ivData.ClippingCoordinateH2)
+	require.Empty(t, ivData.ClippingCoordinateV1)
+	require.Empty(t, ivData.ClippingCoordinateV2)
+	require.Equal(t, "0000", ivData.LengthImageReferenceKey)
+	require.Equal(t, "", ivData.ImageReferenceKey)
+	require.Equal(t, "0    ", ivData.LengthDigitalSignature)
+	require.Equal(t, []byte(""), ivData.DigitalSignature)
+	require.Equal(t, "0000001", ivData.LengthImageData)
+	require.Equal(t, []byte(""), ivData.ImageData)
 }
 
 // testIVDataString validates that a known parsed ImageViewData can return to a string of the same value
 func testIVDataString(t testing.TB) {
-	// var line = "5212345678020140410  44000000                                                       0                00000    0005591"
 	var line = "5212104288220180915  1                                                              0                00000    0000001 "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
@@ -112,43 +74,27 @@ func testIVDataString(t testing.TB) {
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
-	if err := r.parseImageViewData(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseImageViewData())
 	record := r.currentCashLetter.currentBundle.GetChecks()[0].ImageViewData[0]
-
-	if r := record.String(); r != line {
-		rn := utf8.RuneCountInString(r)
-		linen := utf8.RuneCountInString(line)
-		t.Errorf("strings do not match:\n  record=%q (length=%d)\n    line=%q (length=%d)", r, rn, line, linen)
-	}
+	require.Equal(t, line, record.String())
 }
 
 func TestIVDParseCrash(t *testing.T) {
 	iv := &ImageViewData{}
 	iv.Parse(`20000000000040000000020000100300001003000000000000000000000000000000000000000000`)
-	if iv.ImageReferenceKey != "" {
-		t.Errorf("unexpected iv.ImageReferenceKey=%s", iv.ImageReferenceKey)
-	}
+	require.Equal(t, "", iv.ImageReferenceKey)
 
 	prefix := "20000000000040000000020000100300001003"
 
 	iv.Parse(prefix + strings.Repeat("0", 110-len(prefix)-1))
-	if iv.ImageReferenceKey != "" {
-		t.Errorf("unexpected iv.ImageReferenceKey=%s", iv.ImageReferenceKey)
-	}
+	require.Equal(t, "", iv.ImageReferenceKey)
 
 	iv.Parse(prefix + strings.Repeat("0", 117-len(prefix)-1))
-	if iv.LengthDigitalSignature == "" {
-		t.Errorf("expected iv.LengthDigitalSignature=%s", iv.LengthDigitalSignature)
-	}
+	require.NotEmpty(t, iv.LengthDigitalSignature)
 
 	d := mockImageViewData()
 	iv.Parse(d.String()[:117])
-	if len(iv.ImageData) > 0 {
-		t.Errorf("unexpected iv.ImageData=%v", iv.ImageData)
-	}
+	require.Empty(t, iv.ImageData)
 }
 
 // TestIVDataString tests validating that a known parsed ImageViewData an return to a string of the
@@ -170,78 +116,60 @@ func BenchmarkIVDataString(b *testing.B) {
 func TestIVDataRecordType(t *testing.T) {
 	ivData := mockImageViewData()
 	ivData.recordType = "00"
-	if err := ivData.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivData.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestIVDataCycleNumber validation
 func TestIVDataCycleNumber(t *testing.T) {
 	ivData := mockImageViewData()
 	ivData.CycleNumber = "--"
-	if err := ivData.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CycleNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivData.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CycleNumber", e.FieldName)
 }
 
 // TestIVDataSecurityOriginatorName validation
 func TestIVSecurityOriginatorName(t *testing.T) {
 	ivData := mockImageViewData()
 	ivData.SecurityOriginatorName = "®©"
-	if err := ivData.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "SecurityOriginatorName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivData.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "SecurityOriginatorName", e.FieldName)
 }
 
 // TestIVDataSecurityAuthenticatorName validation
 func TestIVSecurityAuthenticatorName(t *testing.T) {
 	ivData := mockImageViewData()
 	ivData.SecurityAuthenticatorName = "®©"
-	if err := ivData.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "SecurityAuthenticatorName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivData.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "SecurityAuthenticatorName", e.FieldName)
 }
 
 // TestIVDataSecurityKeyName validation
 func TestIVSecurityKeyName(t *testing.T) {
 	ivData := mockImageViewData()
 	ivData.SecurityKeyName = "®©"
-	if err := ivData.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "SecurityKeyName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivData.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "SecurityKeyName", e.FieldName)
 }
 
 // TestIVDataImageReferenceKey validation
 func TestIVImageReferenceKey(t *testing.T) {
 	ivData := mockImageViewData()
 	ivData.ImageReferenceKey = "®©"
-	if err := ivData.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImageReferenceKey" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivData.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImageReferenceKey", e.FieldName)
 }
 
 // Field Inclusion
@@ -250,39 +178,30 @@ func TestIVImageReferenceKey(t *testing.T) {
 func TestIVDataFIRecordType(t *testing.T) {
 	ivData := mockImageViewData()
 	ivData.recordType = ""
-	if err := ivData.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivData.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestIVDataFIEceInstitutionRoutingNumber validation
 func TestIVDataFIEceInstitutionRoutingNumber(t *testing.T) {
 	ivData := mockImageViewData()
 	ivData.EceInstitutionRoutingNumber = ""
-	if err := ivData.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EceInstitutionRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivData.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "EceInstitutionRoutingNumber", e.FieldName)
 }
 
 // TestIVDataFIBundleBusinessDate validation
 func TestIVDataFIBundleBusinessDate(t *testing.T) {
 	ivData := mockImageViewData()
 	ivData.BundleBusinessDate = time.Time{}
-	if err := ivData.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BundleBusinessDate" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivData.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BundleBusinessDate", e.FieldName)
 }
 
 func TestImageViewData_Base64String(t *testing.T) {
@@ -292,9 +211,7 @@ func TestImageViewData_Base64String(t *testing.T) {
 	ivData.ImageData = data
 
 	output := ivData.String()
-	if !strings.Contains(output, "hello, world") {
-		t.Errorf("unexpected output=%q", output)
-	}
+	require.Contains(t, output, "hello, world")
 }
 
 func TestDecodeImageData(t *testing.T) {
@@ -305,12 +222,9 @@ func TestDecodeImageData(t *testing.T) {
 	}
 
 	decoded, err := ivData.DecodeImageData()
-	if len(decoded) == 0 || err != nil {
-		t.Fatalf("nothing decoded: %v", err)
-	}
-	if string(decoded) != "hello, world" {
-		t.Errorf("got %q", string(decoded))
-	}
+	require.NoError(t, err)
+	require.NotEmpty(t, decoded)
+	require.Equal(t, "hello, world", string(decoded))
 }
 
 func base64Encode(in string) []byte {

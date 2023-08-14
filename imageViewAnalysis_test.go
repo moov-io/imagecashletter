@@ -5,9 +5,10 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockImageViewAnalysis crates an imageViewAnalysis
@@ -43,86 +44,36 @@ func mockImageViewAnalysis() ImageViewAnalysis {
 // TestMockImageViewAnalysis creates an ImageViewAnalysis
 func TestMockImageViewAnalysis(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
-	if err := ivAnalysis.Validate(); err != nil {
-		t.Error("mockImageViewAnalysis does not validate and will break other tests: ", err)
-	}
-	if ivAnalysis.GlobalImageQuality != 2 {
-		t.Error("GlobalImageQuality does not validate")
-	}
-	if ivAnalysis.GlobalImageUsability != 2 {
-		t.Error("GlobalImageUsability does not validate")
-	}
-	if ivAnalysis.ImagingBankSpecificTest != 0 {
-		t.Error("ImagingBankSpecificTest does not validate")
-	}
-	if ivAnalysis.PartialImage != 2 {
-		t.Error("PartialImage does not validate")
-	}
-	if ivAnalysis.ExcessiveImageSkew != 2 {
-		t.Error("ExcessiveImageSkew does not validate")
-	}
-	if ivAnalysis.PiggybackImage != 2 {
-		t.Error("PiggybackImage does not validate")
-	}
-	if ivAnalysis.TooLightOrTooDark != 2 {
-		t.Error("TooLightOrTooDark does not validate")
-	}
-	if ivAnalysis.StreaksAndOrBands != 2 {
-		t.Error("StreaksAndOrBands does not validate")
-	}
-	if ivAnalysis.BelowMinimumImageSize != 2 {
-		t.Error("BelowMinimumImageSize does not validate")
-	}
-	if ivAnalysis.ExceedsMaximumImageSize != 2 {
-		t.Error("ExceedsMaximumImageSize does not validate")
-	}
+	require.NoError(t, ivAnalysis.Validate())
+	require.Equal(t, 2, ivAnalysis.GlobalImageQuality)
+	require.Equal(t, 2, ivAnalysis.GlobalImageUsability)
+	require.Equal(t, 0, ivAnalysis.ImagingBankSpecificTest)
+	require.Equal(t, 2, ivAnalysis.PartialImage)
+	require.Equal(t, 2, ivAnalysis.ExcessiveImageSkew)
+	require.Equal(t, 2, ivAnalysis.PiggybackImage)
+	require.Equal(t, 2, ivAnalysis.TooLightOrTooDark)
+	require.Equal(t, 2, ivAnalysis.StreaksAndOrBands)
+	require.Equal(t, 2, ivAnalysis.BelowMinimumImageSize)
+	require.Equal(t, 2, ivAnalysis.ExceedsMaximumImageSize)
 
 	_ = additionalIVAnalysisFields(ivAnalysis, t)
 }
 
 func additionalIVAnalysisFields(ivAnalysis ImageViewAnalysis, t *testing.T) string {
-	if ivAnalysis.ImageEnabledPOD != 1 {
-		t.Error("ImageEnabledPOD does not validate")
-	}
-	if ivAnalysis.SourceDocumentBad != 0 {
-		t.Error("SourceDocumentBad does not validate")
-	}
-	if ivAnalysis.DateUsability != 2 {
-		t.Error("DateUsability does not validate")
-	}
-	if ivAnalysis.PayeeUsability != 2 {
-		t.Error("PayeeUsability does not validate")
-	}
-	if ivAnalysis.ConvenienceAmountUsability != 2 {
-		t.Error("ConvenienceAmountUsability does not validate")
-	}
-	if ivAnalysis.AmountInWordsUsability != 2 {
-		t.Error("AmountInWordsUsability does not validate")
-	}
-	if ivAnalysis.SignatureUsability != 2 {
-		t.Error("SignatureUsability does not validate")
-	}
-	if ivAnalysis.PayorNameAddressUsability != 2 {
-		t.Error("PayorNameAddressUsability does not validate")
-	}
-	if ivAnalysis.MICRLineUsability != 2 {
-		t.Error("MICRLineUsability does not validate")
-	}
-	if ivAnalysis.MemoLineUsability != 2 {
-		t.Error("MemoLineUsability does not validate")
-	}
-	if ivAnalysis.PayorBankNameAddressUsability != 2 {
-		t.Error("PayorBankNameAddressUsability does not validate")
-	}
-	if ivAnalysis.PayeeEndorsementUsability != 2 {
-		t.Error("PayeeEndorsementUsability does not validate")
-	}
-	if ivAnalysis.BOFDEndorsementUsability != 2 {
-		t.Error("BOFDEndorsementUsability does not validate")
-	}
-	if ivAnalysis.TransitEndorsementUsability != 2 {
-		t.Error("TransitEndorsementUsability does not validate")
-	}
+	require.Equal(t, 1, ivAnalysis.ImageEnabledPOD)
+	require.Equal(t, 0, ivAnalysis.SourceDocumentBad)
+	require.Equal(t, 2, ivAnalysis.DateUsability)
+	require.Equal(t, 2, ivAnalysis.PayeeUsability)
+	require.Equal(t, 2, ivAnalysis.ConvenienceAmountUsability)
+	require.Equal(t, 2, ivAnalysis.AmountInWordsUsability)
+	require.Equal(t, 2, ivAnalysis.SignatureUsability)
+	require.Equal(t, 2, ivAnalysis.PayorNameAddressUsability)
+	require.Equal(t, 2, ivAnalysis.MICRLineUsability)
+	require.Equal(t, 2, ivAnalysis.MemoLineUsability)
+	require.Equal(t, 2, ivAnalysis.PayorBankNameAddressUsability)
+	require.Equal(t, 2, ivAnalysis.PayeeEndorsementUsability)
+	require.Equal(t, 2, ivAnalysis.BOFDEndorsementUsability)
+	require.Equal(t, 2, ivAnalysis.TransitEndorsementUsability)
 	return ""
 }
 
@@ -140,15 +91,10 @@ func testIVAnalysisString(t testing.TB) {
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
-	if err := r.parseImageViewAnalysis(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseImageViewAnalysis())
 	record := r.currentCashLetter.currentBundle.GetChecks()[0].ImageViewAnalysis[0]
 
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestIVAnalysisString tests validating that a known parsed ImageViewAnalysis an return to a string of the
@@ -170,338 +116,260 @@ func BenchmarkIVAnalysisString(b *testing.B) {
 func TestIVAnalysisRecordType(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.recordType = "00"
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestIVAnalysisGlobalImageQuality validation
 func TestIVAnalysisGlobalImageQuality(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.GlobalImageQuality = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "GlobalImageQuality" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "GlobalImageQuality", e.FieldName)
 }
 
 // TestIVAnalysisGlobalImageUsability validation
 func TestIVAnalysisGlobalImageUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.GlobalImageUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "GlobalImageUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "GlobalImageUsability", e.FieldName)
 }
 
 // TestIVAnalysisImagingBankSpecificTest validation
 func TestIVAnalysisImagingBankSpecificTest(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.ImagingBankSpecificTest = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImagingBankSpecificTest" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImagingBankSpecificTest", e.FieldName)
 }
 
 // TestIVAnalysisPartialImage validation
 func TestIVAnalysisPartialImage(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.PartialImage = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PartialImage" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PartialImage", e.FieldName)
 }
 
 // TestIVAnalysisExcessiveImageSkew validation
 func TestIVAnalysisExcessiveImageSkew(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.ExcessiveImageSkew = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ExcessiveImageSkew" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ExcessiveImageSkew", e.FieldName)
 }
 
 // TestIVAnalysisPiggybackImage validation
 func TestIVAnalysisPiggybackImage(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.PiggybackImage = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PiggybackImage" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PiggybackImage", e.FieldName)
 }
 
 // TestIVAnalysisTooLightOrTooDark validation
 func TestIVAnalysisTooLightOrTooDarke(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.TooLightOrTooDark = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "TooLightOrTooDark" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "TooLightOrTooDark", e.FieldName)
 }
 
 // TestIVAnalysisStreaksAndOrBands validation
 func TestIVAnalysisStreaksAndOrBands(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.StreaksAndOrBands = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "StreaksAndOrBands" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "StreaksAndOrBands", e.FieldName)
 }
 
 // TestIVAnalysisBelowMinimumImageSize validation
 func TestIVAnalysisBelowMinimumImageSize(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.BelowMinimumImageSize = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BelowMinimumImageSize" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BelowMinimumImageSize", e.FieldName)
 }
 
 // TestIVAnalysisExceedsMaximumImageSize validation
 func TestIVAnalysisExceedsMaximumImageSize(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.ExceedsMaximumImageSize = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ExceedsMaximumImageSize" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ExceedsMaximumImageSize", e.FieldName)
 }
 
 // TestIVAnalysisImageEnabledPOD validation
 func TestIVAnalysisImageEnabledPOD(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.ImageEnabledPOD = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImageEnabledPOD" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImageEnabledPOD", e.FieldName)
 }
 
 // TestIVAnalysisSourceDocumentBad validation
 func TestIVAnalysisSourceDocumentBad(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.SourceDocumentBad = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "SourceDocumentBad" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "SourceDocumentBad", e.FieldName)
 }
 
 // TestIVAnalysisDateUsability validation
 func TestIVAnalysisDateUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.DateUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "DateUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "DateUsability", e.FieldName)
 }
 
 // TestIVAnalysisPayeeUsability validation
 func TestIVAnalysisPayeeUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.PayeeUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PayeeUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PayeeUsability", e.FieldName)
 }
 
 // TestIVAnalysisConvenienceAmountUsability validation
 func TestIVAnalysisConvenienceAmountUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.ConvenienceAmountUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ConvenienceAmountUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ConvenienceAmountUsability", e.FieldName)
 }
 
 // TestIVAnalysisAmountInWordsUsability validation
 func TestIVAnalysisAmountInWordsUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
-	ivAnalysis.AmountInWordsUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "AmountInWordsUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	ivAnalysis.AmountInWordsUsability = 57
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "AmountInWordsUsability", e.FieldName)
 }
 
 // TestIVAnalysisSignatureUsability validation
 func TestIVAnalysisSignatureUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.SignatureUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "SignatureUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "SignatureUsability", e.FieldName)
 }
 
 // TestIVAnalysisPayorNameAddressUsability validation
 func TestIVAnalysisPayorNameAddressUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.PayorNameAddressUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PayorNameAddressUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PayorNameAddressUsability", e.FieldName)
 }
 
 // TestIVAnalysisMICRLineUsability validation
 func TestIVAnalysisMICRLineUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.MICRLineUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "MICRLineUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "MICRLineUsability", e.FieldName)
 }
 
 // TestIVAnalysisMemoLineUsability validation
 func TestIVAnalysisMemoLineUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.MemoLineUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "MemoLineUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "MemoLineUsability", e.FieldName)
 }
 
 // TestIVAnalysisPayorBankNameAddressUsability validation
 func TestIVAnalysisPayorBankNameAddressUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.PayorBankNameAddressUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PayorBankNameAddressUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PayorBankNameAddressUsability", e.FieldName)
 }
 
 // TestIVAnalysisPayeeEndorsementUsability validation
 func TestIVAnalysisPayeeEndorsementUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.PayeeEndorsementUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PayeeEndorsementUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PayeeEndorsementUsability", e.FieldName)
 }
 
 // TestIVAnalysisBOFDEndorsementUsability validation
 func TestIVAnalysisBOFDEndorsementUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.BOFDEndorsementUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BOFDEndorsementUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BOFDEndorsementUsability", e.FieldName)
 }
 
 // TestIVAnalysisTransitEndorsementUsability validation
 func TestIVAnalysisTransitEndorsementUsability(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.TransitEndorsementUsability = 5
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "TransitEndorsementUsability" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "TransitEndorsementUsability", e.FieldName)
 }
 
 // TestIVAnalysisUserField validation
 func TestIVAnalysisUserField(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.UserField = "®©"
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserField" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserField", e.FieldName)
 }
 
 // Field Inclusion
@@ -510,13 +378,10 @@ func TestIVAnalysisUserField(t *testing.T) {
 func TestIVAnalysisFIRecordType(t *testing.T) {
 	ivAnalysis := mockImageViewAnalysis()
 	ivAnalysis.recordType = ""
-	if err := ivAnalysis.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := ivAnalysis.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestIVAnalysisRuneCountInString validates RuneCountInString
@@ -525,7 +390,5 @@ func TestIVAnalysisRuneCountInString(t *testing.T) {
 	var line = "54"
 	ivAnalysis.Parse(line)
 
-	if ivAnalysis.AmountInWordsUsability != 0 {
-		t.Error("Parsed with an invalid RuneCountInString")
-	}
+	require.Equal(t, 0, ivAnalysis.AmountInWordsUsability)
 }

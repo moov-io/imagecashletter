@@ -5,10 +5,11 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockReturnDetailAddendumD creates a ReturnDetailAddendumD
@@ -45,82 +46,38 @@ func mockReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber() ReturnDet
 func TestReturnDetailAddendumDParseErr(t *testing.T) {
 	var r ReturnDetailAddendumD
 	r.Parse("ASdasdas")
-	if r.RecordNumber != 0 {
-		t.Errorf("r.RecordNumber=%d", r.RecordNumber)
-	}
+	require.Equal(t, 0, r.RecordNumber)
 }
 
 // TestMockReturnDetailAddendumD creates a ReturnDetailAddendumD
 func TestMockReturnDetailAddendumD(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
-	if err := rdAddendumD.Validate(); err != nil {
-		t.Error("MockReturnDetailAddendumD does not validate and will break other tests: ", err)
-	}
-	if rdAddendumD.recordType != "35" {
-		t.Error("recordType does not validate")
-	}
-	if rdAddendumD.RecordNumber != 1 {
-		t.Error("RecordNumber does not validate")
-	}
-	if rdAddendumD.EndorsingBankRoutingNumber != "121042882" {
-		t.Error("EndorsingBankRoutingNumber does not validate")
-	}
-	if rdAddendumD.EndorsingBankItemSequenceNumber != "1              " {
-		t.Error("EndorsingBankItemSequenceNumber does not validate")
-	}
-	if rdAddendumD.TruncationIndicator != "Y" {
-		t.Error("TruncationIndicator does not validate")
-	}
-	if rdAddendumD.ReturnReason != "A" {
-		t.Error("ReturnReason does not validate")
-	}
-	if rdAddendumD.EndorsingBankConversionIndicator != "1" {
-		t.Error("EndorsingBankConversionIndicator does not validate")
-	}
-	if rdAddendumD.EndorsingBankCorrectionIndicator != 0 {
-		t.Error("EndorsingBankCorrectionIndicator does not validate")
-	}
-	if rdAddendumD.UserField != "" {
-		t.Error("UserField does not validate")
-	}
-	if rdAddendumD.EndorsingBankIdentifier != 0 {
-		t.Error("EndorsingBankIdentifier does not validate")
-	}
+	require.NoError(t, rdAddendumD.Validate())
+	require.Equal(t, "35", rdAddendumD.recordType)
+	require.Equal(t, 1, rdAddendumD.RecordNumber)
+	require.Equal(t, "121042882", rdAddendumD.EndorsingBankRoutingNumber)
+	require.Equal(t, "1              ", rdAddendumD.EndorsingBankItemSequenceNumber)
+	require.Equal(t, "Y", rdAddendumD.TruncationIndicator)
+	require.Equal(t, "A", rdAddendumD.ReturnReason)
+	require.Equal(t, "1", rdAddendumD.EndorsingBankConversionIndicator)
+	require.Equal(t, 0, rdAddendumD.EndorsingBankCorrectionIndicator)
+	require.Equal(t, "", rdAddendumD.UserField)
+	require.Equal(t, 0, rdAddendumD.EndorsingBankIdentifier)
 }
 
 // TestMockReturnDetailAddendumD creates a ReturnDetailAddendumD
 func TestMockReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber()
-	if err := rdAddendumD.Validate(); err != nil {
-		t.Error("MockReturnDetailAddendumD does not validate and will break other tests: ", err)
-	}
-	if rdAddendumD.recordType != "35" {
-		t.Error("recordType does not validate")
-	}
-	if rdAddendumD.RecordNumber != 1 {
-		t.Error("RecordNumber does not validate")
-	}
-	if rdAddendumD.EndorsingBankRoutingNumber != "121042882" {
-		t.Error("EndorsingBankRoutingNumber does not validate")
-	}
-	if rdAddendumD.TruncationIndicator != "Y" {
-		t.Error("TruncationIndicator does not validate")
-	}
-	if rdAddendumD.ReturnReason != "A" {
-		t.Error("ReturnReason does not validate")
-	}
-	if rdAddendumD.EndorsingBankConversionIndicator != "1" {
-		t.Error("EndorsingBankConversionIndicator does not validate")
-	}
-	if rdAddendumD.EndorsingBankCorrectionIndicator != 0 {
-		t.Error("EndorsingBankCorrectionIndicator does not validate")
-	}
-	if rdAddendumD.UserField != "" {
-		t.Error("UserField does not validate")
-	}
-	if rdAddendumD.EndorsingBankIdentifier != 0 {
-		t.Error("EndorsingBankIdentifier does not validate")
-	}
+	require.NoError(t, rdAddendumD.Validate())
+	require.Equal(t, "35", rdAddendumD.recordType)
+	require.Equal(t, 1, rdAddendumD.RecordNumber)
+	require.Equal(t, "121042882", rdAddendumD.EndorsingBankRoutingNumber)
+	require.Equal(t, "Y", rdAddendumD.TruncationIndicator)
+	require.Equal(t, "A", rdAddendumD.ReturnReason)
+	require.Equal(t, "1", rdAddendumD.EndorsingBankConversionIndicator)
+	require.Equal(t, 0, rdAddendumD.EndorsingBankCorrectionIndicator)
+	require.Equal(t, "", rdAddendumD.UserField)
+	require.Equal(t, 0, rdAddendumD.EndorsingBankIdentifier)
 }
 
 // TestParseReturnDetailAddendumD validates parsing a ReturnDetailAddendumD
@@ -137,49 +94,21 @@ func TestParseReturnDetailAddendumD(t *testing.T) {
 	cd := mockReturnDetail()
 	r.currentCashLetter.currentBundle.AddReturnDetail(cd)
 
-	if err := r.parseReturnDetailAddendumD(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseReturnDetailAddendumD())
 	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumD[0]
 
-	if record.recordType != "35" {
-		t.Errorf("RecordType Expected '35' got: %v", record.recordType)
-	}
-	if record.RecordNumberField() != "01" {
-		t.Errorf("RecordNumber Expected '01' got: %v", record.RecordNumberField())
-	}
+	require.Equal(t, "35", record.recordType)
+	require.Equal(t, "01", record.RecordNumberField())
 
-	if record.EndorsingBankRoutingNumberField() != "121042882" {
-		t.Errorf("EndorsingBankRoutingNumbeRoutingNumber Expected '121042882' got: %v",
-			record.EndorsingBankRoutingNumberField())
-	}
-	if record.BOFDEndorsementBusinessDateField() != "20180905" {
-		t.Errorf("BOFDEndorsementBusinessDate Expected '20180905' got: %v",
-			record.BOFDEndorsementBusinessDateField())
-	}
-	if record.EndorsingBankItemSequenceNumberField() != "1              " {
-		t.Errorf("EndorsingBankItemSequenceNumber Expected '1              ' got: %v",
-			record.EndorsingBankItemSequenceNumberField())
-	}
-	if record.TruncationIndicatorField() != "Y" {
-		t.Errorf("TruncationIndicator Expected 'Y' got: %v", record.TruncationIndicatorField())
-	}
-	if record.EndorsingBankConversionIndicatorField() != "1" {
-		t.Errorf("EndorsingBankConversionIndicator  Expected '1' got: %v", record.EndorsingBankConversionIndicatorField())
-	}
-	if record.EndorsingBankCorrectionIndicatorField() != "0" {
-		t.Errorf("EndorsingBankCorrectionIndicator Expected '0' got: %v", record.EndorsingBankCorrectionIndicatorField())
-	}
-	if record.ReturnReasonField() != "A" {
-		t.Errorf("ReturnReason  Expected 'A' got: %v", record.ReturnReasonField())
-	}
-	if record.UserFieldField() != "                   " {
-		t.Errorf("UserField Expected '                   ' got: %v", record.UserFieldField())
-	}
-	if record.reservedField() != "                    " {
-		t.Errorf("reserved Expected '                    ' got: %v", record.reservedField())
-	}
+	require.Equal(t, "121042882", record.EndorsingBankRoutingNumberField())
+	require.Equal(t, "20180905", record.BOFDEndorsementBusinessDateField())
+	require.Equal(t, "1              ", record.EndorsingBankItemSequenceNumberField())
+	require.Equal(t, "Y", record.TruncationIndicatorField())
+	require.Equal(t, "1", record.EndorsingBankConversionIndicatorField())
+	require.Equal(t, "0", record.EndorsingBankCorrectionIndicatorField())
+	require.Equal(t, "A", record.ReturnReasonField())
+	require.Equal(t, "                   ", record.UserFieldField())
+	require.Equal(t, "                    ", record.reservedField())
 }
 
 // TestParseReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber validates parsing a ReturnDetailAddendumD
@@ -196,49 +125,21 @@ func TestParseReturnDetailAddendumDWithoutEndorsingBankItemSequenceNumber(t *tes
 	cd := mockReturnDetail()
 	r.currentCashLetter.currentBundle.AddReturnDetail(cd)
 
-	if err := r.parseReturnDetailAddendumD(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseReturnDetailAddendumD())
 	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumD[0]
 
-	if record.recordType != "35" {
-		t.Errorf("RecordType Expected '35' got: %v", record.recordType)
-	}
-	if record.RecordNumberField() != "01" {
-		t.Errorf("RecordNumber Expected '01' got: %v", record.RecordNumberField())
-	}
+	require.Equal(t, "35", record.recordType)
+	require.Equal(t, "01", record.RecordNumberField())
 
-	if record.EndorsingBankRoutingNumberField() != "121042882" {
-		t.Errorf("EndorsingBankRoutingNumbeRoutingNumber Expected '121042882' got: %v",
-			record.EndorsingBankRoutingNumberField())
-	}
-	if record.BOFDEndorsementBusinessDateField() != "20180905" {
-		t.Errorf("BOFDEndorsementBusinessDate Expected '20180905' got: %v",
-			record.BOFDEndorsementBusinessDateField())
-	}
-	if record.EndorsingBankItemSequenceNumberField() != "               " {
-		t.Errorf("EndorsingBankItemSequenceNumber Expected '               ' got: %v",
-			record.EndorsingBankItemSequenceNumberField())
-	}
-	if record.TruncationIndicatorField() != "Y" {
-		t.Errorf("TruncationIndicator Expected 'Y' got: %v", record.TruncationIndicatorField())
-	}
-	if record.EndorsingBankConversionIndicatorField() != "1" {
-		t.Errorf("EndorsingBankConversionIndicator  Expected '1' got: %v", record.EndorsingBankConversionIndicatorField())
-	}
-	if record.EndorsingBankCorrectionIndicatorField() != "0" {
-		t.Errorf("EndorsingBankCorrectionIndicator Expected '0' got: %v", record.EndorsingBankCorrectionIndicatorField())
-	}
-	if record.ReturnReasonField() != "A" {
-		t.Errorf("ReturnReason  Expected 'A' got: %v", record.ReturnReasonField())
-	}
-	if record.UserFieldField() != "                   " {
-		t.Errorf("UserField Expected '                   ' got: %v", record.UserFieldField())
-	}
-	if record.reservedField() != "                    " {
-		t.Errorf("reserved Expected '                    ' got: %v", record.reservedField())
-	}
+	require.Equal(t, "121042882", record.EndorsingBankRoutingNumberField())
+	require.Equal(t, "20180905", record.BOFDEndorsementBusinessDateField())
+	require.Equal(t, "               ", record.EndorsingBankItemSequenceNumberField())
+	require.Equal(t, "Y", record.TruncationIndicatorField())
+	require.Equal(t, "1", record.EndorsingBankConversionIndicatorField())
+	require.Equal(t, "0", record.EndorsingBankCorrectionIndicatorField())
+	require.Equal(t, "A", record.ReturnReasonField())
+	require.Equal(t, "                   ", record.UserFieldField())
+	require.Equal(t, "                    ", record.reservedField())
 }
 
 // testRDAddendumDString validates that a known parsed ReturnDetailAddendumD can return to a string of the same value
@@ -255,15 +156,10 @@ func testRDAddendumDString(t testing.TB) {
 	rd := mockReturnDetail()
 	r.currentCashLetter.currentBundle.AddReturnDetail(rd)
 
-	if err := r.parseReturnDetailAddendumD(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseReturnDetailAddendumD())
 	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumD[0]
 
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestRDAddendumDString tests validating that a known parsed ReturnDetailAddendumD can return to a string of the
@@ -285,104 +181,80 @@ func BenchmarkRDAddendumDString(b *testing.B) {
 func TestRDAddendumDRecordType(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.recordType = "00"
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestRDAddendumDReturnLocationRoutingNumber validation
 func TestRDAddendumDReturnLocationRoutingNumber(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.EndorsingBankRoutingNumber = "X"
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EndorsingBankRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "EndorsingBankRoutingNumber", e.FieldName)
 }
 
 // TestRDAddendumDTruncationIndicator validation
 func TestRDAddendumDTruncationIndicator(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.TruncationIndicator = "A"
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "TruncationIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "TruncationIndicator", e.FieldName)
 }
 
 // TestRDAddendumDBOFDConversionIndicator validation
 func TestRDAddendumDBOFDConversionIndicator(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.EndorsingBankConversionIndicator = "99"
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EndorsingBankConversionIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "EndorsingBankConversionIndicator", e.FieldName)
 }
 
 // TestRDAddendumDBOFDCorrectionIndicator validation
 func TestRDAddendumDBOFDCorrectionIndicator(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.EndorsingBankCorrectionIndicator = 10
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EndorsingBankCorrectionIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "EndorsingBankCorrectionIndicator", e.FieldName)
 }
 
 // TestRDAddendumDReturnReason validation
 func TestRDAddendumDReturnReason(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.ReturnReason = "--"
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ReturnReason" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ReturnReason", e.FieldName)
 }
 
 // TestRDAddendumDUserField validation
 func TestRDAddendumDUserField(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.UserField = "®©"
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserField" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserField", e.FieldName)
 }
 
 // TestRDAddendumDEndorsingBankIdentifier validation
 func TestRDAddendumDEndorsingBankIdentifier(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.EndorsingBankIdentifier = 9
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EndorsingBankIdentifier" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "EndorsingBankIdentifier", e.FieldName)
 }
 
 // Field Inclusion
@@ -391,91 +263,76 @@ func TestRDAddendumDEndorsingBankIdentifier(t *testing.T) {
 func TestRDAddendumDFIRecordType(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.recordType = ""
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestRDAddendumDFIRecordNumber validation
 func TestRDAddendumDFIRecordNumber(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.RecordNumber = 0
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "RecordNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "RecordNumber", e.FieldName)
 }
 
 // TestRDAddendumDFIReturnLocationRoutingNumber validation
 func TestRDAddendumDFIReturnLocationRoutingNumber(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.EndorsingBankRoutingNumber = ""
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EndorsingBankRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "EndorsingBankRoutingNumber", e.FieldName)
 }
 
 // TestRDAddendumDFIReturnLocationRoutingNumberZero validation
 func TestRDAddendumDFIReturnLocationRoutingNumberZero(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.EndorsingBankRoutingNumber = "000000000"
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EndorsingBankRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "EndorsingBankRoutingNumber", e.FieldName)
 }
 
 // TestRDAddendumDFIBOFDEndorsementDate validation
 func TestRDAddendumDFIBOFDEndorsementDate(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.BOFDEndorsementBusinessDate = time.Time{}
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BOFDEndorsementBusinessDate" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BOFDEndorsementBusinessDate", e.FieldName)
 }
 
 // TestRDAddendumDFIBOFDItemSequenceNumber validation
 func TestRDAddendumDFIBOFDItemSequenceNumber(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
+	rdAddendumD.EndorsingBankItemSequenceNumber = "         s     "
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "EndorsingBankItemSequenceNumber", e.FieldName)
+}
+
+func TestRDAddendumDFIBOFDItemSequenceNumber_emptyAllowed(t *testing.T) {
+	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.EndorsingBankItemSequenceNumber = "               "
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EndorsingBankItemSequenceNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	require.NoError(t, rdAddendumD.Validate())
 }
 
 // TestRDAddendumDFITruncationIndicator validation
 func TestRDAddendumDFITruncationIndicator(t *testing.T) {
 	rdAddendumD := mockReturnDetailAddendumD()
 	rdAddendumD.TruncationIndicator = ""
-	if err := rdAddendumD.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "TruncationIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumD.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "TruncationIndicator", e.FieldName)
 }
 
 // TestRDAddendumDRuneCountInString validates RuneCountInString
@@ -484,7 +341,5 @@ func TestRDAddendumDRuneCountInString(t *testing.T) {
 	var line = "35"
 	rdAddendumD.Parse(line)
 
-	if rdAddendumD.EndorsingBankRoutingNumber != "" {
-		t.Error("Parsed with an invalid RuneCountInString")
-	}
+	require.Equal(t, "", rdAddendumD.EndorsingBankRoutingNumber)
 }

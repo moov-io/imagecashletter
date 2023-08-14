@@ -5,10 +5,11 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockCashLetterControl creates a CashLetterControl
@@ -27,30 +28,14 @@ func mockCashLetterControl() *CashLetterControl {
 // TestMockCashLetterControl creates a CashLetterControl
 func TestMockCashLetterControl(t *testing.T) {
 	clc := mockCashLetterControl()
-	if err := clc.Validate("01"); err != nil {
-		t.Error("mockCashLetterControl does not validate and will break other tests: ", err)
-	}
-	if clc.recordType != "90" {
-		t.Error("recordType does not validate")
-	}
-	if clc.CashLetterBundleCount != 1 {
-		t.Error("CashLetterBundleCount does not validate")
-	}
-	if clc.CashLetterItemsCount != 7 {
-		t.Error("CashLetterItemsCount does not validate")
-	}
-	if clc.CashLetterTotalAmount != 100000 {
-		t.Error("CashLetterTotalAmount does not validate")
-	}
-	if clc.CashLetterImagesCount != 1 {
-		t.Error("CashLetterImagesCount does not validate")
-	}
-	if clc.ECEInstitutionName != "Wells Fargo" {
-		t.Error("ImmediateOriginContactName does not validate")
-	}
-	if clc.CreditTotalIndicator != 0 {
-		t.Error("CreditTotalIndicator does not validate")
-	}
+	require.NoError(t, clc.Validate("01"))
+	require.Equal(t, "90", clc.recordType)
+	require.Equal(t, 1, clc.CashLetterBundleCount)
+	require.Equal(t, 7, clc.CashLetterItemsCount)
+	require.Equal(t, 100000, clc.CashLetterTotalAmount)
+	require.Equal(t, 1, clc.CashLetterImagesCount)
+	require.Equal(t, "Wells Fargo", clc.ECEInstitutionName)
+	require.Equal(t, 0, clc.CreditTotalIndicator)
 }
 
 // TestParseCashLetterControl parses a known CashLetterControl record string
@@ -60,40 +45,18 @@ func TestParseCashLetterControl(t *testing.T) {
 	r.line = line
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
-	err := r.parseCashLetterControl("03")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseCashLetterControl("03"))
 	record := r.currentCashLetter.CashLetterControl
 
-	if record.recordType != "90" {
-		t.Errorf("RecordType Expected '90' got: %v", record.recordType)
-	}
-	if record.CashLetterBundleCountField() != "000001" {
-		t.Errorf("CashLetterBundleCount Expected '000001' got: %v", record.CashLetterBundleCountField())
-	}
-	if record.CashLetterItemsCountField() != "00000001" {
-		t.Errorf("CashLetterItemsCount Expected '00000001' got: %v", record.CashLetterItemsCountField())
-	}
-	if record.CashLetterTotalAmountField() != "00000000100000" {
-		t.Errorf("CashLetterTotalAmount Expected '00000000100000' got: %v", record.CashLetterTotalAmountField())
-	}
-	if record.CashLetterImagesCountField() != "000000000" {
-		t.Errorf("CashLetterImagesCount Expected '000000000' got: %v", record.CashLetterImagesCountField())
-	}
-	if record.ECEInstitutionNameField() != "Wells Fargo       " {
-		t.Errorf("ECEInstitutionName Expected 'Wells Fargo       ' got: %v", record.ECEInstitutionNameField())
-	}
-	if record.SettlementDateField() != "20180905" {
-		t.Errorf("SettlementDate Expected '20180905' got: %v", record.SettlementDateField())
-	}
-	if record.CreditTotalIndicatorField() != "0" {
-		t.Errorf("CreditTotalIndicator Expected '0' got: %v", record.CreditTotalIndicatorField())
-	}
-	if record.reservedField() != "              " {
-		t.Errorf("Reserved Expected '              ' got: %v", record.reservedField())
-	}
+	require.Equal(t, "90", record.recordType)
+	require.Equal(t, "000001", record.CashLetterBundleCountField())
+	require.Equal(t, "00000001", record.CashLetterItemsCountField())
+	require.Equal(t, "00000000100000", record.CashLetterTotalAmountField())
+	require.Equal(t, "000000000", record.CashLetterImagesCountField())
+	require.Equal(t, "Wells Fargo       ", record.ECEInstitutionNameField())
+	require.Equal(t, "20180905", record.SettlementDateField())
+	require.Equal(t, "0", record.CreditTotalIndicatorField())
+	require.Equal(t, "              ", record.reservedField())
 }
 
 // testCLCString validates that a known parsed CashLetterControl can be return to a string of the same value
@@ -103,15 +66,9 @@ func testCLCString(t testing.TB) {
 	r.line = line
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
-	err := r.parseCashLetterControl("01")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseCashLetterControl("01"))
 	record := r.currentCashLetter.CashLetterControl
-	if record.String() != line {
-		t.Errorf("\nStrings do not match %s\n %s", line, record.String())
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestCLCString tests validating that a known parsed CashLetterControl can be return to a string of the same value
@@ -131,91 +88,70 @@ func BenchmarkCLCString(b *testing.B) {
 func TestCLCRecordType(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.recordType = "00"
-	if err := clc.Validate("01"); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clc.Validate("01")
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "recordType", fieldErr.FieldName)
 }
 
 // TestECEInstitutionName validation
 func TestECEInstitutionName(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.ECEInstitutionName = "®©"
-	if err := clc.Validate("01"); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ECEInstitutionName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clc.Validate("01")
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "ECEInstitutionName", fieldErr.FieldName)
 }
 
 // TestCLCCreditTotalIndicator validation
 func TestCLCCreditTotalIndicator(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.CreditTotalIndicator = 9
-	if err := clc.Validate("01"); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CreditTotalIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clc.Validate("01")
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "CreditTotalIndicator", fieldErr.FieldName)
 }
 
 // TestCLCFieldInclusionRecordType validates FieldInclusion
 func TestCLCFieldInclusionRecordType(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.recordType = ""
-	if err := clc.Validate("01"); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clc.Validate("01")
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "recordType", fieldErr.FieldName)
 }
 
 // TestFieldInclusionCashLetterItemsCount validates FieldInclusion
 func TestFieldInclusionCashLetterItemsCount(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.CashLetterItemsCount = 0
-	if err := clc.Validate("01"); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CashLetterItemsCount" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clc.Validate("01")
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "CashLetterItemsCount", fieldErr.FieldName)
 }
 
 // TestFieldInclusionCashLetterTotalAmount validates FieldInclusion
 func TestFieldInclusionCashLetterTotalAmount(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.CashLetterTotalAmount = 0
-	if err := clc.Validate("01"); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CashLetterTotalAmount" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clc.Validate("01")
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "CashLetterTotalAmount", fieldErr.FieldName)
 }
 
 // TestFieldInclusionSettlementDate validates FieldInclusion
 func TestFieldInclusionRecordTypeSettlementDate(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.SettlementDate = time.Time{}
-	if err := clc.Validate("01"); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "SettlementDate" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := clc.Validate("01")
+	var fieldErr *FieldError
+	require.ErrorAs(t, err, &fieldErr)
+	require.Equal(t, "SettlementDate", fieldErr.FieldName)
 }
 
 // TestCashLetterControlRuneCountInString validates RuneCountInString
@@ -224,7 +160,5 @@ func TestCashLetterControlRuneCountInString(t *testing.T) {
 	var line = "90"
 	clc.Parse(line)
 
-	if clc.CashLetterBundleCount != 0 {
-		t.Error("Parsed with an invalid RuneCountInString")
-	}
+	require.Equal(t, 0, clc.CashLetterBundleCount)
 }
