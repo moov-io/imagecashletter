@@ -1,3 +1,18 @@
+## v0.9.4 (Released 2023-08-14)
+
+IMPROVEMENTS
+
+- client: update `eCEInstitutionRoutingNumber` to `eceInstitutionRoutingNumber` to follow existing naming conventions ((See [PR #312](https://github.com/moov-io/imagecashletter/pull/312) by [@DennyWeinberg](https://github.com/DennyWeinberg)))
+- all: use `testify` for assertions in all tests, improving readability
+- reader: add `Unwrap()` method to `ParseError` so `errors.Is()` and `errors.As()` behave as expected
+
+BUG FIXES
+
+- ImageViewAnalysis: fix copy/paste bug in `AmountInWordsUsabilityField()`
+- ReturnDetailAddendumB: implement validation for the `PayorBankBusinessDate` field 
+- ReturnDetailAddendumD: implement validation for the `EndorsingBankItemSequenceNumber` field
+- UserPayeeEndorsement: implement validation for the `FormatTypeVersionLevel` field
+
 ## v0.9.3 (Released 2023-07-31)
 
 BUILD
