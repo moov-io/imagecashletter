@@ -128,8 +128,8 @@ func (clc *CashLetterControl) String() string {
 
 // Validate performs imagecashletter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
-func (clc *CashLetterControl) Validate(collectionTypeIndicator string) error {
-	if err := clc.fieldInclusion(collectionTypeIndicator); err != nil {
+func (clc *CashLetterControl) Validate() error {
+	if err := clc.fieldInclusion(); err != nil {
 		return err
 	}
 	if clc.recordType != "90" {
@@ -149,7 +149,7 @@ func (clc *CashLetterControl) Validate(collectionTypeIndicator string) error {
 
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
-func (clc *CashLetterControl) fieldInclusion(collectionTypeIndicator string) error {
+func (clc *CashLetterControl) fieldInclusion() error {
 	if clc.recordType == "" {
 		return &FieldError{FieldName: "recordType",
 			Value: clc.recordType,
@@ -165,12 +165,15 @@ func (clc *CashLetterControl) fieldInclusion(collectionTypeIndicator string) err
 			Value: clc.CashLetterTotalAmountField(),
 			Msg:   msgFieldInclusion + ", did you use CashLetterControl()?"}
 	}
-	// If the type of the cash letter control is `Return`, we do not require to have this field present.
-	if clc.SettlementDate.IsZero() && !isReturnCollectionType(collectionTypeIndicator) {
-		return &FieldError{FieldName: "SettlementDate",
-			Value: clc.SettlementDate.String(),
-			Msg:   msgFieldInclusion + ", did you use CashLetterControl()?"}
+
+	// optional field - if present, year must be between 1993 and 9999
+	if date := clc.SettlementDate; !date.IsZero() {
+		if date.Year() < 1993 || date.Year() > 9999 {
+			return &FieldError{FieldName: "SettlementDate",
+				Value: clc.SettlementDateField(), Msg: msgInvalidDate + ": year must be between 1993 and 9999"}
+		}
 	}
+
 	return nil
 }
 
