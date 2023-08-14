@@ -184,6 +184,10 @@ func (rdAddendumD *ReturnDetailAddendumD) Validate() error {
 		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
 			Value: rdAddendumD.EndorsingBankRoutingNumber, Msg: err.Error()}
 	}
+	if err := rdAddendumD.isNumeric(rdAddendumD.EndorsingBankItemSequenceNumber); err != nil {
+		return &FieldError{FieldName: "EndorsingBankItemSequenceNumber",
+			Value: rdAddendumD.EndorsingBankItemSequenceNumber, Msg: msgNumeric}
+	}
 	// Mandatory
 	if err := rdAddendumD.isTruncationIndicator(rdAddendumD.TruncationIndicator); err != nil {
 		return &FieldError{FieldName: "TruncationIndicator",

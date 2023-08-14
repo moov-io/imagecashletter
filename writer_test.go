@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // TestICLWrite writes an ICL File
@@ -64,50 +66,28 @@ func TestICLWrite(t *testing.T) {
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.AddBundle(bundle)
 	cl.AddBundle(returnBundle)
-	if err := cl.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, cl.Create())
 	file.AddCashLetter(cl)
 
 	clTwo := NewCashLetter(mockCashLetterHeader())
 	clTwo.CashLetterHeader.CashLetterID = "A2"
 	clTwo.AddBundle(bundle)
 	clTwo.AddBundle(returnBundle)
-	if err := clTwo.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, clTwo.Create())
 	file.AddCashLetter(clTwo)
 
 	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, file.Create())
+	require.NoError(t, file.Validate())
 
 	b := &bytes.Buffer{}
 	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	/*
-		// We want to write the file to an io.Writer
-		w := NewWriter(os.Stdout)
-		if err := w.Write(file); err != nil {
-			log.Fatalf("Unexpected error: %s\n", err)
-		}
-		w.Flush()*/
+	require.NoError(t, f.Write(file))
 
 	r := NewReader(strings.NewReader(b.String()))
 	_, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err = r.File.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, err)
+	require.NoError(t, r.File.Validate())
 }
 
 // TestICLWriteCreditItem writes an ICL file with a CreditItem
@@ -142,50 +122,28 @@ func TestICLWriteCreditItem(t *testing.T) {
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.AddCreditItem(ci)
 	cl.AddBundle(bundle)
-	if err := cl.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, cl.Create())
 	file.AddCashLetter(cl)
 
 	clTwo := NewCashLetter(mockCashLetterHeader())
 	clTwo.CashLetterHeader.CashLetterID = "A2"
 	clTwo.AddBundle(bundle)
 
-	if err := clTwo.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, clTwo.Create())
 	file.AddCashLetter(clTwo)
 
 	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, file.Create())
+	require.NoError(t, file.Validate())
 
 	b := &bytes.Buffer{}
 	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	/*	// We want to write the file to an io.Writer
-		w := NewWriter(os.Stdout)
-		if err := w.Write(file); err != nil {
-			log.Fatalf("Unexpected error: %s\n", err)
-		}
-		w.Flush()*/
+	require.NoError(t, f.Write(file))
 
 	r := NewReader(strings.NewReader(b.String()))
 	_, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err = r.File.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, err)
+	require.NoError(t, r.File.Validate())
 }
 
 // TestICLWriteCreditRecord writes an ICL file with a Credit record
@@ -220,43 +178,28 @@ func TestICLWriteCreditRecord(t *testing.T) {
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.AddCredit(ci)
 	cl.AddBundle(bundle)
-	if err := cl.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, cl.Create())
 	file.AddCashLetter(cl)
 
 	clTwo := NewCashLetter(mockCashLetterHeader())
 	clTwo.CashLetterHeader.CashLetterID = "A2"
 	clTwo.AddBundle(bundle)
 
-	if err := clTwo.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, clTwo.Create())
 	file.AddCashLetter(clTwo)
 
 	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, file.Create())
+	require.NoError(t, file.Validate())
 
 	b := &bytes.Buffer{}
 	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, f.Write(file))
 
 	r := NewReader(strings.NewReader(b.String()))
 	_, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err = r.File.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, err)
+	require.NoError(t, r.File.Validate())
 }
 
 // TestICLWriteRoutingNumberSummary writes an ICL file with a RoutingNumberSummary
@@ -281,95 +224,54 @@ func TestICLWriteRoutingNumber(t *testing.T) {
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.AddBundle(bundle)
 	cl.AddRoutingNumberSummary(rns)
-	if err := cl.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, cl.Create())
 	file.AddCashLetter(cl)
 
 	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, file.Create())
+	require.NoError(t, file.Validate())
 
 	b := &bytes.Buffer{}
 	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	/*		if err := w.Write(file); err != nil {
-			log.Fatalf("Unexpected error: %s\n", err)
-		}*/
-	w.Flush()
+	require.NoError(t, f.Write(file))
 
 	r := NewReader(strings.NewReader(b.String()))
 	_, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err = r.File.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
+	require.NoError(t, err)
+	require.NoError(t, r.File.Validate())
 }
 
 func TestICLWrite_VariableLengthOption(t *testing.T) {
 	fileBytes, err := os.ReadFile(filepath.Join("test", "testdata", "valid-ascii.x937"))
-	if err != nil {
-		t.Fatalf("Can not open local file: %s: \n", err)
-	}
+	require.NoError(t, err)
 
 	fd := bytes.NewReader(fileBytes)
 	r := NewReader(fd, ReadVariableLineLengthOption())
 	file, err := r.Read()
-	if err != nil {
-		t.Errorf("Issue reading file: %+v \n", err)
-	}
+	require.NoError(t, err)
 
 	b := &bytes.Buffer{}
 	w := NewWriter(b, WriteVariableLineLengthOption())
-
-	if err := w.Write(&file); err != nil {
-		t.Errorf("Issue writing ICL: %+v \n", err)
-	}
-
-	if !bytes.Equal(fileBytes, b.Bytes()) {
-		t.Errorf("ICLs does not match")
-	}
+	require.NoError(t, w.Write(&file))
+	require.Equal(t, fileBytes, b.Bytes())
 }
 
 func TestICLWrite_EbcdicEncodingOption(t *testing.T) {
 	fileBytes, err := os.ReadFile(filepath.Join("test", "testdata", "valid-ebcdic.x937"))
-	if err != nil {
-		t.Fatalf("Can not open local file: %s: \n", err)
-	}
+	require.NoError(t, err)
 
 	fd := bytes.NewReader(fileBytes)
 	r := NewReader(fd, ReadVariableLineLengthOption(), ReadEbcdicEncodingOption())
 	file, err := r.Read()
-	if err != nil {
-		t.Errorf("Issue reading file: %+v \n", err)
-	}
+	require.NoError(t, err)
 
 	b := &bytes.Buffer{}
 	w := NewWriter(b, WriteVariableLineLengthOption(), WriteEbcdicEncodingOption())
-
-	if err := w.Write(&file); err != nil {
-		t.Errorf("Issue writing ICL: %+v \n", err)
-	}
-
-	if !bytes.Equal(fileBytes, b.Bytes()) {
-		t.Errorf("ICLs does not match")
-	}
+	require.NoError(t, w.Write(&file))
+	require.Equal(t, fileBytes, b.Bytes())
 }
 
-func TestWriter__CollateErr(t *testing.T) {
+func TestWriter_CollateErr(t *testing.T) {
 	cd := &CheckDetail{
 		// Create a CheckDetail without a corresponding ImageData or ImageViewAnalysis
 		// so when we attempt to collate them it doesn't crash.
@@ -389,12 +291,5 @@ func TestWriter__CollateErr(t *testing.T) {
 
 	var buf bytes.Buffer
 	w := NewWriter(&buf)
-
-	err := w.writeCheckImageView(cd)
-	if err == nil {
-		t.Fatal("expected error")
-	}
-	if !strings.Contains(err.Error(), "ImageViewData does not match Image View Detail count of 1") {
-		t.Errorf("unexpected error: %q", err)
-	}
+	require.ErrorContains(t, w.writeCheckImageView(cd), "ImageViewData does not match Image View Detail count of 1")
 }

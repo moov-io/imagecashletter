@@ -8,51 +8,44 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockFile creates an imagecashletter file
 func mockFile() *File {
-	mockFile := NewFile()
-	mockFile.SetHeader(mockFileHeader())
+	f := NewFile()
+	f.SetHeader(mockFileHeader())
 	clh := mockCashLetterHeader()
 	mockCashLetter := NewCashLetter(clh)
 	mockCashLetter.CashLetterControl = mockCashLetterControl()
-	mockFile.AddCashLetter(mockCashLetter)
-	if err := mockFile.Create(); err != nil {
+	f.AddCashLetter(mockCashLetter)
+	if err := f.Create(); err != nil {
 		panic(err)
 	}
-	return mockFile
+	return f
 }
 
 func TestFileCreate(t *testing.T) {
 	file := mockFile()
-	if err := file.Validate(); err != nil {
-		t.Error("File does not validate and will break other tests: ", err)
-	}
+	require.NoError(t, file.Validate())
 }
 
-func TestFile__FileFromJSON(t *testing.T) {
+func TestFile_FileFromJSON(t *testing.T) {
 	bs, err := os.ReadFile(filepath.Join("test", "testdata", "icl-valid.json"))
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 
 	file, err := FileFromJSON(bs)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if err := file.Validate(); err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
+	require.NoError(t, file.Validate())
 
 	// error conditions
 
-	if _, err := FileFromJSON(nil); err == nil {
-		t.Error("expected error")
-	}
+	f, err := FileFromJSON(nil)
+	require.Nil(t, f)
+	require.Error(t, err)
 
-	if _, err := FileFromJSON([]byte(`{invalid-json`)); err == nil {
-		t.Error("expected error")
-	}
+	f, err = FileFromJSON([]byte(`{invalid-json`))
+	require.Nil(t, f)
+	require.Error(t, err)
 }

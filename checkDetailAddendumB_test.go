@@ -5,9 +5,10 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockCheckDetailAddendumB creates a CheckDetailAddendumB
@@ -25,45 +26,23 @@ func mockCheckDetailAddendumB() CheckDetailAddendumB {
 func TestCheckDetailAddendumBParseErr(t *testing.T) {
 	var c CheckDetailAddendumB
 	c.Parse("asdhfakjfsa")
-	if c.ImageReferenceKeyIndicator != 0 {
-		t.Errorf("c.ImageReferenceKeyIndicator=%d", c.ImageReferenceKeyIndicator)
-	}
+	require.Equal(t, 0, c.ImageReferenceKeyIndicator)
 	c.Parse("2711A             00340                                 CD Addendum B")
-	if c.ImageReferenceKeyIndicator != 1 {
-		t.Errorf("c.ImageReferenceKeyIndicator=%d", c.ImageReferenceKeyIndicator)
-	}
-	if c.ImageReferenceKey != "" {
-		t.Errorf("c.ImageReferenceKey=%s", c.ImageReferenceKey)
-	}
+	require.Equal(t, 1, c.ImageReferenceKeyIndicator)
+	require.Equal(t, "", c.ImageReferenceKey)
 }
 
 // TestMockCheckDetailAddendumB creates a CheckDetailAddendumB
 func TestMockCheckDetailAddendumB(t *testing.T) {
 	cdAddendumB := mockCheckDetailAddendumB()
-	if err := cdAddendumB.Validate(); err != nil {
-		t.Error("MockCheckDetailAddendumB does not validate and will break other tests: ", err)
-	}
-	if cdAddendumB.recordType != "27" {
-		t.Error("recordType does not validate")
-	}
-	if cdAddendumB.ImageReferenceKeyIndicator != 1 {
-		t.Error("ImageReferenceKeyIndicator does not validate")
-	}
-	if cdAddendumB.MicrofilmArchiveSequenceNumber != "1A             " {
-		t.Error("MicrofilmArchiveSequenceNumber does not validate")
-	}
-	if cdAddendumB.LengthImageReferenceKey != "0034" {
-		t.Error("LengthImageReferenceKey does not validate")
-	}
-	if cdAddendumB.ImageReferenceKey != "0" {
-		t.Error("ImageReferenceKey does not validate")
-	}
-	if cdAddendumB.Description != "CD Addendum B" {
-		t.Error("Description does not validate")
-	}
-	if cdAddendumB.UserField != "" {
-		t.Error("UserField does not validate")
-	}
+	require.NoError(t, cdAddendumB.Validate())
+	require.Equal(t, "27", cdAddendumB.recordType)
+	require.Equal(t, 1, cdAddendumB.ImageReferenceKeyIndicator)
+	require.Equal(t, "1A             ", cdAddendumB.MicrofilmArchiveSequenceNumber)
+	require.Equal(t, "0034", cdAddendumB.LengthImageReferenceKey)
+	require.Equal(t, "0", cdAddendumB.ImageReferenceKey)
+	require.Equal(t, "CD Addendum B", cdAddendumB.Description)
+	require.Equal(t, "", cdAddendumB.UserField)
 }
 
 // TestParseCheckDetailAddendumB validates parsing a CheckDetailAddendumB
@@ -80,38 +59,16 @@ func TestParseCheckDetailAddendumB(t *testing.T) {
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
-	if err := r.parseCheckDetailAddendumB(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseCheckDetailAddendumB())
 	record := r.currentCashLetter.currentBundle.GetChecks()[0].CheckDetailAddendumB[0]
-	if record.recordType != "27" {
-		t.Errorf("RecordType Expected '27' got: %v", record.recordType)
-	}
-	if record.ImageReferenceKeyIndicatorField() != "1" {
-		t.Errorf("ImageReferenceKeyIndicator Expected '1' got: %v",
-			record.ImageReferenceKeyIndicatorField())
-	}
-	if record.MicrofilmArchiveSequenceNumberField() != "1A             " {
-		t.Errorf("MicrofilmArchiveSequenceNumber Expected '1A             ' got: %v",
-			record.MicrofilmArchiveSequenceNumberField())
-	}
-	if record.LengthImageReferenceKeyField() != "0034" {
-		t.Errorf("ImageReferenceKeyLength Expected '0034' got: %v", record.LengthImageReferenceKeyField())
-	}
-	if record.ImageReferenceKeyField() != "0                                 " {
-		t.Errorf("ImageReferenceKey Expected '0                                 ' got: %v",
-			record.ImageReferenceKeyField())
-	}
-	if record.DescriptionField() != "CD Addendum B  " {
-		t.Errorf("Description Expected 'CD Addendum B  ' got: %v", record.DescriptionField())
-	}
-	if record.UserFieldField() != "    " {
-		t.Errorf("UserField Expected '    ' got: %v", record.UserFieldField())
-	}
-	if record.reservedField() != "     " {
-		t.Errorf("reserved Expected '     ' got: %v", record.reservedField())
-	}
+	require.Equal(t, "27", record.recordType)
+	require.Equal(t, "1", record.ImageReferenceKeyIndicatorField())
+	require.Equal(t, "1A             ", record.MicrofilmArchiveSequenceNumberField())
+	require.Equal(t, "0034", record.LengthImageReferenceKeyField())
+	require.Equal(t, "0                                 ", record.ImageReferenceKeyField())
+	require.Equal(t, "CD Addendum B  ", record.DescriptionField())
+	require.Equal(t, "    ", record.UserFieldField())
+	require.Equal(t, "     ", record.reservedField())
 }
 
 // testCDAddendumBString validates that a known parsed CheckDetailAddendumB can return to a string of the same value
@@ -128,15 +85,10 @@ func testCDAddendumBString(t testing.TB) {
 	cd := mockCheckDetail()
 	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
 
-	if err := r.parseCheckDetailAddendumB(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseCheckDetailAddendumB())
 	record := r.currentCashLetter.currentBundle.GetChecks()[0].CheckDetailAddendumB[0]
 
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestCDAddendumB String tests validating that a known parsed CheckDetailAddendumB can return to a string of the
@@ -158,65 +110,50 @@ func BenchmarkCDAddendumBString(b *testing.B) {
 func TestCDAddendumBRecordType(t *testing.T) {
 	cdAddendumB := mockCheckDetailAddendumB()
 	cdAddendumB.recordType = "00"
-	if err := cdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := cdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestCDAddendumBImageReferenceKeyIndicator validation
 func TestCDAddendumBImageReferenceKeyIndicator(t *testing.T) {
 	cdAddendumB := mockCheckDetailAddendumB()
 	cdAddendumB.ImageReferenceKeyIndicator = 5
-	if err := cdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImageReferenceKeyIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := cdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImageReferenceKeyIndicator", e.FieldName)
 }
 
 // TestCDAddendumBImageReferenceKey validation
 func TestCDAddendumBImageReferenceKey(t *testing.T) {
 	cdAddendumB := mockCheckDetailAddendumB()
 	cdAddendumB.ImageReferenceKey = "®©"
-	if err := cdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImageReferenceKey" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := cdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImageReferenceKey", e.FieldName)
 }
 
 // TestCDAddendumBDescription validation
 func TestCDAddendumBDescription(t *testing.T) {
 	cdAddendumB := mockCheckDetailAddendumB()
 	cdAddendumB.Description = "®©"
-	if err := cdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "Description" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := cdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "Description", e.FieldName)
 }
 
 // TestCDAddendumBUserField validation
 func TestCDAddendumBUserField(t *testing.T) {
 	cdAddendumB := mockCheckDetailAddendumB()
 	cdAddendumB.UserField = "®©"
-	if err := cdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserField" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := cdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserField", e.FieldName)
 }
 
 // Field Inclusion
@@ -225,26 +162,20 @@ func TestCDAddendumBUserField(t *testing.T) {
 func TestCDAddendumBFIRecordType(t *testing.T) {
 	cdAddendumB := mockCheckDetailAddendumB()
 	cdAddendumB.recordType = ""
-	if err := cdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := cdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestCDAddendumBFIMicrofilmArchiveSequenceNumber validation
 func TestCDAddendumBFIMicrofilmArchiveSequenceNumber(t *testing.T) {
 	cdAddendumB := mockCheckDetailAddendumB()
 	cdAddendumB.MicrofilmArchiveSequenceNumber = "               "
-	if err := cdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "MicrofilmArchiveSequenceNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := cdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "MicrofilmArchiveSequenceNumber", e.FieldName)
 }
 
 // End FieldInclusion
@@ -253,8 +184,5 @@ func TestCDAddendumBFIMicrofilmArchiveSequenceNumber(t *testing.T) {
 func TestNBSMFieldTrim(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()
 	rdAddendumB.AuxiliaryOnUs = "12345678901234567890"
-	if len(rdAddendumB.AuxiliaryOnUsField()) > 15 {
-		t.Error("AuxiliaryOnUs field is greater than max")
-	}
-
+	require.Len(t, rdAddendumB.AuxiliaryOnUsField(), 15)
 }

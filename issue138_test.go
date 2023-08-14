@@ -14,13 +14,9 @@ import (
 
 func TestIssue138(t *testing.T) {
 	b, err := os.ReadFile(filepath.Join("test", "testdata", "issue138.json"))
-	if err != nil {
-		t.Fatalf("failed to read testdata: %v", err)
-	}
+	require.NoError(t, err)
 	f, err := FileFromJSON(b)
-	if err != nil {
-		t.Fatalf("FileFromJSON: %v", err)
-	}
+	require.NoError(t, err)
 
 	// prior to this code change, Write() panicked when writing collated images
 	var buf bytes.Buffer

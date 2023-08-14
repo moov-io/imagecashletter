@@ -5,9 +5,10 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockRoutingNumberSummary creates a RoutingNumberSummary
@@ -23,17 +24,13 @@ func mockRoutingNumberSummary() *RoutingNumberSummary {
 func TestRoutingNumberSummaryParseErr(t *testing.T) {
 	var r RoutingNumberSummary
 	r.Parse("asdlahsakjajf")
-	if r.CashLetterRoutingNumber != "" {
-		t.Errorf("r.CashLetterRoutingNumber=%s", r.CashLetterRoutingNumber)
-	}
+	require.Equal(t, "", r.CashLetterRoutingNumber)
 }
 
 // TestRoutingNumberSummary creates a ReturnRoutingNumberSummary
 func TestRoutingNumberSummary(t *testing.T) {
 	rns := mockRoutingNumberSummary()
-	if err := rns.Validate(); err != nil {
-		t.Error("mockRoutingNumberSummary does not validate and will break other tests: ", err)
-	}
+	require.NoError(t, rns.Validate())
 }
 
 // TestParseRoutingNumberSummary validates parsing a RoutingNumberSummary
@@ -51,23 +48,13 @@ func TestParseRoutingNumberSummary(t *testing.T) {
 	r.currentCashLetter.AddRoutingNumberSummary(rns)
 	r.addCurrentRoutingNumberSummary(rns)
 
-	if err := r.parseRoutingNumberSummary(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, r.parseRoutingNumberSummary())
 	record := r.currentCashLetter.currentRoutingNumberSummary
 
-	if record.recordType != "85" {
-		t.Errorf("RecordType Expected '85' got: %v", record.recordType)
-	}
-	if record.CashLetterRoutingNumberField() != "231380104" {
-		t.Errorf("CashLetterRoutingNumber Expected '231380104' got: %v", record.CashLetterRoutingNumberField())
-	}
-	if record.RoutingNumberTotalAmountField() != "00000000100000" {
-		t.Errorf("RoutingNumberTotalAmount Expected '00000000100000' got: %v", record.RoutingNumberTotalAmountField())
-	}
-	if record.RoutingNumberItemCountField() != "000001" {
-		t.Errorf("RoutingNumberItemCount Expected '000001' got: %v", record.RoutingNumberItemCountField())
-	}
+	require.Equal(t, "85", record.recordType)
+	require.Equal(t, "231380104", record.CashLetterRoutingNumberField())
+	require.Equal(t, "00000000100000", record.RoutingNumberTotalAmountField())
+	require.Equal(t, "000001", record.RoutingNumberItemCountField())
 }
 
 // testRoutingNumberSummaryString validates that a known parsed RoutingNumberSummary can return to a string of the same value
@@ -85,15 +72,10 @@ func testRoutingNumberSummaryString(t testing.TB) {
 	r.currentCashLetter.AddRoutingNumberSummary(rns)
 	r.addCurrentRoutingNumberSummary(rns)
 
-	if err := r.parseRoutingNumberSummary(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseRoutingNumberSummary())
 	record := r.currentCashLetter.currentRoutingNumberSummary
 
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestRoutingNumberSummaryString tests validating that a known parsed RoutingNumberSummary an return to a string of the
@@ -115,26 +97,20 @@ func BenchmarkRoutingNumberSummaryString(b *testing.B) {
 func TestRoutingNumberSummaryRecordType(t *testing.T) {
 	rns := mockRoutingNumberSummary()
 	rns.recordType = "00"
-	if err := rns.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rns.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestRoutingNumberSummaryUserField validation
 func TestRoutingNumberSummaryUserField(t *testing.T) {
 	rns := mockRoutingNumberSummary()
 	rns.UserField = "®©"
-	if err := rns.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserField" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rns.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserField", e.FieldName)
 }
 
 // Field Inclusion
@@ -143,24 +119,18 @@ func TestRoutingNumberSummaryUserField(t *testing.T) {
 func TestRoutingNumberSummaryFIRecordType(t *testing.T) {
 	rns := mockRoutingNumberSummary()
 	rns.recordType = ""
-	if err := rns.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rns.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestRoutingNumberSummaryFICashLetterRoutingNumber validation
 func TestRoutingNumberSummaryFICashLetterRoutingNumber(t *testing.T) {
 	rns := mockRoutingNumberSummary()
 	rns.CashLetterRoutingNumber = ""
-	if err := rns.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CashLetterRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rns.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CashLetterRoutingNumber", e.FieldName)
 }

@@ -5,10 +5,11 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockReturnDetailAddendumA creates a ReturnDetailAddendumA
@@ -47,88 +48,40 @@ func mockReturnDetailAddendumAWithoutBOFDItemSequenceNumber() ReturnDetailAddend
 func TestReturnDetailAddendumAParseErr(t *testing.T) {
 	var r ReturnDetailAddendumA
 	r.Parse("asdlsajhfakjfa")
-	if r.RecordNumber != 0 {
-		t.Errorf("r.RecordNumber=%d", r.RecordNumber)
-	}
+	require.Equal(t, 0, r.RecordNumber)
 }
 
 // TestMockReturnDetailAddendumA creates a ReturnDetailAddendumA
 func TestMockReturnDetailAddendumA(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
-	if err := rdAddendumA.Validate(); err != nil {
-		t.Error("mockReturnDetailAddendumA does not validate and will break other tests: ", err)
-	}
-	if rdAddendumA.recordType != "32" {
-		t.Error("recordType RecordNumber does not validate")
-	}
-	if rdAddendumA.RecordNumber != 1 {
-		t.Error("RecordNumber does not validate")
-	}
-	if rdAddendumA.ReturnLocationRoutingNumber != "121042882" {
-		t.Error("ReturnLocationRoutingNumber does not validate")
-	}
-	if rdAddendumA.BOFDItemSequenceNumber != "1              " {
-		t.Error("BOFDItemSequenceNumber does not validate")
-	}
-	if rdAddendumA.BOFDAccountNumber != "938383" {
-		t.Error("BOFDAccountNumber does not validate")
-	}
-	if rdAddendumA.BOFDBranchCode != "01" {
-		t.Error("BOFDBranchCode does not validate")
-	}
-	if rdAddendumA.PayeeName != "Test Payee" {
-		t.Error("PayeeName does not validate")
-	}
-	if rdAddendumA.TruncationIndicator != "Y" {
-		t.Error("TruncationIndicator does not validate")
-	}
-	if rdAddendumA.BOFDConversionIndicator != "1" {
-		t.Error("BOFDConversionIndicator does not validate")
-	}
-	if rdAddendumA.BOFDCorrectionIndicator != 0 {
-		t.Error("BOFDCorrectionIndicator does not validate")
-	}
-	if rdAddendumA.UserField != "" {
-		t.Error("UserField does not validate")
-	}
+	require.NoError(t, rdAddendumA.Validate())
+	require.Equal(t, "32", rdAddendumA.recordType)
+	require.Equal(t, 1, rdAddendumA.RecordNumber)
+	require.Equal(t, "121042882", rdAddendumA.ReturnLocationRoutingNumber)
+	require.Equal(t, "1              ", rdAddendumA.BOFDItemSequenceNumber)
+	require.Equal(t, "938383", rdAddendumA.BOFDAccountNumber)
+	require.Equal(t, "01", rdAddendumA.BOFDBranchCode)
+	require.Equal(t, "Test Payee", rdAddendumA.PayeeName)
+	require.Equal(t, "Y", rdAddendumA.TruncationIndicator)
+	require.Equal(t, "1", rdAddendumA.BOFDConversionIndicator)
+	require.Equal(t, 0, rdAddendumA.BOFDCorrectionIndicator)
+	require.Equal(t, "", rdAddendumA.UserField)
 }
 
 // TestMockReturnDetailAddendumA creates a ReturnDetailAddendumA
 func TestMockReturnDetailAddendumAWithoutBOFDItemSequenceNumber(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumAWithoutBOFDItemSequenceNumber()
-	if err := rdAddendumA.Validate(); err != nil {
-		t.Error("mockReturnDetailAddendumA does not validate and will break other tests: ", err)
-	}
-	if rdAddendumA.recordType != "32" {
-		t.Error("recordType RecordNumber does not validate")
-	}
-	if rdAddendumA.RecordNumber != 1 {
-		t.Error("RecordNumber does not validate")
-	}
-	if rdAddendumA.ReturnLocationRoutingNumber != "121042882" {
-		t.Error("ReturnLocationRoutingNumber does not validate")
-	}
-	if rdAddendumA.BOFDAccountNumber != "938383" {
-		t.Error("BOFDAccountNumber does not validate")
-	}
-	if rdAddendumA.BOFDBranchCode != "01" {
-		t.Error("BOFDBranchCode does not validate")
-	}
-	if rdAddendumA.PayeeName != "Test Payee" {
-		t.Error("PayeeName does not validate")
-	}
-	if rdAddendumA.TruncationIndicator != "Y" {
-		t.Error("TruncationIndicator does not validate")
-	}
-	if rdAddendumA.BOFDConversionIndicator != "1" {
-		t.Error("BOFDConversionIndicator does not validate")
-	}
-	if rdAddendumA.BOFDCorrectionIndicator != 0 {
-		t.Error("BOFDCorrectionIndicator does not validate")
-	}
-	if rdAddendumA.UserField != "" {
-		t.Error("UserField does not validate")
-	}
+	require.NoError(t, rdAddendumA.Validate())
+	require.Equal(t, "32", rdAddendumA.recordType)
+	require.Equal(t, 1, rdAddendumA.RecordNumber)
+	require.Equal(t, "121042882", rdAddendumA.ReturnLocationRoutingNumber)
+	require.Equal(t, "938383", rdAddendumA.BOFDAccountNumber)
+	require.Equal(t, "01", rdAddendumA.BOFDBranchCode)
+	require.Equal(t, "Test Payee", rdAddendumA.PayeeName)
+	require.Equal(t, "Y", rdAddendumA.TruncationIndicator)
+	require.Equal(t, "1", rdAddendumA.BOFDConversionIndicator)
+	require.Equal(t, 0, rdAddendumA.BOFDCorrectionIndicator)
+	require.Equal(t, "", rdAddendumA.UserField)
 }
 
 // TestParseReturnDetailAddendumAWithoutBOFDItemSequenceNumber validates parsing a ReturnDetailAddendumA
@@ -145,51 +98,22 @@ func TestParseReturnDetailAddendumAWithoutBOFDItemSequenceNumber(t *testing.T) {
 	rd := mockReturnDetail()
 	r.currentCashLetter.currentBundle.AddReturnDetail(rd)
 
-	if err := r.parseReturnDetailAddendumA(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseReturnDetailAddendumA())
 	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumA[0]
 
-	if record.recordType != "32" {
-		t.Errorf("RecordType Expected '32' got: %v", record.recordType)
-	}
-	if record.RecordNumberField() != "1" {
-		t.Errorf("RecordNumber Expected '1' got: %v", record.RecordNumberField())
-	}
-	if record.ReturnLocationRoutingNumberField() != "121042882" {
-		t.Errorf("ReturnLocationRoutingNumber Expected '121042882' got: %v", record.ReturnLocationRoutingNumberField())
-	}
-	if record.BOFDEndorsementDateField() != "20180905" {
-		t.Errorf("BOFDEndorsementDate Expected '20180905' got: %v", record.BOFDEndorsementDateField())
-	}
-	if record.BOFDItemSequenceNumberField() != "               " {
-		t.Errorf("BOFDItemSequenceNumber Expected '                ' got: %v", record.BOFDItemSequenceNumberField())
-	}
-	if record.BOFDAccountNumberField() != "938383            " {
-		t.Errorf("BOFDAccountNumber Expected '938383            ' got: %v", record.BOFDAccountNumberField())
-	}
-	if record.BOFDBranchCodeField() != "01   " {
-		t.Errorf("BOFDBranchCode Expected '01   ' got: %v", record.BOFDBranchCodeField())
-	}
-	if record.PayeeNameField() != "Test Payee     " {
-		t.Errorf("PayeeName Expected 'Test Payee     ' got: %v", record.PayeeNameField())
-	}
-	if record.TruncationIndicatorField() != "Y" {
-		t.Errorf("TruncationIndicator Expected 'Y' got: %v", record.TruncationIndicatorField())
-	}
-	if record.BOFDConversionIndicatorField() != "1" {
-		t.Errorf("BOFDConversionIndicator Expected '1' got: %v", record.BOFDConversionIndicatorField())
-	}
-	if record.BOFDCorrectionIndicatorField() != "0" {
-		t.Errorf("BOFDCorrectionIndicator Expected '0' got: %v", record.BOFDCorrectionIndicatorField())
-	}
-	if record.UserFieldField() != " " {
-		t.Errorf("UserField Expected ' ' got: %v", record.UserFieldField())
-	}
-	if record.reservedField() != "   " {
-		t.Errorf("reserved Expected '   ' got: %v", record.reservedField())
-	}
+	require.Equal(t, "32", record.recordType)
+	require.Equal(t, "1", record.RecordNumberField())
+	require.Equal(t, "121042882", record.ReturnLocationRoutingNumberField())
+	require.Equal(t, "20180905", record.BOFDEndorsementDateField())
+	require.Equal(t, "               ", record.BOFDItemSequenceNumberField())
+	require.Equal(t, "938383            ", record.BOFDAccountNumberField())
+	require.Equal(t, "01   ", record.BOFDBranchCodeField())
+	require.Equal(t, "Test Payee     ", record.PayeeNameField())
+	require.Equal(t, "Y", record.TruncationIndicatorField())
+	require.Equal(t, "1", record.BOFDConversionIndicatorField())
+	require.Equal(t, "0", record.BOFDCorrectionIndicatorField())
+	require.Equal(t, " ", record.UserFieldField())
+	require.Equal(t, "   ", record.reservedField())
 }
 
 // TestParseReturnDetailAddendumA validates parsing a ReturnDetailAddendumA
@@ -206,51 +130,22 @@ func TestParseReturnDetailAddendumA(t *testing.T) {
 	rd := mockReturnDetail()
 	r.currentCashLetter.currentBundle.AddReturnDetail(rd)
 
-	if err := r.parseReturnDetailAddendumA(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseReturnDetailAddendumA())
 	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumA[0]
 
-	if record.recordType != "32" {
-		t.Errorf("RecordType Expected '32' got: %v", record.recordType)
-	}
-	if record.RecordNumberField() != "1" {
-		t.Errorf("RecordNumber Expected '1' got: %v", record.RecordNumberField())
-	}
-	if record.ReturnLocationRoutingNumberField() != "121042882" {
-		t.Errorf("ReturnLocationRoutingNumber Expected '121042882' got: %v", record.ReturnLocationRoutingNumberField())
-	}
-	if record.BOFDEndorsementDateField() != "20180905" {
-		t.Errorf("BOFDEndorsementDate Expected '20180905' got: %v", record.BOFDEndorsementDateField())
-	}
-	if record.BOFDItemSequenceNumberField() != "1              " {
-		t.Errorf("BOFDItemSequenceNumber Expected '1               ' got: %v", record.BOFDItemSequenceNumberField())
-	}
-	if record.BOFDAccountNumberField() != "938383            " {
-		t.Errorf("BOFDAccountNumber Expected '938383            ' got: %v", record.BOFDAccountNumberField())
-	}
-	if record.BOFDBranchCodeField() != "01   " {
-		t.Errorf("BOFDBranchCode Expected '01   ' got: %v", record.BOFDBranchCodeField())
-	}
-	if record.PayeeNameField() != "Test Payee     " {
-		t.Errorf("PayeeName Expected 'Test Payee     ' got: %v", record.PayeeNameField())
-	}
-	if record.TruncationIndicatorField() != "Y" {
-		t.Errorf("TruncationIndicator Expected 'Y' got: %v", record.TruncationIndicatorField())
-	}
-	if record.BOFDConversionIndicatorField() != "1" {
-		t.Errorf("BOFDConversionIndicator Expected '1' got: %v", record.BOFDConversionIndicatorField())
-	}
-	if record.BOFDCorrectionIndicatorField() != "0" {
-		t.Errorf("BOFDCorrectionIndicator Expected '0' got: %v", record.BOFDCorrectionIndicatorField())
-	}
-	if record.UserFieldField() != " " {
-		t.Errorf("UserField Expected ' ' got: %v", record.UserFieldField())
-	}
-	if record.reservedField() != "   " {
-		t.Errorf("reserved Expected '   ' got: %v", record.reservedField())
-	}
+	require.Equal(t, "32", record.recordType)
+	require.Equal(t, "1", record.RecordNumberField())
+	require.Equal(t, "121042882", record.ReturnLocationRoutingNumberField())
+	require.Equal(t, "20180905", record.BOFDEndorsementDateField())
+	require.Equal(t, "1              ", record.BOFDItemSequenceNumberField())
+	require.Equal(t, "938383            ", record.BOFDAccountNumberField())
+	require.Equal(t, "01   ", record.BOFDBranchCodeField())
+	require.Equal(t, "Test Payee     ", record.PayeeNameField())
+	require.Equal(t, "Y", record.TruncationIndicatorField())
+	require.Equal(t, "1", record.BOFDConversionIndicatorField())
+	require.Equal(t, "0", record.BOFDCorrectionIndicatorField())
+	require.Equal(t, " ", record.UserFieldField())
+	require.Equal(t, "   ", record.reservedField())
 }
 
 // testRDAddendumAString validates that a known parsed ReturnDetailAddendumA can return to a string of the same value
@@ -267,15 +162,10 @@ func testRDAddendumAString(t testing.TB) {
 	rd := mockReturnDetail()
 	r.currentCashLetter.currentBundle.AddReturnDetail(rd)
 
-	if err := r.parseReturnDetailAddendumA(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseReturnDetailAddendumA())
 	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumA[0]
 
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, record.String())
 
 }
 
@@ -298,117 +188,90 @@ func BenchmarkRDAddendumAString(b *testing.B) {
 func TestRDAddendumARecordType(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.recordType = "00"
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestRDAddendumAReturnLocationRoutingNumber validation
 func TestRDAddendumAReturnLocationRoutingNumber(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.ReturnLocationRoutingNumber = "X"
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ReturnLocationRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ReturnLocationRoutingNumber", e.FieldName)
 }
 
 // TestRDAddendumABOFDAccountNumber validation
 func TestRDAddendumABOFDAccountNumber(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.BOFDAccountNumber = "®©"
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BOFDAccountNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BOFDAccountNumber", e.FieldName)
 }
 
 // TestRDAddendumABOFDBranchCode validation
 func TestRDAddendumABOFDBranchCode(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.BOFDBranchCode = "®©"
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BOFDBranchCode" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BOFDBranchCode", e.FieldName)
 }
 
 // TestRDAddendumAPayeeName validation
 func TestRDAddendumAPayeeName(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.PayeeName = "®©"
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PayeeName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PayeeName", e.FieldName)
 }
 
 // TestRDAddendumATruncationIndicator validation
 func TestRDAddendumATruncationIndicator(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.TruncationIndicator = "A"
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "TruncationIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "TruncationIndicator", e.FieldName)
 }
 
 // TestRDAddendumABOFDConversionIndicator validation
 func TestRDAddendumABOFDConversionIndicator(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.BOFDConversionIndicator = "99"
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BOFDConversionIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BOFDConversionIndicator", e.FieldName)
 }
 
 // TestRDAddendumABOFDCorrectionIndicator validation
 func TestRDAddendumABOFDCorrectionIndicator(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.BOFDCorrectionIndicator = 10
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BOFDCorrectionIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BOFDCorrectionIndicator", e.FieldName)
 }
 
 // TestRDAddendumAUserField validation
 func TestRDAddendumAUserField(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.UserField = "®©"
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserField" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserField", e.FieldName)
 }
 
 // Field Inclusion
@@ -417,76 +280,58 @@ func TestRDAddendumAUserField(t *testing.T) {
 func TestRDAddendumAFIRecordType(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.recordType = ""
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestRDAddendumAFIRecordNumber validation
 func TestRDAddendumAFIRecordNumber(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.RecordNumber = 0
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "RecordNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "RecordNumber", e.FieldName)
 }
 
 // TestRDAddendumAFIReturnLocationRoutingNumber validation
 func TestRDAddendumAFIReturnLocationRoutingNumber(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.ReturnLocationRoutingNumber = ""
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ReturnLocationRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ReturnLocationRoutingNumber", e.FieldName)
 }
 
 // TestRDAddendumAFIReturnLocationRoutingNumberZero validation
 func TestRDAddendumAFIReturnLocationRoutingNumberZero(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.ReturnLocationRoutingNumber = "000000000"
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ReturnLocationRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ReturnLocationRoutingNumber", e.FieldName)
 }
 
 // TestRDAddendumAFIBOFDEndorsementDate validation
 func TestRDAddendumAFIBOFDEndorsementDate(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.BOFDEndorsementDate = time.Time{}
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BOFDEndorsementDate" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BOFDEndorsementDate", e.FieldName)
 }
 
 // TestRDAddendumAFITruncationIndicator validation
 func TestRDAddendumAFITruncationIndicator(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.TruncationIndicator = ""
-	if err := rdAddendumA.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "TruncationIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "TruncationIndicator", e.FieldName)
 }

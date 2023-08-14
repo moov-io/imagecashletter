@@ -5,10 +5,11 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockBundleHeader creates a BundleHeader
@@ -29,33 +30,15 @@ func mockBundleHeader() *BundleHeader {
 // testMockBundleHeader creates a BundleHeader
 func testMockBundleHeader(t testing.TB) {
 	bh := mockBundleHeader()
-	if err := bh.Validate(); err != nil {
-		t.Error("mockBundleHeader does not validate and will break other tests: ", err)
-	}
-	if bh.recordType != "20" {
-		t.Error("recordType does not validate")
-	}
-	if bh.CollectionTypeIndicator != "01" {
-		t.Error("CollectionTypeIndicator does not validate")
-	}
-	if bh.DestinationRoutingNumber != "231380104" {
-		t.Error("DestinationRoutingNumber does not validate")
-	}
-	if bh.ECEInstitutionRoutingNumber != "121042882" {
-		t.Error("ECEInstitutionRoutingNumber does not validate")
-	}
-	if bh.BundleID != "9999" {
-		t.Error("BundleID does not validate")
-	}
-	if bh.BundleSequenceNumber != "1" {
-		t.Error("SequenceNumber does not validate")
-	}
-	if bh.CycleNumber != "01" {
-		t.Error("CycleNumber does not validate")
-	}
-	if bh.UserField != "" {
-		t.Error("UserField does not validate")
-	}
+	require.NoError(t, bh.Validate())
+	require.Equal(t, "20", bh.recordType)
+	require.Equal(t, "01", bh.CollectionTypeIndicator)
+	require.Equal(t, "231380104", bh.DestinationRoutingNumber)
+	require.Equal(t, "121042882", bh.ECEInstitutionRoutingNumber)
+	require.Equal(t, "9999", bh.BundleID)
+	require.Equal(t, "1", bh.BundleSequenceNumber)
+	require.Equal(t, "01", bh.CycleNumber)
+	require.Equal(t, "", bh.UserField)
 }
 
 // TestMockBundleHeader tests creating a BundleHeader
@@ -81,48 +64,21 @@ func parseBundleHeader(t testing.TB) {
 	bh := mockBundleHeader()
 	r.currentCashLetter.AddBundle(NewBundle(bh))
 
-	if err := r.parseBundleHeader(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseBundleHeader())
 
 	record := r.currentCashLetter.currentBundle.BundleHeader
-	if record.recordType != "20" {
-		t.Errorf("RecordType Expected '20' got: %v", record.recordType)
-	}
-	if record.CollectionTypeIndicatorField() != "01" {
-		t.Errorf("CollectionTypeIndicator Expected '01' got: %v", record.CollectionTypeIndicator)
-	}
-	if record.DestinationRoutingNumberField() != "231380104" {
-		t.Errorf("DestinationRoutingNumber '231380104' got: %v", record.DestinationRoutingNumberField())
-	}
-	if record.ECEInstitutionRoutingNumberField() != "121042882" {
-		t.Errorf("ECEInstitutionRoutingNumber Expected '121042882' got: %v", record.ECEInstitutionRoutingNumberField())
-	}
-	if record.BundleBusinessDateField() != "20180905" {
-		t.Errorf("BundleBusinessDate Expected '20180905' got:'%v'", record.BundleBusinessDateField())
-	}
-	if record.BundleCreationDateField() != "20180905" {
-		t.Errorf("BundleCreationDate Expected '20180905' got:'%v'", record.BundleCreationDateField())
-	}
-	if record.BundleIDField() != "9999      " {
-		t.Errorf("BundleID Expected '9999      ' got:'%v'", record.BundleIDField())
-	}
-	if record.BundleSequenceNumberField() != "1   " {
-		t.Errorf("BundleSequenceNumber Expected '1   ' got: '%v'", record.BundleSequenceNumberField())
-	}
-	if record.CycleNumberField() != "01" {
-		t.Errorf("CycleNumber Expected '01' got:'%v'", record.CycleNumberField())
-	}
-	if record.ReturnLocationRoutingNumberField() != "         " {
-		t.Errorf("reserved Expected '         ' got:'%v'", record.ReturnLocationRoutingNumberField())
-	}
-	if record.UserFieldField() != "     " {
-		t.Errorf("UserField Expected '     ' got:'%v'", record.UserFieldField())
-	}
-	if record.reservedField() != "            " {
-		t.Errorf("reservedTwo Expected '            ' got:'%v'", record.reservedField())
-	}
+	require.Equal(t, "20", record.recordType)
+	require.Equal(t, "01", record.CollectionTypeIndicatorField())
+	require.Equal(t, "231380104", record.DestinationRoutingNumberField())
+	require.Equal(t, "121042882", record.ECEInstitutionRoutingNumberField())
+	require.Equal(t, "20180905", record.BundleBusinessDateField())
+	require.Equal(t, "20180905", record.BundleCreationDateField())
+	require.Equal(t, "9999      ", record.BundleIDField())
+	require.Equal(t, "1   ", record.BundleSequenceNumberField())
+	require.Equal(t, "01", record.CycleNumberField())
+	require.Equal(t, "         ", record.ReturnLocationRoutingNumberField())
+	require.Equal(t, "     ", record.UserFieldField())
+	require.Equal(t, "            ", record.reservedField())
 }
 
 // TestParseBundleHeader tests validating parsing a BundleHeader
@@ -147,14 +103,9 @@ func testBHString(t testing.TB) {
 	r.addCurrentCashLetter(NewCashLetter(clh))
 	bh := mockBundleHeader()
 	r.currentCashLetter.AddBundle(NewBundle(bh))
-	if err := r.parseBundleHeader(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseBundleHeader())
 	record := r.currentCashLetter.currentBundle.BundleHeader
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestBHString tests validating that a known parsed BundleHeader can return to a string of the same value
@@ -175,182 +126,140 @@ func BenchmarkBHString(b *testing.B) {
 func TestBHRecordType(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.recordType = "00"
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestBHCollectionTypeIndicator validation
 func TestBHCollectionTypeIndicator(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.CollectionTypeIndicator = "87"
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CollectionTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CollectionTypeIndicator", e.FieldName)
 }
 
 // TestBundleID validation
 func TestBundleID(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.BundleID = "--"
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BundleID" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BundleID", e.FieldName)
 }
 
 // TestCycleNumber validation
 func TestCycleNumber(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.CycleNumber = "--"
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CycleNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CycleNumber", e.FieldName)
 }
 
 // TestBHUserField validation
 func TestBHUserFieldI(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.UserField = "®©"
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserField" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserField", e.FieldName)
 }
 
 // TestBHFieldInclusionRecordType validates FieldInclusion
 func TestBHFieldInclusionRecordType(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.recordType = ""
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestBHFieldInclusionCollectionTypeIndicator validates FieldInclusion
 func TestBHFieldInclusionCollectionTypeIndicator(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.CollectionTypeIndicator = ""
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CollectionTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CollectionTypeIndicator", e.FieldName)
 }
 
 // TestBHFieldInclusionDestinationRoutingNumber validates FieldInclusion
 func TestBHFieldInclusionDestinationRoutingNumber(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.DestinationRoutingNumber = ""
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "DestinationRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "DestinationRoutingNumber", e.FieldName)
 }
 
 // TestBHFieldInclusionDestinationRoutingNumberZero validates FieldInclusion
 func TestBHFieldInclusionDestinationRoutingNumberZero(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.DestinationRoutingNumber = "000000000"
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "DestinationRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "DestinationRoutingNumber", e.FieldName)
 }
 
 // TestBHFieldInclusionECEInstitutionRoutingNumber validates FieldInclusion
 func TestBHFieldInclusionECEInstitutionRoutingNumber(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.ECEInstitutionRoutingNumber = ""
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ECEInstitutionRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ECEInstitutionRoutingNumber", e.FieldName)
 }
 
 // TestBHFieldInclusionECEInstitutionRoutingNumberZero validates FieldInclusion
 func TestBHFieldInclusionECEInstitutionRoutingNumberZero(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.ECEInstitutionRoutingNumber = "000000000"
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ECEInstitutionRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ECEInstitutionRoutingNumber", e.FieldName)
 }
 
 // TestBHFieldInclusionBundleBusinessDate validates FieldInclusion
 func TestBHFieldInclusionBundleBusinessDate(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.BundleBusinessDate = time.Time{}
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BundleBusinessDate" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BundleBusinessDate", e.FieldName)
 }
 
 // TestBHFieldInclusionBundleCreationDate validates FieldInclusion
 func TestBHFieldInclusionBundleCreationDate(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.BundleCreationDate = time.Time{}
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BundleCreationDate" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BundleCreationDate", e.FieldName)
 }
 
 // TestBHFieldInclusionBundleSequenceNumber validates FieldInclusion
 func TestBHFieldInclusionBundleSequenceNumber(t *testing.T) {
 	bh := mockBundleHeader()
 	bh.BundleSequenceNumber = "    "
-	if err := bh.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BundleSequenceNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := bh.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BundleSequenceNumber", e.FieldName)
 }
 
 // TestBundleHeaderRuneCountInString validates RuneCountInString
@@ -359,7 +268,5 @@ func TestBundleHeaderRuneCountInString(t *testing.T) {
 	var line = "20"
 	bh.Parse(line)
 
-	if bh.CycleNumber != "" {
-		t.Error("Parsed with an invalid RuneCountInString")
-	}
+	require.Equal(t, "", bh.CycleNumber)
 }

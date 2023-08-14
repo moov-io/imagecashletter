@@ -236,6 +236,10 @@ func (upe *UserPayeeEndorsement) Validate() error {
 		msg := fmt.Sprint(msgInvalid)
 		return &FieldError{FieldName: "UserRecordFormatType", Value: upe.UserRecordFormatType, Msg: msg}
 	}
+	if err := upe.isNumeric(upe.FormatTypeVersionLevel); err != nil {
+		return &FieldError{FieldName: "FormatTypeVersionLevel",
+			Value: upe.FormatTypeVersionLevel, Msg: msgNumeric}
+	}
 	if err := upe.validateOwnerFields(); err != nil {
 		return err
 	}

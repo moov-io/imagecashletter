@@ -11,17 +11,18 @@ import (
 )
 
 var (
-	//upperAlphanumericRegex    = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
+	// upperAlphanumericRegex    = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
 	alphanumericRegex        = regexp.MustCompile(`[^ a-zA-Z0-9]`)
 	alphanumericRegexSpecial = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
 	numericRegex             = regexp.MustCompile(`[^ 0-9]`)
 	msgAlphanumeric          = "has non alphanumeric characters"
 	msgAlphanumericSpecial   = "has non alphanumeric or special characters"
-	//msgUpperAlpha             = "is not uppercase A-Z or 0-9"
+	// msgUpperAlpha             = "is not uppercase A-Z or 0-9"
 	msgNumeric        = "is not 0-9"
 	msgFieldInclusion = "is a mandatory field and has a default value"
-	//msgValidFieldLength    = "is not length %d"
-	msgInvalid = "is invalid"
+	// msgValidFieldLength    = "is not length %d"
+	msgInvalid     = "is invalid"
+	msgInvalidDate = "is not a valid date"
 )
 
 // validator is common validation and formatting of golang types to imagecashletter type strings
@@ -448,7 +449,7 @@ func (v *validator) isEndorsingBankIdentifier(code int) error {
 	return errors.New(msgInvalid)
 }
 
-//ImageView
+// ImageView
 
 // isImageIndicator ensures ImageIndicator of a ImageViewDetail is valid
 func (v *validator) isImageIndicator(code int) error {
@@ -721,7 +722,7 @@ func (v *validator) isAccountTypeCode(code string) error {
 		"3",
 		// Money Market account
 		"4",
-		//Other account
+		// Other account
 		"5",
 		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J":
 		return nil
@@ -735,7 +736,7 @@ func (v *validator) isSourceWorkCode(code string) error {
 	case
 		// Unknown
 		"00",
-		//Internal–ATM
+		// Internal–ATM
 		"01",
 		// Internal–Branch
 		"02",
@@ -749,13 +750,13 @@ func (v *validator) isSourceWorkCode(code string) error {
 		"06",
 		// External–Processor to Bank
 		"07",
-		//External–Bank to Processor
+		// External–Bank to Processor
 		"08",
 		// Lockbox
 		"09",
 		// International–Internal
 		"10",
-		//International–External
+		// International–External
 		"11",
 		// User Defined
 		"21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
@@ -780,7 +781,7 @@ func (v *validator) isOwnerIdentifierIndicator(code int) error {
 		3,
 		// X9 Assignment
 		4,
-		//Other
+		// Other
 		5:
 		return nil
 	}

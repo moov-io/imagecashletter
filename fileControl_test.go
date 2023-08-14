@@ -5,9 +5,10 @@
 package imagecashletter
 
 import (
-	"log"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockFileControl creates a FileControl
@@ -16,7 +17,7 @@ func mockFileControl() FileControl {
 	fc.CashLetterCount = 1
 	fc.TotalRecordCount = 7
 	fc.TotalItemCount = 1
-	fc.FileTotalAmount = 100000 //1000.00
+	fc.FileTotalAmount = 100000 // 1000.00
 	fc.ImmediateOriginContactName = "Contact Name"
 	fc.ImmediateOriginContactPhoneNumber = "5558675552"
 	fc.CreditTotalIndicator = 0
@@ -26,33 +27,15 @@ func mockFileControl() FileControl {
 // TestMockFileControl creates a FileControl
 func TestMockFileControl(t *testing.T) {
 	fc := mockFileControl()
-	if err := fc.Validate(); err != nil {
-		t.Error("mockFileControl does not validate and will break other tests: ", err)
-	}
-	if fc.recordType != "99" {
-		t.Error("recordType does not validate")
-	}
-	if fc.CashLetterCount != 1 {
-		t.Error("CashLetterCount does not validate")
-	}
-	if fc.TotalRecordCount != 7 {
-		t.Error("TotalRecordCount does not validate")
-	}
-	if fc.TotalItemCount != 1 {
-		t.Error("TotalItemCount does not validate")
-	}
-	if fc.FileTotalAmount != 100000 {
-		t.Error("FileTotalAmount does not validate")
-	}
-	if fc.ImmediateOriginContactName != "Contact Name" {
-		t.Error("ImmediateOriginContactName does not validate")
-	}
-	if fc.ImmediateOriginContactPhoneNumber != "5558675552" {
-		t.Error("ImmediateOriginContactPhoneNumber does not validate")
-	}
-	if fc.CreditTotalIndicator != 0 {
-		t.Error("CreditTotalIndicator does not validate")
-	}
+	require.NoError(t, fc.Validate())
+	require.Equal(t, "99", fc.recordType)
+	require.Equal(t, 1, fc.CashLetterCount)
+	require.Equal(t, 7, fc.TotalRecordCount)
+	require.Equal(t, 1, fc.TotalItemCount)
+	require.Equal(t, 100000, fc.FileTotalAmount)
+	require.Equal(t, "Contact Name", fc.ImmediateOriginContactName)
+	require.Equal(t, "5558675552", fc.ImmediateOriginContactPhoneNumber)
+	require.Equal(t, 0, fc.CreditTotalIndicator)
 }
 
 // testParseFileControl parses a known FileControl record string
@@ -60,40 +43,18 @@ func testParseFileControl(t testing.TB) {
 	var line = "9900000100000007000000010000000000100000Contact Name  55586755520               "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	err := r.parseFileControl()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseFileControl())
 	record := r.File.Control
 
-	if record.recordType != "99" {
-		t.Errorf("RecordType Expected '99' got: %v", record.recordType)
-	}
-	if record.CashLetterCountField() != "000001" {
-		t.Errorf("CashLetterCount Expected '000001' got: %v", record.CashLetterCountField())
-	}
-	if record.TotalRecordCountField() != "00000007" {
-		t.Errorf("TotalRecordCount Expected '00000007' got: %v", record.TotalRecordCountField())
-	}
-	if record.TotalItemCountField() != "00000001" {
-		t.Errorf("TotalItemCount Expected '00000001' got: %v", record.TotalItemCountField())
-	}
-	if record.FileTotalAmountField() != "0000000000100000" {
-		t.Errorf("FileTotalAmount Expected '0000000000100000' got: %v", record.FileTotalAmountField())
-	}
-	if record.ImmediateOriginContactNameField() != "Contact Name  " {
-		t.Errorf("ImmediateOriginContactName Expected 'Contact Name  ' got: %v", record.ImmediateOriginContactNameField())
-	}
-	if record.ImmediateOriginContactPhoneNumberField() != "5558675552" {
-		t.Errorf("ImmediateOriginContactPhoneNumber Expected '5558675552' got: %v", record.ImmediateOriginContactPhoneNumberField())
-	}
-	if record.CreditTotalIndicatorField() != "0" {
-		t.Errorf("CreditTotalIndicator Expected '0' got: %v", record.CreditTotalIndicatorField())
-	}
-	if record.reservedField() != "               " {
-		t.Errorf("Reserved Expected '               ' got: %v", record.reservedField())
-	}
+	require.Equal(t, "99", record.recordType)
+	require.Equal(t, "000001", record.CashLetterCountField())
+	require.Equal(t, "00000007", record.TotalRecordCountField())
+	require.Equal(t, "00000001", record.TotalItemCountField())
+	require.Equal(t, "0000000000100000", record.FileTotalAmountField())
+	require.Equal(t, "Contact Name  ", record.ImmediateOriginContactNameField())
+	require.Equal(t, "5558675552", record.ImmediateOriginContactPhoneNumberField())
+	require.Equal(t, "0", record.CreditTotalIndicatorField())
+	require.Equal(t, "               ", record.reservedField())
 }
 
 // TestParseFileControl tests parsing a known FileControl record string
@@ -114,15 +75,9 @@ func testFCString(t testing.TB) {
 	var line = "9900000100000007000000010000000000100000Contact Name  55586755520               "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	err := r.parseFileControl()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseFileControl())
 	record := r.File.Control
-	if record.String() != line {
-		t.Errorf("\nStrings do not match %s\n %s", line, record.String())
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestFCString tests validating that a known parsed FileControl can be return to a string of the same value
@@ -142,117 +97,90 @@ func BenchmarkFCString(b *testing.B) {
 func TestFCRecordType(t *testing.T) {
 	fc := mockFileControl()
 	fc.recordType = "00"
-	if err := fc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fc.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestImmediateOriginContactName validation
 func TestImmediateOriginContactName(t *testing.T) {
 	fc := mockFileControl()
 	fc.ImmediateOriginContactName = "®©"
-	if err := fc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImmediateOriginContactName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fc.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImmediateOriginContactName", e.FieldName)
 }
 
 // TestImmediateOriginContactPhoneNumber validation
 func TestImmediateOriginContactPhoneNumber(t *testing.T) {
 	fc := mockFileControl()
 	fc.ImmediateOriginContactPhoneNumber = "--"
-	if err := fc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ImmediateOriginContactPhoneNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fc.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImmediateOriginContactPhoneNumber", e.FieldName)
 }
 
 // TestCreditTotalIndicator validation
 func TestCreditTotalIndicator(t *testing.T) {
 	fc := mockFileControl()
 	fc.CreditTotalIndicator = 9
-	if err := fc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CreditTotalIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fc.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CreditTotalIndicator", e.FieldName)
 }
 
 // TestFCFieldInclusionRecordType validates FieldInclusion
 func TestFCFieldInclusionRecordType(t *testing.T) {
 	fc := mockFileControl()
 	fc.recordType = ""
-	if err := fc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fc.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestFieldInclusionCashLetterCount validates FieldInclusion
 func TestFieldInclusionCashLetterCount(t *testing.T) {
 	fc := mockFileControl()
 	fc.CashLetterCount = 0
-	if err := fc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CashLetterCount" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fc.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CashLetterCount", e.FieldName)
 }
 
 // TestFieldInclusionTotalRecordCount validates FieldInclusion
 func TestFieldInclusionTotalRecordCount(t *testing.T) {
 	fc := mockFileControl()
 	fc.TotalRecordCount = 0
-	if err := fc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "TotalRecordCount" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fc.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "TotalRecordCount", e.FieldName)
 }
 
 // TestFieldInclusionTotalItemCount validates FieldInclusion
 func TestFieldInclusionTotalItemCount(t *testing.T) {
 	fc := mockFileControl()
 	fc.TotalItemCount = 0
-	if err := fc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "TotalItemCount" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fc.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "TotalItemCount", e.FieldName)
 }
 
 // TestFieldInclusionFileTotalAmount validates FieldInclusion
 func TestFieldInclusionFileTotalAmount(t *testing.T) {
 	fc := mockFileControl()
 	fc.FileTotalAmount = 0
-	if err := fc.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "FileTotalAmount" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := fc.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "FileTotalAmount", e.FieldName)
 }
 
 // TestFileControlRuneCountInString validates RuneCountInString
@@ -261,7 +189,5 @@ func TestFileControlRuneCountInString(t *testing.T) {
 	var line = "99"
 	fc.Parse(line)
 
-	if fc.CashLetterCount != 0 {
-		t.Error("Parsed with an invalid RuneCountInString")
-	}
+	require.Equal(t, 0, fc.CashLetterCount)
 }

@@ -155,6 +155,15 @@ func (rdAddendumB *ReturnDetailAddendumB) Validate() error {
 	if err := rdAddendumB.isAlphanumericSpecial(rdAddendumB.PayorAccountName); err != nil {
 		return &FieldError{FieldName: "PayorAccountName", Value: rdAddendumB.PayorAccountName, Msg: err.Error()}
 	}
+
+	if date := rdAddendumB.PayorBankBusinessDate; !date.IsZero() {
+		// optional field - if present, year must be between 1993 and 9999
+		if date.Year() < 1993 || date.Year() > 9999 {
+			return &FieldError{FieldName: "PayorBankBusinessDate",
+				Value: rdAddendumB.PayorBankBusinessDateField(), Msg: msgInvalidDate + ": year must be between 1993 and 9999"}
+		}
+	}
+
 	return nil
 }
 

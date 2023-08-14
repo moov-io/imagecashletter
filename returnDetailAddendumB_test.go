@@ -6,11 +6,12 @@ package imagecashletter
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
-	"log"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // mockReturnDetailAddendumB creates a ReturnDetailAddendumB
@@ -27,32 +28,18 @@ func mockReturnDetailAddendumB() ReturnDetailAddendumB {
 func TestReturnDetailAddendumBParseErr(t *testing.T) {
 	var r ReturnDetailAddendumB
 	r.Parse("Asdjashfakjfa")
-	if r.PayorBankName != "" {
-		t.Errorf("r.PayorBankName=%s", r.PayorBankName)
-	}
+	require.Equal(t, "", r.PayorBankName)
 }
 
 // TestMockReturnDetailAddendumB creates a ReturnDetailAddendumB
 func TestMockReturnDetailAddendumB(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()
-	if err := rdAddendumB.Validate(); err != nil {
-		t.Error("MockReturnDetailAddendumB does not validate and will break other tests: ", err)
-	}
-	if rdAddendumB.recordType != "33" {
-		t.Error("recordType does not validate")
-	}
-	if rdAddendumB.PayorBankName != "Payor Bank Name" {
-		t.Error("PayorBankName does not validate")
-	}
-	if rdAddendumB.AuxiliaryOnUs != "123456789" {
-		t.Error("AuxiliaryOnUs does not validate")
-	}
-	if rdAddendumB.PayorBankSequenceNumber != "1              " {
-		t.Error("PayorBankSequenceNumber does not validate")
-	}
-	if rdAddendumB.PayorAccountName != "Payor Account Name" {
-		t.Error("PayorAccountName does not validate")
-	}
+	require.NoError(t, rdAddendumB.Validate())
+	require.Equal(t, "33", rdAddendumB.recordType)
+	require.Equal(t, "Payor Bank Name", rdAddendumB.PayorBankName)
+	require.Equal(t, "123456789", rdAddendumB.AuxiliaryOnUs)
+	require.Equal(t, "1              ", rdAddendumB.PayorBankSequenceNumber)
+	require.Equal(t, "Payor Account Name", rdAddendumB.PayorAccountName)
 }
 
 // TestParseReturnDetailAddendumB validates parsing a ReturnDetailAddendumB
@@ -69,27 +56,14 @@ func TestParseReturnDetailAddendumB(t *testing.T) {
 	rd := mockReturnDetail()
 	r.currentCashLetter.currentBundle.AddReturnDetail(rd)
 
-	if err := r.parseReturnDetailAddendumB(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseReturnDetailAddendumB())
 	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumB[0]
 
-	if record.recordType != "33" {
-		t.Errorf("RecordType Expected '33' got: %v", record.recordType)
-	}
-	if record.PayorBankNameField() != "Payor Bank Name   " {
-		t.Errorf("PayorBankName Expected 'Payor Bank Name   ' got: %v", record.PayorBankNameField())
-	}
-	if record.AuxiliaryOnUsField() != "      123456789" {
-		t.Errorf("AuxiliaryOnUs Expected '      123456789' got: %v", record.AuxiliaryOnUsField())
-	}
-	if record.PayorBankSequenceNumberField() != "1              " {
-		t.Errorf("PayorBankSequenceNumber Expected '1              ' got: %v", record.PayorBankSequenceNumberField())
-	}
-	if record.PayorAccountNameField() != "Payor Account Name    " {
-		t.Errorf("PayorAccountName Expected 'Payor Account Name    ' got: %v", record.PayorAccountNameField())
-	}
+	require.Equal(t, "33", record.recordType)
+	require.Equal(t, "Payor Bank Name   ", record.PayorBankNameField())
+	require.Equal(t, "      123456789", record.AuxiliaryOnUsField())
+	require.Equal(t, "1              ", record.PayorBankSequenceNumberField())
+	require.Equal(t, "Payor Account Name    ", record.PayorAccountNameField())
 }
 
 // testRDAddendumBString validates that a known parsed ReturnDetailAddendumB can return to a string of the same value
@@ -106,15 +80,10 @@ func testRDAddendumBString(t testing.TB) {
 	rd := mockReturnDetail()
 	r.currentCashLetter.currentBundle.AddReturnDetail(rd)
 
-	if err := r.parseReturnDetailAddendumB(); err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+	require.NoError(t, r.parseReturnDetailAddendumB())
 	record := r.currentCashLetter.currentBundle.GetReturns()[0].ReturnDetailAddendumB[0]
 
-	if record.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestParseAddendumBJSONWith3339Date tests parsing ReturnAddendumB with a PayorBankBusinessDate in RFC3339 format
@@ -253,39 +222,30 @@ func BenchmarkRDAddendumBString(b *testing.B) {
 func TestRDAddendumBRecordType(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()
 	rdAddendumB.recordType = "00"
-	if err := rdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestRDAddendumBPayorBankName validation
 func TestRDAddendumBPayorBankName(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()
 	rdAddendumB.PayorBankName = "®©"
-	if err := rdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PayorBankName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PayorBankName", e.FieldName)
 }
 
 // TestRDAddendumBPayorAccountName validation
 func TestRDAddendumBPayorAccountName(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()
 	rdAddendumB.PayorAccountName = "®©"
-	if err := rdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PayorAccountName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PayorAccountName", e.FieldName)
 }
 
 // Field Inclusion
@@ -294,37 +254,30 @@ func TestRDAddendumBPayorAccountName(t *testing.T) {
 func TestRDAddendumBFIRecordType(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()
 	rdAddendumB.recordType = ""
-	if err := rdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestRDAddendumBFIPayorBankSequenceNumber validation
 func TestRDAddendumBFIPayorBankSequenceNumber(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()
 	rdAddendumB.PayorBankSequenceNumber = "               "
-	if err := rdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PayorBankSequenceNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := rdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PayorBankSequenceNumber", e.FieldName)
 }
 
 // TestRDAddendumBFIPayorBankBusinessDate validation
 func TestRDAddendumPayorBankBusinessDate(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()
-	rdAddendumB.PayorBankBusinessDate = time.Time{}
-	if err := rdAddendumB.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PayorBankBusinessDate" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	date := time.Date(1990, time.January, 1, 0, 0, 0, 0, time.UTC)
+	rdAddendumB.PayorBankBusinessDate = date
+	err := rdAddendumB.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PayorBankBusinessDate", e.FieldName)
+	require.Contains(t, e.Msg, msgInvalidDate)
 }

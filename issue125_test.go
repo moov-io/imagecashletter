@@ -12,26 +12,19 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestIssue125(t *testing.T) {
 	bs, err := os.ReadFile(filepath.Join("test", "testdata", "icl-valid.json"))
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 
 	file, err := FileFromJSON(bs)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if file == nil {
-		t.Fatal("nil File")
-	}
+	require.NoError(t, err)
+	require.NotNil(t, file)
 
 	var buf bytes.Buffer
-	if err := NewWriter(&buf).Write(file); err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, NewWriter(&buf).Write(file))
 
 	lines := strings.Split(buf.String(), "\n")
 	counts := make(map[string]int)
@@ -40,7 +33,7 @@ func TestIssue125(t *testing.T) {
 		if line == "" {
 			continue
 		}
-		counts[string(line[:2])] += 1
+		counts[line[:2]] += 1
 	}
 
 	// check each record count

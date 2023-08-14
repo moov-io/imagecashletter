@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestCorpusSymlinks(t *testing.T) {
@@ -16,30 +18,19 @@ func TestCorpusSymlinks(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip()
 	}
+
 	fds, err := os.ReadDir("corpus")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(fds) == 0 {
-		t.Fatal("no file descriptors found in corpus/")
-	}
+	require.NoError(t, err)
+	require.NotEmpty(t, fds)
 
 	for i := range fds {
 		info, err := fds[i].Info()
-		if err != nil {
-			t.Fatalf("couldn't get directory entry's info: %v", err)
-		}
+		require.NoError(t, err)
 
-		if info.Mode()&os.ModeSymlink != 0 {
-			if path, err := os.Readlink(filepath.Join("corpus", fds[i].Name())); err != nil {
-				t.Errorf("broken symlink: %v", err)
-			} else {
-				if _, err := os.Stat(filepath.Join("corpus", path)); err != nil {
-					t.Errorf("broken symlink: %v", err)
-				}
-			}
-		} else {
-			t.Errorf("%s isn't a symlink, move outside corpus/ and symlink into directory", fds[i].Name())
-		}
+		require.NotEqualValuesf(t, 0, info.Mode()&os.ModeSymlink, "%s isn't a symlink, move outside corpus/ and symlink into directory", fds[i].Name())
+		path, err := os.Readlink(filepath.Join("corpus", fds[i].Name()))
+		require.NoError(t, err)
+		_, err = os.Stat(filepath.Join("corpus", path))
+		require.NoError(t, err)
 	}
 }

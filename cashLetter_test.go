@@ -2,20 +2,16 @@ package imagecashletter
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestCashLetterPanics(t *testing.T) {
 	var cl *CashLetter
 
-	if v := cl.GetBundles(); v != nil {
-		t.Errorf("unexpected GetBundles: %v", v)
-	}
-	if v := cl.GetRoutingNumberSummary(); v != nil {
-		t.Errorf("unexpected GetRoutingNumberSummary: %v", v)
-	}
-	if v := cl.GetCreditItems(); v != nil {
-		t.Errorf("unexpected GetCreditItems: %v", v)
-	}
+	require.Nil(t, cl.GetBundles())
+	require.Nil(t, cl.GetRoutingNumberSummary())
+	require.Nil(t, cl.GetCreditItems())
 }
 
 // TestCashLetterNoBundle validates no Bundle when CashLetterHeader.RecordTypeIndicator = "N"
@@ -35,13 +31,10 @@ func TestCashLetterNoBundle(t *testing.T) {
 	cl := NewCashLetter(mockCashLetterHeader())
 	cl.GetHeader().RecordTypeIndicator = "N"
 	cl.AddBundle(bundle)
-	if err := cl.Create(); err != nil {
-		if e, ok := err.(*CashLetterError); ok {
-			if e.FieldName != "RecordTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := cl.Create()
+	var e *CashLetterError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "RecordTypeIndicator", e.FieldName)
 }
 
 // TestCashLetterNoRoutingNumberSummary validates no Bundle when CashLetterHeader.CollectionTypeIndicator is not
@@ -64,11 +57,8 @@ func TestCashLetterRoutingNumberSummary(t *testing.T) {
 	cl.AddBundle(bundle)
 	rns := mockRoutingNumberSummary()
 	cl.AddRoutingNumberSummary(rns)
-	if err := cl.Create(); err != nil {
-		if e, ok := err.(*CashLetterError); ok {
-			if e.FieldName != "CollectionTypeIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := cl.Create()
+	var e *CashLetterError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CollectionTypeIndicator", e.FieldName)
 }

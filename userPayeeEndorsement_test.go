@@ -8,6 +8,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockUserPayeeEndorsement creates a UserPayeeEndorsement
@@ -42,85 +44,39 @@ func mockUserPayeeEndorsement() *UserPayeeEndorsement {
 func TestUserPayeeEndorsementParseErr(t *testing.T) {
 	var upe UserPayeeEndorsement
 	upe.Parse("asjsahfakja")
-	if upe.OwnerIdentifierIndicator != 0 {
-		t.Errorf("upe.OwnerIdentifierIndicator=%d", upe.OwnerIdentifierIndicator)
-	}
+	require.Equal(t, 0, upe.OwnerIdentifierIndicator)
 }
 
 // TestMockUserPayeeEndorsement creates a UserPayeeEndorsement
 func TestMockUserPayeeEndorsement(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
-	if err := upe.Validate(); err != nil {
-		t.Error("mockUserGeneral does not validate and will break other tests: ", err)
-	}
-	if upe.recordType != "68" {
-		t.Error("recordType does not validate")
-	}
-	if upe.OwnerIdentifierIndicator != 3 {
-		t.Error("OwnerIdentifierIndicator does not validate")
-	}
-	if upe.OwnerIdentifier != "230918276" {
-		t.Error("OwnerIdentifier does not validate")
-	}
-	if upe.OwnerIdentifierModifier != "ZZ1" {
-		t.Error("OwnerIdentifierModifier does not validate")
-	}
-	if upe.UserRecordFormatType != "001" {
-		t.Error("UserRecordFormatType does not validate")
-	}
-	if upe.FormatTypeVersionLevel != "1" {
-		t.Error("FormatTypeVersionLevel does not validate")
-	}
-	if upe.LengthUserData != "0000290" {
-		t.Error("LengthUserData does not validate")
-	}
-	if upe.PayeeName != "Payee Name" {
-		t.Error("PayeeName does not validate")
-	}
+	require.NoError(t, upe.Validate())
+	require.Equal(t, "68", upe.recordType)
+	require.Equal(t, 3, upe.OwnerIdentifierIndicator)
+	require.Equal(t, "230918276", upe.OwnerIdentifier)
+	require.Equal(t, "ZZ1", upe.OwnerIdentifierModifier)
+	require.Equal(t, "001", upe.UserRecordFormatType)
+	require.Equal(t, "1", upe.FormatTypeVersionLevel)
+	require.Equal(t, "0000290", upe.LengthUserData)
+	require.Equal(t, "Payee Name", upe.PayeeName)
 
 	_ = additionalUPEFields(upe, t)
 }
 
 func additionalUPEFields(upe *UserPayeeEndorsement, t *testing.T) string {
-	if upe.BankRoutingNumber != "121042882" {
-		t.Error("BankRoutingNumber does not validate")
-	}
-	if upe.BankAccountNumber != "123456888" {
-		t.Error("BankAccountNumber does not validate")
-	}
-	if upe.CustomerIdentifier != "A234A" {
-		t.Error("CustomerIdentifier does not validate")
-	}
-	if upe.CustomerContactInformation != "Home" {
-		t.Error("CustomerContactInformation does not validate")
-	}
-	if upe.StoreMerchantProcessingSiteNumber != "12345678" {
-		t.Error("StoreMerchantProcessingSiteNumber does not validate")
-	}
-	if upe.InternalControlSequenceNumber != "ZB17262ZB" {
-		t.Error("InternalControlSequenceNumber does not validate")
-	}
-	if upe.OperatorName != "ZJK" {
-		t.Error("OperatorName does not validate")
-	}
-	if upe.OperatorNumber != "12345" {
-		t.Error("OperatorNumber does not validate")
-	}
-	if upe.ManagerName != "ZBK" {
-		t.Error("ManagerName does not validate")
-	}
-	if upe.ManagerNumber != "12345" {
-		t.Error("ManagerNumber does not validate")
-	}
-	if upe.EquipmentNumber != "123456789012345" {
-		t.Error("EquipmentNumber does not validate")
-	}
-	if upe.EndorsementIndicator != 1 {
-		t.Error("EndorsementIndicator does not validate")
-	}
-	if upe.UserField != "" {
-		t.Error("UserField does not validate")
-	}
+	require.Equal(t, "121042882", upe.BankRoutingNumber)
+	require.Equal(t, "123456888", upe.BankAccountNumber)
+	require.Equal(t, "A234A", upe.CustomerIdentifier)
+	require.Equal(t, "Home", upe.CustomerContactInformation)
+	require.Equal(t, "12345678", upe.StoreMerchantProcessingSiteNumber)
+	require.Equal(t, "ZB17262ZB", upe.InternalControlSequenceNumber)
+	require.Equal(t, "ZJK", upe.OperatorName)
+	require.Equal(t, "12345", upe.OperatorNumber)
+	require.Equal(t, "ZBK", upe.ManagerName)
+	require.Equal(t, "12345", upe.ManagerNumber)
+	require.Equal(t, "123456789012345", upe.EquipmentNumber)
+	require.Equal(t, 1, upe.EndorsementIndicator)
+	require.Equal(t, "", upe.UserField)
 	return ""
 }
 
@@ -132,131 +88,99 @@ func TestUPEString(t *testing.T) {
 	r.line = line
 	upe.Parse(r.line)
 
-	if upe.String() != line {
-		t.Errorf("Strings do not match")
-	}
+	require.Equal(t, line, upe.String())
 }
 
 // TestUPEParse validation
 func TestUPEParse(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
-	if err := upe.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, upe.Validate())
 	line := upe.String()
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	upe.Parse(r.line)
-
-	if err := upe.Validate(); err == nil {
-	} else {
-		t.Errorf("%T: %s", err, err)
-	}
+	require.NoError(t, upe.Validate())
 }
 
 // TestUPERecordType validation
 func TestUPERecordType(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.recordType = "00"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestUPEUserRecordFormatType validation
 func TestUPEUserRecordFormatType(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
-	upe.UserRecordFormatType = "001"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserRecordFormatType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	upe.UserRecordFormatType = "002"
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserRecordFormatType", e.FieldName)
 }
 
 // TestUPEOwnerIdentifierIndicator validation
 func TestUPEOwnerIdentifierIndicator(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.OwnerIdentifierIndicator = 9
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OwnerIdentifierIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OwnerIdentifierIndicator", e.FieldName)
 }
 
 // TestUPEOwnerIdentifierModifier validation
 func TestUPEOwnerIdentifierModifier(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.OwnerIdentifierModifier = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OwnerIdentifierModifier" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OwnerIdentifierModifier", e.FieldName)
 }
 
 // TestUPEUserRecordFormatTypeChar validation
 func TestUPEUserRecordFormatTypeChar(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.UserRecordFormatType = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserRecordFormatType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserRecordFormatType", e.FieldName)
 }
 
 // TestUPEFormatTypeVersionLevel validation
 func TestUPEFormatTypeVersionLevel(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.FormatTypeVersionLevel = "W"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "FormatTypeVersionLevel" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "FormatTypeVersionLevel", e.FieldName)
 }
 
 // TestUPELengthUserData validation
 func TestUPELengthUserData(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.LengthUserData = "W"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "LengthUserData" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "LengthUserData", e.FieldName)
 }
 
 // TestUPEOwnerIdentifierIndicatorZero validation
 func TestUPEOwnerIdentifierIndicatorZero(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.OwnerIdentifierIndicator = 0
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OwnerIdentifier" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OwnerIdentifier", e.FieldName)
 }
 
 // TestUPEOwnerIdentifierIndicator123 validation
@@ -264,13 +188,10 @@ func TestUPEOwnerIdentifierIndicator123(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.OwnerIdentifierIndicator = 1
 	upe.OwnerIdentifier = "W"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OwnerIdentifier" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OwnerIdentifier", e.FieldName)
 }
 
 // TestUPEOwnerIdentifierIndicatorFour validation
@@ -278,195 +199,150 @@ func TestUPEOwnerIdentifierIndicatorFour(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.OwnerIdentifierIndicator = 4
 	upe.OwnerIdentifier = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OwnerIdentifier" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OwnerIdentifier", e.FieldName)
 }
 
 // TestUPEPayeeName validation
 func TestUPEPayeeName(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.PayeeName = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "PayeeName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "PayeeName", e.FieldName)
 }
 
 // TestUPEBankRoutingNumber validation
 func TestUPEBankRoutingNumber(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.BankRoutingNumber = "W"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BankRoutingNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BankRoutingNumber", e.FieldName)
 }
 
 // TestUPEBankAccountNumber validation
 func TestUPEBankAccountNumber(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.BankAccountNumber = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "BankAccountNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "BankAccountNumber", e.FieldName)
 }
 
 // TestUPECustomerIdentifier validation
 func TestUPECustomerIdentifier(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.CustomerIdentifier = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CustomerIdentifier" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CustomerIdentifier", e.FieldName)
 }
 
 // TestUPECustomerContactInformation validation
 func TestUPECustomerContactInformation(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.CustomerContactInformation = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "CustomerContactInformation" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "CustomerContactInformation", e.FieldName)
 }
 
 // TestUPEStoreMerchantProcessingSiteNumber validation
 func TestUPEStoreMerchantProcessingSiteNumber(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.StoreMerchantProcessingSiteNumber = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "StoreMerchantProcessingSiteNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "StoreMerchantProcessingSiteNumber", e.FieldName)
 }
 
 // TestUPEInternalControlSequenceNumber validation
 func TestUPEInternalControlSequenceNumber(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.InternalControlSequenceNumber = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "InternalControlSequenceNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "InternalControlSequenceNumber", e.FieldName)
 }
 
 // TestUPEOperatorName validation
 func TestUPEOperatorName(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.OperatorName = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OperatorName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OperatorName", e.FieldName)
 }
 
 // TestUPEOperatorNumber validation
 func TestUPEOperatorNumber(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.OperatorNumber = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "OperatorNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "OperatorNumber", e.FieldName)
 }
 
 // TestUPEManagerName validation
 func TestUPEManagerName(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.ManagerName = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ManagerName" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ManagerName", e.FieldName)
 }
 
 // TestUPEManagerNumber validation
 func TestUPEManagerNumber(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.ManagerNumber = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "ManagerNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ManagerNumber", e.FieldName)
 }
 
 // TestUPEEquipmentNumber validation
 func TestUPEEquipmentNumber(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.EquipmentNumber = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EquipmentNumber" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "EquipmentNumber", e.FieldName)
 }
 
 // TestUPEEndorsementIndicator validation
 func TestUPEEndorsementIndicator(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.EndorsementIndicator = 7
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "EndorsementIndicator" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "EndorsementIndicator", e.FieldName)
 }
 
 // TestUPEUserField validation
 func TestUPEUserField(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.UserField = "®©"
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserField" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserField", e.FieldName)
 }
 
 // Field Inclusion
@@ -475,52 +351,40 @@ func TestUPEUserField(t *testing.T) {
 func TestUPEFIRecordType(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.recordType = ""
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "recordType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "recordType", e.FieldName)
 }
 
 // TestUPEFIUserRecordFormatType validation
 func TestUPEFIUserRecordFormatType(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.UserRecordFormatType = ""
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "UserRecordFormatType" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "UserRecordFormatType", e.FieldName)
 }
 
 // TestUPEFIFormatTypeVersionLevel validation
 func TestUPEFIFormatTypeVersionLevel(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.FormatTypeVersionLevel = ""
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "FormatTypeVersionLevel" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "FormatTypeVersionLevel", e.FieldName)
 }
 
 // TestUPEFILengthUserData validation
 func TestUPEFILengthUserData(t *testing.T) {
 	upe := mockUserPayeeEndorsement()
 	upe.LengthUserData = ""
-	if err := upe.Validate(); err != nil {
-		if e, ok := err.(*FieldError); ok {
-			if e.FieldName != "LengthUserData" {
-				t.Errorf("%T: %s", err, err)
-			}
-		}
-	}
+	err := upe.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "LengthUserData", e.FieldName)
 }
 
 // TestUPERuneCountInString validates RuneCountInString
@@ -529,7 +393,5 @@ func TestUPERuneCountInString(t *testing.T) {
 	var line = "68"
 	upe.Parse(line)
 
-	if upe.BankAccountNumber != "" {
-		t.Error("Parsed with an invalid RuneCountInString")
-	}
+	require.Equal(t, "", upe.BankAccountNumber)
 }

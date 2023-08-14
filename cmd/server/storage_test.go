@@ -9,6 +9,7 @@ import (
 
 	"github.com/moov-io/base"
 	"github.com/moov-io/imagecashletter"
+	"github.com/stretchr/testify/require"
 )
 
 type testICLFileRepository struct {
@@ -48,35 +49,23 @@ func TestMemoryStorage(t *testing.T) {
 	}
 
 	files, err := repo.getFiles()
-	if err != nil || len(files) != 0 {
-		t.Errorf("files=%#v error=%v", files, err)
-	}
+	require.NoError(t, err)
+	require.Equal(t, 0, len(files))
 
 	f := readFile(t, "BNK20180905121042882-A.icl")
 	f.ID = base.ID()
-
-	if err := repo.saveFile(f); err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, repo.saveFile(f))
 
 	files, err = repo.getFiles()
-	if err != nil || len(files) != 1 {
-		t.Errorf("files=%#v error=%v", files, err)
-	}
+	require.NoError(t, err)
+	require.Equal(t, 1, len(files))
 
 	file, err := repo.getFile(f.ID)
-	if err != nil {
-		t.Error(err)
-	}
-	if file.ID != f.ID {
-		t.Errorf("file mis-match")
-	}
+	require.NoError(t, err)
+	require.Equal(t, f.ID, file.ID)
 
-	if err := repo.deleteFile(f.ID); err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, repo.deleteFile(f.ID))
 	files, err = repo.getFiles()
-	if err != nil || len(files) != 0 {
-		t.Errorf("files=%#v error=%v", files, err)
-	}
+	require.NoError(t, err)
+	require.Equal(t, 0, len(files))
 }
