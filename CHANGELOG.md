@@ -1,3 +1,9 @@
+## v0.9.5 (Released 2023-08-15)
+
+IMPROVEMENTS
+
+- CashLetterControl: make `SettlementDate` field optional to support additional specification variations
+
 ## v0.9.4 (Released 2023-08-14)
 
 IMPROVEMENTS
