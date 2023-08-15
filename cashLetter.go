@@ -106,7 +106,7 @@ func (cl *CashLetter) Validate() error {
 		}
 	}
 
-	if err := cl.CashLetterControl.Validate(cl.CashLetterHeader.CollectionTypeIndicator); err != nil {
+	if err := cl.CashLetterControl.Validate(); err != nil {
 		return err
 	}
 

@@ -28,7 +28,7 @@ func mockCashLetterControl() *CashLetterControl {
 // TestMockCashLetterControl creates a CashLetterControl
 func TestMockCashLetterControl(t *testing.T) {
 	clc := mockCashLetterControl()
-	require.NoError(t, clc.Validate("01"))
+	require.NoError(t, clc.Validate())
 	require.Equal(t, "90", clc.recordType)
 	require.Equal(t, 1, clc.CashLetterBundleCount)
 	require.Equal(t, 7, clc.CashLetterItemsCount)
@@ -45,7 +45,7 @@ func TestParseCashLetterControl(t *testing.T) {
 	r.line = line
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
-	require.NoError(t, r.parseCashLetterControl("03"))
+	require.NoError(t, r.parseCashLetterControl())
 	record := r.currentCashLetter.CashLetterControl
 
 	require.Equal(t, "90", record.recordType)
@@ -66,7 +66,7 @@ func testCLCString(t testing.TB) {
 	r.line = line
 	clh := mockCashLetterHeader()
 	r.addCurrentCashLetter(NewCashLetter(clh))
-	require.NoError(t, r.parseCashLetterControl("01"))
+	require.NoError(t, r.parseCashLetterControl())
 	record := r.currentCashLetter.CashLetterControl
 	require.Equal(t, line, record.String())
 }
@@ -88,7 +88,7 @@ func BenchmarkCLCString(b *testing.B) {
 func TestCLCRecordType(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.recordType = "00"
-	err := clc.Validate("01")
+	err := clc.Validate()
 	var fieldErr *FieldError
 	require.ErrorAs(t, err, &fieldErr)
 	require.Equal(t, "recordType", fieldErr.FieldName)
@@ -98,7 +98,7 @@ func TestCLCRecordType(t *testing.T) {
 func TestECEInstitutionName(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.ECEInstitutionName = "®©"
-	err := clc.Validate("01")
+	err := clc.Validate()
 	var fieldErr *FieldError
 	require.ErrorAs(t, err, &fieldErr)
 	require.Equal(t, "ECEInstitutionName", fieldErr.FieldName)
@@ -108,7 +108,7 @@ func TestECEInstitutionName(t *testing.T) {
 func TestCLCCreditTotalIndicator(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.CreditTotalIndicator = 9
-	err := clc.Validate("01")
+	err := clc.Validate()
 	var fieldErr *FieldError
 	require.ErrorAs(t, err, &fieldErr)
 	require.Equal(t, "CreditTotalIndicator", fieldErr.FieldName)
@@ -118,7 +118,7 @@ func TestCLCCreditTotalIndicator(t *testing.T) {
 func TestCLCFieldInclusionRecordType(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.recordType = ""
-	err := clc.Validate("01")
+	err := clc.Validate()
 	var fieldErr *FieldError
 	require.ErrorAs(t, err, &fieldErr)
 	require.Equal(t, "recordType", fieldErr.FieldName)
@@ -128,7 +128,7 @@ func TestCLCFieldInclusionRecordType(t *testing.T) {
 func TestFieldInclusionCashLetterItemsCount(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.CashLetterItemsCount = 0
-	err := clc.Validate("01")
+	err := clc.Validate()
 	var fieldErr *FieldError
 	require.ErrorAs(t, err, &fieldErr)
 	require.Equal(t, "CashLetterItemsCount", fieldErr.FieldName)
@@ -138,7 +138,7 @@ func TestFieldInclusionCashLetterItemsCount(t *testing.T) {
 func TestFieldInclusionCashLetterTotalAmount(t *testing.T) {
 	clc := mockCashLetterControl()
 	clc.CashLetterTotalAmount = 0
-	err := clc.Validate("01")
+	err := clc.Validate()
 	var fieldErr *FieldError
 	require.ErrorAs(t, err, &fieldErr)
 	require.Equal(t, "CashLetterTotalAmount", fieldErr.FieldName)
@@ -147,8 +147,9 @@ func TestFieldInclusionCashLetterTotalAmount(t *testing.T) {
 // TestFieldInclusionSettlementDate validates FieldInclusion
 func TestFieldInclusionRecordTypeSettlementDate(t *testing.T) {
 	clc := mockCashLetterControl()
-	clc.SettlementDate = time.Time{}
-	err := clc.Validate("01")
+	// if present (non-zero), SettlementDate.Year() must be between 1993 and 9999
+	clc.SettlementDate = time.Date(40010, time.November, 9, 0, 0, 0, 0, time.UTC)
+	err := clc.Validate()
 	var fieldErr *FieldError
 	require.ErrorAs(t, err, &fieldErr)
 	require.Equal(t, "SettlementDate", fieldErr.FieldName)
@@ -161,4 +162,25 @@ func TestCashLetterControlRuneCountInString(t *testing.T) {
 	clc.Parse(line)
 
 	require.Equal(t, 0, clc.CashLetterBundleCount)
+}
+
+func TestCashLetterControl_isReturnCollectionType(t *testing.T) {
+	tests := []struct {
+		collectionType string
+		expected       bool
+	}{
+		{"03", true},
+		{"04", true},
+		{"05", true},
+		{"06", true},
+		{"07", false},
+		{"01", false},
+		{"", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.collectionType, func(t *testing.T) {
+			require.Equal(t, tt.expected, isReturnCollectionType(tt.collectionType))
+		})
+	}
 }
