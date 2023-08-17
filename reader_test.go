@@ -155,7 +155,7 @@ func TestTwoFileHeaders(t *testing.T) {
 	r := NewReader(strings.NewReader(twoHeaders))
 	_, err := r.Read()
 	fileErr := getFileError(t, err)
-	require.Equal(t, msgFileControl, fileErr.Msg)
+	require.Equal(t, msgFileHeader, fileErr.Msg)
 }
 
 // TestCashLetterHeaderErr validates error flows back from the parser

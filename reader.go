@@ -279,7 +279,7 @@ func (r *Reader) parseLine() error { //nolint:gocyclo
 			return err
 		}
 		if r.currentCashLetter.currentBundle == nil {
-			r.error(&FileError{Msg: msgFileBundleControl})
+			return r.error(&FileError{Msg: msgFileBundleControl})
 		}
 		// Add Bundle or ReturnBundle to CashLetter
 		if r.currentCashLetter.currentBundle != nil {
@@ -326,10 +326,11 @@ func (r *Reader) parseLine() error { //nolint:gocyclo
 // parseFileHeader takes the input record string and parses the FileHeader values
 func (r *Reader) parseFileHeader() error {
 	r.recordName = "FileHeader"
-	if (FileHeader{}) != r.File.Header {
+	if !r.File.Header.IsZero() {
 		// There can only be one File Header per File
-		r.error(&FileError{Msg: msgFileHeader})
+		return r.error(&FileError{Msg: msgFileHeader})
 	}
+
 	r.File.Header.Parse(r.decodeLine(r.line))
 	// Ensure valid FileHeader
 	if err := r.File.Header.Validate(); err != nil {
