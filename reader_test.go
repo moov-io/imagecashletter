@@ -871,6 +871,20 @@ func TestRead_multipleBundlesInCashLetter(t *testing.T) {
 	require.Equal(t, "2", f.CashLetters[0].Bundles[1].BundleHeader.BundleSequenceNumber)
 }
 
+func TestRead_CreditInBundle(t *testing.T) {
+	r := NewReader(strings.NewReader(depositTicketAsCredit))
+	f, err := r.Read()
+	require.NoError(t, err)
+
+	bundles := f.CashLetters[0].Bundles
+	require.Equal(t, 1, len(bundles))
+	credits := bundles[0].Credits
+	require.Equal(t, 1, len(credits))
+	credit := credits[0]
+	require.Equal(t, 2, len(credit.ImageViewDetail))
+	require.Equal(t, 2, len(credit.ImageViewData))
+}
+
 const multipleBundles = `0135T231380104121042882201810101237NCitadel           Wells Fargo        US     
 100123138010412104288220181010201810101237IGA1      Contact Name  5558675552    
 62      123456789 031300012             5558881000000001000001              G101                    
@@ -891,6 +905,34 @@ const multipleBundles = `0135T231380104121042882201810101237NCitadel           W
 542202222222             10222222222222                                         
 70001400000020000000000020000000002                    0                        
 200123138010412104288220181010201810109999      2   01                          
+25      123456789 031300012             555888100001000001              GD1Y030B
+261121042882201810101              938383            01   Test Payee     Y10    
+2711A             00340                                 CD Addendum B           
+2802121042882201810101              Y10A                   0                    
+501031300012201810100000000000000000000000000000000000000         0             
+52121042882201810101 1              Sec Orig Name   Sec Auth Name   SECURE          0                00000    0000001 
+542202222222             10222222222222                                         
+25      123456789 031300012             555888100001000002              GD1Y030B
+262121042882201810102              938383            01   Test Payee     Y10    
+2711A             00340                                 CD Addendum B           
+2803121042882201810102              Y10A                   0                    
+501031300012201810100000000000000000000000000000000000000         0             
+52121042882201810101 1              Sec Orig Name   Sec Auth Name   SECURE          0                00000    0000001 
+542202222222             10222222222222                                         
+8511112222300000000100000000001                                                 
+70001400000020000000000020000000002                    0                        
+900000010000001400000000200000000000002                  201810100              
+9900000200000038000000280000000000400000                        0               `
+
+const depositTicketAsCredit = `0135T231380104121042882201810101237NCitadel           Wells Fargo        US     
+100123138010412104288220181010201810101237IGA1      Contact Name  5558675552    
+62      123456789 031300012             5558881000000001000001              G101                    
+200123138010412104288220181010201810109999      1   01                          
+61010910999940910 99992006050920060509383521210000010208812345          G13     
+501031300012201809050000000000000000000000000000000000000         0             
+52121042882202308161 1              Sec Orig Name   Sec Auth Name   SECURE          0                00000    0000001 
+5010313000122023081600000000000100000     000000000000000         0             
+52121042882202308161 1              Sec Orig Name   Sec Auth Name   SECURE          0                00000    0000001 
 25      123456789 031300012             555888100001000001              GD1Y030B
 261121042882201810101              938383            01   Test Payee     Y10    
 2711A             00340                                 CD Addendum B           

@@ -539,23 +539,21 @@ func (r *Reader) parseReturnDetailAddendumD() error {
 // parseImageViewDetail takes the input record string and parses the ImageViewDetail values
 func (r *Reader) parseImageViewDetail() error {
 	r.recordName = "ImageViewDetail"
+	ivDetail := NewImageViewDetail()
+	ivDetail.Parse(r.decodeLine(r.line))
+	if err := ivDetail.Validate(); err != nil {
+		return r.error(err)
+	}
+
 	if r.currentCashLetter.currentBundle.GetChecks() != nil {
-		ivDetail := NewImageViewDetail()
-		ivDetail.Parse(r.decodeLine(r.line))
-		if err := ivDetail.Validate(); err != nil {
-			return r.error(err)
-		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewDetail(ivDetail)
-
 	} else if r.currentCashLetter.currentBundle.GetReturns() != nil {
-		ivDetail := NewImageViewDetail()
-		ivDetail.Parse(r.decodeLine(r.line))
-		if err := ivDetail.Validate(); err != nil {
-			return r.error(err)
-		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewDetail(ivDetail)
+	} else if len(r.currentCashLetter.currentBundle.Credits) > 0 {
+		entryIndex := len(r.currentCashLetter.currentBundle.Credits) - 1
+		r.currentCashLetter.currentBundle.Credits[entryIndex].AddImageViewDetail(ivDetail)
 	} else {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "ImageViewDetail", Msg: msg})
@@ -567,23 +565,22 @@ func (r *Reader) parseImageViewDetail() error {
 // parseImageViewData takes the input record string and parses the ImageViewData values
 func (r *Reader) parseImageViewData() error {
 	r.recordName = "ImageViewData"
+	ivData := NewImageViewData()
+	ivData.ParseAndDecode(r.line, r.decodeLine)
+	if err := ivData.Validate(); err != nil {
+		return r.error(err)
+	}
+
 	if r.currentCashLetter.currentBundle.GetChecks() != nil {
-		ivData := NewImageViewData()
-		ivData.ParseAndDecode(r.line, r.decodeLine)
-		if err := ivData.Validate(); err != nil {
-			return r.error(err)
-		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewData(ivData)
 
 	} else if r.currentCashLetter.currentBundle.GetReturns() != nil {
-		ivData := NewImageViewData()
-		ivData.ParseAndDecode(r.line, r.decodeLine)
-		if err := ivData.Validate(); err != nil {
-			return r.error(err)
-		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewData(ivData)
+	} else if len(r.currentCashLetter.currentBundle.Credits) > 0 {
+		entryIndex := len(r.currentCashLetter.currentBundle.Credits) - 1
+		r.currentCashLetter.currentBundle.Credits[entryIndex].AddImageViewData(ivData)
 	} else {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
@@ -595,21 +592,17 @@ func (r *Reader) parseImageViewData() error {
 // parseImageViewAnalysis takes the input record string and parses ImageViewAnalysis values
 func (r *Reader) parseImageViewAnalysis() error {
 	r.recordName = "ImageViewAnalysis"
+	ivAnalysis := NewImageViewAnalysis()
+	ivAnalysis.Parse(r.decodeLine(r.line))
+	if err := ivAnalysis.Validate(); err != nil {
+		return r.error(err)
+	}
+
 	if r.currentCashLetter.currentBundle.GetChecks() != nil {
-		ivAnalysis := NewImageViewAnalysis()
-		ivAnalysis.Parse(r.decodeLine(r.line))
-		if err := ivAnalysis.Validate(); err != nil {
-			return r.error(err)
-		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewAnalysis(ivAnalysis)
 
 	} else if r.currentCashLetter.currentBundle.GetReturns() != nil {
-		ivAnalysis := NewImageViewAnalysis()
-		ivAnalysis.Parse(r.decodeLine(r.line))
-		if err := ivAnalysis.Validate(); err != nil {
-			return r.error(err)
-		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewAnalysis(ivAnalysis)
 	} else {
@@ -624,7 +617,8 @@ func (r *Reader) parseImageViewAnalysis() error {
 func (r *Reader) parseCredit() error {
 	// Current implementation has the credit letter outside the bundle but within the cash letter
 	r.recordName = "Credit"
-	if r.currentCashLetter.CashLetterHeader == nil {
+	if r.currentCashLetter.CashLetterHeader == nil &&
+		r.currentCashLetter.currentBundle == nil {
 		return r.error(&FileError{Msg: msgFileCredit})
 	}
 	cr := new(Credit)
@@ -632,6 +626,14 @@ func (r *Reader) parseCredit() error {
 	if err := cr.Validate(); err != nil {
 		return r.error(err)
 	}
+
+	// if we have an incomplete bundle, add the credit to the bundle
+	if r.currentCashLetter.currentBundle != nil {
+		r.currentCashLetter.currentBundle.Credits = append(r.currentCashLetter.currentBundle.Credits, cr)
+		return nil
+	}
+
+	// otherwise add the credit to the cash letter
 	r.currentCashLetter.AddCredit(cr)
 	return nil
 }

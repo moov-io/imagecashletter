@@ -88,7 +88,7 @@ var (
 	msgFileCashLetterID         = "%s is not unique"
 	msgRecordType               = "received expecting %d"
 	msgFileCreditItem           = "Credit item outside of cash letter"
-	msgFileCredit               = "Credit outside of cash letter"
+	msgFileCredit               = "Credit outside of cash letter or bundle"
 )
 
 // FileError is an error describing issues validating a file
