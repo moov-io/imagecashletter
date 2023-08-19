@@ -47,6 +47,10 @@ type Credit struct {
 	DebitCreditIndicator string `json:"debitCreditIndicator,omitempty"`
 	// reserved is a field reserved for future use.  Reserved should be blank.
 	reserved string
+
+	ImageViewDetail []ImageViewDetail `json:"imageViewDetail"`
+	ImageViewData   []ImageViewData   `json:"imageViewData"`
+
 	// validator is composed for image cash letter data validation
 	validator
 	// converters is composed for image cash letter to golang Converters
@@ -263,4 +267,12 @@ func (cr *Credit) DebitCreditIndicatorField() string {
 // reservedField gets reserved - blank space
 func (cr *Credit) reservedField() string {
 	return cr.alphaField(cr.reserved, 3)
+}
+
+func (cr *Credit) AddImageViewData(ivData ImageViewData) {
+	cr.ImageViewData = append(cr.ImageViewData, ivData)
+}
+
+func (cr *Credit) AddImageViewDetail(ivDetail ImageViewDetail) {
+	cr.ImageViewDetail = append(cr.ImageViewDetail, ivDetail)
 }

@@ -57,7 +57,6 @@ func TestMockImageViewDetail(t *testing.T) {
 	require.Equal(t, "", ivDetail.reserved)
 	require.Equal(t, "0", ivDetail.OverrideIndicator)
 	require.Equal(t, "", ivDetail.reservedTwo)
-
 }
 
 // TestParseIVDetail validates parsing an ImageViewDetail

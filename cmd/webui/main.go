@@ -121,6 +121,7 @@ func addPingRoute(r *mux.Router) {
 
 func addAssetsPath(r *mux.Router, assetPath string) {
 	if _, err := os.Stat(assetPath); err != nil {
+		//nolint:forbidigo
 		panic(fmt.Sprintf("ERROR: unable to stat %s: %v", assetPath, err))
 	}
 	r.Methods("GET").PathPrefix("/").Handler(http.StripPrefix(*flagBasePath, http.FileServer(http.Dir(assetPath))))
