@@ -243,6 +243,10 @@ func (rd *ReturnDetail) UnmarshalJSON(data []byte) error {
 
 // String writes the ReturnDetail struct to a variable length string.
 func (rd *ReturnDetail) String() string {
+	if rd == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(rd.recordType)

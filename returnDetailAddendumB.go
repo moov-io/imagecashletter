@@ -128,6 +128,10 @@ func (rdAddendumB ReturnDetailAddendumB) MarshalJSON() ([]byte, error) {
 
 // String writes the ReturnDetailAddendumB struct to a string.
 func (rdAddendumB *ReturnDetailAddendumB) String() string {
+	if rdAddendumB == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(rdAddendumB.recordType)

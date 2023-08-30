@@ -153,6 +153,10 @@ func (bh *BundleHeader) UnmarshalJSON(data []byte) error {
 
 // String writes the BundleHeader struct to a string.
 func (bh *BundleHeader) String() string {
+	if bh == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(bh.recordType)

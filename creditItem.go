@@ -177,6 +177,10 @@ func (ci *CreditItem) UnmarshalJSON(data []byte) error {
 
 // String writes the CreditItem struct to a variable length string.
 func (ci *CreditItem) String() string {
+	if ci == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(100)
 	buf.WriteString(ci.recordType)

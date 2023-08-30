@@ -221,6 +221,10 @@ func (cd *CheckDetail) UnmarshalJSON(data []byte) error {
 
 // String writes the CheckDetail struct to a variable length string.
 func (cd *CheckDetail) String() string {
+	if cd == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(cd.recordType)

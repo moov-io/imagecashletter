@@ -153,6 +153,10 @@ func (rdAddendumD *ReturnDetailAddendumD) UnmarshalJSON(data []byte) error {
 
 // String writes the ReturnDetailAddendumD struct to a string.
 func (rdAddendumD *ReturnDetailAddendumD) String() string {
+	if rdAddendumD == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(rdAddendumD.recordType)

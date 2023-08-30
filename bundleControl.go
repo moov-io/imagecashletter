@@ -101,6 +101,10 @@ func (bc *BundleControl) UnmarshalJSON(data []byte) error {
 
 // String writes the BundleControl struct to a string.
 func (bc *BundleControl) String() string {
+	if bc == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(bc.recordType)

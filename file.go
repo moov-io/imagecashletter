@@ -299,6 +299,9 @@ func (f *File) CashLetterIDUnique() error {
 	}
 	cashLetterID := ""
 	for _, cl := range f.CashLetters {
+		if cl.CashLetterHeader == nil {
+			continue
+		}
 		if cashLetterID == cl.CashLetterHeader.CashLetterID {
 			msg := fmt.Sprintf(msgFileCashLetterID, cashLetterID)
 			return &FileError{FieldName: "CashLetterID", Value: cl.CashLetterHeader.CashLetterID, Msg: msg}

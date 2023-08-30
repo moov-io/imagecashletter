@@ -160,6 +160,10 @@ func (fh *FileHeader) UnmarshalJSON(data []byte) error {
 
 // String writes the FileHeader struct to a string.
 func (fh *FileHeader) String() string {
+	if fh == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(fh.recordType)

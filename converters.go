@@ -58,7 +58,9 @@ func (c *converters) alphaField(s string, max uint) string {
 	if ln > max {
 		return s[:max]
 	}
-	s += strings.Repeat(" ", int(max-ln))
+	if count := int(max - ln); count > 0 {
+		s += strings.Repeat(" ", count)
+	}
 	return s
 }
 

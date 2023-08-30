@@ -241,10 +241,17 @@ func (ivData *ImageViewData) UnmarshalJSON(data []byte) error {
 
 // String writes the ImageViewData struct to a string.
 func (ivData *ImageViewData) String() string {
+	if ivData == nil {
+		return ""
+	}
 	return ivData.toString(true)
 }
 
 func (ivData *ImageViewData) toString(inclImage bool) string {
+	if ivData == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(105)
 	buf.WriteString(ivData.recordType)
@@ -268,7 +275,9 @@ func (ivData *ImageViewData) toString(inclImage bool) string {
 	buf.WriteString(ivData.DigitalSignatureField())
 	buf.WriteString(ivData.LengthImageDataField())
 	if inclImage {
-		buf.Grow(ivData.parseNumField(ivData.LengthImageData))
+		if size := ivData.parseNumField(ivData.LengthImageData); size > 0 {
+			buf.Grow(size)
+		}
 		buf.WriteString(ivData.ImageDataField())
 	}
 	return buf.String()
