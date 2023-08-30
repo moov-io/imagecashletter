@@ -21,9 +21,6 @@ func Fuzz(data []byte) int {
 	r := imagecashletter.NewReader(bytes.NewReader(data))
 	f, err := r.Read()
 	if err != nil {
-		// if f != nil {
-		// 	panic(fmt.Sprintf("f != nil on err != nil: %v", f))
-		// }
 		return 0
 	}
 

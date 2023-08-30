@@ -11,7 +11,9 @@ import (
 )
 
 // mockBundleChecks
-func mockBundleChecks() *Bundle {
+func mockBundleChecks(t *testing.T) *Bundle {
+	t.Helper()
+
 	bundle := &Bundle{}
 	bundle.SetHeader(mockBundleHeader())
 	bundle.AddCheckDetail(mockCheckDetail())
@@ -21,14 +23,16 @@ func mockBundleChecks() *Bundle {
 	bundle.Checks[0].AddImageViewDetail(mockImageViewDetail())
 	bundle.Checks[0].AddImageViewData(mockImageViewData())
 	bundle.Checks[0].AddImageViewAnalysis(mockImageViewAnalysis())
-	if err := bundle.build(); err != nil {
-		panic(err)
-	}
+
+	require.NoError(t, bundle.build())
+
 	return bundle
 }
 
 // mockBundleReturns
-func mockBundleReturns() *Bundle {
+func mockBundleReturns(t *testing.T) *Bundle {
+	t.Helper()
+
 	bundle := &Bundle{}
 	bundle.SetHeader(mockBundleHeader())
 	bundle.AddReturnDetail(mockReturnDetail())
@@ -39,15 +43,15 @@ func mockBundleReturns() *Bundle {
 	bundle.Returns[0].AddImageViewDetail(mockImageViewDetail())
 	bundle.Returns[0].AddImageViewData(mockImageViewData())
 	bundle.Returns[0].AddImageViewAnalysis(mockImageViewAnalysis())
-	if err := bundle.build(); err != nil {
-		panic(err)
-	}
+
+	require.NoError(t, bundle.build())
+
 	return bundle
 }
 
 // TestMockBundleChecks creates a Bundle of checks
 func TestMockBundleChecks(t *testing.T) {
-	bundle := mockBundleChecks()
+	bundle := mockBundleChecks(t)
 	require.NoError(t, bundle.Validate())
 
 	bundle = nil // ensure we don't panic
@@ -59,7 +63,7 @@ func TestMockBundleChecks(t *testing.T) {
 
 // TestMockBundleReturns creates a Bundle of returns
 func TestMockBundleReturns(t *testing.T) {
-	bundle := mockBundleReturns()
+	bundle := mockBundleReturns(t)
 	require.NoError(t, bundle.Validate())
 
 	bundle = nil // ensure we don't panic
