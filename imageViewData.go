@@ -275,7 +275,9 @@ func (ivData *ImageViewData) toString(inclImage bool) string {
 	buf.WriteString(ivData.DigitalSignatureField())
 	buf.WriteString(ivData.LengthImageDataField())
 	if inclImage {
-		buf.Grow(ivData.parseNumField(ivData.LengthImageData))
+		if size := ivData.parseNumField(ivData.LengthImageData); size > 0 {
+			buf.Grow(size)
+		}
 		buf.WriteString(ivData.ImageDataField())
 	}
 	return buf.String()
