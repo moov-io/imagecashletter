@@ -316,6 +316,10 @@ func (ivAnalysis *ImageViewAnalysis) UnmarshalJSON(data []byte) error {
 
 // String writes the ImageViewAnalysis struct to a string.
 func (ivAnalysis *ImageViewAnalysis) String() string {
+	if ivAnalysis == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(ivAnalysis.recordType)

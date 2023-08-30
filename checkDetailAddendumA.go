@@ -149,6 +149,10 @@ func (cdAddendumA *CheckDetailAddendumA) UnmarshalJSON(data []byte) error {
 
 // String writes the CheckDetailAddendumA struct to a string.
 func (cdAddendumA *CheckDetailAddendumA) String() string {
+	if cdAddendumA == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(cdAddendumA.recordType)

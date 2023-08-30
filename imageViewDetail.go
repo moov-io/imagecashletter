@@ -248,6 +248,10 @@ func (ivDetail *ImageViewDetail) UnmarshalJSON(data []byte) error {
 
 // String writes the ImageViewDetail struct to a string.
 func (ivDetail *ImageViewDetail) String() string {
+	if ivDetail == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(ivDetail.recordType)

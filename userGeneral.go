@@ -131,6 +131,10 @@ func (ug *UserGeneral) UnmarshalJSON(data []byte) error {
 
 // String writes the UserGeneral struct to a variable length string.
 func (ug *UserGeneral) String() string {
+	if ug == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(45)
 	buf.WriteString(ug.recordType)

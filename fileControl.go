@@ -102,6 +102,10 @@ func (fc *FileControl) UnmarshalJSON(data []byte) error {
 
 // String writes the FileControl struct to a string.
 func (fc *FileControl) String() string {
+	if fc == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(fc.recordType)
