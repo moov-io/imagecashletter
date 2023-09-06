@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -76,6 +77,10 @@ func (cl *CashLetter) setRecordType() {
 
 // Validate performs ImageCashLetter validations and format rule checks and returns an error if not Validated
 func (cl *CashLetter) Validate() error {
+	if cl.CashLetterHeader == nil {
+		return errors.New("nil CashLetterHeader")
+	}
+
 	if cl.CashLetterHeader.RecordTypeIndicator == "N" {
 		if cl.GetBundles() != nil {
 			return &CashLetterError{
