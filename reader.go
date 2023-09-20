@@ -105,10 +105,7 @@ func Passthrough(lineIn string) (lineOut string) {
 
 // DecodeEBCDIC will decode a line from EBCDIC-0037 to UTF-8
 func DecodeEBCDIC(lineIn string) (lineOut string) {
-	lineOut, err := encoding.EBCDIC.NewDecoder().String(lineIn)
-	if err != nil {
-		fmt.Printf("Error decoding '%X' as EBCDIC: %v\n", lineIn, err)
-	}
+	lineOut, _ = encoding.EBCDIC.NewDecoder().String(lineIn)
 	return lineOut
 }
 
