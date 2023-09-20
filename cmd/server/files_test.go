@@ -309,7 +309,7 @@ func TestFiles_validateFile(t *testing.T) {
 		w.Flush()
 
 		require.Equal(t, http.StatusOK, w.Code, w.Body)
-		assert.Contains(t, w.Body.String(), `"{\"error\": null}"`)
+		assert.Contains(t, w.Body.String(), `{"error":null}`)
 	})
 
 	t.Run("invalid file", func(t *testing.T) {

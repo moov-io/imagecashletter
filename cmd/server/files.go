@@ -282,7 +282,12 @@ func deleteFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(`{"error": null}`)
+
+		type response struct {
+			Error error `json:"error"`
+		}
+
+		json.NewEncoder(w).Encode(&response{Error: nil})
 	}
 }
 
@@ -369,7 +374,12 @@ func validateFile(logger log.Logger, repo ICLFileRepository) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(`{"error": null}`)
+
+		type response struct {
+			Error error `json:"error"`
+		}
+
+		json.NewEncoder(w).Encode(&response{Error: nil})
 	}
 }
 
@@ -474,6 +484,11 @@ func removeCashLetterFromFile(logger log.Logger, repo ICLFileRepository) http.Ha
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(`{"error": null}`)
+
+		type response struct {
+			Error error `json:"error"`
+		}
+
+		json.NewEncoder(w).Encode(&response{Error: nil})
 	}
 }
