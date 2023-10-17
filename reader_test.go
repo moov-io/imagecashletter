@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"unicode/utf8"
 
 	"github.com/stretchr/testify/require"
 )
@@ -863,8 +864,15 @@ func TestICLFile_LargeCheckImage(t *testing.T) {
 }
 
 func Test_DecodeEBCDIC(t *testing.T) {
-	testData := []byte{0xF0, 0xF1, 0xF2}
-	decoded, err := DecodeEBCDIC(string(testData))
+	// test with valid sample
+	decoded, err := DecodeEBCDIC(string([]byte{0xF0, 0xF1, 0xF2}))
 	require.NoError(t, err)
 	require.Equal(t, "012", decoded)
+
+	// replaced invalid code with utf8.RuneError
+	decoded, err = DecodeEBCDIC(string([]byte{0x04, 0x06, 0xff}))
+	require.NoError(t, err)
+	r, n := utf8.DecodeRuneInString(decoded)
+	require.Equal(t, 3, n)
+	require.Equal(t, r, utf8.RuneError)
 }
