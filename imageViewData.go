@@ -158,71 +158,141 @@ func (ivData *ImageViewData) setRecordType() {
 }
 
 // ParseAndDecode takes the input record string, decodes all except image and parses the ImageViewData values
-func (ivData *ImageViewData) ParseAndDecode(record string, decode DecodeLineFn) {
+func (ivData *ImageViewData) ParseAndDecode(record string, decode DecodeLineFn) error {
 	// record contains binary data that may not map to UTF-8 charmap
 	recordLength := len(record)
 	if recordLength < 105 {
-		return // line too short
+		return fmt.Errorf("parse record is short, got %d, expected length is 105", recordLength) // line too short
 	}
 	// Character position 1-2, Always "52"
 	ivData.setRecordType()
 	// 03-11
-	ivData.EceInstitutionRoutingNumber = ivData.parseStringField(decode(record[2:11]))
+	lineOut, err := decode(record[2:11])
+	if err != nil {
+		return err
+	}
+	ivData.EceInstitutionRoutingNumber = ivData.parseStringField(lineOut)
 	// 12-19
-	ivData.BundleBusinessDate = ivData.parseYYYYMMDDDate(decode(record[11:19]))
+	lineOut, err = decode(record[11:19])
+	if err != nil {
+		return err
+	}
+	ivData.BundleBusinessDate = ivData.parseYYYYMMDDDate(lineOut)
 	// 20-21
-	ivData.CycleNumber = ivData.parseStringField(decode(record[19:21]))
+	lineOut, err = decode(record[19:21])
+	if err != nil {
+		return err
+	}
+	ivData.CycleNumber = ivData.parseStringField(lineOut)
 	// 22-36
-	ivData.EceInstitutionItemSequenceNumber = ivData.parseStringField(decode(record[21:36]))
+	lineOut, err = decode(record[21:36])
+	if err != nil {
+		return err
+	}
+	ivData.EceInstitutionItemSequenceNumber = ivData.parseStringField(lineOut)
 	// 37-52
-	ivData.SecurityOriginatorName = ivData.parseStringField(decode(record[36:52]))
+	lineOut, err = decode(record[36:52])
+	if err != nil {
+		return err
+	}
+	ivData.SecurityOriginatorName = ivData.parseStringField(lineOut)
 	// 53-68
-	ivData.SecurityAuthenticatorName = ivData.parseStringField(decode(record[52:68]))
+	lineOut, err = decode(record[52:68])
+	if err != nil {
+		return err
+	}
+	ivData.SecurityAuthenticatorName = ivData.parseStringField(lineOut)
 	// 69-84
-	ivData.SecurityKeyName = ivData.parseStringField(decode(record[68:84]))
+	lineOut, err = decode(record[68:84])
+	if err != nil {
+		return err
+	}
+	ivData.SecurityKeyName = ivData.parseStringField(lineOut)
 	// 85-85
-	ivData.ClippingOrigin = ivData.parseNumField(decode(record[84:85]))
+	lineOut, err = decode(record[84:85])
+	if err != nil {
+		return err
+	}
+	ivData.ClippingOrigin = ivData.parseNumField(lineOut)
 	// 86-89
-	ivData.ClippingCoordinateH1 = ivData.parseStringField(decode(record[85:89]))
+	lineOut, err = decode(record[85:89])
+	if err != nil {
+		return err
+	}
+	ivData.ClippingCoordinateH1 = ivData.parseStringField(lineOut)
 	// 90-93
-	ivData.ClippingCoordinateH2 = ivData.parseStringField(decode(record[89:93]))
+	lineOut, err = decode(record[89:93])
+	if err != nil {
+		return err
+	}
+	ivData.ClippingCoordinateH2 = ivData.parseStringField(lineOut)
 	// 94-97
-	ivData.ClippingCoordinateV1 = ivData.parseStringField(decode(record[93:97]))
+	lineOut, err = decode(record[93:97])
+	if err != nil {
+		return err
+	}
+	ivData.ClippingCoordinateV1 = ivData.parseStringField(lineOut)
 	// 98-101
-	ivData.ClippingCoordinateV2 = ivData.parseStringField(decode(record[97:101]))
+	lineOut, err = decode(record[97:101])
+	if err != nil {
+		return err
+	}
+	ivData.ClippingCoordinateV2 = ivData.parseStringField(lineOut)
 	// 102-105
-	ivData.LengthImageReferenceKey = ivData.parseStringField(decode(record[101:105]))
+	lineOut, err = decode(record[101:105])
+	if err != nil {
+		return err
+	}
+	ivData.LengthImageReferenceKey = ivData.parseStringField(lineOut)
 
 	lirk := ivData.parseNumField(ivData.LengthImageReferenceKey)
 	if lirk < 0 || recordLength < 110+lirk {
-		return // line too short
+		return nil // line too short
 	}
 
 	// 106 - (105+X)
-	ivData.ImageReferenceKey = ivData.parseStringField(decode(record[105 : 105+lirk]))
+	lineOut, err = decode(record[105 : 105+lirk])
+	if err != nil {
+		return err
+	}
+	ivData.ImageReferenceKey = ivData.parseStringField(lineOut)
 	// (106 + lirk) – (110 + lirk)
-	ivData.LengthDigitalSignature = ivData.parseStringField(decode(record[105+lirk : 110+lirk]))
+	lineOut, err = decode(record[105+lirk : 110+lirk])
+	if err != nil {
+		return err
+	}
+	ivData.LengthDigitalSignature = ivData.parseStringField(lineOut)
 
 	lds := ivData.parseNumField(ivData.LengthDigitalSignature)
 	if lds < 0 || recordLength < 117+lirk+lds {
-		return // line too short
+		return nil // line too short
 	}
 	// (111 + lirk) – (110 + lirk + lds)
-	ivData.DigitalSignature = ivData.stringToBytesField(decode(record[110+lirk : 110+lirk+lds]))
+	lineOut, err = decode(record[110+lirk : 110+lirk+lds])
+	if err != nil {
+		return err
+	}
+	ivData.DigitalSignature = ivData.stringToBytesField(lineOut)
 	// (111 + lirk + lds) – (117 + lirk + lds)
-	ivData.LengthImageData = ivData.parseStringField(decode(record[110+lirk+lds : 117+lirk+lds]))
+	lineOut, err = decode(record[110+lirk+lds : 117+lirk+lds])
+	if err != nil {
+		return err
+	}
+	ivData.LengthImageData = ivData.parseStringField(lineOut)
 
 	lid := ivData.parseNumField(ivData.LengthImageData)
 	if lid < 0 || recordLength < 117+lirk+lds+lid {
-		return // line too short
+		return nil // line too short
 	}
 	// (118 + lirk + lds) – (117+lirk + lds + lid)
 	ivData.ImageData = ivData.stringToBytesField(record[117+lirk+lds : 117+lirk+lds+lid])
+
+	return nil
 }
 
 // Parse takes the input record string and parses the ImageViewData values
-func (ivData *ImageViewData) Parse(record string) {
-	ivData.ParseAndDecode(record, Passthrough)
+func (ivData *ImageViewData) Parse(record string) error {
+	return ivData.ParseAndDecode(record, Passthrough)
 }
 
 func (ivData *ImageViewData) UnmarshalJSON(data []byte) error {

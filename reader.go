@@ -672,7 +672,7 @@ func (r *Reader) ImageViewData() error {
 		}
 
 		ivData := NewImageViewData()
-		ivData.ParseAndDecode(r.line, r.decodeLine)
+		ivData.Parse(lineOut)
 		if err := ivData.Validate(); err != nil {
 			return r.error(err)
 		}
@@ -686,7 +686,7 @@ func (r *Reader) ImageViewData() error {
 		}
 
 		ivData := NewImageViewData()
-		ivData.ParseAndDecode(r.line, r.decodeLine)
+		ivData.Parse(lineOut)
 		if err := ivData.Validate(); err != nil {
 			return r.error(err)
 		}
@@ -797,7 +797,13 @@ func (r *Reader) parseBundleControl() error {
 	if r.currentCashLetter.currentBundle == nil || r.currentCashLetter.currentBundle.BundleControl == nil {
 		return r.error(&FileError{Msg: msgFileBundleControl})
 	}
-	r.currentCashLetter.currentBundle.GetControl().Parse(r.decodeLine(r.line))
+
+	lineOut, err := r.decodeLine(r.line)
+	if err != nil {
+		return err
+	}
+
+	r.currentCashLetter.currentBundle.GetControl().Parse(lineOut)
 	if err := r.currentCashLetter.currentBundle.GetControl().Validate(); err != nil {
 		return r.error(err)
 	}
@@ -852,12 +858,10 @@ func (r *Reader) parseFileControl() error {
 		// Can be only one file control per file
 		return r.error(&FileError{Msg: msgFileControl})
 	}
-
 	lineOut, err := r.decodeLine(r.line)
 	if err != nil {
 		return err
 	}
-
 	r.File.Control.Parse(lineOut)
 	// Ensure valid FileControl
 	if err := r.File.Control.Validate(); err != nil {

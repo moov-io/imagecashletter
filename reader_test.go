@@ -861,3 +861,10 @@ func TestICLFile_LargeCheckImage(t *testing.T) {
 	_, err = r.Read()
 	require.NoError(t, err)
 }
+
+func Test_DecodeEBCDIC(t *testing.T) {
+	testData := []byte{0xF0, 0xF1, 0xF2}
+	decoded, err := DecodeEBCDIC(string(testData))
+	require.NoError(t, err)
+	require.Equal(t, "012", decoded)
+}
