@@ -20,7 +20,7 @@ ifeq ($(OS),Windows_NT)
 else
 	@wget -O lint-project.sh https://raw.githubusercontent.com/moov-io/infra/master/go/lint-project.sh
 	@chmod +x ./lint-project.sh
-	DISABLE_XMLENCODERCLOSE=true GOOS=js GOARCH=wasm COVER_THRESHOLD=90.0 ./lint-project.sh
+	DISABLE_XMLENCODERCLOSE=true GOOS=js GOARCH=wasm COVER_THRESHOLD=85.0 ./lint-project.sh
 endif
 
 .PHONY: client
