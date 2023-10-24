@@ -312,7 +312,7 @@ func (cd *CheckDetail) fieldInclusion() error {
 	if cd.PayorBankRoutingNumberField() == "00000000" {
 		return &FieldError{FieldName: "PayorBankRoutingNumber",
 			Value: cd.PayorBankRoutingNumber,
-			Msg:   msgFieldInclusion + ", did you use CheckDetail()?"}
+			Msg:   msgFieldInclusion + ", did you use CheckDetail()?" + " SEQ = " + cd.EceInstitutionItemSequenceNumber}
 	}
 	if cd.PayorBankCheckDigit == "" {
 		return &FieldError{FieldName: "PayorBankCheckDigit",
