@@ -144,7 +144,9 @@ func (ug *UserGeneral) String() string {
 	buf.WriteString(ug.UserRecordFormatTypeField())
 	buf.WriteString(ug.FormatTypeVersionLevelField())
 	buf.WriteString(ug.LengthUserDataField())
-	buf.Grow(ug.parseNumField(ug.LengthUserData))
+	if size := ug.parseNumField(ug.LengthUserData); size > 0 {
+		buf.Grow(size)
+	}
 	buf.WriteString(ug.UserDataField())
 	return buf.String()
 }
