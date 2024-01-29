@@ -77,7 +77,11 @@ func (b *Bundle) setRecordType() {
 // Validate performs imagecashletter validations and format rule checks and returns an error if not Validated
 func (b *Bundle) Validate() error {
 	if (len(b.Checks) <= 0) && (len(b.Returns) <= 0) {
-		return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "entries", Msg: msgBundleEntries}
+		seqNumber := ""
+		if b.BundleHeader != nil {
+			seqNumber = b.BundleHeader.BundleSequenceNumber
+		}
+		return &BundleError{BundleSequenceNumber: seqNumber, FieldName: "entries", Msg: msgBundleEntries}
 	}
 
 	if len(b.Checks) > 0 {
@@ -100,7 +104,11 @@ func (b *Bundle) build() error {
 		return err
 	}
 	if (len(b.Checks) <= 0) && (len(b.Returns) <= 0) {
-		return &BundleError{BundleSequenceNumber: b.BundleHeader.BundleSequenceNumber, FieldName: "entries", Msg: msgBundleEntries}
+		seqNumber := ""
+		if b.BundleHeader != nil {
+			seqNumber = b.BundleHeader.BundleSequenceNumber
+		}
+		return &BundleError{BundleSequenceNumber: seqNumber, FieldName: "entries", Msg: msgBundleEntries}
 	}
 
 	itemCount := 0
