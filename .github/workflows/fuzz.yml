@@ -41,7 +41,7 @@ jobs:
     - name: Report Failures
       if: ${{ failure() }}
       run: |
-        tail -n +1 ./testdata/fuzz/Fuzz*/*
+        find ./test/fuzz/testdata/fuzz/ -type f | xargs -n1 tail -n +1
 
   fuzz-json:
     name: Fuzz JSON
@@ -76,4 +76,4 @@ jobs:
     - name: Report Failures
       if: ${{ failure() }}
       run: |
-        tail -n +1 ./testdata/fuzz/Fuzz*/*
+        find ./test/fuzz/testdata/fuzz/ -type f | xargs -n1 tail -n +1
