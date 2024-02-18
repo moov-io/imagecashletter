@@ -34,7 +34,7 @@ type Returns struct {
 	// ForwardBundleDate represents for electronic check exchange items, the year, month, and day that designate the business date of the original forward bundle. This data is transferred from the BundleHeader BundleBusinessDate.  For items presented in paper cash letters, the year, month, and day that the cash letter was created.
 	ForwardBundleDate time.Time `json:"forwardBundleDate,omitempty"`
 	// ECEInstitutionItemSequenceNumber identifies a number assigned by the institution that creates the CheckDetail. Field must contain a numeric value. It cannot be all blanks.
-	ECEInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber,omitempty"`
+	EceInstitutionItemSequenceNumber string `json:"eceInstitutionItemSequenceNumber,omitempty"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.
 	ExternalProcessingCode string `json:"externalProcessingCode,omitempty"`
 	// ReturnNotificationIndicator is a code that identifies the type of notification. The CashLetterHeader.CollectionTypeIndicator and BundleHeader.CollectionTypeIndicator equalling `05` or `06` takes precedence over this field.  * `1` - Preliminary notification * `2` - Final notification

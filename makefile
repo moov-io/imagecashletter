@@ -102,3 +102,8 @@ AUTHORS:
 .PHONY: tagged-release
 tagged-release:
 	@./tagged-release.sh $(VERSION)
+
+.PHONY: preview-openapi
+preview-openapi:
+	@docker run --rm -p 8080:8080 -e SWAGGER_JSON=/openapi.yaml -v $(shell pwd)/openapi.yaml:/openapi.yaml swaggerapi/swagger-ui
+	
