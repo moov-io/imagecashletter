@@ -10,6 +10,7 @@ import (
 	"net/textproto"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -21,13 +22,62 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestController_createFile_errors(t *testing.T) {
+	router := newRouter(t)
+
+	t.Run("unsupported content type", func(t *testing.T) {
+		rdr := strings.NewReader("real file")
+		resp, apiErr := createFile(t, router, rdr, "application/msword", "application/json")
+		require.Equal(t, http.StatusBadRequest, resp.Code)
+		require.Contains(t, apiErr.Error, "unsupported Content-Type")
+	})
+
+	t.Run("invalid json file", func(t *testing.T) {
+		rdr := strings.NewReader("real file")
+		resp, apiErr := createFile(t, router, rdr, "application/json", "application/json")
+		require.Equal(t, http.StatusBadRequest, resp.Code)
+		require.Contains(t, apiErr.Error, "problem reading file")
+	})
+
+	t.Run("invalid ascii file", func(t *testing.T) {
+		rdr := strings.NewReader("real file")
+		resp, apiErr := uploadFile(t, router, rdr, "text/plain", "application/json")
+		require.Equal(t, http.StatusBadRequest, resp.Code)
+		require.Contains(t, apiErr.Error, "parsing file")
+	})
+
+	t.Run("invalid ebcdic file", func(t *testing.T) {
+		rdr := strings.NewReader("real file")
+		resp, apiErr := uploadFile(t, router, rdr, "application/octet-stream", "application/json")
+		require.Equal(t, http.StatusBadRequest, resp.Code)
+		require.Contains(t, apiErr.Error, "parsing file")
+	})
+}
+
 func TestController_createJSONFile(t *testing.T) {
 	router := newRouter(t)
 
 	t.Run("returns JSON", func(t *testing.T) {
 		rdr := getTestData(t, "icl-valid.json")
 
-		resp, apiErr := createFile(t, router, rdr, "application/json")
+		resp, apiErr := createFile(t, router, rdr, "application/json", "application/json")
+		require.Empty(t, apiErr)
+
+		var created imagecashletter.File
+		require.NoError(t, json.NewDecoder(resp.Body).Decode(&created))
+
+		require.Contains(t, resp.Header().Get("Location"), created.ID)
+		require.NotEmpty(t, created.ID)
+		require.NotEmpty(t, created)
+		require.Equal(t, "231380104", created.Header.ImmediateDestination)
+		require.Len(t, created.CashLetters, 2)
+		require.Equal(t, 400000, created.CashLetters[0].CashLetterControl.CashLetterTotalAmount)
+	})
+
+	t.Run("invalid accept header returns JSON", func(t *testing.T) {
+		rdr := getTestData(t, "icl-valid.json")
+
+		resp, apiErr := createFile(t, router, rdr, "application/json", "foo/bar")
 		require.Empty(t, apiErr)
 
 		var created imagecashletter.File
@@ -44,7 +94,7 @@ func TestController_createJSONFile(t *testing.T) {
 	t.Run("returns EBCDIC file", func(t *testing.T) {
 		rdr := getTestData(t, "icl-valid.json")
 
-		resp, apiErr := createFile(t, router, rdr, "application/octet-stream")
+		resp, apiErr := createFile(t, router, rdr, "application/json", "application/octet-stream")
 		require.Empty(t, apiErr)
 
 		opts := []imagecashletter.ReaderOption{
@@ -55,6 +105,26 @@ func TestController_createJSONFile(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Contains(t, resp.Header().Get("Content-Type"), "application/octet-stream")
+		require.Contains(t, resp.Header().Get("Content-Disposition"), ".x9")
+		require.NotEmpty(t, created)
+		require.Equal(t, "231380104", created.Header.ImmediateDestination)
+		require.Len(t, created.CashLetters, 2)
+		require.Equal(t, 400000, created.CashLetters[0].CashLetterControl.CashLetterTotalAmount)
+	})
+
+	t.Run("returns ASCII file", func(t *testing.T) {
+		rdr := getTestData(t, "icl-valid.json")
+
+		resp, apiErr := createFile(t, router, rdr, "application/json", "text/plain")
+		require.Empty(t, apiErr)
+
+		opts := []imagecashletter.ReaderOption{
+			imagecashletter.ReadVariableLineLengthOption(),
+		}
+		created, err := imagecashletter.NewReader(resp.Body, opts...).Read()
+		require.NoError(t, err)
+
+		require.Contains(t, resp.Header().Get("Content-Type"), "text/plain")
 		require.Contains(t, resp.Header().Get("Content-Disposition"), ".x9")
 		require.NotEmpty(t, created)
 		require.Equal(t, "231380104", created.Header.ImmediateDestination)
@@ -177,12 +247,12 @@ func TestController_uploadASCIIFile(t *testing.T) {
 	})
 }
 
-func createFile(t *testing.T, router *mux.Router, body io.Reader, accept string) (*httptest.ResponseRecorder, openapi.Error) {
+func createFile(t *testing.T, router *mux.Router, body io.Reader, contentType string, accept string) (*httptest.ResponseRecorder, openapi.Error) {
 	req, err := http.NewRequest(http.MethodPost, "/v2/files", body)
 	require.NoError(t, err)
 
+	req.Header.Set("Content-Type", contentType)
 	req.Header.Set("Accept", accept)
-	req.Header.Set("Content-Type", "application/json")
 
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, req)
