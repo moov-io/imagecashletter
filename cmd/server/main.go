@@ -23,6 +23,7 @@ import (
 	"github.com/moov-io/base/log"
 	"github.com/moov-io/imagecashletter"
 	"github.com/moov-io/imagecashletter/internal/files"
+	v2files "github.com/moov-io/imagecashletter/internal/files/v2"
 	"github.com/moov-io/imagecashletter/internal/storage"
 )
 
@@ -76,11 +77,15 @@ func main() {
 	}()
 	defer adminServer.Shutdown()
 
+	// Persistence layer shared between API versions for interoperability
+	repository := storage.NewInMemoryRepo()
+
 	// Setup business HTTP routes
 	router := mux.NewRouter()
 	moovhttp.AddCORSHandler(router)
 	addPingRoute(router)
-	files.AppendRoutes(logger, router, storage.NewInMemoryRepo())
+	files.AppendRoutes(logger, router, repository)
+	v2files.NewController(logger, repository).AddRoutes(router)
 
 	// Start business HTTP server
 	readTimeout, _ := time.ParseDuration("30s")
