@@ -1,0 +1,3 @@
+# This is for preventing generated code from showing up in GitHub diffs
+# https://docs.github.com/en/github/administering-a-repository/customizing-how-changed-files-appear-on-github
+/client/** linguist-generated

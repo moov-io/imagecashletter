@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ID** | **string** | ImageViewData ID | [optional] 
-**ECEInstitutionRoutingNumber** | **string** | ECEInstitutionRoutingNumber contains the routing and transit number of the institution that creates the bundle header.  This number is imported from the Bundle Header Record (Clause 9.4) associated with the image view conveyed in this Image View Data Property. | [optional] 
+**EceInstitutionRoutingNumber** | **string** | ECEInstitutionRoutingNumber contains the routing and transit number of the institution that creates the bundle header.  This number is imported from the Bundle Header Record (Clause 9.4) associated with the image view conveyed in this Image View Data Property. | [optional] 
 **BundleBusinessDate** | [**time.Time**](time.Time.md) | BundleBusinessDate is the business date of the bundle. | [optional] 
 **CycleNumber** | **string** | CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which the bundle is created. | [optional] 
 **IvDataECEInstitutionItemSequenceNumber** | **string** | ECEInstitutionItemSequenceNumber is a number assigned by the institution that creates the Check or Return.  This number is imported from the Check.ECEInstitutionItemSequenceNumber or Return.ECEInstitutionItemSequenceNumber associated with the image view conveyed in this Image View Data Record. The ECE institution must construct the sequence number to guarantee uniqueness for a given routing number, business day, and cycle number. Must contain a numeric value. | [optional] 

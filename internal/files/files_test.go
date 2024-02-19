@@ -2,7 +2,7 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package main
+package files
 
 import (
 	"bytes"
@@ -55,7 +55,7 @@ func TestFiles_getFiles(t *testing.T) {
 		},
 	}
 	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
+	AppendRoutes(log.NewNopLogger(), router, repo)
 
 	t.Run("returns one file", func(t *testing.T) {
 		w := httptest.NewRecorder()
@@ -96,7 +96,7 @@ func TestFiles_createFile(t *testing.T) {
 	req := httptest.NewRequest("POST", "/files/create", fd)
 	repo := &testICLFileRepository{}
 	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
+	AppendRoutes(log.NewNopLogger(), router, repo)
 	router.ServeHTTP(w, req)
 	w.Flush()
 
@@ -124,7 +124,7 @@ func TestFiles_createFileJSON(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 	repo := &testICLFileRepository{}
 	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
+	AppendRoutes(log.NewNopLogger(), router, repo)
 	router.ServeHTTP(w, req)
 	w.Flush()
 
@@ -147,7 +147,7 @@ func TestFiles_createFileJSON(t *testing.T) {
 func TestFiles_getFile(t *testing.T) {
 	repo := &testICLFileRepository{}
 	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
+	AppendRoutes(log.NewNopLogger(), router, repo)
 	req := httptest.NewRequest("GET", "/files/foo", nil)
 
 	t.Run("file not found", func(t *testing.T) {
@@ -185,7 +185,7 @@ func TestFiles_getFile(t *testing.T) {
 func TestFiles_updateFileHeader(t *testing.T) {
 	repo := &testICLFileRepository{}
 	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
+	AppendRoutes(log.NewNopLogger(), router, repo)
 	f := readFile(t, "BNK20180905121042882-A.icl")
 	f.ID = base.ID()
 
@@ -220,7 +220,7 @@ func TestFiles_deleteFile(t *testing.T) {
 	req := httptest.NewRequest("DELETE", "/files/foo", nil)
 	repo := &testICLFileRepository{}
 	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
+	AppendRoutes(log.NewNopLogger(), router, repo)
 
 	t.Run("file not found", func(t *testing.T) {
 		w := httptest.NewRecorder()
@@ -254,7 +254,7 @@ func TestFiles_getFileContents(t *testing.T) {
 	req := httptest.NewRequest("GET", "/files/foo/contents", nil)
 	router := mux.NewRouter()
 	repo := &testICLFileRepository{}
-	addFileRoutes(log.NewNopLogger(), router, repo)
+	AppendRoutes(log.NewNopLogger(), router, repo)
 
 	t.Run("file not found", func(t *testing.T) {
 		w := httptest.NewRecorder()
@@ -291,7 +291,7 @@ func TestFiles_validateFile(t *testing.T) {
 	req := httptest.NewRequest("GET", "/files/foo/validate", nil)
 	repo := &testICLFileRepository{}
 	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
+	AppendRoutes(log.NewNopLogger(), router, repo)
 	f := readFile(t, "BNK20180905121042882-A.icl")
 
 	t.Run("file not found", func(t *testing.T) {
@@ -335,7 +335,7 @@ func TestFiles_validateFile(t *testing.T) {
 func TestFiles_addCashLetterToFile(t *testing.T) {
 	repo := &testICLFileRepository{}
 	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
+	AppendRoutes(log.NewNopLogger(), router, repo)
 	f := readFile(t, "BNK20180905121042882-A.icl")
 	cashLetter := f.CashLetters[0]
 	f.CashLetters = nil
@@ -383,7 +383,7 @@ func TestFiles_addCashLetterToFile(t *testing.T) {
 func TestFiles_removeCashLetterFromFile(t *testing.T) {
 	repo := &testICLFileRepository{}
 	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
+	AppendRoutes(log.NewNopLogger(), router, repo)
 	f := readFile(t, "BNK20180905121042882-A.icl")
 	cashLetterId := base.ID()
 	f.CashLetters[0].ID = cashLetterId
@@ -420,7 +420,7 @@ func TestFiles_removeCashLetterFromFile(t *testing.T) {
 func TestFiles_createFile_Issue228(t *testing.T) {
 	repo := &testICLFileRepository{}
 	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
+	AppendRoutes(log.NewNopLogger(), router, repo)
 
 	w := httptest.NewRecorder()
 	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "issue228.json"))
@@ -446,4 +446,35 @@ func readFile(t *testing.T, filename string) *imagecashletter.File {
 	f, err := imagecashletter.NewReader(fd, imagecashletter.ReadVariableLineLengthOption()).Read()
 	require.NoError(t, err)
 	return &f
+}
+
+type testICLFileRepository struct {
+	err error
+
+	file *imagecashletter.File
+}
+
+func (r *testICLFileRepository) GetFiles() ([]*imagecashletter.File, error) {
+	if r.err != nil {
+		return nil, r.err
+	}
+	return []*imagecashletter.File{r.file}, nil
+}
+
+func (r *testICLFileRepository) GetFile(fileId string) (*imagecashletter.File, error) {
+	if r.err != nil {
+		return nil, r.err
+	}
+	return r.file, nil
+}
+
+func (r *testICLFileRepository) SaveFile(file *imagecashletter.File) error {
+	if r.err == nil { // only persist if we're not error'ing
+		r.file = file
+	}
+	return r.err
+}
+
+func (r *testICLFileRepository) DeleteFile(fileId string) error {
+	return r.err
 }
