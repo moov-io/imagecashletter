@@ -35,9 +35,11 @@ func NewResponder(logger log.Logger, w http.ResponseWriter, r *http.Request) *Re
 	}
 }
 
-// WithLocation sets the Location header on the response.
-func (r *Responder) WithLocation(resourceID string) *Responder {
-	r.optionalHeaders.location = r.r.URL.String() + "/" + resourceID
+// WithLocation sets the Location header on the response. The Location header should be used for
+// HTTP 201 responses to indicate the location of the newly created resource. While both absolute
+// and relative URIs are allowed, the absolute URI is preferred.
+func (r *Responder) WithLocation(location string) *Responder {
+	r.optionalHeaders.location = location
 	return r
 }
 

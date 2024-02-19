@@ -80,7 +80,9 @@ func (c Controller) createFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respond = respond.WithLocation(created.ID)
+	// TODO: Update to the v2 API endpoint once the GET file endpoint is implemented
+	location := fmt.Sprintf("%s://%s/files/%s", r.URL.Scheme, r.URL.Host, created.ID)
+	respond = respond.WithLocation(location)
 	if expectingFile(r) {
 		respond.File(http.StatusCreated, *created, fmt.Sprintf("%s.x9", created.ID))
 		return

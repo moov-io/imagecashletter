@@ -13,6 +13,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/moov-io/base/log"
 	"github.com/moov-io/imagecashletter"
@@ -66,8 +67,8 @@ func TestController_createJSONFile(t *testing.T) {
 		var created imagecashletter.File
 		require.NoError(t, json.NewDecoder(resp.Body).Decode(&created))
 
-		require.Contains(t, resp.Header().Get("Location"), created.ID)
 		require.NotEmpty(t, created.ID)
+		require.Equal(t, "https://some.domain.io/files/"+created.ID, resp.Header().Get("Location"))
 		require.NotEmpty(t, created)
 		require.Equal(t, "231380104", created.Header.ImmediateDestination)
 		require.Len(t, created.CashLetters, 2)
@@ -199,11 +200,19 @@ func TestController_uploadASCIIFile(t *testing.T) {
 		resp, apiErr := uploadFile(t, router, rdr, "text/plain", "text/plain")
 		require.Empty(t, apiErr)
 
+		// inspect headers
+		require.Contains(t, resp.Header().Get("Content-Type"), "text/plain")
+		require.Contains(t, resp.Header().Get("Content-Disposition"), ".x9")
+		location := resp.Header().Get("Location")
+		require.True(t, strings.HasPrefix(location, "https://some.domain.io/files/"))
+		resourceID := strings.TrimPrefix(location, "https://some.domain.io/files/")
+		require.NotEmpty(t, resourceID)
+		_, err := uuid.Parse(resourceID)
+		require.NoError(t, err)
+
 		// now read back in without EBCDIC option
 		created, err := imagecashletter.NewReader(resp.Body, imagecashletter.ReadVariableLineLengthOption()).Read()
 		require.NoError(t, err)
-		require.Contains(t, resp.Header().Get("Content-Type"), "text/plain")
-		require.Contains(t, resp.Header().Get("Content-Disposition"), ".x9")
 		require.NotEmpty(t, created)
 		require.Equal(t, "061000146", created.Header.ImmediateDestination)
 		require.Len(t, created.CashLetters, 1)
@@ -248,7 +257,7 @@ func TestController_uploadASCIIFile(t *testing.T) {
 }
 
 func createFile(t *testing.T, router *mux.Router, body io.Reader, contentType string, accept string) (*httptest.ResponseRecorder, openapi.Error) {
-	req, err := http.NewRequest(http.MethodPost, "/v2/files", body)
+	req, err := http.NewRequest(http.MethodPost, "https://some.domain.io/v2/files", body)
 	require.NoError(t, err)
 
 	req.Header.Set("Content-Type", contentType)
@@ -285,7 +294,7 @@ func uploadFile(t *testing.T, router *mux.Router, file io.Reader, contentType, a
 	require.NoError(t, err)
 	require.NoError(t, mw.Close())
 
-	req, err := http.NewRequest(http.MethodPost, "/v2/files", body)
+	req, err := http.NewRequest(http.MethodPost, "https://some.domain.io/v2/files", body)
 	require.NoError(t, err)
 	req.Header.Set("Content-Type", mw.FormDataContentType())
 	req.Header.Set("Accept", accept)
