@@ -6,7 +6,7 @@ require (
 	github.com/antihax/optional v1.0.0
 	github.com/gdamore/encoding v1.0.0
 	github.com/go-kit/kit v0.13.0
-	github.com/google/uuid v1.5.0
+	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/moov-io/base v0.48.5
 	github.com/prometheus/client_golang v1.18.0
