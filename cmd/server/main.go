@@ -16,13 +16,15 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/moov-io/base/admin"
 	moovhttp "github.com/moov-io/base/http"
 	"github.com/moov-io/base/http/bind"
-	"github.com/moov-io/imagecashletter"
-
-	"github.com/gorilla/mux"
 	"github.com/moov-io/base/log"
+	"github.com/moov-io/imagecashletter"
+	"github.com/moov-io/imagecashletter/internal/files"
+	v2files "github.com/moov-io/imagecashletter/internal/files/v2"
+	"github.com/moov-io/imagecashletter/internal/storage"
 )
 
 var (
@@ -75,15 +77,15 @@ func main() {
 	}()
 	defer adminServer.Shutdown()
 
-	repo := &memoryICLFileRepository{
-		files: make(map[string]*imagecashletter.File),
-	}
+	// Persistence layer shared between API versions for interoperability
+	repository := storage.NewInMemoryRepo()
 
 	// Setup business HTTP routes
 	router := mux.NewRouter()
 	moovhttp.AddCORSHandler(router)
 	addPingRoute(router)
-	addFileRoutes(logger, router, repo)
+	files.AppendRoutes(logger, router, repository)
+	v2files.NewController(logger, repository).AddRoutes(router)
 
 	// Start business HTTP server
 	readTimeout, _ := time.ParseDuration("30s")

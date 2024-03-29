@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**AddICLToFile**](ImageCashLetterFilesApi.md#AddICLToFile) | **Post** /files/{fileID}/cashLetters | Add cash letter to file
 [**CreateICLFile**](ImageCashLetterFilesApi.md#CreateICLFile) | **Post** /files/create | Create file
+[**CreateICLFileV2**](ImageCashLetterFilesApi.md#CreateICLFileV2) | **Post** /v2/files | Create file
 [**DeleteICLFile**](ImageCashLetterFilesApi.md#DeleteICLFile) | **Delete** /files/{fileID} | Delete file
 [**DeleteICLFromFile**](ImageCashLetterFilesApi.md#DeleteICLFromFile) | **Delete** /files/{fileID}/cashLetters/{cashLetterID} | Delete cash letter from file
 [**GetICLFileByID**](ImageCashLetterFilesApi.md#GetICLFileByID) | **Get** /files/{fileID} | Retrieve file
@@ -99,6 +100,38 @@ No authorization required
 
 - **Content-Type**: application/json, text/plain
 - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CreateICLFileV2
+
+> IclFile CreateICLFileV2(ctx, createIclFile)
+
+Create file
+
+### Required Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**createIclFile** | [**CreateIclFile**](CreateIclFile.md)| Content of the ImageCashLetter file in JSON, or X9 (ASCII or EBCDIC) format. Use the &#x60;Accept&#x60; header to specify the response format.  | 
+
+### Return type
+
+[**IclFile**](ICLFile.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json, multipart/form-data
+- **Accept**: application/json, application/octet-stream, text/plain
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)

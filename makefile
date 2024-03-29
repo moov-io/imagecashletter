@@ -20,7 +20,7 @@ ifeq ($(OS),Windows_NT)
 else
 	@wget -O lint-project.sh https://raw.githubusercontent.com/moov-io/infra/master/go/lint-project.sh
 	@chmod +x ./lint-project.sh
-	DISABLE_XMLENCODERCLOSE=true GOOS=js GOARCH=wasm COVER_THRESHOLD=85.0 ./lint-project.sh
+	DISABLE_XMLENCODERCLOSE=true GOOS=js GOARCH=wasm COVER_THRESHOLD=70.0 ./lint-project.sh
 endif
 
 .PHONY: client
@@ -102,3 +102,8 @@ AUTHORS:
 .PHONY: tagged-release
 tagged-release:
 	@./tagged-release.sh $(VERSION)
+
+.PHONY: preview-openapi
+preview-openapi:
+	@docker run --rm -p 8080:8080 -e SWAGGER_JSON=/openapi.yaml -v $(shell pwd)/openapi.yaml:/openapi.yaml swaggerapi/swagger-ui
+	

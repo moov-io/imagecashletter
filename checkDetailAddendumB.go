@@ -122,7 +122,9 @@ func (cdAddendumB *CheckDetailAddendumB) String() string {
 	buf.WriteString(cdAddendumB.ImageReferenceKeyIndicatorField())
 	buf.WriteString(cdAddendumB.MicrofilmArchiveSequenceNumberField())
 	buf.WriteString(cdAddendumB.LengthImageReferenceKeyField())
-	buf.Grow(cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey))
+	if size := cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey); size > 0 {
+		buf.Grow(size)
+	}
 	buf.WriteString(cdAddendumB.ImageReferenceKeyField())
 	buf.WriteString(cdAddendumB.DescriptionField())
 	buf.WriteString(cdAddendumB.UserFieldField())
