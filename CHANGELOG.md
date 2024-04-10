@@ -1,3 +1,9 @@
+## v0.10.0 (Released 2024-02-19)
+
+ADDITIONS
+
+- api: introduce a `v2` files API with an improved Create File endpoint
+
 ## v0.9.5 (Released 2023-08-15)
 
 IMPROVEMENTS

@@ -83,6 +83,10 @@ func (rns *RoutingNumberSummary) UnmarshalJSON(data []byte) error {
 
 // String writes the ImageViewDetail struct to a string.
 func (rns *RoutingNumberSummary) String() string {
+	if rns == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(rns.recordType)

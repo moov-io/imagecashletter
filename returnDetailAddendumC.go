@@ -114,13 +114,19 @@ func (rdAddendumC *ReturnDetailAddendumC) UnmarshalJSON(data []byte) error {
 
 // String writes the ReturnDetailAddendumC struct to a string.
 func (rdAddendumC *ReturnDetailAddendumC) String() string {
+	if rdAddendumC == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(22)
 	buf.WriteString(rdAddendumC.recordType)
 	buf.WriteString(rdAddendumC.ImageReferenceKeyIndicatorField())
 	buf.WriteString(rdAddendumC.MicrofilmArchiveSequenceNumberField())
 	buf.WriteString(rdAddendumC.LengthImageReferenceKeyField())
-	buf.Grow(rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey))
+	if size := rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey); size > 0 {
+		buf.Grow(size)
+	}
 	buf.WriteString(rdAddendumC.ImageReferenceKeyField())
 	buf.WriteString(rdAddendumC.DescriptionField())
 	buf.WriteString(rdAddendumC.UserFieldField())

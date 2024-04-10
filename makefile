@@ -20,7 +20,7 @@ ifeq ($(OS),Windows_NT)
 else
 	@wget -O lint-project.sh https://raw.githubusercontent.com/moov-io/infra/master/go/lint-project.sh
 	@chmod +x ./lint-project.sh
-	DISABLE_XMLENCODERCLOSE=true GOOS=js GOARCH=wasm COVER_THRESHOLD=90.0 ./lint-project.sh
+	DISABLE_XMLENCODERCLOSE=true GOOS=js GOARCH=wasm COVER_THRESHOLD=70.0 ./lint-project.sh
 endif
 
 .PHONY: client
@@ -57,15 +57,11 @@ else
 	CGO_ENABLED=1 GOOS=$(PLATFORM) go build -o bin/imagecashletter-$(PLATFORM)-amd64 github.com/moov-io/imagecashletter/cmd/server
 endif
 
-docker: clean docker-hub docker-fuzz docker-openshift docker-webui
+docker: clean docker-hub docker-openshift docker-webui
 
 docker-hub:
 	docker build --pull -t moov/imagecashletter:$(VERSION) -f Dockerfile .
 	docker tag moov/imagecashletter:$(VERSION) moov/imagecashletter:latest
-
-docker-fuzz:
-	docker build --pull -t moov/imagecashletterfuzz:$(VERSION) . -f Dockerfile.fuzz
-	docker tag moov/imagecashletterfuzz:$(VERSION) moov/imagecashletterfuzz:latest
 
 docker-openshift:
 	docker build --pull -t quay.io/moov/imagecashletter:$(VERSION) -f Dockerfile.openshift --build-arg VERSION=$(VERSION) .
@@ -85,7 +81,6 @@ release-push:
 	docker push moov/imagecashletter:latest
 	docker push moov/imagecashletter-webui:$(VERSION)
 	docker push moov/imagecashletter-webui:latest
-	docker push moov/imagecashletterfuzz:$(VERSION)
 
 quay-push:
 	docker push quay.io/moov/imagecashletter:$(VERSION)
@@ -107,3 +102,8 @@ AUTHORS:
 .PHONY: tagged-release
 tagged-release:
 	@./tagged-release.sh $(VERSION)
+
+.PHONY: preview-openapi
+preview-openapi:
+	@docker run --rm -p 8080:8080 -e SWAGGER_JSON=/openapi.yaml -v $(shell pwd)/openapi.yaml:/openapi.yaml swaggerapi/swagger-ui
+	

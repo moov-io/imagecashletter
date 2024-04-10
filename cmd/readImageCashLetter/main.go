@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/moov-io/imagecashletter"
 	"log"
 	"os"
 	"runtime/pprof"
+
+	"github.com/moov-io/imagecashletter"
 )
 
 var (
@@ -35,7 +36,8 @@ func main() {
 	f, err := os.Open(path)
 
 	if err != nil {
-		log.Panicf("Can not open file: %s: \n", err)
+		log.Printf("ERROR: Can not open file: %s: \n", err)
+		os.Exit(1)
 	}
 
 	r := imagecashletter.NewReader(f)

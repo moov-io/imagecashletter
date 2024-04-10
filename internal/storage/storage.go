@@ -2,7 +2,7 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package main
+package storage
 
 import (
 	"errors"
@@ -12,11 +12,11 @@ import (
 )
 
 type ICLFileRepository interface {
-	getFiles() ([]*imagecashletter.File, error)
-	getFile(fileId string) (*imagecashletter.File, error)
+	GetFiles() ([]*imagecashletter.File, error)
+	GetFile(fileId string) (*imagecashletter.File, error)
 
-	saveFile(file *imagecashletter.File) error
-	deleteFile(fileId string) error
+	SaveFile(file *imagecashletter.File) error
+	DeleteFile(fileId string) error
 }
 
 type memoryICLFileRepository struct {
@@ -24,7 +24,13 @@ type memoryICLFileRepository struct {
 	files map[string]*imagecashletter.File
 }
 
-func (r *memoryICLFileRepository) getFiles() ([]*imagecashletter.File, error) {
+func NewInMemoryRepo() ICLFileRepository {
+	return &memoryICLFileRepository{
+		files: make(map[string]*imagecashletter.File),
+	}
+}
+
+func (r *memoryICLFileRepository) GetFiles() ([]*imagecashletter.File, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -36,7 +42,7 @@ func (r *memoryICLFileRepository) getFiles() ([]*imagecashletter.File, error) {
 	return out, nil
 }
 
-func (r *memoryICLFileRepository) getFile(fileId string) (*imagecashletter.File, error) {
+func (r *memoryICLFileRepository) GetFile(fileId string) (*imagecashletter.File, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -49,7 +55,7 @@ func (r *memoryICLFileRepository) getFile(fileId string) (*imagecashletter.File,
 	return nil, nil
 }
 
-func (r *memoryICLFileRepository) saveFile(file *imagecashletter.File) error {
+func (r *memoryICLFileRepository) SaveFile(file *imagecashletter.File) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -60,7 +66,7 @@ func (r *memoryICLFileRepository) saveFile(file *imagecashletter.File) error {
 	return nil
 }
 
-func (r *memoryICLFileRepository) deleteFile(fileId string) error {
+func (r *memoryICLFileRepository) DeleteFile(fileId string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 

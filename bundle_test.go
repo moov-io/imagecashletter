@@ -12,6 +12,8 @@ import (
 
 // mockBundleChecks
 func mockBundleChecks(t *testing.T) *Bundle {
+	t.Helper()
+
 	bundle := &Bundle{}
 	bundle.SetHeader(mockBundleHeader())
 	bundle.AddCheckDetail(mockCheckDetail())
@@ -21,12 +23,16 @@ func mockBundleChecks(t *testing.T) *Bundle {
 	bundle.Checks[0].AddImageViewDetail(mockImageViewDetail())
 	bundle.Checks[0].AddImageViewData(mockImageViewData())
 	bundle.Checks[0].AddImageViewAnalysis(mockImageViewAnalysis())
+
 	require.NoError(t, bundle.build())
+
 	return bundle
 }
 
 // mockBundleReturns
 func mockBundleReturns(t *testing.T) *Bundle {
+	t.Helper()
+
 	bundle := &Bundle{}
 	bundle.SetHeader(mockBundleHeader())
 	bundle.AddReturnDetail(mockReturnDetail())
@@ -37,7 +43,9 @@ func mockBundleReturns(t *testing.T) *Bundle {
 	bundle.Returns[0].AddImageViewDetail(mockImageViewDetail())
 	bundle.Returns[0].AddImageViewData(mockImageViewData())
 	bundle.Returns[0].AddImageViewAnalysis(mockImageViewAnalysis())
+
 	require.NoError(t, bundle.build())
+
 	return bundle
 }
 

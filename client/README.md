@@ -35,6 +35,7 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ImageCashLetterFilesApi* | [**AddICLToFile**](docs/ImageCashLetterFilesApi.md#addicltofile) | **Post** /files/{fileID}/cashLetters | Add cash letter to file
 *ImageCashLetterFilesApi* | [**CreateICLFile**](docs/ImageCashLetterFilesApi.md#createiclfile) | **Post** /files/create | Create file
+*ImageCashLetterFilesApi* | [**CreateICLFileV2**](docs/ImageCashLetterFilesApi.md#createiclfilev2) | **Post** /v2/files | Create file
 *ImageCashLetterFilesApi* | [**DeleteICLFile**](docs/ImageCashLetterFilesApi.md#deleteiclfile) | **Delete** /files/{fileID} | Delete file
 *ImageCashLetterFilesApi* | [**DeleteICLFromFile**](docs/ImageCashLetterFilesApi.md#deleteiclfromfile) | **Delete** /files/{fileID}/cashLetters/{cashLetterID} | Delete cash letter from file
 *ImageCashLetterFilesApi* | [**GetICLFileByID**](docs/ImageCashLetterFilesApi.md#geticlfilebyid) | **Get** /files/{fileID} | Retrieve file

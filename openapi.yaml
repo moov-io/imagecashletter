@@ -331,6 +331,59 @@ paths:
           description: CashLetter deleted
         '404':
           description: CashLetter or File not found
+  /v2/files:
+    post:
+      tags: ['Image Cash Letter Files']
+      summary: Create file
+      operationId: createICLFileV2
+      requestBody:
+        description: |
+          Content of the ImageCashLetter file in JSON, or X9 (ASCII or EBCDIC) format.
+          Use the `Accept` header to specify the response format.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateICLFile'
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  description: |
+                    The file to upload. Set this section's `Content-Type` to `text/plain` for 
+                    ASCII-encoded files, or `application/octet-stream` for binary files. 
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: The file was created successfully 
+          headers:
+            Location:
+              description: The location of the new resource
+              required: true
+              schema:
+                type: string
+                format: url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ICLFile'
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: The request was invalid
+          content:
+            application/json:
+              schema:
+                $ref: 'https://raw.githubusercontent.com/moov-io/base/master/api/common.yaml#/components/schemas/Error'
+
 
 components:
   schemas:

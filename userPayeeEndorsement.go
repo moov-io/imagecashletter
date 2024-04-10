@@ -194,6 +194,10 @@ func (upe *UserPayeeEndorsement) UnmarshalJSON(data []byte) error {
 
 // String writes the UserPayeeEndorsement struct to a variable length string.
 func (upe *UserPayeeEndorsement) String() string {
+	if upe == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(335)
 	buf.WriteString(upe.recordType)

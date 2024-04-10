@@ -112,13 +112,19 @@ func (cdAddendumB *CheckDetailAddendumB) UnmarshalJSON(data []byte) error {
 
 // String writes the CheckDetailAddendumB struct to a string.
 func (cdAddendumB *CheckDetailAddendumB) String() string {
+	if cdAddendumB == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(46)
 	buf.WriteString(cdAddendumB.recordType)
 	buf.WriteString(cdAddendumB.ImageReferenceKeyIndicatorField())
 	buf.WriteString(cdAddendumB.MicrofilmArchiveSequenceNumberField())
 	buf.WriteString(cdAddendumB.LengthImageReferenceKeyField())
-	buf.Grow(cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey))
+	if size := cdAddendumB.parseNumField(cdAddendumB.LengthImageReferenceKey); size > 0 {
+		buf.Grow(size)
+	}
 	buf.WriteString(cdAddendumB.ImageReferenceKeyField())
 	buf.WriteString(cdAddendumB.DescriptionField())
 	buf.WriteString(cdAddendumB.UserFieldField())

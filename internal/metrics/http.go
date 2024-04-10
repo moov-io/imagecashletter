@@ -2,7 +2,7 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-package main
+package metrics
 
 import (
 	"fmt"
@@ -25,7 +25,7 @@ var (
 	}, []string{"route"})
 )
 
-func wrapResponseWriter(logger log.Logger, w http.ResponseWriter, r *http.Request) http.ResponseWriter {
+func WrapResponseWriter(logger log.Logger, w http.ResponseWriter, r *http.Request) http.ResponseWriter {
 	route := fmt.Sprintf("%s-%s", strings.ToLower(r.Method), cleanMetricsPath(r.URL.Path))
 	return moovhttp.Wrap(logger, routeHistogram.With("route", route), w, r)
 }

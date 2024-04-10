@@ -112,6 +112,10 @@ func (clc *CashLetterControl) UnmarshalJSON(data []byte) error {
 
 // String writes the CashLetterControl struct to a string.
 func (clc *CashLetterControl) String() string {
+	if clc == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(clc.recordType)

@@ -14,13 +14,17 @@ import (
 
 // mockFile creates an imagecashletter file
 func mockFile(t *testing.T) *File {
+	t.Helper()
+
 	f := NewFile()
 	f.SetHeader(mockFileHeader())
 	clh := mockCashLetterHeader()
 	mockCashLetter := NewCashLetter(clh)
 	mockCashLetter.CashLetterControl = mockCashLetterControl()
 	f.AddCashLetter(mockCashLetter)
+
 	require.NoError(t, f.Create())
+
 	return f
 }
 

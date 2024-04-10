@@ -45,7 +45,12 @@ func main() {
 	}()
 
 	// Start Admin server (with Prometheus metrics)
-	adminServer := admin.NewServer(*adminAddr)
+	adminServer, err := admin.New(admin.Opts{
+		Addr: *adminAddr,
+	})
+	if err != nil {
+		errs <- fmt.Errorf("creating admin server: %w", err)
+	}
 	adminServer.AddVersionHandler(imagecashletter.Version) // Setup 'GET /version'
 	go func() {
 		log.Printf("listening on %s", adminServer.BindAddr())
@@ -68,7 +73,9 @@ func main() {
 		assetsPath = filepath.Join("cmd", "webui", "assets")
 	}
 	log.Printf("serving assets from %s", assetsPath)
-	addAssetsPath(router, assetsPath)
+	if err := addAssetsPath(router, assetsPath); err != nil {
+		errs <- err
+	}
 
 	serve := &http.Server{
 		Addr:    *httpAddr,
@@ -119,10 +126,10 @@ func addPingRoute(r *mux.Router) {
 	})
 }
 
-func addAssetsPath(r *mux.Router, assetPath string) {
+func addAssetsPath(r *mux.Router, assetPath string) error {
 	if _, err := os.Stat(assetPath); err != nil {
-		//nolint:forbidigo
-		panic(fmt.Sprintf("ERROR: unable to stat %s: %v", assetPath, err))
+		return fmt.Errorf("ERROR: unable to stat %s: %v", assetPath, err)
 	}
 	r.Methods("GET").PathPrefix("/").Handler(http.StripPrefix(*flagBasePath, http.FileServer(http.Dir(assetPath))))
+	return nil
 }

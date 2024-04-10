@@ -216,6 +216,10 @@ func (clh *CashLetterHeader) UnmarshalJSON(data []byte) error {
 
 // String writes the CashLetterHeader struct to a string.
 func (clh *CashLetterHeader) String() string {
+	if clh == nil {
+		return ""
+	}
+
 	var buf strings.Builder
 	buf.Grow(80)
 	buf.WriteString(clh.recordType)
