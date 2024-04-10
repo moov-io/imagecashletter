@@ -1,6 +1,6 @@
 module github.com/moov-io/imagecashletter
 
-go 1.22
+go 1.22.2
 
 require (
 	github.com/antihax/optional v1.0.0
