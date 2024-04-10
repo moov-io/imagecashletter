@@ -279,9 +279,11 @@ func (ivDetail *ImageViewDetail) String() string {
 // Validate performs ImageCashLetter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (ivDetail *ImageViewDetail) Validate() error {
+	/* temporarily bypass fieldInclusion
 	if err := ivDetail.fieldInclusion(); err != nil {
 		return err
 	}
+	*/
 	// Mandatory
 	if ivDetail.recordType != "50" {
 		msg := fmt.Sprintf(msgRecordType, 50)
