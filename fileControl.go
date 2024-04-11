@@ -52,6 +52,13 @@ func NewFileControl() FileControl {
 	return fc
 }
 
+func (fc *FileControl) IsZero() bool {
+	if fc == nil {
+		return true
+	}
+	return *fc == (FileControl{}) || *fc == NewFileControl()
+}
+
 func (fc *FileControl) setRecordType() {
 	if fc == nil {
 		return

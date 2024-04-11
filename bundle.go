@@ -44,6 +44,8 @@ type Bundle struct {
 	ID string `json:"id"`
 	// BundleHeader is a Bundle Header Record
 	BundleHeader *BundleHeader `json:"bundleHeader,omitempty"`
+	// Credits may be included as part of a bundle, and are often used to represent deposit tickets
+	Credits []*Credit `json:"credits,omitempty"`
 	// Checks are Check Items: Check Detail Records, Check Detail Addendum Records, and Image Views
 	Checks []*CheckDetail `json:"checks,omitempty"`
 	// Returns are Return Items: Return Detail Records, Return Detail Addendum Records, and Image Views
@@ -65,6 +67,9 @@ func (b *Bundle) setRecordType() {
 		return
 	}
 	b.BundleHeader.setRecordType()
+	for i := range b.Credits {
+		b.Credits[i].setRecordType()
+	}
 	for i := range b.Checks {
 		b.Checks[i].setRecordType()
 	}
@@ -96,8 +101,8 @@ func (b *Bundle) Validate() error {
 	return nil
 }
 
-// build creates a valid Bundle by building  BundleControl. An error is returned if
-// the bundle being built has invalid records.
+// build creates a valid Bundle by building BundleControl. An error is returned if the bundle being
+// built has invalid records.
 func (b *Bundle) build() error {
 	// Requires a valid BundleHeader
 	if err := b.BundleHeader.Validate(); err != nil {
@@ -115,8 +120,20 @@ func (b *Bundle) build() error {
 	bundleTotalAmount := 0
 	micrValidTotalAmount := 0
 	bundleImagesCount := 0
-	// The current Implementation doe snot support CreditItems as part of a bundle so BundleControl.CreditIndicator = 0
+	// The current Implementation does not support CreditItems as part of a bundle so BundleControl.CreditIndicator = 0
 	creditIndicator := 0
+
+	// Credit items
+	for _, cr := range b.Credits {
+		if err := b.ValidateCredit(cr); err != nil {
+			return err
+		}
+
+		// A credit record within a Bundle is typically used to present a
+		// deposit ticket, and its amount is not included in the bundle total
+		itemCount++
+		bundleImagesCount += len(cr.ImageViewDetail)
+	}
 
 	// Forward Items
 	for _, cd := range b.Checks {
@@ -126,13 +143,13 @@ func (b *Bundle) build() error {
 			return err
 		}
 
-		itemCount = itemCount + 1
-		bundleTotalAmount = bundleTotalAmount + cd.ItemAmount
+		itemCount++
+		bundleTotalAmount += cd.ItemAmount
 		if cd.MICRValidIndicator == 1 {
-			micrValidTotalAmount = micrValidTotalAmount + cd.ItemAmount
+			micrValidTotalAmount += cd.ItemAmount
 		}
 
-		bundleImagesCount = bundleImagesCount + len(cd.ImageViewDetail)
+		bundleImagesCount += len(cd.ImageViewDetail)
 	}
 
 	// Return Items
@@ -142,9 +159,9 @@ func (b *Bundle) build() error {
 		if err := b.ValidateReturnItems(rd); err != nil {
 			return err
 		}
-		itemCount = itemCount + 1
-		bundleTotalAmount = bundleTotalAmount + rd.ItemAmount
-		bundleImagesCount = bundleImagesCount + len(rd.ImageViewDetail)
+		itemCount++
+		bundleTotalAmount += rd.ItemAmount
+		bundleImagesCount += len(rd.ImageViewDetail)
 	}
 
 	// build a BundleControl record
@@ -202,6 +219,20 @@ func (b *Bundle) GetReturns() []*ReturnDetail {
 		return nil
 	}
 	return b.Returns
+}
+
+func (b *Bundle) ValidateCredit(cr *Credit) error {
+	for _, ivDetail := range cr.ImageViewDetail {
+		if err := ivDetail.Validate(); err != nil {
+			return err
+		}
+	}
+	for _, ivData := range cr.ImageViewData {
+		if err := ivData.Validate(); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // ValidateForwardItems calls Validate function for check items

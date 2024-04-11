@@ -102,6 +102,13 @@ func NewFileHeader() FileHeader {
 	return fh
 }
 
+func (fh *FileHeader) IsZero() bool {
+	if fh == nil {
+		return true
+	}
+	return *fh == (FileHeader{}) || *fh == NewFileHeader()
+}
+
 func (fh *FileHeader) setRecordType() {
 	if fh == nil {
 		return
