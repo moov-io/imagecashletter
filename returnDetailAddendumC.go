@@ -124,7 +124,7 @@ func (rdAddendumC *ReturnDetailAddendumC) String() string {
 	buf.WriteString(rdAddendumC.ImageReferenceKeyIndicatorField())
 	buf.WriteString(rdAddendumC.MicrofilmArchiveSequenceNumberField())
 	buf.WriteString(rdAddendumC.LengthImageReferenceKeyField())
-	if size := rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey); size > 0 {
+	if size := rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey); validSize(size) {
 		buf.Grow(size)
 	}
 	buf.WriteString(rdAddendumC.ImageReferenceKeyField())

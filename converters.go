@@ -58,7 +58,7 @@ func (c *converters) alphaField(s string, max uint) string {
 	if ln > max {
 		return s[:max]
 	}
-	if count := int(max - ln); count > 0 {
+	if count := int(max - ln); validSize(count) {
 		s += strings.Repeat(" ", count)
 	}
 	return s
@@ -71,7 +71,9 @@ func (c *converters) numericField(n int, max uint) string {
 	if ln > max {
 		return s[ln-max:]
 	}
-	s = strings.Repeat("0", int(max-ln)) + s
+	if count := int(max - ln); validSize(count) {
+		s = strings.Repeat("0", count) + s
+	}
 	return s
 }
 
@@ -82,7 +84,9 @@ func (c *converters) nbsmField(s string, max uint) string {
 	if ln > max {
 		return s[ln-max:]
 	}
-	s = strings.Repeat(" ", int(max-ln)) + s
+	if count := int(max - ln); validSize(count) {
+		s = strings.Repeat(" ", count) + s
+	}
 	return s
 }
 
@@ -92,6 +96,8 @@ func (c *converters) stringField(s string, max uint) string {
 	if ln > max {
 		return s[:max]
 	}
-	s = strings.Repeat("0", int(max-ln)) + s
+	if count := int(max - ln); validSize(count) {
+		s = strings.Repeat("0", count) + s
+	}
 	return s
 }

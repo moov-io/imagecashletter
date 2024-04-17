@@ -25,6 +25,17 @@ var (
 	msgInvalidDate = "is not a valid date"
 )
 
+const (
+	// maxBufferGrowth is the high limit for growing string builders and byte buffers.
+	//
+	// 1e8/1024/1024 is ~95MB which should be enough for anybody
+	maxBufferGrowth = 1e8
+)
+
+func validSize(n int) bool {
+	return n > 0 && n < maxBufferGrowth
+}
+
 // validator is common validation and formatting of golang types to imagecashletter type strings
 type validator struct{}
 
