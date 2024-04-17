@@ -1,3 +1,15 @@
+## v0.10.1 (Released 2024-04-17)
+
+IMPROVEMENTS
+
+- fix: cap buffer growth
+
+BUILD
+
+- fix(deps): update module golang.org/x/oauth2 to v0.19.0
+- build(deps): bump google.golang.org/protobuf from 1.32.0 to 1.33.0
+- fix(deps): update module github.com/gdamore/encoding to v1.0.1
+
 ## v0.10.0 (Released 2024-02-19)
 
 ADDITIONS
@@ -21,7 +33,7 @@ IMPROVEMENTS
 BUG FIXES
 
 - ImageViewAnalysis: fix copy/paste bug in `AmountInWordsUsabilityField()`
-- ReturnDetailAddendumB: implement validation for the `PayorBankBusinessDate` field 
+- ReturnDetailAddendumB: implement validation for the `PayorBankBusinessDate` field
 - ReturnDetailAddendumD: implement validation for the `EndorsingBankItemSequenceNumber` field
 - UserPayeeEndorsement: implement validation for the `FormatTypeVersionLevel` field
 
