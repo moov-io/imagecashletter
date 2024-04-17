@@ -338,18 +338,18 @@ func (ivData *ImageViewData) toString(inclImage bool) string {
 	buf.WriteString(ivData.ClippingCoordinateV1Field())
 	buf.WriteString(ivData.ClippingCoordinateV2Field())
 	buf.WriteString(ivData.LengthImageReferenceKeyField())
-	if size := ivData.parseNumField(ivData.LengthImageReferenceKey); size > 0 {
+	if size := ivData.parseNumField(ivData.LengthImageReferenceKey); validSize(size) {
 		buf.Grow(size)
 	}
 	buf.WriteString(ivData.ImageReferenceKeyField())
 	buf.WriteString(ivData.LengthDigitalSignatureField())
-	if size := ivData.parseNumField(ivData.LengthDigitalSignature); size > 0 {
+	if size := ivData.parseNumField(ivData.LengthDigitalSignature); validSize(size) {
 		buf.Grow(size)
 	}
 	buf.WriteString(ivData.DigitalSignatureField())
 	buf.WriteString(ivData.LengthImageDataField())
 	if inclImage {
-		if size := ivData.parseNumField(ivData.LengthImageData); size > 0 {
+		if size := ivData.parseNumField(ivData.LengthImageData); validSize(size) {
 			buf.Grow(size)
 		}
 		buf.WriteString(ivData.ImageDataField())
