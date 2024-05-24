@@ -63,7 +63,7 @@ dist-webui: build-webui
 	git commit -m "chore: updating wasm webui" || echo "No changes to commit"
 	git push origin master
 
-docker: clean docker-hub docker-openshift docker-webui
+docker: clean docker-hub docker-openshift
 
 docker-hub:
 	docker build --pull -t moov/imagecashletter:$(VERSION) -f Dockerfile .
@@ -73,10 +73,6 @@ docker-openshift:
 	docker build --pull -t quay.io/moov/imagecashletter:$(VERSION) -f Dockerfile.openshift --build-arg VERSION=$(VERSION) .
 	docker tag quay.io/moov/imagecashletter:$(VERSION) quay.io/moov/imagecashletter:latest
 
-docker-webui:
-	docker build --pull -t moov/imagecashletter-webui:$(VERSION) -f Dockerfile.webui .
-	docker tag moov/imagecashletter-webui:$(VERSION) moov/imagecashletter-webui:latest
-
 release: docker AUTHORS
 	go vet ./...
 	go test -coverprofile=cover-$(VERSION).out ./...
@@ -85,8 +81,6 @@ release: docker AUTHORS
 release-push:
 	docker push moov/imagecashletter:$(VERSION)
 	docker push moov/imagecashletter:latest
-	docker push moov/imagecashletter-webui:$(VERSION)
-	docker push moov/imagecashletter-webui:latest
 
 quay-push:
 	docker push quay.io/moov/imagecashletter:$(VERSION)
