@@ -231,50 +231,6 @@ func (w *Writer) writeCheckDetailAddendum(cd *CheckDetail) error {
 	return nil
 }
 
-// writeCheckImageView writes ImageViews (Detail, Data, Analysis) to a CheckDetail
-func (w *Writer) writeCheckImageView(cd *CheckDetail) error {
-
-	ivDetailSlice := cd.GetImageViewDetail()
-	ivDataSlice := cd.GetImageViewData()
-	ivAnalysisSlice := cd.GetImageViewAnalysis()
-
-	// TODO: Add validator to ensure that each imageViewDetail has a corresponding imageViewData and imageViewAnalysis
-	// for now enforce that all images have data and analysis or no images have data and analysis
-
-	if len(ivDataSlice) > 0 && len(ivDataSlice) != len(ivDetailSlice) {
-		// should be same number of imageViewData as imageViewDetail
-		msg := fmt.Sprintf(msgBundleImageDetailCount, len(ivDataSlice))
-		return &BundleError{FieldName: "ImageViewData", Msg: msg}
-	}
-
-	if len(ivAnalysisSlice) > 0 && len(ivAnalysisSlice) != len(ivDetailSlice) {
-		// should same number of imageViewAnalysis and imageViewDetail
-		msg := fmt.Sprintf(msgBundleImageDetailCount, len(ivAnalysisSlice))
-		return &BundleError{FieldName: "ImageViewAnalysis", Msg: msg}
-	}
-
-	// FRB asks that imageViewDetail should immediately be followed by its corresponding data and analysis
-	for i := range ivDetailSlice {
-		if err := w.writeLine(&ivDetailSlice[i]); err != nil {
-			return err
-		}
-		if len(ivDataSlice) > 0 && len(ivDataSlice) >= i-1 {
-			ivData := ivDataSlice[i]
-			if err := w.writeLine(&ivData); err != nil {
-				return err
-			}
-		}
-		if len(ivAnalysisSlice) > 0 && len(ivAnalysisSlice) >= i-1 {
-			ivAnalysis := ivAnalysisSlice[i]
-			if err := w.writeLine(&ivAnalysis); err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
-}
-
 // writeReturnDetail writes a ReturnDetail to a ReturnBundle
 func (w *Writer) writeReturnDetail(b *Bundle) error {
 	for _, rd := range b.GetReturns() {
@@ -324,27 +280,52 @@ func (w *Writer) writeReturnDetailAddendum(rd *ReturnDetail) error {
 	return nil
 }
 
+// writeCheckImageView writes ImageViews (Detail, Data, Analysis) to a CheckDetail
+func (w *Writer) writeCheckImageView(cd *CheckDetail) error {
+	return w.writeImageView(cd.GetImageViewDetail(), cd.GetImageViewData(), cd.GetImageViewAnalysis())
+}
+
 // writeReturnImageView writes ImageViews (Detail, Data, Analysis) to a ReturnDetail
 func (w *Writer) writeReturnImageView(rd *ReturnDetail) error {
-	ivDetail := rd.GetImageViewDetail()
+	return w.writeImageView(rd.GetImageViewDetail(), rd.GetImageViewData(), rd.GetImageViewAnalysis())
+}
+
+// writeImageView writes ImageViews (Detail, Data, Analysis) in the order expected by the FRB
+func (w *Writer) writeImageView(ivDetail []ImageViewDetail, ivData []ImageViewData, ivAnalysis []ImageViewAnalysis) error {
+
+	// TODO: Add validator to ensure that each imageViewDetail has a corresponding imageViewData and imageViewAnalysis
+	// for now enforce that all images have data and analysis or no images have data and analysis
+
+	if len(ivData) > 0 && len(ivData) != len(ivDetail) {
+		// should be same number of imageViewData as imageViewDetail
+		msg := fmt.Sprintf(msgBundleImageDetailCount, len(ivData))
+		return &BundleError{FieldName: "ImageViewData", Msg: msg}
+	}
+
+	if len(ivAnalysis) > 0 && len(ivAnalysis) != len(ivDetail) {
+		// should same number of imageViewAnalysis and imageViewDetail
+		msg := fmt.Sprintf(msgBundleImageDetailCount, len(ivAnalysis))
+		return &BundleError{FieldName: "ImageViewAnalysis", Msg: msg}
+	}
+
+	// FRB asks that imageViewDetail should immediately be followed by its corresponding data and analysis
 	for i := range ivDetail {
 		if err := w.writeLine(&ivDetail[i]); err != nil {
 			return err
 		}
-	}
-
-	ivData := rd.GetImageViewData()
-	for i := range ivData {
-		if err := w.writeLine(&ivData[i]); err != nil {
-			return err
+		if len(ivData) > 0 && len(ivData) >= i-1 {
+			ivData := ivData[i]
+			if err := w.writeLine(&ivData); err != nil {
+				return err
+			}
+		}
+		if len(ivAnalysis) > 0 && len(ivAnalysis) >= i-1 {
+			ivAnalysis := ivAnalysis[i]
+			if err := w.writeLine(&ivAnalysis); err != nil {
+				return err
+			}
 		}
 	}
 
-	ivAnalysis := rd.GetImageViewAnalysis()
-	for i := range ivAnalysis {
-		if err := w.writeLine(&ivAnalysis[i]); err != nil {
-			return err
-		}
-	}
 	return nil
 }
