@@ -9,9 +9,8 @@ build-server:
 	CGO_ENABLED=1 go build -o ./bin/server github.com/moov-io/imagecashletter/cmd/server
 
 build-webui:
-	cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./cmd/webui/assets/wasm_exec.js
-	GOOS=js GOARCH=wasm go build -o ./cmd/webui/assets/imagecashletter.wasm github.com/moov-io/imagecashletter/cmd/webui/icl/
-	CGO_ENABLED=0 go build -o ./bin/webui ./cmd/webui
+	cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./docs/webui/assets/wasm_exec.js
+	GOOS=js GOARCH=wasm go build -o ./docs/webui/assets/imagecashletter.wasm github.com/moov-io/imagecashletter/docs/webui/
 
 .PHONY: check
 check:
@@ -56,6 +55,13 @@ ifeq ($(OS),Windows_NT)
 else
 	CGO_ENABLED=1 GOOS=$(PLATFORM) go build -o bin/imagecashletter-$(PLATFORM)-amd64 github.com/moov-io/imagecashletter/cmd/server
 endif
+
+dist-webui: build-webui
+	git config user.name "moov-bot"
+	git config user.email "oss@moov.io"
+	git add ./docs/webui/assets/wasm_exec.js ./docs/webui/assets/imagecashletter.wasm
+	git commit -m "chore: updating wasm webui" || echo "No changes to commit"
+	git push origin master
 
 docker: clean docker-hub docker-openshift docker-webui
 
@@ -106,4 +112,3 @@ tagged-release:
 .PHONY: preview-openapi
 preview-openapi:
 	@docker run --rm -p 8080:8080 -e SWAGGER_JSON=/openapi.yaml -v $(shell pwd)/openapi.yaml:/openapi.yaml swaggerapi/swagger-ui
-	

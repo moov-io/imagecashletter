@@ -4,6 +4,9 @@ on:
   push:
     tags: [ "v*.*.*" ]
 
+permissions:
+  contents: write
+
 jobs:
   testing:
     name: Testing
@@ -23,6 +26,9 @@ jobs:
 
     - name: Check
       run: make check
+
+    - name: WebUI
+      run: make dist-webui
 
   create_release:
     name: Create Release

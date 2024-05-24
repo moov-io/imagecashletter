@@ -2,8 +2,6 @@ module github.com/moov-io/imagecashletter
 
 go 1.21
 
-toolchain go1.22.3
-
 require (
 	github.com/antihax/optional v1.0.0
 	github.com/gdamore/encoding v1.0.1
