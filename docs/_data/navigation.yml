@@ -3,7 +3,7 @@
 - name: Go
   link: https://pkg.go.dev/github.com/moov-io/imagecashletter#section-documentation
 - name: Demo
-  link: https://oss.moov.io/x9/
+  link: https://moov-io.github.io/x9/webui/
 - name: Community
   dropdown:
     - name: Awesome Fintech
