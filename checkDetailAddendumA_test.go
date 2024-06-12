@@ -179,6 +179,18 @@ func TestCDAddendumATruncationIndicator(t *testing.T) {
 	require.Equal(t, "TruncationIndicator", e.FieldName)
 }
 
+// TestCDAddendumATruncationIndicator validation
+func TestCDAddendumATruncationIndicatorFRB(t *testing.T) {
+	cdAddendumA := mockCheckDetailAddendumA()
+	cdAddendumA.TruncationIndicator = ""
+	err := cdAddendumA.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "TruncationIndicator", e.FieldName)
+	t.Setenv(FRBCompatibilityMode, "")
+	require.NoError(t, cdAddendumA.Validate())
+}
+
 // TestCDAddendumABOFDConversionIndicator validation
 func TestCDAddendumABOFDConversionIndicator(t *testing.T) {
 	cdAddendumA := mockCheckDetailAddendumA()
