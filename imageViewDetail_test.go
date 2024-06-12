@@ -5,7 +5,6 @@
 package imagecashletter
 
 import (
-	"os"
 	"strings"
 	"testing"
 	"time"
@@ -221,9 +220,8 @@ func TestIVDetailDigitalSignatureMethodFRB(t *testing.T) {
 	require.ErrorAs(t, err, &e)
 	require.Equal(t, "DigitalSignatureMethod", e.FieldName)
 	// "0" should be accepted in FRB compatibility mode
-	os.Setenv(FRBCompatibilityMode, "")
+	t.Setenv(FRBCompatibilityMode, "")
 	require.NoError(t, ivDetail.Validate())
-	os.Unsetenv(FRBCompatibilityMode)
 }
 
 // TestIVDetailImageRecreateIndicator validation
@@ -286,9 +284,8 @@ func TestIVDetailFIImageCreatorRoutingNumberFRB(t *testing.T) {
 	var e *FieldError
 	require.ErrorAs(t, err, &e)
 	require.Equal(t, "ImageCreatorRoutingNumber", e.FieldName)
-	os.Setenv(FRBCompatibilityMode, "")
+	t.Setenv(FRBCompatibilityMode, "")
 	require.NoError(t, ivDetail.Validate())
-	os.Unsetenv(FRBCompatibilityMode)
 }
 
 // TestIVDetailFIImageCreatorRoutingNumberZero validation

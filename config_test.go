@@ -5,7 +5,6 @@
 package imagecashletter
 
 import (
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,8 +12,7 @@ import (
 
 // TestMockBundleChecks creates a Bundle of checks
 func TestFRBCompatibilityMode(t *testing.T) {
-	os.Setenv(FRBCompatibilityMode, "")
-	assert.Equal(t, IsFRBCompatibilityModeEnabled(), true)
-	os.Unsetenv(FRBCompatibilityMode)
 	assert.Equal(t, IsFRBCompatibilityModeEnabled(), false)
+	t.Setenv(FRBCompatibilityMode, "")
+	assert.Equal(t, IsFRBCompatibilityModeEnabled(), true)
 }
