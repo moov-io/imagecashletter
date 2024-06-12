@@ -325,6 +325,9 @@ func (ivDetail *ImageViewDetail) Validate() error {
 	}
 	// Conditional
 	if ivDetail.DigitalSignatureMethod != "" {
+		if ivDetail.DigitalSignatureMethod == "0" && IsFRBCompatibilityModeEnabled() {
+			ivDetail.DigitalSignatureMethod = "00"
+		}
 		if err := ivDetail.isDigitalSignatureMethod(ivDetail.DigitalSignatureMethod); err != nil {
 			return &FieldError{FieldName: "DigitalSignatureMethod",
 				Value: ivDetail.DigitalSignatureMethod, Msg: err.Error()}
@@ -363,7 +366,7 @@ func (ivDetail *ImageViewDetail) fieldInclusion() error {
 			Value: ivDetail.ImageCreatorRoutingNumber,
 			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
 	}
-	if ivDetail.ImageCreatorRoutingNumberField() == "000000000" {
+	if ivDetail.ImageCreatorRoutingNumberField() == "000000000" && !IsFRBCompatibilityModeEnabled() {
 		return &FieldError{FieldName: "ImageCreatorRoutingNumber",
 			Value: ivDetail.ImageCreatorRoutingNumber,
 			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}

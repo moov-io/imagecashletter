@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -324,6 +325,15 @@ func TestRDAddendumAFIBOFDEndorsementDate(t *testing.T) {
 	var e *FieldError
 	require.ErrorAs(t, err, &e)
 	require.Equal(t, "BOFDEndorsementDate", e.FieldName)
+}
+
+// TestRDAddendumAFIBOFDEndorsementDateFRB validation
+func TestRDAddendumAFIBOFDEndorsementDateFRB(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.BOFDEndorsementDate = time.Time{}
+	os.Setenv(FRBCompatibilityMode, "")
+	require.NoError(t, rdAddendumA.Validate())
+	os.Unsetenv(FRBCompatibilityMode)
 }
 
 // TestRDAddendumAFITruncationIndicator validation
