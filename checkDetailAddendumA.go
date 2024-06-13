@@ -256,9 +256,13 @@ func (cdAddendumA *CheckDetailAddendumA) fieldInclusion() error {
 			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
 	}
 	if cdAddendumA.TruncationIndicator == "" {
-		return &FieldError{FieldName: "TruncationIndicator",
-			Value: cdAddendumA.TruncationIndicator,
-			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
+		if IsFRBCompatibilityModeEnabled() {
+			cdAddendumA.TruncationIndicator = "N"
+		} else {
+			return &FieldError{FieldName: "TruncationIndicator",
+				Value: cdAddendumA.TruncationIndicator,
+				Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumA()?"}
+		}
 	}
 	return nil
 }

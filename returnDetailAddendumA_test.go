@@ -326,6 +326,14 @@ func TestRDAddendumAFIBOFDEndorsementDate(t *testing.T) {
 	require.Equal(t, "BOFDEndorsementDate", e.FieldName)
 }
 
+// TestRDAddendumAFIBOFDEndorsementDateFRB validation
+func TestRDAddendumAFIBOFDEndorsementDateFRB(t *testing.T) {
+	rdAddendumA := mockReturnDetailAddendumA()
+	rdAddendumA.BOFDEndorsementDate = time.Time{}
+	t.Setenv(FRBCompatibilityMode, "")
+	require.NoError(t, rdAddendumA.Validate())
+}
+
 // TestRDAddendumAFITruncationIndicator validation
 func TestRDAddendumAFITruncationIndicator(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()

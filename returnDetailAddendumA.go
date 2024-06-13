@@ -251,7 +251,7 @@ func (rdAddendumA *ReturnDetailAddendumA) fieldInclusion() error {
 			Value: rdAddendumA.ReturnLocationRoutingNumber,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}
 	}
-	if rdAddendumA.BOFDEndorsementDate.IsZero() {
+	if rdAddendumA.BOFDEndorsementDate.IsZero() && !IsFRBCompatibilityModeEnabled() {
 		return &FieldError{FieldName: "BOFDEndorsementDate",
 			Value: rdAddendumA.BOFDEndorsementDate.String(),
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumA()?"}

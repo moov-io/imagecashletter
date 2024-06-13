@@ -211,6 +211,19 @@ func TestIVDetailDigitalSignatureMethod(t *testing.T) {
 	require.Equal(t, "DigitalSignatureMethod", e.FieldName)
 }
 
+// TestIVDetailDigitalSignatureMethodFRB validation
+func TestIVDetailDigitalSignatureMethodFRB(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.DigitalSignatureMethod = "0"
+	err := ivDetail.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "DigitalSignatureMethod", e.FieldName)
+	// "0" should be accepted in FRB compatibility mode
+	t.Setenv(FRBCompatibilityMode, "")
+	require.NoError(t, ivDetail.Validate())
+}
+
 // TestIVDetailImageRecreateIndicator validation
 func TestIVDetailImageRecreateIndicator(t *testing.T) {
 	ivDetail := mockImageViewDetail()
@@ -261,6 +274,18 @@ func TestIVDetailFIImageCreatorRoutingNumber(t *testing.T) {
 	var e *FieldError
 	require.ErrorAs(t, err, &e)
 	require.Equal(t, "ImageCreatorRoutingNumber", e.FieldName)
+}
+
+// TestIVDetailFIImageCreatorRoutingNumberFRB validation
+func TestIVDetailFIImageCreatorRoutingNumberFRB(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ImageCreatorRoutingNumber = "00000000"
+	err := ivDetail.Validate()
+	var e *FieldError
+	require.ErrorAs(t, err, &e)
+	require.Equal(t, "ImageCreatorRoutingNumber", e.FieldName)
+	t.Setenv(FRBCompatibilityMode, "")
+	require.NoError(t, ivDetail.Validate())
 }
 
 // TestIVDetailFIImageCreatorRoutingNumberZero validation
