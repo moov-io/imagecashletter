@@ -1221,7 +1221,7 @@ components:
             PayorBankCheckDigit identifies the routing number check digit.  The
             combination of Payor Bank Routing Number and Payor Bank Routing Number Check Digit must be a mod-checked
             routing number with a valid check digit.
-          example: 5
+          example: '5'
         onUs:
           type: string
           maxLength: 20
