@@ -1,3 +1,20 @@
+## v0.11.0 (Released 2024-07-08)
+
+ADDITIONS
+
+- config: add an `FRB_COMPATIBILITY_MODE` environment variable to enable Federal Reserve Bank (FRB) compatibility mode (See [PR #307](https://github.com/moov-io/imagecashletter/pull/364) by [@smithbk](https://github.com/smithbk))
+
+BUG FIXES
+
+- writer: correct ordering of records in return images (See [PR #307](https://github.com/moov-io/imagecashletter/pull/361) by [@smithbk](https://github.com/smithbk))
+- client: add missing quotes to `payorBankCheckDigit` example value in OpenAPI specification
+
+BUILD
+
+- fix(deps): update minimum Go version to 1.21
+- fix(deps): update module golang.org/x/oauth2 to v0.21.0
+- fix(deps): update module github.com/moov-io/base to v0.50.0
+
 ## v0.10.1 (Released 2024-04-17)
 
 IMPROVEMENTS
