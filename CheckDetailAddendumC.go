@@ -248,7 +248,7 @@ func (cdAddendumC *CheckDetailAddendumC) fieldInclusion() error {
 			Value: cdAddendumC.BOFDEndorsementBusinessDate.String(),
 			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumC()?"}
 	}
-	if cdAddendumC.EndorsingBankItemSequenceNumberField() == "               " {
+	if !IsFRBCompatibilityModeEnabled() && cdAddendumC.EndorsingBankItemSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "EndorsingBankItemSequenceNumber",
 			Value: cdAddendumC.EndorsingBankItemSequenceNumber,
 			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumC()?"}
