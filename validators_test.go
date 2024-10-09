@@ -13,12 +13,12 @@ import (
 )
 
 func TestValidSize(t *testing.T) {
-	require.True(t, validSize(10))
-	require.True(t, validSize(1e7))
+	require.True(t, validSizeInt(10))
+	require.True(t, validSizeInt(1e7))
 
-	require.False(t, validSize(1e8+1))
-	require.False(t, validSize(1e9))
-	require.False(t, validSize(math.MaxInt))
+	require.False(t, validSizeInt(1e8+1))
+	require.False(t, validSizeInt(1e9))
+	require.False(t, validSizeInt(math.MaxInt))
 
 	t.Run("converters", func(t *testing.T) {
 		c := &converters{}
@@ -51,5 +51,17 @@ func TestValidSize(t *testing.T) {
 		ug.LengthUserData = fmt.Sprintf("%0.0f", 1e9)
 		expected = "0                                   1000000"
 		require.Equal(t, expected, ug.String())
+	})
+
+	t.Run("int", func(t *testing.T) {
+		require.False(t, validSizeInt(int(1e9)))
+	})
+
+	t.Run("uint", func(t *testing.T) {
+		a := uint(100)
+		b := uint(201)
+
+		require.False(t, validSizeUint(a-b))
+		require.True(t, validSizeUint(b-a))
 	})
 }

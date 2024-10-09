@@ -144,7 +144,7 @@ func (ug *UserGeneral) String() string {
 	buf.WriteString(ug.UserRecordFormatTypeField())
 	buf.WriteString(ug.FormatTypeVersionLevelField())
 	buf.WriteString(ug.LengthUserDataField())
-	if size := ug.parseNumField(ug.LengthUserData); validSize(size) {
+	if size := ug.parseNumField(ug.LengthUserData); validSizeInt(size) {
 		buf.Grow(size)
 	}
 	buf.WriteString(ug.UserDataField())
@@ -269,5 +269,9 @@ func (ug *UserGeneral) LengthUserDataField() string {
 
 // UserDataField gets the UserData field
 func (ug *UserGeneral) UserDataField() string {
-	return ug.alphaField(ug.UserData, uint(ug.parseNumField(ug.LengthUserData)))
+	max := ug.parseNumField(ug.LengthUserData)
+	if !validSizeInt(max) {
+		return ""
+	}
+	return ug.alphaField(ug.UserData, uint(max)) //nolint:gosec
 }

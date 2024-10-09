@@ -338,18 +338,18 @@ func (ivData *ImageViewData) toString(inclImage bool) string {
 	buf.WriteString(ivData.ClippingCoordinateV1Field())
 	buf.WriteString(ivData.ClippingCoordinateV2Field())
 	buf.WriteString(ivData.LengthImageReferenceKeyField())
-	if size := ivData.parseNumField(ivData.LengthImageReferenceKey); validSize(size) {
+	if size := ivData.parseNumField(ivData.LengthImageReferenceKey); validSizeInt(size) {
 		buf.Grow(size)
 	}
 	buf.WriteString(ivData.ImageReferenceKeyField())
 	buf.WriteString(ivData.LengthDigitalSignatureField())
-	if size := ivData.parseNumField(ivData.LengthDigitalSignature); validSize(size) {
+	if size := ivData.parseNumField(ivData.LengthDigitalSignature); validSizeInt(size) {
 		buf.Grow(size)
 	}
 	buf.WriteString(ivData.DigitalSignatureField())
 	buf.WriteString(ivData.LengthImageDataField())
 	if inclImage {
-		if size := ivData.parseNumField(ivData.LengthImageData); validSize(size) {
+		if size := ivData.parseNumField(ivData.LengthImageData); validSizeInt(size) {
 			buf.Grow(size)
 		}
 		buf.WriteString(ivData.ImageDataField())
@@ -479,7 +479,11 @@ func (ivData *ImageViewData) LengthImageReferenceKeyField() string {
 
 // ImageReferenceKeyField gets the ImageReferenceKey field
 func (ivData *ImageViewData) ImageReferenceKeyField() string {
-	return ivData.alphaField(ivData.ImageReferenceKey, uint(ivData.parseNumField(ivData.LengthImageReferenceKey)))
+	max := ivData.parseNumField(ivData.LengthImageReferenceKey)
+	if !validSizeInt(max) {
+		return ""
+	}
+	return ivData.alphaField(ivData.ImageReferenceKey, uint(max)) //nolint:gosec
 }
 
 // LengthDigitalSignatureField gets the LengthDigitalSignature field
@@ -490,7 +494,11 @@ func (ivData *ImageViewData) LengthDigitalSignatureField() string {
 // DigitalSignatureField gets the DigitalSignature field []byte to string
 func (ivData *ImageViewData) DigitalSignatureField() string {
 	s := string(ivData.DigitalSignature[:])
-	return ivData.alphaField(s, uint(ivData.parseNumField(ivData.LengthDigitalSignature)))
+	max := ivData.parseNumField(ivData.LengthDigitalSignature)
+	if !validSizeInt(max) {
+		return ""
+	}
+	return ivData.alphaField(s, uint(max)) //nolint:gosec
 }
 
 // LengthImageDataField gets the LengthImageData field
@@ -507,7 +515,12 @@ func (ivData *ImageViewData) ImageDataField() string {
 
 	// Return the untouched image data padded according to the spec
 	s := string(ivData.ImageData[:])
-	return ivData.alphaField(s, uint(ivData.parseNumField(ivData.LengthImageData)))
+
+	max := ivData.parseNumField(ivData.LengthImageData)
+	if !validSizeInt(max) {
+		return ""
+	}
+	return ivData.alphaField(s, uint(max)) //nolint:gosec
 }
 
 // DecodeImageData attempts to read ImageData as a base64 blob. Other formats may be

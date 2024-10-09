@@ -124,7 +124,7 @@ func (rdAddendumC *ReturnDetailAddendumC) String() string {
 	buf.WriteString(rdAddendumC.ImageReferenceKeyIndicatorField())
 	buf.WriteString(rdAddendumC.MicrofilmArchiveSequenceNumberField())
 	buf.WriteString(rdAddendumC.LengthImageReferenceKeyField())
-	if size := rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey); validSize(size) {
+	if size := rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey); validSizeInt(size) {
 		buf.Grow(size)
 	}
 	buf.WriteString(rdAddendumC.ImageReferenceKeyField())
@@ -194,7 +194,11 @@ func (rdAddendumC *ReturnDetailAddendumC) LengthImageReferenceKeyField() string 
 
 // ImageReferenceKeyField gets the ImageReferenceKey field
 func (rdAddendumC *ReturnDetailAddendumC) ImageReferenceKeyField() string {
-	return rdAddendumC.alphaField(rdAddendumC.ImageReferenceKey, uint(rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)))
+	max := rdAddendumC.parseNumField(rdAddendumC.LengthImageReferenceKey)
+	if !validSizeInt(max) {
+		return ""
+	}
+	return rdAddendumC.alphaField(rdAddendumC.ImageReferenceKey, uint(max)) //nolint:gosec
 }
 
 // DescriptionField gets the Description field

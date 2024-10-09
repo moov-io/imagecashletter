@@ -7,6 +7,7 @@ package imagecashletter
 import (
 	"bufio"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"io"
 
@@ -60,7 +61,11 @@ func (w *Writer) writeLine(record FileRecord) error {
 
 	if w.VariableLineLength {
 		ctrl := make([]byte, 4)
-		binary.BigEndian.PutUint32(ctrl, uint32(lineLength))
+
+		if lineLength < 0 || !validSizeInt(lineLength) {
+			return errors.New("writeLine: variable line length can't be negative or overflow")
+		}
+		binary.BigEndian.PutUint32(ctrl, uint32(lineLength)) //nolint:gosec
 		if _, err := w.w.Write(ctrl); err != nil {
 			return err
 		}
