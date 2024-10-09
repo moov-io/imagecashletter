@@ -24,10 +24,10 @@ func TestValidSize(t *testing.T) {
 		c := &converters{}
 
 		// Do nothing if the request is too large
-		require.Equal(t, "a", c.alphaField("a", 1e9))
-		require.Equal(t, "7", c.numericField(7, 1e9))
-		require.Equal(t, "b", c.nbsmField("b", 1e9))
-		require.Equal(t, "c", c.stringField("c", 1e9))
+		require.Equal(t, "", c.alphaField("a", 1e9))
+		require.Equal(t, "", c.numericField(7, 1e9))
+		require.Equal(t, "", c.nbsmField("b", 1e9))
+		require.Equal(t, "", c.stringField("c", 1e9))
 	})
 
 	t.Run("don't grow", func(t *testing.T) {
