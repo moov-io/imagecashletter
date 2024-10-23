@@ -16,15 +16,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
-	"github.com/stretchr/testify/require"
-
-	"github.com/moov-io/base"
-	"github.com/moov-io/imagecashletter"
-
 	"github.com/gorilla/mux"
+	"github.com/moov-io/base"
 	"github.com/moov-io/base/log"
+	"github.com/moov-io/imagecashletter"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestFileId(t *testing.T) {
