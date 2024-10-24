@@ -253,6 +253,10 @@ func (f *File) Create() error {
 
 				fileTotalAmount = fileTotalAmount + rd.ItemAmount
 			}
+
+			if err := b.build(); err != nil {
+				return fmt.Errorf("building bundle %s: %w", b.BundleHeader.BundleSequenceNumber, err)
+			}
 		}
 	}
 
