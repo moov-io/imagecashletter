@@ -6,25 +6,17 @@ package files
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
-	"github.com/stretchr/testify/require"
-
+	"github.com/gdamore/encoding"
 	"github.com/moov-io/base"
 	"github.com/moov-io/imagecashletter"
-
-	"github.com/gorilla/mux"
-	"github.com/moov-io/base/log"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestFileId(t *testing.T) {
@@ -48,34 +40,20 @@ func TestCashLetterId(t *testing.T) {
 }
 
 func TestFiles_getFiles(t *testing.T) {
-	req := httptest.NewRequest("GET", "/files", nil)
 	repo := &testICLFileRepository{
 		file: &imagecashletter.File{
 			ID: base.ID(),
 		},
 	}
-	router := mux.NewRouter()
-	AppendRoutes(log.NewNopLogger(), router, repo)
+	env := newTestEnvironment(t, withRepo(repo))
 
-	t.Run("returns one file", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		w.Flush()
+	resp, files := env.listFiles(t)
+	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+	require.Len(t, files, 1)
 
-		require.Equal(t, http.StatusOK, w.Code, w.Body)
-		var files []*imagecashletter.File
-		require.NoError(t, json.NewDecoder(w.Body).Decode(&files))
-		require.Len(t, files, 1)
-	})
-
-	t.Run("repo error", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		repo.err = errors.New("bad error")
-		router.ServeHTTP(w, req)
-		w.Flush()
-
-		require.Equal(t, http.StatusBadRequest, w.Code, w.Body)
-	})
+	repo.err = errors.New("bad error")
+	resp, _ = env.listFiles(t)
+	require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
 }
 
 func TestFiles_determineBufferSize(t *testing.T) {
@@ -91,390 +69,308 @@ func TestFiles_determineBufferSize(t *testing.T) {
 }
 
 func TestFiles_createFile(t *testing.T) {
-	w := httptest.NewRecorder()
-	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "valid-ebcdic.x937"))
-	req := httptest.NewRequest("POST", "/files/create", fd)
 	repo := &testICLFileRepository{}
-	router := mux.NewRouter()
-	AppendRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
+	env := newTestEnvironment(t, withRepo(repo))
 
-	require.Equal(t, http.StatusCreated, w.Code, w.Body.String())
-
-	var resp imagecashletter.File
-	require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
-
-	require.Equal(t, "Wave Money", resp.Header.ImmediateDestinationName)
+	resp, file := env.createFile(t, "", openTestFile(t, "valid-ebcdic.x937"))
+	require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+	require.Equal(t, "Wave Money", file.Header.ImmediateDestinationName)
 
 	// error case
 	repo.err = errors.New("bad error")
+	resp, _ = env.createFile(t, "", openTestFile(t, "valid-ebcdic.x937"))
+	require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
+}
 
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
+func TestFiles_create_missingBundleControl(t *testing.T) {
+	env := newTestEnvironment(t)
 
-	require.Equal(t, http.StatusBadRequest, w.Code, w.Body.String())
+	wantBundleControl := imagecashletter.NewBundleControl()
+	wantBundleControl.BundleItemsCount = 4
+	wantBundleControl.BundleTotalAmount = 400000
+	wantBundleControl.MICRValidTotalAmount = 400000
+	wantBundleControl.BundleImagesCount = 4
+	wantBundleControl.CreditTotalIndicator = 0
+
+	resp, file := env.createFile(t, "application/json", openTestFile(t, "missing-bundle-control.json"))
+	require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+	require.Len(t, file.CashLetters, 1)
+	require.Equal(t, "118507", file.CashLetters[0].CashLetterHeader.CashLetterID)
+	require.Len(t, file.CashLetters[0].Bundles, 1)
+	require.Len(t, file.CashLetters[0].Bundles[0].Checks, 4)
+	require.Equal(t, *wantBundleControl, *file.CashLetters[0].Bundles[0].BundleControl)
+
+	// GET the file
+	resp, rawFile := env.getFileContents(t, file.ID)
+	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+
+	// POST the fetched file
+	resp, newFile := env.createFile(t, "application/octet-stream", bytes.NewReader(rawFile))
+	require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+	require.Len(t, newFile.CashLetters, 1)
+	require.Equal(t, "118507", newFile.CashLetters[0].CashLetterHeader.CashLetterID)
+	require.Len(t, newFile.CashLetters[0].Bundles, 1)
+	require.Len(t, newFile.CashLetters[0].Bundles[0].Checks, 4)
+	require.Equal(t, *wantBundleControl, *newFile.CashLetters[0].Bundles[0].BundleControl)
 }
 
 func TestFiles_createFileJSON(t *testing.T) {
-	w := httptest.NewRecorder()
-	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "icl-valid.json"))
-	req := httptest.NewRequest("POST", "/files/create", fd)
-	req.Header.Set("Content-Type", "application/json")
-	repo := &testICLFileRepository{}
-	router := mux.NewRouter()
-	AppendRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
+	env := newTestEnvironment(t)
 
-	require.Equal(t, http.StatusCreated, w.Code, w.Body)
-	var resp imagecashletter.File
-	require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
-	assert.Equal(t, "US", resp.Header.CountryCode)
+	resp, file := env.createFile(t, "application/json", openTestFile(t, "icl-valid.json"))
+	require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+	require.Equal(t, "US", file.Header.CountryCode)
 
 	// error case
-	w = httptest.NewRecorder()
-	req = httptest.NewRequest("POST", "/files/create", strings.NewReader("{invalid-json"))
-	req.Header.Set("content-type", "application/json")
+	resp, _ = env.createFile(t, "application/json", strings.NewReader("{invalid-json"))
 
-	router.ServeHTTP(w, req)
-	w.Flush()
-
-	require.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+	require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
 }
 
 func TestFiles_getFile(t *testing.T) {
-	repo := &testICLFileRepository{}
-	router := mux.NewRouter()
-	AppendRoutes(log.NewNopLogger(), router, repo)
-	req := httptest.NewRequest("GET", "/files/foo", nil)
+	fileID := base.ID()
+	repo := &testICLFileRepository{
+		file: &imagecashletter.File{
+			ID: fileID,
+		},
+	}
+	env := newTestEnvironment(t, withRepo(repo))
 
 	t.Run("file not found", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		w.Flush()
-
-		require.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		resp, _ := env.getFile(t, "foo")
+		require.Equal(t, http.StatusNotFound, resp.Code, resp.Body)
 	})
 
 	t.Run("successful request", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		repo.file = &imagecashletter.File{
-			ID: base.ID(),
-		}
-		router.ServeHTTP(w, req)
-		w.Flush()
-
-		require.Equal(t, http.StatusOK, w.Code, w.Body)
-		var file imagecashletter.File
-		require.NoError(t, json.NewDecoder(w.Body).Decode(&file))
-		assert.NotEmpty(t, file.ID)
+		resp, file := env.getFile(t, fileID)
+		require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+		require.Equal(t, fileID, file.ID)
 	})
 
 	t.Run("repo error", func(t *testing.T) {
-		w := httptest.NewRecorder()
+		defer func() {
+			repo.err = nil
+		}()
 		repo.err = errors.New("bad error")
-		router.ServeHTTP(w, req)
-		w.Flush()
-
-		require.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+		resp, _ := env.getFile(t, fileID)
+		require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
 	})
 }
 
 func TestFiles_updateFileHeader(t *testing.T) {
-	repo := &testICLFileRepository{}
-	router := mux.NewRouter()
-	AppendRoutes(log.NewNopLogger(), router, repo)
-	f := readFile(t, "BNK20180905121042882-A.icl")
+	env := newTestEnvironment(t)
+
+	f := parseTestFile(t, "BNK20180905121042882-A.icl")
 	f.ID = base.ID()
+	f.Header.UserField = "before"
+	require.NoError(t, env.repo.SaveFile(f))
 
 	t.Run("file not found", func(t *testing.T) {
-		var buf bytes.Buffer
-		require.NoError(t, json.NewEncoder(&buf).Encode(f.Header))
-		w := httptest.NewRecorder()
-		req := httptest.NewRequest("POST", fmt.Sprintf("/files/%s", f.ID), &buf)
-		router.ServeHTTP(w, req)
-		w.Flush()
+		resp, _ := env.updateFileHeader(t, "foo", f.Header)
 
-		require.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		require.Equal(t, http.StatusNotFound, resp.Code, resp.Body)
 	})
 
 	t.Run("successful request", func(t *testing.T) {
-		var buf bytes.Buffer
-		require.NoError(t, json.NewEncoder(&buf).Encode(f.Header))
-		w := httptest.NewRecorder()
-		req := httptest.NewRequest("POST", fmt.Sprintf("/files/%s", f.ID), &buf)
-		repo.file = &imagecashletter.File{
-			ID: f.ID, // create a file without FileHeader so it's updated
-		}
-		router.ServeHTTP(w, req)
-		w.Flush()
+		newHeader := f.Header
+		newHeader.UserField = "after"
 
-		require.Equal(t, http.StatusCreated, w.Code, w.Body)
-		assert.Equal(t, repo.file.Header.CountryCode, f.Header.CountryCode)
+		resp, file := env.updateFileHeader(t, f.ID, newHeader)
+		require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+		assert.Equal(t, "after", file.Header.UserField)
+
+		// check the repo as well
+		updated, err := env.repo.GetFile(f.ID)
+		require.NoError(t, err)
+		assert.Equal(t, "after", updated.Header.UserField)
 	})
 }
 
 func TestFiles_deleteFile(t *testing.T) {
-	req := httptest.NewRequest("DELETE", "/files/foo", nil)
-	repo := &testICLFileRepository{}
-	router := mux.NewRouter()
-	AppendRoutes(log.NewNopLogger(), router, repo)
+	env := newTestEnvironment(t)
+
+	f1 := base.ID()
+	f2 := base.ID()
+	require.NoError(t, env.repo.SaveFile(&imagecashletter.File{ID: f1}))
+	require.NoError(t, env.repo.SaveFile(&imagecashletter.File{ID: f2}))
 
 	t.Run("file not found", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		w.Flush()
+		resp := env.deleteFile(t, "foo")
 
-		require.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		require.Equal(t, http.StatusNotFound, resp.Code, resp.Body)
 	})
 
 	t.Run("successful request", func(t *testing.T) {
-		repo.file = &imagecashletter.File{}
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		w.Flush()
+		resp := env.deleteFile(t, f1)
 
-		require.Equal(t, http.StatusOK, w.Code, w.Body)
+		require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+
+		listResp, files := env.listFiles(t)
+		require.Equal(t, http.StatusOK, listResp.Code, listResp.Body)
+		require.Len(t, files, 1)
+		require.Equal(t, f2, files[0].ID)
 	})
 
 	t.Run("repo error", func(t *testing.T) {
-		repo.err = errors.New("bad error")
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		w.Flush()
+		repo := &testICLFileRepository{
+			err: errors.New("bad error"),
+		}
+		mockEnv := newTestEnvironment(t, withRepo(repo))
+		resp := mockEnv.deleteFile(t, f1)
 
-		require.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+		require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
 	})
 
 }
 
 func TestFiles_getFileContents(t *testing.T) {
-	req := httptest.NewRequest("GET", "/files/foo/contents", nil)
-	router := mux.NewRouter()
-	repo := &testICLFileRepository{}
-	AppendRoutes(log.NewNopLogger(), router, repo)
+	env := newTestEnvironment(t)
+	f := parseTestFile(t, "BNK20180905121042882-A.icl")
+	f.ID = base.ID()
+	f.Header.UserField = "user"
+	require.NoError(t, env.repo.SaveFile(f))
 
 	t.Run("file not found", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		w.Flush()
+		resp, _ := env.getFileContents(t, "foo")
 
-		require.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		require.Equal(t, http.StatusNotFound, resp.Code, resp.Body)
 	})
 
 	t.Run("successful request", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		f := readFile(t, "BNK20180905121042882-A.icl")
-		repo.file = f
-		router.ServeHTTP(w, req)
-		w.Flush()
+		resp, file := env.getFileContents(t, f.ID)
 
-		require.Equal(t, http.StatusOK, w.Code, w.Body)
-		assert.Equal(t, "text/plain", w.Header().Get("Content-Type"), "unexpected content type")
+		require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+		require.Equal(t, "text/plain", resp.Header().Get("Content-Type"), "unexpected content type")
+		wantUserField, _ := encoding.EBCDIC.NewEncoder().String("user")
+		require.Contains(t, string(file), wantUserField)
 	})
 
 	t.Run("repo error", func(t *testing.T) {
-		repo.err = errors.New("bad error")
+		repo := &testICLFileRepository{
+			err: errors.New("bad error"),
+		}
+		mockEnv := newTestEnvironment(t, withRepo(repo))
+		resp, _ := mockEnv.getFileContents(t, "foo")
 
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		w.Flush()
-
-		require.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+		require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
 	})
-
 }
 
 func TestFiles_validateFile(t *testing.T) {
-	req := httptest.NewRequest("GET", "/files/foo/validate", nil)
-	repo := &testICLFileRepository{}
-	router := mux.NewRouter()
-	AppendRoutes(log.NewNopLogger(), router, repo)
-	f := readFile(t, "BNK20180905121042882-A.icl")
+	env := newTestEnvironment(t)
+	f := parseTestFile(t, "BNK20180905121042882-A.icl")
+	f.ID = base.ID()
+	require.NoError(t, env.repo.SaveFile(f))
 
 	t.Run("file not found", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		w.Flush()
+		resp := env.validateFile(t, "foo")
 
-		require.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		require.Equal(t, http.StatusNotFound, resp.Code, resp.Body)
 	})
 
 	t.Run("valid file", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		repo.file = f
-		router.ServeHTTP(w, req)
-		w.Flush()
+		resp := env.validateFile(t, f.ID)
 
-		require.Equal(t, http.StatusOK, w.Code, w.Body)
-		assert.Contains(t, w.Body.String(), `"{\"error\": null}"`)
+		require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+		assert.Contains(t, resp.Body.String(), `"{\"error\": null}"`)
 	})
 
 	t.Run("invalid file", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		// make the file invalid
-		repo.file.Header = imagecashletter.NewFileHeader()
-		router.ServeHTTP(w, req)
-		w.Flush()
+		invalidFile := *f
+		invalidFile.ID = base.ID()
+		invalidFile.Header = imagecashletter.NewFileHeader()
+		require.NoError(t, env.repo.SaveFile(&invalidFile))
+		resp := env.validateFile(t, invalidFile.ID)
 
-		require.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+		require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
+		require.Contains(t, resp.Body.String(), "TestFileIndicator  is a mandatory field")
 	})
 
 	t.Run("repo error", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		repo.err = errors.New("bad error")
-		router.ServeHTTP(w, req)
-		w.Flush()
+		repo := &testICLFileRepository{
+			err: errors.New("bad error"),
+		}
+		mockEnv := newTestEnvironment(t, withRepo(repo))
+		resp := mockEnv.validateFile(t, "foo")
 
-		require.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+		require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
 	})
 }
 
 func TestFiles_addCashLetterToFile(t *testing.T) {
-	repo := &testICLFileRepository{}
-	router := mux.NewRouter()
-	AppendRoutes(log.NewNopLogger(), router, repo)
-	f := readFile(t, "BNK20180905121042882-A.icl")
+	env := newTestEnvironment(t)
+
+	f := parseTestFile(t, "BNK20180905121042882-A.icl")
 	cashLetter := f.CashLetters[0]
 	f.CashLetters = nil
+	f.ID = base.ID()
+	require.NoError(t, env.repo.SaveFile(f))
 
 	t.Run("file not found", func(t *testing.T) {
-		var buf bytes.Buffer
-		require.NoError(t, json.NewEncoder(&buf).Encode(cashLetter))
-		req := httptest.NewRequest("POST", "/files/foo/cashLetters", &buf)
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		w.Flush()
+		resp, _ := env.addCashLetter(t, "foo", cashLetter)
 
-		require.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		require.Equal(t, http.StatusNotFound, resp.Code, resp.Body)
 	})
 
 	t.Run("successful request", func(t *testing.T) {
-		var buf bytes.Buffer
-		require.NoError(t, json.NewEncoder(&buf).Encode(cashLetter))
-		req := httptest.NewRequest("POST", "/files/foo/cashLetters", &buf)
-		w := httptest.NewRecorder()
-		repo.file = f
-		router.ServeHTTP(w, req)
-		w.Flush()
+		resp, file := env.addCashLetter(t, f.ID, cashLetter)
 
-		require.Equal(t, http.StatusOK, w.Code, w.Body)
-		var out imagecashletter.File
-		require.NoError(t, json.NewDecoder(w.Body).Decode(&out))
-		assert.Len(t, out.CashLetters, 1, "expected one cashLetter")
+		require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+		assert.Len(t, file.CashLetters, 1, "expected one cashLetter")
 	})
 
 	t.Run("repo error", func(t *testing.T) {
-		var buf bytes.Buffer
-		require.NoError(t, json.NewEncoder(&buf).Encode(cashLetter))
-		req := httptest.NewRequest("POST", "/files/foo/cashLetters", &buf)
-		w := httptest.NewRecorder()
-		repo.file = nil
-		repo.err = errors.New("bad error")
-		router.ServeHTTP(w, req)
-		w.Flush()
+		repo := &testICLFileRepository{
+			err: errors.New("bad error"),
+		}
+		mockEnv := newTestEnvironment(t, withRepo(repo))
+		resp, _ := mockEnv.addCashLetter(t, "foo", cashLetter)
 
-		require.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+		require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
 	})
 }
 
 func TestFiles_removeCashLetterFromFile(t *testing.T) {
-	repo := &testICLFileRepository{}
-	router := mux.NewRouter()
-	AppendRoutes(log.NewNopLogger(), router, repo)
-	f := readFile(t, "BNK20180905121042882-A.icl")
+	env := newTestEnvironment(t)
+
+	f := parseTestFile(t, "BNK20180905121042882-A.icl")
+	f.ID = base.ID()
 	cashLetterId := base.ID()
 	f.CashLetters[0].ID = cashLetterId
-	req := httptest.NewRequest("DELETE", fmt.Sprintf("/files/foo/cashLetters/%s", cashLetterId), nil)
+	require.NoError(t, env.repo.SaveFile(f))
 
 	t.Run("file not found", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		w.Flush()
+		resp := env.removeCashLetter(t, "foo", cashLetterId)
 
-		require.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		require.Equal(t, http.StatusNotFound, resp.Code, resp.Body)
 	})
 
 	t.Run("successful request", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		repo.file = f
-		router.ServeHTTP(w, req)
-		w.Flush()
+		resp := env.removeCashLetter(t, f.ID, cashLetterId)
 
-		require.Equal(t, http.StatusOK, w.Code, w.Body)
+		require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+		file, err := env.repo.GetFile(f.ID)
+		require.NoError(t, err)
+		require.Len(t, file.CashLetters, 1)
+		require.NotEqual(t, cashLetterId, file.CashLetters[0].ID)
 	})
 
 	t.Run("repo error", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		repo.file = nil
-		repo.err = errors.New("bad error")
-		router.ServeHTTP(w, req)
-		w.Flush()
+		repo := &testICLFileRepository{
+			err: errors.New("bad error"),
+		}
+		mockEnv := newTestEnvironment(t, withRepo(repo))
+		resp := mockEnv.removeCashLetter(t, f.ID, cashLetterId)
 
-		require.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+		require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
 	})
 }
 
 func TestFiles_createFile_Issue228(t *testing.T) {
-	repo := &testICLFileRepository{}
-	router := mux.NewRouter()
-	AppendRoutes(log.NewNopLogger(), router, repo)
+	env := newTestEnvironment(t)
 
-	w := httptest.NewRecorder()
-	fd, _ := os.Open(filepath.Join("..", "..", "test", "testdata", "issue228.json"))
-	req := httptest.NewRequest("POST", "/files/create", fd)
-	req.Header.Set("Content-Type", "application/json")
+	resp, _ := env.createFile(t, "application/json", openTestFile(t, "issue228.json"))
 
-	router.ServeHTTP(w, req)
-
-	require.Equal(t, http.StatusBadRequest, w.Code, w.Body)
-	type apiError struct {
-		Error string `json:"error"`
-	}
-	var wantErr apiError
-	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &wantErr))
-	require.Contains(t, wantErr.Error, "CashLetterControl record is mandatory")
-}
-
-func readFile(t *testing.T, filename string) *imagecashletter.File {
-	t.Helper()
-
-	fd, err := os.Open(filepath.Join("..", "..", "test", "testdata", filename))
-	require.NoError(t, err)
-	f, err := imagecashletter.NewReader(fd, imagecashletter.ReadVariableLineLengthOption()).Read()
-	require.NoError(t, err)
-	return &f
-}
-
-type testICLFileRepository struct {
-	err error
-
-	file *imagecashletter.File
-}
-
-func (r *testICLFileRepository) GetFiles() ([]*imagecashletter.File, error) {
-	if r.err != nil {
-		return nil, r.err
-	}
-	return []*imagecashletter.File{r.file}, nil
-}
-
-func (r *testICLFileRepository) GetFile(fileId string) (*imagecashletter.File, error) {
-	if r.err != nil {
-		return nil, r.err
-	}
-	return r.file, nil
-}
-
-func (r *testICLFileRepository) SaveFile(file *imagecashletter.File) error {
-	if r.err == nil { // only persist if we're not error'ing
-		r.file = file
-	}
-	return r.err
-}
-
-func (r *testICLFileRepository) DeleteFile(fileId string) error {
-	return r.err
+	require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
+	require.Contains(t, resp.Body.String(), "CashLetterControl record is mandatory")
 }

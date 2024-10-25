@@ -1,0 +1,591 @@
+{
+  "fileHeader": {
+    "standardLevel": "03",
+    "testIndicator": "P",
+    "resendIndicator": "N",
+    "immediateOrigin": "000000123",
+    "immediateOriginName": "Immediate Origin",
+    "immediateDestination": "000000123",
+    "immediateDestinationName": "Immediate Destination",
+    "fileCreationDate": "2024-10-23T00:00:00Z",
+    "fileCreationTime": "2024-10-23T00:00:00Z"
+  },
+  "cashLetters": [
+    {
+      "cashLetterHeader": {
+        "collectionTypeIndicator": "01",
+        "destinationRoutingNumber": "000000123",
+        "eceInstitutionRoutingNumber": "000000123",
+        "recordTypeIndicator": "I",
+        "DocumentationTypeIndicator": "G",
+        "originatorContactName": "",
+        "originatorContactPhoneNumber": "",
+        "fedWorkType": "C",
+        "cashLetterBusinessDate": "2024-10-23T00:00:00Z",
+        "cashLetterCreationDate": "2024-10-23T00:00:00Z",
+        "cashLetterCreationTime": "0000-01-01T13:42:17Z",
+        "cashLetterID": "118507"
+      },
+      "bundles": [
+        {
+          "bundleHeader": {
+            "collectionTypeIndicator": "01",
+            "destinationRoutingNumber": "000000123",
+            "eceInstitutionRoutingNumber": "000000123",
+            "cycleNumber": "01",
+            "BundleSequenceNumber": "0001",
+            "bundleBusinessDate": "2024-10-23T00:00:00Z",
+            "bundleCreationDate": "2024-10-23T00:00:00Z",
+            "bundleCreationTime": "0000-01-01T13:42:17Z"
+          },
+          "checks": [
+            {
+              "id": "",
+              "auxiliaryOnUs": "123456789",
+              "externalProcessingCode": "",
+              "payorBankRoutingNumber": "03130001",
+              "payorBankCheckDigit": "2",
+              "onUs": "5558881",
+              "itemAmount": 100000,
+              "eceInstitutionItemSequenceNumber": "1",
+              "documentationTypeIndicator": "G",
+              "returnAcceptanceIndicator": "D",
+              "micrValidIndicator": 1,
+              "bofdIndicator": "Y",
+              "addendumCount": 3,
+              "correctionIndicator": 0,
+              "archiveTypeIndicator": "B",
+              "checkDetailAddendumA": [
+                {
+                  "id": "",
+                  "recordNumber": 1,
+                  "returnLocationRoutingNumber": "121042882",
+                  "bofdEndorsementDate": "2018-10-03T00:00:00Z",
+                  "bofdItemSequenceNumber": "1",
+                  "bofdAccountNumber": "123456789",
+                  "bofdBranchCode": "01",
+                  "payeeName": "Test Payee",
+                  "truncationIndicator": "Y",
+                  "bofdConversionIndicator": "1",
+                  "bofdCorrectionIndicator": 0,
+                  "userField": ""
+                }
+              ],
+              "checkDetailAddendumB": [
+                {
+                  "id": "",
+                  "imageReferenceKeyIndicator": 1,
+                  "microfilmArchiveSequenceNumber": "1A",
+                  "imageReferenceKeyLength": "0034",
+                  "imageReferenceKey": "0",
+                  "description": "CD Addendum B",
+                  "userField": ""
+                }
+              ],
+              "checkDetailAddendumC": [
+                {
+                  "id": "",
+                  "recordNumber": 2,
+                  "endorsingBankRoutingNumber": "121042882",
+                  "bofdEndorsementBusinessDate": "2018-10-03T00:00:00Z",
+                  "endorsingBankItemSequenceNumber": "1",
+                  "truncationIndicator": "Y",
+                  "endorsingBankConversionIndicator": "1",
+                  "endorsingBankCorrectionIndicator": 0,
+                  "returnReason": "A",
+                  "userField": "",
+                  "endorsingBankIdentifier": 0
+                }
+              ],
+              "imageViewDetail": [
+                {
+                  "id": "",
+                  "imageIndicator": 1,
+                  "imageCreatorRoutingNumber": "031300012",
+                  "imageCreatorDate": "2018-10-03T00:00:00Z",
+                  "imageViewFormatIndicator": "00",
+                  "imageViewCompressionAlgorithm": "00",
+                  "imageViewDataSize": "0000000",
+                  "viewSideIndicator": 0,
+                  "viewDescriptor": "00",
+                  "digitalSignatureIndicator": 0,
+                  "digitalSignatureMethod": "00",
+                  "securityKeySize": 0,
+                  "protectedDataStart": 0,
+                  "protectedDataLength": 0,
+                  "imageRecreateIndicator": 0,
+                  "userField": "",
+                  "overrideIndicator": "0"
+                }
+              ],
+              "imageViewData": [
+                {
+                  "id": "",
+                  "eceInstitutionRoutingNumber": "121042882",
+                  "bundleBusinessDate": "2018-10-03T00:00:00Z",
+                  "cycleNumber": "1",
+                  "eceInstitutionItemSequenceNumber": "1",
+                  "securityOriginatorName": "Sec Orig Name",
+                  "securityAuthenticatorName": "Sec Auth Name",
+                  "securityKeyName": "SECURE",
+                  "clippingOrigin": 0,
+                  "clippingCoordinateH1": "",
+                  "clippingCoordinateH2": "",
+                  "clippingCoordinateV1": "",
+                  "clippingCoordinateV2": "",
+                  "lengthImageReferenceKey": "0000",
+                  "imageReferenceKey": "",
+                  "lengthDigitalSignature": "0",
+                  "digitalSignature": "",
+                  "lengthImageData": "0000001",
+                  "imageData": "IA=="
+                }
+              ],
+              "imageViewAnalysis": [
+                {
+                  "id": "",
+                  "globalImageQuality": 2,
+                  "globalImageUsability": 2,
+                  "imagingBankSpecificTest": 0,
+                  "partialImage": 2,
+                  "excessiveImageSkew": 2,
+                  "piggybackImage": 2,
+                  "tooLightOrTooDark": 2,
+                  "streaksAndOrBands": 2,
+                  "belowMinimumImageSize": 2,
+                  "exceedsMaximumImageSize": 2,
+                  "imageEnabledPOD": 1,
+                  "sourceDocumentBad": 0,
+                  "dateUsability": 2,
+                  "payeeUsability": 2,
+                  "convenienceAmountUsability": 2,
+                  "amountInWordsUsability": 2,
+                  "signatureUsability": 2,
+                  "payorNameAddressUsability": 2,
+                  "micrLineUsability": 2,
+                  "memoLineUsability": 2,
+                  "payorBankNameAddressUsability": 2,
+                  "payeeEndorsementUsability": 2,
+                  "bofdEndorsementUsability": 2,
+                  "transitEndorsementUsability": 2,
+                  "userField": ""
+                }
+              ]
+            },
+            {
+              "id": "",
+              "auxiliaryOnUs": "123456789",
+              "externalProcessingCode": "",
+              "payorBankRoutingNumber": "03130001",
+              "payorBankCheckDigit": "2",
+              "onUs": "5558881",
+              "itemAmount": 100000,
+              "eceInstitutionItemSequenceNumber": "2",
+              "documentationTypeIndicator": "G",
+              "returnAcceptanceIndicator": "D",
+              "micrValidIndicator": 1,
+              "bofdIndicator": "Y",
+              "addendumCount": 3,
+              "correctionIndicator": 0,
+              "archiveTypeIndicator": "B",
+              "checkDetailAddendumA": [
+                {
+                  "id": "",
+                  "recordNumber": 2,
+                  "returnLocationRoutingNumber": "121042882",
+                  "bofdEndorsementDate": "2018-10-03T00:00:00Z",
+                  "bofdItemSequenceNumber": "2",
+                  "bofdAccountNumber": "123456789",
+                  "bofdBranchCode": "01",
+                  "payeeName": "Test Payee",
+                  "truncationIndicator": "Y",
+                  "bofdConversionIndicator": "1",
+                  "bofdCorrectionIndicator": 0,
+                  "userField": ""
+                }
+              ],
+              "checkDetailAddendumB": [
+                {
+                  "id": "",
+                  "imageReferenceKeyIndicator": 1,
+                  "microfilmArchiveSequenceNumber": "1A",
+                  "imageReferenceKeyLength": "0034",
+                  "imageReferenceKey": "0",
+                  "description": "CD Addendum B",
+                  "userField": ""
+                }
+              ],
+              "checkDetailAddendumC": [
+                {
+                  "id": "",
+                  "recordNumber": 3,
+                  "endorsingBankRoutingNumber": "121042882",
+                  "bofdEndorsementBusinessDate": "2018-10-03T00:00:00Z",
+                  "endorsingBankItemSequenceNumber": "2",
+                  "truncationIndicator": "Y",
+                  "endorsingBankConversionIndicator": "1",
+                  "endorsingBankCorrectionIndicator": 0,
+                  "returnReason": "A",
+                  "userField": "",
+                  "endorsingBankIdentifier": 0
+                }
+              ],
+              "imageViewDetail": [
+                {
+                  "id": "",
+                  "imageIndicator": 1,
+                  "imageCreatorRoutingNumber": "031300012",
+                  "imageCreatorDate": "2018-10-03T00:00:00Z",
+                  "imageViewFormatIndicator": "00",
+                  "imageViewCompressionAlgorithm": "00",
+                  "imageViewDataSize": "0000000",
+                  "viewSideIndicator": 0,
+                  "viewDescriptor": "00",
+                  "digitalSignatureIndicator": 0,
+                  "digitalSignatureMethod": "00",
+                  "securityKeySize": 0,
+                  "protectedDataStart": 0,
+                  "protectedDataLength": 0,
+                  "imageRecreateIndicator": 0,
+                  "userField": "",
+                  "overrideIndicator": "0"
+                }
+              ],
+              "imageViewData": [
+                {
+                  "id": "",
+                  "eceInstitutionRoutingNumber": "121042882",
+                  "bundleBusinessDate": "2018-10-03T00:00:00Z",
+                  "cycleNumber": "1",
+                  "eceInstitutionItemSequenceNumber": "1",
+                  "securityOriginatorName": "Sec Orig Name",
+                  "securityAuthenticatorName": "Sec Auth Name",
+                  "securityKeyName": "SECURE",
+                  "clippingOrigin": 0,
+                  "clippingCoordinateH1": "",
+                  "clippingCoordinateH2": "",
+                  "clippingCoordinateV1": "",
+                  "clippingCoordinateV2": "",
+                  "lengthImageReferenceKey": "0000",
+                  "imageReferenceKey": "",
+                  "lengthDigitalSignature": "0",
+                  "digitalSignature": "",
+                  "lengthImageData": "0000001",
+                  "imageData": "IA=="
+                }
+              ],
+              "imageViewAnalysis": [
+                {
+                  "id": "",
+                  "globalImageQuality": 2,
+                  "globalImageUsability": 2,
+                  "imagingBankSpecificTest": 0,
+                  "partialImage": 2,
+                  "excessiveImageSkew": 2,
+                  "piggybackImage": 2,
+                  "tooLightOrTooDark": 2,
+                  "streaksAndOrBands": 2,
+                  "belowMinimumImageSize": 2,
+                  "exceedsMaximumImageSize": 2,
+                  "imageEnabledPOD": 1,
+                  "sourceDocumentBad": 0,
+                  "dateUsability": 2,
+                  "payeeUsability": 2,
+                  "convenienceAmountUsability": 2,
+                  "amountInWordsUsability": 2,
+                  "signatureUsability": 2,
+                  "payorNameAddressUsability": 2,
+                  "micrLineUsability": 2,
+                  "memoLineUsability": 2,
+                  "payorBankNameAddressUsability": 2,
+                  "payeeEndorsementUsability": 2,
+                  "bofdEndorsementUsability": 2,
+                  "transitEndorsementUsability": 2,
+                  "userField": ""
+                }
+              ]
+            },
+            {
+              "id": "",
+              "auxiliaryOnUs": "123456789",
+              "externalProcessingCode": "",
+              "payorBankRoutingNumber": "03130001",
+              "payorBankCheckDigit": "2",
+              "onUs": "5558881",
+              "itemAmount": 100000,
+              "eceInstitutionItemSequenceNumber": "1",
+              "documentationTypeIndicator": "G",
+              "returnAcceptanceIndicator": "D",
+              "micrValidIndicator": 1,
+              "bofdIndicator": "Y",
+              "addendumCount": 3,
+              "correctionIndicator": 0,
+              "archiveTypeIndicator": "B",
+              "checkDetailAddendumA": [
+                {
+                  "id": "",
+                  "recordNumber": 1,
+                  "returnLocationRoutingNumber": "121042882",
+                  "bofdEndorsementDate": "2018-10-03T00:00:00Z",
+                  "bofdItemSequenceNumber": "1",
+                  "bofdAccountNumber": "123456789",
+                  "bofdBranchCode": "01",
+                  "payeeName": "Test Payee",
+                  "truncationIndicator": "Y",
+                  "bofdConversionIndicator": "1",
+                  "bofdCorrectionIndicator": 0,
+                  "userField": ""
+                }
+              ],
+              "checkDetailAddendumB": [
+                {
+                  "id": "",
+                  "imageReferenceKeyIndicator": 1,
+                  "microfilmArchiveSequenceNumber": "1A",
+                  "imageReferenceKeyLength": "0034",
+                  "imageReferenceKey": "0",
+                  "description": "CD Addendum B",
+                  "userField": ""
+                }
+              ],
+              "checkDetailAddendumC": [
+                {
+                  "id": "",
+                  "recordNumber": 2,
+                  "endorsingBankRoutingNumber": "121042882",
+                  "bofdEndorsementBusinessDate": "2018-10-03T00:00:00Z",
+                  "endorsingBankItemSequenceNumber": "1",
+                  "truncationIndicator": "Y",
+                  "endorsingBankConversionIndicator": "1",
+                  "endorsingBankCorrectionIndicator": 0,
+                  "returnReason": "A",
+                  "userField": "",
+                  "endorsingBankIdentifier": 0
+                }
+              ],
+              "imageViewDetail": [
+                {
+                  "id": "",
+                  "imageIndicator": 1,
+                  "imageCreatorRoutingNumber": "031300012",
+                  "imageCreatorDate": "2018-10-03T00:00:00Z",
+                  "imageViewFormatIndicator": "00",
+                  "imageViewCompressionAlgorithm": "00",
+                  "imageViewDataSize": "0000000",
+                  "viewSideIndicator": 0,
+                  "viewDescriptor": "00",
+                  "digitalSignatureIndicator": 0,
+                  "digitalSignatureMethod": "00",
+                  "securityKeySize": 0,
+                  "protectedDataStart": 0,
+                  "protectedDataLength": 0,
+                  "imageRecreateIndicator": 0,
+                  "userField": "",
+                  "overrideIndicator": "0"
+                }
+              ],
+              "imageViewData": [
+                {
+                  "id": "",
+                  "eceInstitutionRoutingNumber": "121042882",
+                  "bundleBusinessDate": "2018-10-03T00:00:00Z",
+                  "cycleNumber": "1",
+                  "eceInstitutionItemSequenceNumber": "1",
+                  "securityOriginatorName": "Sec Orig Name",
+                  "securityAuthenticatorName": "Sec Auth Name",
+                  "securityKeyName": "SECURE",
+                  "clippingOrigin": 0,
+                  "clippingCoordinateH1": "",
+                  "clippingCoordinateH2": "",
+                  "clippingCoordinateV1": "",
+                  "clippingCoordinateV2": "",
+                  "lengthImageReferenceKey": "0000",
+                  "imageReferenceKey": "",
+                  "lengthDigitalSignature": "0",
+                  "digitalSignature": "",
+                  "lengthImageData": "0000001",
+                  "imageData": "IA=="
+                }
+              ],
+              "imageViewAnalysis": [
+                {
+                  "id": "",
+                  "globalImageQuality": 2,
+                  "globalImageUsability": 2,
+                  "imagingBankSpecificTest": 0,
+                  "partialImage": 2,
+                  "excessiveImageSkew": 2,
+                  "piggybackImage": 2,
+                  "tooLightOrTooDark": 2,
+                  "streaksAndOrBands": 2,
+                  "belowMinimumImageSize": 2,
+                  "exceedsMaximumImageSize": 2,
+                  "imageEnabledPOD": 1,
+                  "sourceDocumentBad": 0,
+                  "dateUsability": 2,
+                  "payeeUsability": 2,
+                  "convenienceAmountUsability": 2,
+                  "amountInWordsUsability": 2,
+                  "signatureUsability": 2,
+                  "payorNameAddressUsability": 2,
+                  "micrLineUsability": 2,
+                  "memoLineUsability": 2,
+                  "payorBankNameAddressUsability": 2,
+                  "payeeEndorsementUsability": 2,
+                  "bofdEndorsementUsability": 2,
+                  "transitEndorsementUsability": 2,
+                  "userField": ""
+                }
+              ]
+            },
+            {
+              "id": "",
+              "auxiliaryOnUs": "123456789",
+              "externalProcessingCode": "",
+              "payorBankRoutingNumber": "03130001",
+              "payorBankCheckDigit": "2",
+              "onUs": "5558881",
+              "itemAmount": 100000,
+              "eceInstitutionItemSequenceNumber": "2",
+              "documentationTypeIndicator": "G",
+              "returnAcceptanceIndicator": "D",
+              "micrValidIndicator": 1,
+              "bofdIndicator": "Y",
+              "addendumCount": 3,
+              "correctionIndicator": 0,
+              "archiveTypeIndicator": "B",
+              "checkDetailAddendumA": [
+                {
+                  "id": "",
+                  "recordNumber": 2,
+                  "returnLocationRoutingNumber": "121042882",
+                  "bofdEndorsementDate": "2018-10-03T00:00:00Z",
+                  "bofdItemSequenceNumber": "2",
+                  "bofdAccountNumber": "123456789",
+                  "bofdBranchCode": "01",
+                  "payeeName": "Test Payee",
+                  "truncationIndicator": "Y",
+                  "bofdConversionIndicator": "1",
+                  "bofdCorrectionIndicator": 0,
+                  "userField": ""
+                }
+              ],
+              "checkDetailAddendumB": [
+                {
+                  "id": "",
+                  "imageReferenceKeyIndicator": 1,
+                  "microfilmArchiveSequenceNumber": "1A",
+                  "imageReferenceKeyLength": "0034",
+                  "imageReferenceKey": "0",
+                  "description": "CD Addendum B",
+                  "userField": ""
+                }
+              ],
+              "checkDetailAddendumC": [
+                {
+                  "id": "",
+                  "recordNumber": 3,
+                  "endorsingBankRoutingNumber": "121042882",
+                  "bofdEndorsementBusinessDate": "2018-10-03T00:00:00Z",
+                  "endorsingBankItemSequenceNumber": "2",
+                  "truncationIndicator": "Y",
+                  "endorsingBankConversionIndicator": "1",
+                  "endorsingBankCorrectionIndicator": 0,
+                  "returnReason": "A",
+                  "userField": "",
+                  "endorsingBankIdentifier": 0
+                }
+              ],
+              "imageViewDetail": [
+                {
+                  "id": "",
+                  "imageIndicator": 1,
+                  "imageCreatorRoutingNumber": "031300012",
+                  "imageCreatorDate": "2018-10-03T00:00:00Z",
+                  "imageViewFormatIndicator": "00",
+                  "imageViewCompressionAlgorithm": "00",
+                  "imageViewDataSize": "0000000",
+                  "viewSideIndicator": 0,
+                  "viewDescriptor": "00",
+                  "digitalSignatureIndicator": 0,
+                  "digitalSignatureMethod": "00",
+                  "securityKeySize": 0,
+                  "protectedDataStart": 0,
+                  "protectedDataLength": 0,
+                  "imageRecreateIndicator": 0,
+                  "userField": "",
+                  "overrideIndicator": "0"
+                }
+              ],
+              "imageViewData": [
+                {
+                  "id": "",
+                  "eceInstitutionRoutingNumber": "121042882",
+                  "bundleBusinessDate": "2018-10-03T00:00:00Z",
+                  "cycleNumber": "1",
+                  "eceInstitutionItemSequenceNumber": "1",
+                  "securityOriginatorName": "Sec Orig Name",
+                  "securityAuthenticatorName": "Sec Auth Name",
+                  "securityKeyName": "SECURE",
+                  "clippingOrigin": 0,
+                  "clippingCoordinateH1": "",
+                  "clippingCoordinateH2": "",
+                  "clippingCoordinateV1": "",
+                  "clippingCoordinateV2": "",
+                  "lengthImageReferenceKey": "0000",
+                  "imageReferenceKey": "",
+                  "lengthDigitalSignature": "0",
+                  "digitalSignature": "",
+                  "lengthImageData": "0000001",
+                  "imageData": "IA=="
+                }
+              ],
+              "imageViewAnalysis": [
+                {
+                  "id": "",
+                  "globalImageQuality": 2,
+                  "globalImageUsability": 2,
+                  "imagingBankSpecificTest": 0,
+                  "partialImage": 2,
+                  "excessiveImageSkew": 2,
+                  "piggybackImage": 2,
+                  "tooLightOrTooDark": 2,
+                  "streaksAndOrBands": 2,
+                  "belowMinimumImageSize": 2,
+                  "exceedsMaximumImageSize": 2,
+                  "imageEnabledPOD": 1,
+                  "sourceDocumentBad": 0,
+                  "dateUsability": 2,
+                  "payeeUsability": 2,
+                  "convenienceAmountUsability": 2,
+                  "amountInWordsUsability": 2,
+                  "signatureUsability": 2,
+                  "payorNameAddressUsability": 2,
+                  "micrLineUsability": 2,
+                  "memoLineUsability": 2,
+                  "payorBankNameAddressUsability": 2,
+                  "payeeEndorsementUsability": 2,
+                  "bofdEndorsementUsability": 2,
+                  "transitEndorsementUsability": 2,
+                  "userField": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "cashLetterControl": {
+        "cashLetterBundleCount": 1,
+        "cashLetterItemsCount": 4,
+        "cashLetterTotalAmount": 400000,
+        "settlementDate": "2024-10-23T00:00:00Z"
+      }
+    }
+  ],
+  "FileControl": {
+    "id": "",
+    "cashLetterCount": 1,
+    "totalItemCount": 4,
+    "fileTotalAmount": 400000
+  }
+}
