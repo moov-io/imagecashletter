@@ -1,3 +1,19 @@
+## v0.11.1 (Released 2024-10-28)
+
+IMPROVEMENTS
+
+- build bundle control records when creating files (#381)
+- fix: Allow empty EndorsingBankItemSequenceNumber in FRB mode (#376)
+- fix: nil checks from fuzzers
+
+BUILD
+
+- build(deps): bump rexml from 3.2.8 to 3.3.6 in /docs
+- build(deps): bump webrick from 1.8.1 to 1.8.2 in /docs
+- chore(deps): update dependency github-pages to v232
+- fix(deps): update module github.com/moov-io/base to v0.51.1
+- fix(deps): update module github.com/prometheus/client_golang to v1.20.5
+
 ## v0.11.0 (Released 2024-07-08)
 
 ADDITIONS
