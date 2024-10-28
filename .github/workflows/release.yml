@@ -29,10 +29,6 @@ jobs:
     - name: Check
       run: make check
 
-    - name: WebUI
-      if: runner.os == 'Linux'
-      run: make dist-webui
-
   create_release:
     name: Create Release
     needs: [testing]
@@ -124,6 +120,28 @@ jobs:
         asset_path: ./bin/imagecashletter.exe
         asset_name: imagecashletter.exe
         asset_content_type: application/octet-stream
+
+  webui:
+    name: WebUI
+    needs: [testing, create_release]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v5
+      with:
+        go-version: stable
+      id: go
+
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Switch to master
+      run: |
+        git fetch origin
+        git checkout master
+
+    - name: Distribute
+      run: make dist-webui
 
   docker:
     name: Docker
