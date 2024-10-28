@@ -30,6 +30,7 @@ jobs:
       run: make check
 
     - name: WebUI
+      if: runner.os == 'Linux'
       run: make dist-webui
 
   create_release:
