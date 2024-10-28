@@ -177,6 +177,9 @@ func (bh *BundleHeader) String() string {
 // Validate performs imagecashletter format rule checks on the record and returns an error if not Validated
 // The first error encountered is returned and stops the parsing.
 func (bh *BundleHeader) Validate() error {
+	if bh == nil {
+		return nil
+	}
 	if err := bh.fieldInclusion(); err != nil {
 		return err
 	}
@@ -204,6 +207,9 @@ func (bh *BundleHeader) Validate() error {
 // fieldInclusion validate mandatory fields are not default values. If fields are
 // invalid the Electronic Exchange will be returned.
 func (bh *BundleHeader) fieldInclusion() error {
+	if bh == nil {
+		return nil
+	}
 	if bh.recordType == "" {
 		return &FieldError{FieldName: "recordType",
 			Value: bh.recordType,

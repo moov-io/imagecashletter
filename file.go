@@ -255,7 +255,11 @@ func (f *File) Create() error {
 			}
 
 			if err := b.build(); err != nil {
-				return fmt.Errorf("building bundle %s: %w", b.BundleHeader.BundleSequenceNumber, err)
+				bundleSeq := b.ID
+				if b.BundleHeader != nil {
+					bundleSeq = b.BundleHeader.BundleSequenceNumber
+				}
+				return fmt.Errorf("building bundle %s: %w", bundleSeq, err)
 			}
 		}
 	}

@@ -99,6 +99,10 @@ func (b *Bundle) Validate() error {
 // build creates a valid Bundle by building  BundleControl. An error is returned if
 // the bundle being built has invalid records.
 func (b *Bundle) build() error {
+	if b == nil {
+		return nil
+	}
+
 	// Requires a valid BundleHeader
 	if err := b.BundleHeader.Validate(); err != nil {
 		return err
