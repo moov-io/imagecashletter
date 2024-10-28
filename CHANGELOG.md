@@ -1,4 +1,4 @@
-## v0.11.1 (Released 2024-10-28)
+## v0.11.2 (Released 2024-10-28)
 
 IMPROVEMENTS
 
