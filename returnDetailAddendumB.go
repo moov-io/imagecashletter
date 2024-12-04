@@ -15,8 +15,6 @@ import (
 // Errors specific to a ReturnDetailAddendumB Record
 
 // ReturnDetailAddendumB Record
-//
-//nolint:recvcheck
 type ReturnDetailAddendumB struct {
 	// ID is a client defined string used as a reference to this record.
 	ID string `json:"id"`
@@ -107,7 +105,7 @@ func (rdAddendumB *ReturnDetailAddendumB) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (rdAddendumB ReturnDetailAddendumB) MarshalJSON() ([]byte, error) {
+func (rdAddendumB *ReturnDetailAddendumB) MarshalJSON() ([]byte, error) {
 	type Alias ReturnDetailAddendumB
 	if rdAddendumB.PayorBankBusinessDate.IsZero() {
 		// put the empty string in instead of marshalling the zero value
@@ -115,7 +113,7 @@ func (rdAddendumB ReturnDetailAddendumB) MarshalJSON() ([]byte, error) {
 			*Alias
 			PayorBankBusinessDate string `json:"payorBankBusinessDate"`
 		}{
-			Alias:                 (*Alias)(&rdAddendumB),
+			Alias:                 (*Alias)(rdAddendumB),
 			PayorBankBusinessDate: "",
 		})
 	}
@@ -124,7 +122,7 @@ func (rdAddendumB ReturnDetailAddendumB) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&struct {
 		*Alias
 	}{
-		Alias: (*Alias)(&rdAddendumB),
+		Alias: (*Alias)(rdAddendumB),
 	})
 }
 
