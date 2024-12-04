@@ -12,7 +12,8 @@ import (
 
 // TestMockBundleChecks creates a Bundle of checks
 func TestFRBCompatibilityMode(t *testing.T) {
-	assert.Equal(t, IsFRBCompatibilityModeEnabled(), false)
-	t.Setenv(FRBCompatibilityMode, "")
-	assert.Equal(t, IsFRBCompatibilityModeEnabled(), true)
+	t.Setenv(FRBCompatibilityMode, "false")
+	assert.False(t, IsFRBCompatibilityModeEnabled())
+	t.Setenv(FRBCompatibilityMode, "true")
+	assert.True(t, IsFRBCompatibilityModeEnabled())
 }

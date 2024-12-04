@@ -71,7 +71,7 @@ func TestICL_ReadVariableLineLengthOption(t *testing.T) {
 	expected, err := os.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
 	require.NoError(t, err)
 
-	require.Equal(t, string(actual), string(expected))
+	require.Equal(t, string(expected), string(actual))
 }
 
 func TestICL_EBCDICEncodingOption(t *testing.T) {
@@ -96,7 +96,7 @@ func TestICL_EBCDICEncodingOption(t *testing.T) {
 	expected, err := os.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
 	require.NoError(t, err)
 
-	require.Equal(t, string(actual), string(expected))
+	require.Equal(t, string(expected), string(actual))
 }
 
 func getFileError(t *testing.T, err error) *FileError {
@@ -801,8 +801,8 @@ func TestICLCreditRecord61File(t *testing.T) {
 
 	// ensure we have a validated file structure
 	require.NoError(t, iclFile.Validate())
-	require.Equal(t, 2, len(iclFile.CashLetters))
-	require.Equal(t, 1, len(iclFile.CashLetters[0].Credits))
+	require.Len(t, iclFile.CashLetters, 2)
+	require.Len(t, iclFile.CashLetters[0].Credits, 1)
 }
 
 func TestICLBase64ImageData(t *testing.T) {
@@ -874,5 +874,5 @@ func Test_DecodeEBCDIC(t *testing.T) {
 	require.NoError(t, err)
 	r, n := utf8.DecodeRuneInString(decoded)
 	require.Equal(t, 3, n)
-	require.Equal(t, r, utf8.RuneError)
+	require.Equal(t, utf8.RuneError, r)
 }

@@ -280,7 +280,7 @@ func (rd *ReturnDetail) Validate() error {
 	if rd.DocumentationTypeIndicator != "" {
 		// Z is valid for CashLetter DocumentationTypeIndicator only
 		if rd.DocumentationTypeIndicator == "Z" {
-			msg := fmt.Sprint(msgDocumentationTypeIndicator)
+			msg := msgDocumentationTypeIndicator
 			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: rd.DocumentationTypeIndicator, Msg: msg}
 		}
 		if err := rd.isDocumentationTypeIndicator(rd.DocumentationTypeIndicator); err != nil {
@@ -308,7 +308,7 @@ func (rd *ReturnDetail) Validate() error {
 	_, arc := AdministrativeReturnCodeDict[rd.ReturnReason]
 	if !crc && !arc {
 		// Return msgReturnCode
-		msg := fmt.Sprint(msgReturnCode)
+		msg := msgReturnCode
 		return &FieldError{FieldName: "ReturnReason", Value: rd.ReturnReason, Msg: msg}
 	}
 	return nil

@@ -418,13 +418,16 @@ func (r *Reader) parseCheckDetail() error {
 func (r *Reader) parseCheckDetailAddendumA() error {
 	r.recordName = "CheckDetailAddendumA"
 	if r.currentCashLetter.currentBundle.GetChecks() == nil {
-		msg := fmt.Sprint(msgFileBundleOutside)
+		msg := msgFileBundleOutside
 		return r.error(&FileError{FieldName: "CheckDetailAddendumA", Msg: msg})
 	}
-	lineOut, err := r.decodeLine(r.line)
+	inputBytes := []byte(r.line)
+	adjustedBytes := handleIBM1047Compatibility(inputBytes)
+	lineOut, err := r.decodeLine(string(adjustedBytes))
 	if err != nil {
 		return err
 	}
+
 	cdAddendumA := NewCheckDetailAddendumA()
 	cdAddendumA.Parse(lineOut)
 	if err := cdAddendumA.Validate(); err != nil {
@@ -436,11 +439,34 @@ func (r *Reader) parseCheckDetailAddendumA() error {
 	return nil
 }
 
+func handleIBM1047Compatibility(input []byte) []byte {
+	if !IsFRBCompatibilityModeEnabled() {
+		return input
+	}
+
+	output := make([]byte, len(input))
+	copy(output, input)
+
+	// Replace bytes that map differently between IBM037 and IBM1047
+	// but only for the ascii subset see https://en.wikibooks.org/wiki/Character_Encodings/Code_Tables/EBCDIC/EBCDIC_1047
+	for i, b := range output {
+		switch b {
+		case 0xAD: // Ý -> [
+			output[i] = 0xBA
+		case 0xBD: // ¨ -> ]
+			output[i] = 0xBB
+		case 0x5F: // ¬ -> ^
+			output[i] = 0xB0
+		}
+	}
+	return output
+}
+
 // parseCheckDetailAddendumB takes the input record string and parses the CheckDetailAddendumB values
 func (r *Reader) parseCheckDetailAddendumB() error {
 	r.recordName = "CheckDetailAddendumB"
 	if r.currentCashLetter.currentBundle.GetChecks() == nil {
-		msg := fmt.Sprint(msgFileBundleOutside)
+		msg := msgFileBundleOutside
 		return r.error(&FileError{FieldName: "CheckDetailAddendumB", Msg: msg})
 	}
 	lineOut, err := r.decodeLine(r.line)
@@ -461,7 +487,7 @@ func (r *Reader) parseCheckDetailAddendumB() error {
 func (r *Reader) parseCheckDetailAddendumC() error {
 	r.recordName = "CheckDetailAddendumC"
 	if r.currentCashLetter.currentBundle.GetChecks() == nil {
-		msg := fmt.Sprint(msgFileBundleOutside)
+		msg := msgFileBundleOutside
 		return r.error(&FileError{FieldName: "CheckDetailAddendumC", Msg: msg})
 	}
 	lineOut, err := r.decodeLine(r.line)
@@ -503,7 +529,7 @@ func (r *Reader) parseReturnDetail() error {
 func (r *Reader) parseReturnDetailAddendumA() error {
 	r.recordName = "ReturnDetailAddendumA"
 	if r.currentCashLetter.currentBundle.GetReturns() == nil {
-		msg := fmt.Sprint(msgFileBundleOutside)
+		msg := msgFileBundleOutside
 		return r.error(&FileError{FieldName: "ReturnDetailAddendumA", Msg: msg})
 	}
 	lineOut, err := r.decodeLine(r.line)
@@ -525,7 +551,7 @@ func (r *Reader) parseReturnDetailAddendumA() error {
 func (r *Reader) parseReturnDetailAddendumB() error {
 	r.recordName = "ReturnDetailAddendumB"
 	if r.currentCashLetter.currentBundle.GetReturns() == nil {
-		msg := fmt.Sprint(msgFileBundleOutside)
+		msg := msgFileBundleOutside
 		return r.error(&FileError{FieldName: "ReturnDetailAddendumB", Msg: msg})
 	}
 	lineOut, err := r.decodeLine(r.line)
@@ -546,7 +572,7 @@ func (r *Reader) parseReturnDetailAddendumB() error {
 func (r *Reader) parseReturnDetailAddendumC() error {
 	r.recordName = "ReturnDetailAddendumC"
 	if r.currentCashLetter.currentBundle.GetReturns() == nil {
-		msg := fmt.Sprint(msgFileBundleOutside)
+		msg := msgFileBundleOutside
 		return r.error(&FileError{FieldName: "ReturnDetailAddendumC", Msg: msg})
 	}
 	lineOut, err := r.decodeLine(r.line)
@@ -568,7 +594,7 @@ func (r *Reader) parseReturnDetailAddendumD() error {
 	r.recordName = "ReturnDetailAddendumD"
 
 	if r.currentCashLetter.currentBundle.GetReturns() == nil {
-		msg := fmt.Sprint(msgFileBundleOutside)
+		msg := msgFileBundleOutside
 		return r.error(&FileError{FieldName: "ReturnDetailAddendumD", Msg: msg})
 	}
 	lineOut, err := r.decodeLine(r.line)
@@ -622,7 +648,7 @@ func (r *Reader) ImageViewDetail() error {
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewDetail(ivDetail)
 	} else {
-		msg := fmt.Sprint(msgFileBundleOutside)
+		msg := msgFileBundleOutside
 		return r.error(&FileError{FieldName: "ImageViewDetail", Msg: msg})
 	}
 
@@ -658,7 +684,7 @@ func (r *Reader) ImageViewData() error {
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewData(ivData)
 	} else {
-		msg := fmt.Sprint(msgFileBundleOutside)
+		msg := msgFileBundleOutside
 		return r.error(&FileError{FieldName: "ImageViewData", Msg: msg})
 	}
 
@@ -702,7 +728,7 @@ func (r *Reader) ImageViewAnalysis() error {
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewAnalysis(ivAnalysis)
 	} else {
-		msg := fmt.Sprint(msgFileBundleOutside)
+		msg := msgFileBundleOutside
 		return r.error(&FileError{FieldName: "ImageViewAnalysis", Msg: msg})
 	}
 

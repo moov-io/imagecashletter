@@ -6,12 +6,12 @@ package imagecashletter
 
 import (
 	"os"
+	"strings"
 )
 
 const FRBCompatibilityMode = "FRB_COMPATIBILITY_MODE"
 
 // Determine if FRB (Federal Reserve Bank) compatibility mode is enabled
 func IsFRBCompatibilityModeEnabled() bool {
-	_, ok := os.LookupEnv(FRBCompatibilityMode)
-	return ok
+	return strings.ToLower(os.Getenv("FRB_COMPATIBILITY_MODE")) == "true"
 }
