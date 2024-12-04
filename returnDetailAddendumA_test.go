@@ -330,7 +330,7 @@ func TestRDAddendumAFIBOFDEndorsementDate(t *testing.T) {
 func TestRDAddendumAFIBOFDEndorsementDateFRB(t *testing.T) {
 	rdAddendumA := mockReturnDetailAddendumA()
 	rdAddendumA.BOFDEndorsementDate = time.Time{}
-	t.Setenv(FRBCompatibilityMode, "")
+	t.Setenv(FRBCompatibilityMode, "true")
 	require.NoError(t, rdAddendumA.Validate())
 }
 

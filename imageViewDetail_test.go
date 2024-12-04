@@ -220,7 +220,7 @@ func TestIVDetailDigitalSignatureMethodFRB(t *testing.T) {
 	require.ErrorAs(t, err, &e)
 	require.Equal(t, "DigitalSignatureMethod", e.FieldName)
 	// "0" should be accepted in FRB compatibility mode
-	t.Setenv(FRBCompatibilityMode, "")
+	t.Setenv(FRBCompatibilityMode, "true")
 	require.NoError(t, ivDetail.Validate())
 }
 
@@ -284,7 +284,7 @@ func TestIVDetailFIImageCreatorRoutingNumberFRB(t *testing.T) {
 	var e *FieldError
 	require.ErrorAs(t, err, &e)
 	require.Equal(t, "ImageCreatorRoutingNumber", e.FieldName)
-	t.Setenv(FRBCompatibilityMode, "")
+	t.Setenv(FRBCompatibilityMode, "true")
 	require.NoError(t, ivDetail.Validate())
 }
 
