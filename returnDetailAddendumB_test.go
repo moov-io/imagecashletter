@@ -97,7 +97,7 @@ func TestParseAddendumBJSONWith3339Date(t *testing.T) {
 		"payorAccountName": "",
 		"payorBankBusinessDate": "2021-01-21T00:00:00Z"
 }`
-	assert.NoError(
+	require.NoError(
 		t,
 		json.Unmarshal([]byte(testBusinessDateJSON), &addB),
 		"Unable to unmarshal ReturnDetailAddendumB",
@@ -112,11 +112,11 @@ func TestParseAddendumBJSONWith3339Date(t *testing.T) {
 		time.RFC3339,
 		"2021-01-21T00:00:00Z",
 	)
-	assert.NoError(t, timeParseErr, "Unable to parse test time")
+	require.NoError(t, timeParseErr, "Unable to parse test time")
 	assert.True(t, addB.PayorBankBusinessDate.Equal(parsedTime), "PayorBankBusinessDate should match JSON")
 
 	marshalled, marshalErr := json.Marshal(addB)
-	assert.NoError(t, marshalErr, "Unable to marshal ReturnDetailAddendumB to JSON")
+	require.NoError(t, marshalErr, "Unable to marshal ReturnDetailAddendumB to JSON")
 	assert.Contains(
 		t,
 		string(marshalled),
@@ -136,7 +136,7 @@ func TestParseAddendumBJSONWithX9Date(t *testing.T) {
 		"payorAccountName": "",
 		"payorBankBusinessDate": "20210121"
 }`
-	assert.NoError(
+	require.NoError(
 		t,
 		json.Unmarshal([]byte(testBusinessDateJSON), &addB),
 		"Unable to unmarshal ReturnDetailAddendumB",
@@ -151,11 +151,11 @@ func TestParseAddendumBJSONWithX9Date(t *testing.T) {
 		time.RFC3339,
 		"2021-01-21T00:00:00Z",
 	)
-	assert.NoError(t, timeParseErr, "Unable to parse test time")
+	require.NoError(t, timeParseErr, "Unable to parse test time")
 	assert.True(t, addB.PayorBankBusinessDate.Equal(parsedTime), "PayorBankBusinessDate should match JSON")
 
 	marshalled, marshalErr := json.Marshal(addB)
-	assert.NoError(t, marshalErr, "Unable to marshal ReturnDetailAddendumB to JSON")
+	require.NoError(t, marshalErr, "Unable to marshal ReturnDetailAddendumB to JSON")
 	assert.Contains(
 		t,
 		string(marshalled),
@@ -176,7 +176,7 @@ func TestParseAddendumBJSONWithEmptyDate(t *testing.T) {
 		"payorBankBusinessDate": ""
 }`
 
-	assert.NoError(
+	require.NoError(
 		t,
 		json.Unmarshal([]byte(testNoBusinessDateJSON), &addB),
 		"Unable to unmarshal ReturnDetailAddendumB",
@@ -194,7 +194,7 @@ func TestParseAddendumBJSONWithEmptyDate(t *testing.T) {
 	)
 
 	marshalled, marshalErr := json.Marshal(addB)
-	assert.NoError(t, marshalErr, "Unable to marshal ReturnDetailAddendumB to JSON")
+	require.NoError(t, marshalErr, "Unable to marshal ReturnDetailAddendumB to JSON")
 	assert.NotContains(
 		t,
 		string(marshalled),

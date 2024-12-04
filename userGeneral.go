@@ -162,7 +162,7 @@ func (ug *UserGeneral) Validate() error {
 		return &FieldError{FieldName: "recordType", Value: ug.recordType, Msg: msg}
 	}
 	if ug.UserRecordFormatType == "001" {
-		msg := fmt.Sprint(msgInvalid)
+		msg := msgInvalid
 		return &FieldError{FieldName: "UserRecordFormatType", Value: ug.UserRecordFormatType, Msg: msg}
 	}
 	if err := ug.isOwnerIdentifierIndicator(ug.OwnerIdentifierIndicator); err != nil {

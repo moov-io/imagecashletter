@@ -258,7 +258,7 @@ func (cd *CheckDetail) Validate() error {
 	if cd.DocumentationTypeIndicator != "" {
 		// Z is valid for CashLetter DocumentationTypeIndicator only
 		if cd.DocumentationTypeIndicator == "Z" {
-			msg := fmt.Sprint(msgDocumentationTypeIndicator)
+			msg := msgDocumentationTypeIndicator
 			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: cd.DocumentationTypeIndicator, Msg: msg}
 		}
 		if err := cd.isDocumentationTypeIndicator(cd.DocumentationTypeIndicator); err != nil {

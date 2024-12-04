@@ -237,7 +237,7 @@ func (upe *UserPayeeEndorsement) Validate() error {
 		return &FieldError{FieldName: "recordType", Value: upe.recordType, Msg: msg}
 	}
 	if upe.UserRecordFormatType != "001" {
-		msg := fmt.Sprint(msgInvalid)
+		msg := msgInvalid
 		return &FieldError{FieldName: "UserRecordFormatType", Value: upe.UserRecordFormatType, Msg: msg}
 	}
 	if err := upe.isNumeric(upe.FormatTypeVersionLevel); err != nil {

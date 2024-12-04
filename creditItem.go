@@ -211,12 +211,12 @@ func (ci *CreditItem) Validate() error {
 	if ci.DocumentationTypeIndicator != "" {
 		// Z is valid for CashLetter DocumentationTypeIndicator only
 		if ci.DocumentationTypeIndicator == "Z" {
-			msg := fmt.Sprint(msgDocumentationTypeIndicator)
+			msg := msgDocumentationTypeIndicator
 			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: ci.DocumentationTypeIndicator, Msg: msg}
 		}
 		// M is not valid for CreditItem DocumentationTypeIndicator
 		if ci.DocumentationTypeIndicator == "M" {
-			msg := fmt.Sprint(msgDocumentationTypeIndicator)
+			msg := msgDocumentationTypeIndicator
 			return &FieldError{FieldName: "DocumentationTypeIndicator", Value: ci.DocumentationTypeIndicator, Msg: msg}
 		}
 		if err := ci.isDocumentationTypeIndicator(ci.DocumentationTypeIndicator); err != nil {
