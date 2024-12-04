@@ -421,10 +421,13 @@ func (r *Reader) parseCheckDetailAddendumA() error {
 		msg := fmt.Sprint(msgFileBundleOutside)
 		return r.error(&FileError{FieldName: "CheckDetailAddendumA", Msg: msg})
 	}
-	lineOut, err := r.decodeLine(r.line)
+	inputBytes := []byte(r.line)
+	adjustedBytes := handleIBM1047Compatibility(inputBytes)
+	lineOut, err := r.decodeLine(string(adjustedBytes))
 	if err != nil {
 		return err
 	}
+
 	cdAddendumA := NewCheckDetailAddendumA()
 	cdAddendumA.Parse(lineOut)
 	if err := cdAddendumA.Validate(); err != nil {
@@ -434,6 +437,29 @@ func (r *Reader) parseCheckDetailAddendumA() error {
 	// r.currentCashLetter.currentBundle.Checks[entryIndex].CheckDetailAddendumA = cdAddendumA
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumA(cdAddendumA)
 	return nil
+}
+
+func handleIBM1047Compatibility(input []byte) []byte {
+	if !IsFRBCompatibilityModeEnabled() {
+		return input
+	}
+
+	output := make([]byte, len(input))
+	copy(output, input)
+
+	// Replace bytes that map differently between IBM037 and IBM1047
+	// but only for the ascii subset see https://en.wikibooks.org/wiki/Character_Encodings/Code_Tables/EBCDIC/EBCDIC_1047
+	for i, b := range output {
+		switch b {
+		case 0xAD: // Ý -> [
+			output[i] = 0xBA
+		case 0xBD: // ¨ -> ]
+			output[i] = 0xBB
+		case 0x5F: // ¬ -> ^
+			output[i] = 0xB0
+		}
+	}
+	return output
 }
 
 // parseCheckDetailAddendumB takes the input record string and parses the CheckDetailAddendumB values

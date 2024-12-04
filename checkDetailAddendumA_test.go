@@ -187,7 +187,7 @@ func TestCDAddendumATruncationIndicatorFRB(t *testing.T) {
 	var e *FieldError
 	require.ErrorAs(t, err, &e)
 	require.Equal(t, "TruncationIndicator", e.FieldName)
-	t.Setenv(FRBCompatibilityMode, "")
+	t.Setenv(FRBCompatibilityMode, "true")
 	require.NoError(t, cdAddendumA.Validate())
 }
 
@@ -307,4 +307,58 @@ func TestStringFieldTrim(t *testing.T) {
 	cdAddendumA := mockCheckDetailAddendumA()
 	cdAddendumA.ReturnLocationRoutingNumber = "12345678912345"
 	require.Len(t, cdAddendumA.ReturnLocationRoutingNumberField(), 9)
+}
+
+func TestParseCheckDetailAddendumA_BOFDAccountEBCDIC(t *testing.T) {
+	t.Setenv("FRB_COMPATIBILITY_MODE", "true")
+	line := "\xf2\xf6" + // Record Type 26
+		strings.Repeat("\xf1", 33) + // Fill with '1's
+		"@@@@@@@@@@@" + // Spaces
+		"\xad\x85\x94\x97\xa3\xa8\xbd" + // [empty] in IBM1047
+		strings.Repeat("@", 20) + // More spaces
+		"\xe8\xf2\xf0@@@@" // End padding
+	r := NewReader(strings.NewReader(line), ReadEbcdicEncodingOption())
+	r.line = line
+
+	clh := mockCashLetterHeader()
+	r.addCurrentCashLetter(NewCashLetter(clh))
+	bh := mockBundleHeader()
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
+	cd := mockCheckDetail()
+	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
+
+	err := r.parseCheckDetailAddendumA()
+	require.NoError(t, err)
+
+	record := r.currentCashLetter.currentBundle.GetChecks()[0].CheckDetailAddendumA[0]
+	require.Equal(t, "[empty]", record.BOFDAccountNumber)
+	t.Setenv("FRB_COMPATIBILITY_MODE", "")
+}
+
+func TestParseCheckDetailAddendumA_BOFDAccountEBCDIC_NoFlag(t *testing.T) {
+	t.Setenv("FRB_COMPATIBILITY_MODE", "false")
+	line := "\xf2\xf6" +
+		strings.Repeat("\xf1", 33) +
+		"@@@@@@@@@@@" +
+		"\xad\x85\x94\x97\xa3\xa8\xbd" +
+		strings.Repeat("@", 20) +
+		"\xe8\xf2\xf0@@@@"
+
+	r := NewReader(strings.NewReader(line), ReadEbcdicEncodingOption())
+	r.line = line
+
+	clh := mockCashLetterHeader()
+	r.addCurrentCashLetter(NewCashLetter(clh))
+	bh := mockBundleHeader()
+	b := NewBundle(bh)
+	r.currentCashLetter.AddBundle(b)
+	r.addCurrentBundle(b)
+	cd := mockCheckDetail()
+	r.currentCashLetter.currentBundle.AddCheckDetail(cd)
+
+	err := r.parseCheckDetailAddendumA()
+	require.Error(t, err, "Expected an error when FRB_COMPATIBILITY_MODE is false")
+	t.Setenv("FRB_COMPATIBILITY_MODE", "")
 }
