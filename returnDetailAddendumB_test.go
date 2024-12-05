@@ -166,7 +166,7 @@ func TestParseAddendumBJSONWithX9Date(t *testing.T) {
 
 // TestParseAddendumBJSONWith3339Date tests parsing ReturnAddendumB with a PayorBankBusinessDate that is empty
 func TestParseAddendumBJSONWithEmptyDate(t *testing.T) {
-	addB := ReturnDetailAddendumB{}
+	addB := &ReturnDetailAddendumB{}
 	var testNoBusinessDateJSON = `{
 		"id": "",
 		"payorBankName": "",
@@ -174,7 +174,7 @@ func TestParseAddendumBJSONWithEmptyDate(t *testing.T) {
 		"payorBankSequenceNumber": "3713365088",
 		"payorAccountName": "",
 		"payorBankBusinessDate": ""
-}`
+	}`
 
 	require.NoError(
 		t,
