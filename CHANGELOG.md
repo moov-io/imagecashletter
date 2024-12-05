@@ -1,3 +1,16 @@
+## v0.11.4 (Released 2024-12-05)
+
+IMPROVEMENTS
+
+- extend ASCII compatibility in FRB compatibility mode (See [PR #386](https://github.com/moov-io/imagecashletter/pull/386) by [@Hillrunner2008](https://github.com/Hillrunner2008))
+
+BUILD
+
+- build(deps): bump rexml from 3.3.6 to 3.3.9 in /docs
+- fix(deps): update module golang.org/x/oauth2 to v0.24.0
+- build: increase fuzz job timeout
+- fix(deps): update module github.com/stretchr/testify to v1.10.0
+
 ## v0.11.3 (Released 2024-10-28)
 
 IMPROVEMENTS
