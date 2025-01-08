@@ -266,10 +266,13 @@ func TestCDAddendumAFIReturnLocationRoutingNumberZero(t *testing.T) {
 func TestCDAddendumAFIReturnLocationRoutingNumberZeroFRB(t *testing.T) {
 	cdAddendumA := mockCheckDetailAddendumA()
 	cdAddendumA.ReturnLocationRoutingNumber = "000000000"
+
 	// enable FRB mode and verify it passes
 	t.Setenv(FRBCompatibilityMode, "true")
 	require.NoError(t, cdAddendumA.Validate())
+
 	t.Setenv(FRBCompatibilityMode, "")
+	require.ErrorContains(t, cdAddendumA.Validate(), "ReturnLocationRoutingNumber")
 }
 
 // TestCDAddendumAFIBOFDEndorsementDate validation
