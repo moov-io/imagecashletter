@@ -8,13 +8,18 @@ build: check build-server build-webui
 build-server:
 	CGO_ENABLED=1 go build -o ./bin/server github.com/moov-io/imagecashletter/cmd/server
 
+GOROOT_PATH=$(shell go env GOROOT)
+WASM_124=$(GOROOT_PATH)/lib/wasm/wasm_exec.js
+WASM_123=$(GOROOT_PATH)/misc/wasm/wasm_exec.js
+TARGET_DIR=./docs/webui/assets
+
 build-webui:
-	@if [ -f "$(shell go env GOROOT)/lib/wasm/wasm_exec.js" ]; then \
-		cp $(shell go env GOROOT)/lib/wasm/wasm_exec.js ./docs/webui/assets/wasm_exec.js; \
+	@if [ -f "$(WASM_124)" ]; then \
+		cp "$(WASM_124)" "$(TARGET_DIR)/wasm_exec.js"; \
 	else \
-		cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./docs/webui/assets/wasm_exec.js; \
+		cp "$(WASM_123)" "$(TARGET_DIR)/wasm_exec.js"; \
 	fi
-	GOOS=js GOARCH=wasm go build -o ./docs/webui/assets/imagecashletter.wasm github.com/moov-io/imagecashletter/docs/webui/
+	GOOS=js GOARCH=wasm go build -o $(TARGET_DIR)/imagecashletter.wasm github.com/moov-io/imagecashletter/docs/webui/
 
 .PHONY: check
 check:
