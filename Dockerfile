@@ -1,4 +1,4 @@
-FROM golang:1.23 as builder
+FROM golang:1.24 as builder
 WORKDIR /go/src/github.com/moov-io/imagecashletter
 RUN apt-get update && apt-get install make gcc g++
 COPY . .
