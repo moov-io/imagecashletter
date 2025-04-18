@@ -238,6 +238,15 @@ func TestCDAddendumCFIEndorsingBankRoutingNumberZero(t *testing.T) {
 	require.Equal(t, "EndorsingBankRoutingNumber", e.FieldName)
 }
 
+// TestCDAddendumCFIEndorsingBankRoutingNumberZero validation
+func TestCDAddendumCFIEndorsingBankRoutingNumberZeroFRBEnabled(t *testing.T) {
+	cdAddendumC := mockCheckDetailAddendumC()
+	cdAddendumC.EndorsingBankRoutingNumber = "000000000"
+	t.Setenv(FRBCompatibilityMode, "true")
+	err := cdAddendumC.Validate()
+	require.Nil(t, err)
+}
+
 // TestCDAddendumCFIBOFDEndorsementBusinessDate validation
 func TestCDAddendumCFIBOFDEndorsementBusinessDate(t *testing.T) {
 	cdAddendumC := mockCheckDetailAddendumC()

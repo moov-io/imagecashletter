@@ -308,6 +308,13 @@ func TestIVDetailFIImageCreatorDate(t *testing.T) {
 	require.Equal(t, "ImageCreatorDate", e.FieldName)
 }
 
+func TestIVDetailFIImageCreatorDateFRB(t *testing.T) {
+	ivDetail := mockImageViewDetail()
+	ivDetail.ImageCreatorDate = time.Time{}
+	t.Setenv(FRBCompatibilityMode, "true")
+	require.NoError(t, ivDetail.Validate())
+}
+
 // TestIVDetailFIViewDescriptor validation
 func TestIVDetailFIViewDescriptor(t *testing.T) {
 	ivDetail := mockImageViewDetail()

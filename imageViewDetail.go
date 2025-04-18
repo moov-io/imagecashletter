@@ -371,7 +371,7 @@ func (ivDetail *ImageViewDetail) fieldInclusion() error {
 			Value: ivDetail.ImageCreatorRoutingNumber,
 			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
 	}
-	if ivDetail.ImageCreatorDate.IsZero() {
+	if ivDetail.ImageCreatorDate.IsZero() && !IsFRBCompatibilityModeEnabled() {
 		return &FieldError{FieldName: "ImageCreatorDate",
 			Value: ivDetail.ImageCreatorDate.String(),
 			Msg:   msgFieldInclusion + ", did you use ImageViewDetail()?"}
