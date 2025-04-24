@@ -238,7 +238,7 @@ func (cdAddendumC *CheckDetailAddendumC) fieldInclusion() error {
 			Value: cdAddendumC.EndorsingBankRoutingNumber,
 			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumC()?"}
 	}
-	if cdAddendumC.EndorsingBankRoutingNumberField() == "000000000" {
+	if cdAddendumC.EndorsingBankRoutingNumberField() == "000000000" && !IsFRBCompatibilityModeEnabled() {
 		return &FieldError{FieldName: "EndorsingBankRoutingNumber",
 			Value: cdAddendumC.EndorsingBankRoutingNumber,
 			Msg:   msgFieldInclusion + ", did you use CheckDetailAddendumC()?"}
