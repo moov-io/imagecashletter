@@ -135,6 +135,7 @@ type CashLetterHeader struct {
 	// affect the customer or its account.
 	// R: Customer–items being returned that directly affect a customer’s account.
 	// J: Reject Return
+	// N: Altered/fictitious Item. Suspected counterfeit/counterfeit
 	ReturnsIndicator string `json:"returnsIndicator"`
 	// UserField is a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`
