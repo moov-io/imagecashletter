@@ -1,3 +1,21 @@
+## v0.12.0 (Released 2025-04-30)
+
+IMPROVEMENTS
+
+- add support for return code `N` for `CashLetterHeader.ReturnsIndicator` ([#403](https://github.com/moov-io/imagecashletter/pull/403) by [@obscure76](https://github.com/obscure76))
+- validation logic updates for FRB compatibility mode ([#398](https://github.com/moov-io/imagecashletter/pull/398) by [@mtnat](https://github.com/mtnat))
+- skip `ReturnLocationRoutingNumber` zero validation when FRB compatibility is enabled ([#388](https://github.com/moov-io/imagecashletter/pull/388) by [@Hillrunner2008](https://github.com/Hillrunner2008))
+
+BUILD
+
+- build(deps): bump nokogiri from 1.16.7 to 1.18.8
+- build(deps): bump uri from 0.13.0 to 0.13.2
+- fix(deps): update module github.com/moov-io/base to v0.54.4
+- fix(deps): update module golang.org/x/oauth2 to v0.26.0
+- fix(deps): update module github.com/stretchr/testify to v1.10.0
+- build(webui): check both `lib/` and `misc/` for `wasm_exec.js`
+- chore(deps): update golang docker tag to v1.24
+
 ## v0.11.4 (Released 2024-12-05)
 
 IMPROVEMENTS
