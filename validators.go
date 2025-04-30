@@ -257,7 +257,9 @@ func (v *validator) isReturnsIndicator(code string) error {
 		// Customer–items being returned that directly affect a customer’s account.
 		"R",
 		// Reject Return
-		"J":
+		"J",
+		// Altered/Fictitious Item/Suspected Counterfeit/Counterfeit
+		"N":
 		return nil
 	}
 	return errors.New(msgInvalid)

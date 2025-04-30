@@ -183,12 +183,54 @@ func TestFedWorkType(t *testing.T) {
 
 // TestReturnsIndicator validation
 func TestReturnsIndicator(t *testing.T) {
+	testCases := []struct {
+		name             string
+		returnsIndicator string
+		err              bool
+	}{
+		{
+			name:             "Invalid ReturnsIndicator",
+			returnsIndicator: "A",
+			err:              true,
+		},
+		{
+			name:             "Valid ReturnsIndicator empty",
+			returnsIndicator: "",
+			err:              false,
+		},
+		{
+			name:             "Valid ReturnsIndicator E",
+			returnsIndicator: "E",
+			err:              false,
+		},
+		{
+			name:             "Valid ReturnsIndicator R",
+			returnsIndicator: "R",
+			err:              false,
+		},
+		{
+			name:             "Valid ReturnsIndicator J",
+			returnsIndicator: "J",
+			err:              false,
+		},
+		{
+			name:             "Valid ReturnsIndicator N",
+			returnsIndicator: "N",
+			err:              false,
+		},
+	}
 	clh := mockCashLetterHeader()
-	clh.ReturnsIndicator = "A"
-	err := clh.Validate()
 	var e *FieldError
-	require.ErrorAs(t, err, &e)
-	require.Equal(t, "ReturnsIndicator", e.FieldName)
+	for _, tc := range testCases {
+		clh.ReturnsIndicator = tc.returnsIndicator
+		err := clh.Validate()
+		if tc.err {
+			require.ErrorAs(t, err, &e)
+			require.Equal(t, "ReturnsIndicator", e.FieldName)
+		} else {
+			require.NoError(t, err)
+		}
+	}
 }
 
 // TestCLHUserField validation
