@@ -12,7 +12,7 @@ package openapi
 // IclFileControl struct for IclFileControl
 type IclFileControl struct {
 	// FileControl ID
-	ID string `json:"ID,omitempty"`
+	Id string `json:"id,omitempty"`
 	// CashLetterCount identifies the total number of cash letters within the file.
 	CashLetterCount int32 `json:"cashLetterCount"`
 	// TotalRecordCount identifies the total number of records of all types sent in the file, including the FileControl.

@@ -16,13 +16,13 @@ import (
 // ReturnDetailAddendumD struct for ReturnDetailAddendumD
 type ReturnDetailAddendumD struct {
 	// ReturnDetailAddendumD ID
-	ID string `json:"ID,omitempty"`
+	Id string `json:"id,omitempty"`
 	// RecordNumber is a number representing the order in which each ReturnDetailAddendumD was created. ReturnDetailAddendumD shall be in sequential order starting with 1.  Maximum 99.
 	RecordNumber int32 `json:"recordNumber,omitempty"`
 	// EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that endorsed the check.
 	EndorsingBankRoutingNumber string `json:"endorsingBankRoutingNumber"`
 	// BOFDEndorsementBusinessDate is the date of endorsement.
-	BOFDEndorsementBusinessDate time.Time `json:"bOFDEndorsementBusinessDate"`
+	BofdEndorsementBusinessDate time.Time `json:"bofdEndorsementBusinessDate"`
 	// EndorsingItemSequenceNumber is a number that identifies the item at the endorsing bank.
 	EndorsingBankSequenceNumber string `json:"endorsingBankSequenceNumber,omitempty"`
 	// TruncationIndicator identifies if the institution truncated the original check item.

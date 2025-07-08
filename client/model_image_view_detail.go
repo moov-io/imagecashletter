@@ -16,7 +16,7 @@ import (
 // ImageViewDetail struct for ImageViewDetail
 type ImageViewDetail struct {
 	// ImageViewDetail ID
-	ID string `json:"ID,omitempty"`
+	Id string `json:"id,omitempty"`
 	// ImageIndicator is a code that indicates the presence and disposition of an image view conveyed in the related ImageViewData.  When an image view is not present (0) then certain conditional fields in this ImageViewDetail and the related ImageViewData shall not be present and will be filled with blank space.  * `0` - Image view not present * `1` - Image view present, actual check * `2` - Image view present, not actual check * `3` - Image view present, unable to determine if value is 1 or 2
 	ImageIndicator int32 `json:"imageIndicator,omitempty"`
 	// ImageCreatorRoutingNumber identifies the financial institution that created the image view.

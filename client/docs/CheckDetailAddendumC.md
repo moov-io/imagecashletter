@@ -4,10 +4,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ID** | **string** | CheckDetailAddendumC ID | [optional] 
+**Id** | **string** | CheckDetailAddendumC ID | [optional] 
 **RecordNumber** | **int32** | RecordNumber is a number representing the order in which each CheckDetailAddendumC was created. CheckDetailAddendumC shall be in sequential order starting with 1. | 
 **EndorsingBankRoutingNumber** | **string** | EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that endorsed the check. | 
-**BOFDEndorsementBusinessDate** | [**time.Time**](time.Time.md) | BOFDEndorsementBusinessDate is the date of endorsement. | [optional] 
+**BofdEndorsementBusinessDate** | [**time.Time**](time.Time.md) | BOFDEndorsementBusinessDate is the date of endorsement. | 
 **EndorsingBankSequenceNumber** | **string** | EndorsingItemSequenceNumber is a number that identifies the item at the endorsing bank. | [optional] 
 **TruncationIndicator** | **string** | TruncationIndicator identifies if the institution truncated the original check item. | 
 **EndorsingBankConversionIndicator** | **string** | EndorsingBankConversionIndicator is a code that indicates the conversion within the processing institution between original paper check, image, and IRD. The indicator is specific to the action of the institution identified in the EndorsingBankRoutingNumber.  * &#x60;0&#x60; - Did not convert physical document * &#x60;1&#x60; - Original paper converted to IRD * &#x60;2&#x60; - Original paper converted to image * &#x60;3&#x60; - IRD converted to another IRD * &#x60;4&#x60; - IRD converted to image of IRD * &#x60;5&#x60; - Image converted to an IRD * &#x60;6&#x60; - Image converted to another image (e.g., transcoded) * &#x60;7&#x60; - Did not convert image (e.g., same as source) * &#x60;8&#x60; - Undetermined  | [optional] 

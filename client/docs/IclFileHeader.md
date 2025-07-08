@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ID** | **string** | FileHeader ID | [optional] 
+**Id** | **string** | FileHeader ID | [optional] 
 **StandardLevel** | **string** | StandardLevel identifies the standard level of the file.  * &#x60;03&#x60; - DSTU X9.37-2003 * &#x60;30&#x60; - X9.100-187-2008 * &#x60;35&#x60; - X9.100-187-2013 and X9.100-187-2016  | 
 **TestIndicator** | **string** | TestIndicator identifies whether the file is a test or production file.  * &#x60;T&#x60; - Test File * &#x60;P&#x60; - Production File  | 
 **ImmediateDestination** | **string** | ImmediateDestination is the routing and transit number of the Federal Reserve Bank (FRB) or receiver to which the file is being sent.  | 

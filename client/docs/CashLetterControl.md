@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ID** | **string** | CashLetterControl ID | [optional] 
+**Id** | **string** | CashLetterControl ID | [optional] 
 **CashLetterBundleCount** | **int32** | CashLetterBundleCount identifies the total number of bundles within the cash letter. | [optional] 
 **CashLetterItemsCount** | **int32** | CashLetterItemsCount identifies the total number of items within the cash letter. | 
 **CashLetterTotalAmount** | **int32** | CashLetterTotalAmount identifies the total dollar value of all item amounts within the cash letter. | 

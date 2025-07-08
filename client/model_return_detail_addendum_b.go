@@ -16,15 +16,15 @@ import (
 // ReturnDetailAddendumB struct for ReturnDetailAddendumB
 type ReturnDetailAddendumB struct {
 	// ReturnDetailAddendumB ID
-	ID string `json:"ID,omitempty"`
+	Id string `json:"id,omitempty"`
 	// PayorBankName is short name of the institution by or through which the item is payable.
 	PayorBankName string `json:"payorBankName,omitempty"`
 	// AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
 	AuxiliaryOnUs string `json:"auxiliaryOnUs,omitempty"`
 	// PayorBankSequenceNumber is a number that identifies the item at the payor bank.
-	PayorBankSequenceNumber string `json:"payorBankSequenceNumber,omitempty"`
+	PayorBankSequenceNumber string `json:"payorBankSequenceNumber"`
 	// PayorBankBusinessDate is the year, month, and day the payor bank processed the Return Record.
-	PayorBankBusinessDate time.Time `json:"payorBankBusinessDate,omitempty"`
+	PayorBankBusinessDate time.Time `json:"payorBankBusinessDate"`
 	// PayorAccountName is the account name from payor bank records.
 	PayorAccountName string `json:"payorAccountName,omitempty"`
 }

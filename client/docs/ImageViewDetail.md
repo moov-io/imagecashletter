@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ID** | **string** | ImageViewDetail ID | [optional] 
+**Id** | **string** | ImageViewDetail ID | [optional] 
 **ImageIndicator** | **int32** | ImageIndicator is a code that indicates the presence and disposition of an image view conveyed in the related ImageViewData.  When an image view is not present (0) then certain conditional fields in this ImageViewDetail and the related ImageViewData shall not be present and will be filled with blank space.  * &#x60;0&#x60; - Image view not present * &#x60;1&#x60; - Image view present, actual check * &#x60;2&#x60; - Image view present, not actual check * &#x60;3&#x60; - Image view present, unable to determine if value is 1 or 2  | [optional] 
 **ImageCreatorRoutingNumber** | **string** | ImageCreatorRoutingNumber identifies the financial institution that created the image view. | [optional] 
 **ImageCreatorDate** | [**time.Time**](time.Time.md) | ImageCreatorDate is the date assigned by the image creator for the image view conveyed in the related ImageData.  | [optional] 

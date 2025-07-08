@@ -12,23 +12,23 @@ package openapi
 // CreditItem struct for CreditItem
 type CreditItem struct {
 	// CreditItem ID
-	ID string `json:"ID,omitempty"`
+	Id string `json:"id,omitempty"`
 	// AuxiliaryOnUs identifies a code used at the discretion of the creating bank. The handling of dashes and spaces shall be determined between the exchange partners.
 	AuxiliaryOnUs string `json:"auxiliaryOnUs,omitempty"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.
 	ExternalProcessingCode string `json:"externalProcessingCode,omitempty"`
 	// PostingBankRoutingNumber is a routing number assigned by the posting bank to identify this credit.
-	PostingBankRoutingNumber string `json:"postingBankRoutingNumber,omitempty"`
+	PostingBankRoutingNumber string `json:"postingBankRoutingNumber"`
 	// OnUs identifies data specified by the payor bank. On-Us data usually consists of the payor’s account number, a serial number or transaction code, or both.
 	OnUs string `json:"onUs,omitempty"`
 	// Amount identifies the amount of the check.  All amounts fields have two implied decimal points. e.g., 100000 is $1,000.00.
 	ItemAmount int32 `json:"itemAmount,omitempty"`
 	// CreditItemSequenceNumber identifies a number assigned by the institution that creates the CreditItem.
-	CreditItemSequenceNumber string `json:"creditItemSequenceNumber,omitempty"`
+	CreditItemSequenceNumber string `json:"creditItemSequenceNumber"`
 	// DocumentationTypeIndicator is a code used to indicate the type of documentation that supports this record. Shall be present when Cash Letter Documentation Type Indicator in the Cash Letter Header Record is Defined Value of ‘Z’.  * `A` - No image provided, paper provided separately * `B` - No image provided, paper provided separately, image upon request * `C` - Image provided separately, no paper provided * `D` - Image provided separately, no paper provided, image upon request * `E` - Image and paper provided separately * `F` - Image and paper provided separately, image upon request * `G` - Image included, no paper provided * `H` - Image included, no paper provided, image upon request * `I` - Image included, paper provided separately * `J` - Image included, paper provided separately, image upon request * `K` - No image provided, no paper provided * `L` - No image provided, no paper provided, image upon request
 	DocumentationTypeIndicator string `json:"documentationTypeIndicator,omitempty"`
 	// AccountTypeCode is a code that indicates the type of account to which this CreditItem is associated.  * `0` - Unknown * `1` - DDA account * `2` - General Ledger account * `3` - Savings account * `4` - Money Market account * `5` - Other Account
-	AcccountTypeCode string `json:"acccountTypeCode,omitempty"`
+	AccountTypeCode string `json:"accountTypeCode,omitempty"`
 	// SourceWorkCode is a code used to identify the source of the work associated with this CreditItem.  * `00` - Unknown * `01` - Internal–ATM * `02` - Internal–Branch * `03` - Internal–Other * `04` - External–Bank to Bank (Correspondent) * `05` - External–Business to Bank (Customer) * `06` - External–Business to Bank Remote Capture * `07` - External–Processor to Bank * `08` - External–Bank to Processor * `09` - Lockbox * `10` - International–Internal * `11` - International–External * `21–50` - User Defined
 	SourceWorkCode string `json:"sourceWorkCode,omitempty"`
 	// UserField identifies a field used at the discretion of users of the standard.

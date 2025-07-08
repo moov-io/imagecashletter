@@ -389,7 +389,7 @@ components:
   schemas:
     CreateICLFile:
       properties:
-        ID:
+        id:
           type: string
           description: File ID
           example: 3f2d23ee214
@@ -409,7 +409,7 @@ components:
         - fileHeader
     ICLFile:
       properties:
-        ID:
+        id:
           type: string
           description: File ID
           example: 3f2d23ee214
@@ -427,7 +427,7 @@ components:
           $ref: '#/components/schemas/ICLFileControl'
     ICLFileHeader:
       properties:
-        ID:
+        id:
           description: FileHeader ID
           type: string
           example: d1e26288
@@ -538,7 +538,7 @@ components:
         - fileCreationTime
     ICLFileControl:
       properties:
-        ID:
+        id:
           type: string
           description: FileControl ID
           example: 'd1e26288'
@@ -618,7 +618,7 @@ components:
           $ref: '#/components/schemas/CashLetterControl'
     CashLetterHeader:
       properties:
-        ID:
+        id:
           description: CashLetterHeader ID
           type: string
           example: 'd1e26288'
@@ -771,7 +771,7 @@ components:
           example: 'V'
     CashLetterControl:
       properties:
-        ID:
+        id:
           type: string
           description: CashLetterControl ID
           example: 'd1e26288'
@@ -838,7 +838,7 @@ components:
           $ref: '#/components/schemas/BundleControl'
     BundleHeader:
       properties:
-        ID:
+        id:
           type: string
           description: BundleHeader ID
           example: 'd1e26288'
@@ -918,7 +918,7 @@ components:
           example: "B1234"
     BundleControl:
       properties:
-        ID:
+        id:
           type: string
           description: BundleControl ID
           example: 'd1e26288'
@@ -962,7 +962,7 @@ components:
         - bundleTotalAmount
     Checks:
       properties:
-        ID:
+        id:
           type: string
           description: Check ID
           example: d1e26288
@@ -1093,7 +1093,7 @@ components:
             * `E` -	Will accept final return notifications and image returns
             * `F` -	Will accept image returns only
           example: '1'
-        mICRValidIndicator:
+        micrValidIndicator:
           type: integer
           enum:
             - 1
@@ -1108,7 +1108,7 @@ components:
             * `3` - Read error encountered
             * `4` - Missing field and read error encountered
           example: 1
-        bOFDIndicator:
+        bofdIndicator:
           type: string
           maxLength: 1
           enum:
@@ -1200,7 +1200,7 @@ components:
             $ref: '#/components/schemas/ImageViewAnalysis'
     Returns:
       properties:
-        ID:
+        id:
           type: string
           description: Return ID
           example: d1e26288
@@ -1386,7 +1386,7 @@ components:
             $ref: '#/components/schemas/ImageViewAnalysis'
     CreditItem:
       properties:
-        ID:
+        id:
           type: string
           description: CreditItem ID
           example: d1e26288
@@ -1456,7 +1456,7 @@ components:
             * `K` - No image provided, no paper provided
             * `L` - No image provided, no paper provided, image upon request
           example: 'A'
-        acccountTypeCode:
+        accountTypeCode:
           type: string
           maxLength: 1
           enum:
@@ -1502,11 +1502,11 @@ components:
           description: UserField identifies a field used at the discretion of users of the standard.
           example: "B12345678"
       required:
-        - PostingBankRoutingNumber
-        - CreditItemSequenceNumbe
+        - postingBankRoutingNumber
+        - creditItemSequenceNumber
     RoutingNumberSummary:
       properties:
-        ID:
+        id:
           type: string
           description: RoutingNumberSummary ID
           example: d1e26288
@@ -1535,7 +1535,7 @@ components:
         - cashLetterRoutingNumber
     CheckDetailAddendumA:
       properties:
-        ID:
+        id:
           type: string
           description: CheckDetailAddendumA ID
           example: d1e26288
@@ -1552,22 +1552,22 @@ components:
           description: ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns,
             final return notifications, and preliminary return notifications are sent, usually the BOFD.
           example: '231486745'
-        bOFDEndorsementDate:
+        bofdEndorsementDate:
           type: string
           format: 'date-time'
           description: BOFDEndorsementDate is the date of endorsement.
           example: '2018-10-03T00:00:00Z'
-        bOFDItemSequenceNumber:
+        bofdItemSequenceNumber:
           type: string
           maxLength: 15
           description: BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
           example: '1'
-        bOFDAccountNumber:
+        bofdAccountNumber:
           type: string
           maxLength: 18
           description: BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
           example: '938383'
-        bOFDBranchCode:
+        bofdBranchCode:
           type: string
           maxLength: 5
           description: BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
@@ -1585,7 +1585,7 @@ components:
             - 'N'
           description: TruncationIndicator identifies if the institution truncated the original check item.
           example: 'Y'
-        bOFDConversionIndicator:
+        bofdConversionIndicator:
           type: string
           maxLength: 1
           enum:
@@ -1613,7 +1613,7 @@ components:
             * `7` - Did not convert image (e.g., same as source)
             * `8` - Undetermined
           example: '1'
-        BOFDCorrectionIndicator:
+        bofdCorrectionIndicator:
           type: integer
           enum:
             - 0
@@ -1643,7 +1643,7 @@ components:
         - truncationIndicator
     CheckDetailAddendumB:
       properties:
-        ID:
+        id:
           type: string
           description: CheckDetailAddendumB ID
           example: d1e26288
@@ -1685,10 +1685,10 @@ components:
             ImageReferenceKey is used to find the image of the item in the image data system.  Size is variable based on lengthImageReferenceKey.
             The position within the file is variable based on the lengthImageReferenceKey.
           example: '0'
-        descript:
+        description:
           type: string
           maxLength: 15
-          description: Descript describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
+          description: Description describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
           example: 'Payment'
         userField:
           type: string
@@ -1699,7 +1699,7 @@ components:
         - microfilmArchiveSequenceNumber
     CheckDetailAddendumC:
       properties:
-        ID:
+        id:
           type: string
           description:  CheckDetailAddendumC ID
           example: d1e26288
@@ -1716,7 +1716,7 @@ components:
           description: EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that
             endorsed the check.
           example: '231486745'
-        bOFDEndorsementBusinessDate:
+        bofdEndorsementBusinessDate:
           type: string
           format: 'date-time'
           description: BOFDEndorsementBusinessDate is the date of endorsement.
@@ -1810,7 +1810,7 @@ components:
         - truncationIndicator
     ImageViewDetail:
       properties:
-        ID:
+        id:
           type: string
           description: ImageViewDetail ID
           example: d1e26288
@@ -2051,7 +2051,7 @@ components:
           example: '0'
     ImageViewData:
       properties:
-        ID:
+        id:
           type: string
           description: ImageViewData ID
           example: 'd1e26288'
@@ -2073,7 +2073,7 @@ components:
           description: CycleNumber is a code assigned by the institution that creates the bundle.  Denotes the cycle under which
             the bundle is created.
           example: '1'
-        ivData.ECEInstitutionItemSequenceNumber:
+        eceInstitutionItemSequenceNumber:
           type: string
           maxLength: 15
           description: ECEInstitutionItemSequenceNumber is a number assigned by the institution that creates the
@@ -2082,21 +2082,21 @@ components:
             The ECE institution must construct the sequence number to guarantee uniqueness for a given routing number,
             business day, and cycle number. Must contain a numeric value.
           example: '1'
-        ivData.SecurityOriginatorName:
+        securityOriginatorName:
           type: string
           maxLength: 16
           description: SecurityOriginatorName is a unique name that creates the Digital Signature for data to be exchanged.
             Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
             Shall not be present when ImageViewDetail.ImageIndicator is 0.
           example: 'Name'
-        ivData.SecurityAuthenticatorName:
+        securityAuthenticatorName:
           type: string
           maxLength: 16
           description: SecurityAuthenticatorName is the unique name that performs authentication on received data.
             Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
             Shall not be present when ImageViewDetail.ImageIndicator is 0.
           example: 'Name'
-        ivData.SecurityKeyName:
+        securityKeyName:
           type: string
           maxLength: 16
           description: SecurityKeyName is a name or character sequence used by the signer (originator) to communicate a
@@ -2107,7 +2107,7 @@ components:
             Shall be present only under clearing arrangements and when ImageViewDetail.DigitalSignatureIndicator is 1
             Shall not be present when ImageViewDetail.ImageIndicator is 0.
           example: 'SECURE'
-        ivData.ClippingOrigin:
+        clippingOrigin:
           type: integer
           enum:
             - 0
@@ -2128,7 +2128,7 @@ components:
             * `3` - Clipping origin is bottom right corner of image view
             * `4` - Clipping origin is bottom left corner of image view
           example: 1
-        ivData.ClippingCoordinateH1:
+        clippingCoordinateH1:
           type: string
           maxLength: 4
           description: ClippingCoordinateH1 is a number that represents the horizontal offset in pixels from the
@@ -2142,7 +2142,7 @@ components:
             Shall not be present when ImageViewDetail.ImageIndicator is 0.
             Valid values - 0000–9999
           example: '0001'
-        ivData.ClippingCoordinateH2:
+        clippingCoordinateH2:
           type: string
           maxLength: 4
           description: ClippingCoordinateH2 is a number that represents the horizontal offset in pixels from the
@@ -2151,7 +2151,7 @@ components:
             Shall not be present when ImageViewDetail.ImageIndicator is 0.
             Valid values - 0000–9999
           example: '0001'
-        ivData.ClippingCoordinateV1:
+        clippingCoordinateV1:
           type: string
           maxLength: 4
           description: ClippingCoordinateV1 is a number that represents the vertical offset in pixels from the
@@ -2160,7 +2160,7 @@ components:
            Shall not be present when ImageViewDetail.ImageIndicator is 0.
            Valid values - 0000–9999
           example: '0001'
-        ivData.ClippingCoordinateV2:
+        clippingCoordinateV2:
           type: string
           maxLength: 4
           description: ClippingCoordinateV2 is a number that represents the vertical offset in pixels from the
@@ -2169,7 +2169,7 @@ components:
             Shall not be present when ImageViewDetail.ImageIndicator is 0.
             Valid values - 0000–9999
           example: '0001'
-        ivData.LengthImageReferenceKey:
+        lengthImageReferenceKey:
           type: string
           maxLength: 4
           description: LengthImageReferenceKey is the number of characters in the ImageViewData.ImageReferenceKey.
@@ -2178,7 +2178,7 @@ components:
             0000	ImageReferenceKey is not present
             0001–9999  Valid when ImageReferenceKey is present
           example: '0001'
-        ivData.ImageReferenceKey:
+        imageReferenceKey:
           type: string
           maxLength: 4
           description: ImageReferenceKey is assigned by the ECE institution that creates the CheckDetail or Return, and the related
@@ -2189,13 +2189,13 @@ components:
            CheckDetailAddendumB.ImageReferenceKey, or ReturnAddendumCImageReferenceKey Record, if used.
            Valid size - 0 – 9999
           example: '0'
-        ivData.LengthDigitalSignature:
+        lengthDigitalSignature:
           type: string
           maxLength: 4
           description: LengthDigitalSignature is the number of bytes in the Image View Data.DigitalSignature.
             Shall not be present when ImageViewDetail.ImageIndicator is 0.
           example: '0    '
-        ivData.DigitalSignature:
+        digitalSignature:
           type: string
           maxLength: 5
           description: DigitalSignature is created by applying the cryptographic algorithm and private/secret key
@@ -2204,14 +2204,14 @@ components:
             Shall not be present when ImageViewDetail.ImageIndicator is 0.
             Valid size - 0-99999
           example: '0101'
-        ivData.LengthImageData:
+        lengthImageData:
           type: string
           maxLength: 8
           description: LengthImageData is the number of bytes in the ImageViewData.ImageData.
            Shall be present when ImageViewDetail.ImageIndicator is NOT 0
            Valid values - 0000001–99999999
           example: '0000001'
-        ivData.ImageData:
+        imageData:
           type: string
           maxLength: 7
           description: ImageData contains the image view. The Image Data generally consists of an image header and the
@@ -2230,7 +2230,7 @@ components:
           example: '0101'
     ImageViewAnalysis:
       properties:
-        ID:
+        id:
           type: string
           description: ImageViewAnalysis ID
           example: 'd1e26288'
@@ -2501,7 +2501,7 @@ components:
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
             example: 0
-        mICRLineUsability:
+        micrLineUsability:
             type: integer
             enum:
               - 0
@@ -2561,7 +2561,7 @@ components:
               * `1` -  The image was tested and one or more image quality conditions were reported
               * `2` -  The image was tested and no image quality conditions were reported
             example: 0
-        bOFDEndorsementUsability:
+        bofdEndorsementUsability:
             type: integer
             enum:
               - 0
@@ -2598,7 +2598,7 @@ components:
             example: 'ZZZZZ'
     ReturnDetailAddendumA:
       properties:
-        ID:
+        id:
           type: string
           description: ReturnDetailAddendumA ID
           example: d1e26288
@@ -2615,22 +2615,22 @@ components:
           description: ReturnLocationRoutingNumber is a valid routing and transit number indicating where returns,
             final return notifications, and preliminary return notifications are sent, usually the BOFD.
           example: '231486745'
-        bOFDEndorsementDate:
+        bofdEndorsementDate:
           type: string
           format: 'date-time'
           description: BOFDEndorsementDate is the date of endorsement.
           example: '2018-10-03T00:00:00Z'
-        bOFDItemSequenceNumber:
+        bofdItemSequenceNumber:
           type: string
           maxLength: 15
           description: BOFDItemSequenceNumber is a number that identifies the item in the CheckDetailAddendumA.
           example: '1'
-        bOFDAccountNumber:
+        bofdAccountNumber:
           type: string
           maxLength: 18
           description: BOFDAccountNumber is a number that identifies the depository account at the Bank of First Deposit.
           example: '938383'
-        bOFDBranchCode:
+        bofdBranchCode:
           type: string
           maxLength: 5
           description: BOFDBranchCode is a code that identifies the branch at the Bank of First Deposit.
@@ -2648,7 +2648,7 @@ components:
             - 'N'
           description: TruncationIndicator identifies if the institution truncated the original check item.
           example: 'Y'
-        bOFDConversionIndicator:
+        bofdConversionIndicator:
           type: string
           maxLength: 1
           enum:
@@ -2676,7 +2676,7 @@ components:
             * `7` - Did not convert image (e.g., same as source)
             * `8` - Undetermined
           example: '1'
-        BOFDCorrectionIndicator:
+        bofdCorrectionIndicator:
           type: integer
           enum:
             - 0
@@ -2706,7 +2706,7 @@ components:
         - truncationIndicator
     ReturnDetailAddendumB:
       properties:
-        ID:
+        id:
           type: string
           description: ReturnDetailAddendumB ID
           example: d1e26288
@@ -2736,11 +2736,11 @@ components:
           description: PayorAccountName is the account name from payor bank records.
           example: 'Account Name'
       required:
-        - PayorBankSequenceNumber
-        - PayorBankBusinessDate
+        - payorBankSequenceNumber
+        - payorBankBusinessDate
     ReturnDetailAddendumC:
       properties:
-        ID:
+        id:
           type: string
           description:  ReturnDetailAddendumC ID
           example: d1e26288
@@ -2782,10 +2782,10 @@ components:
             ImageReferenceKey is used to find the image of the item in the image data system.  Size is variable based on lengthImageReferenceKey.
             The position within the file is variable based on the lengthImageReferenceKey.
           example: '0'
-        descript:
+        description:
           type: string
           maxLength: 15
-          description: Descript describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
+          description: Description describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
           example: 'Payment'
         userField:
           type: string
@@ -2794,7 +2794,7 @@ components:
           example: 'ZZZZ'
     ReturnDetailAddendumD:
       properties:
-        ID:
+        id:
           type: string
           description:  ReturnDetailAddendumD ID
           example: d1e26288
@@ -2812,7 +2812,7 @@ components:
           description: EndorsingBankRoutingNumber is a valid routing and transit number indicating the bank that
             endorsed the check.
           example: '231486745'
-        bOFDEndorsementBusinessDate:
+        bofdEndorsementBusinessDate:
           type: string
           format: 'date-time'
           description: BOFDEndorsementBusinessDate is the date of endorsement.
@@ -2901,6 +2901,6 @@ components:
           example: 0
       required:
         - endorsingBankRoutingNumber
-        - bOFDEndorsementBusinessDate
+        - bofdEndorsementBusinessDate
         - endorsingBankItemSequenceNumber
         - truncationIndicator

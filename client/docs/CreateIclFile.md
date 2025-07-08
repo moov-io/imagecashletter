@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ID** | **string** | File ID | [optional] 
+**Id** | **string** | File ID | [optional] 
 **FileHeader** | [**IclFileHeader**](ICLFileHeader.md) |  | 
 **CashLetters** | [**[]CashLetter**](CashLetter.md) |  | [optional] 
 **Bundles** | [**[]Bundle**](Bundle.md) |  | [optional] 
