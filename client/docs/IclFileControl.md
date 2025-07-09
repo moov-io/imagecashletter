@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ID** | **string** | FileControl ID | [optional] 
+**Id** | **string** | FileControl ID | [optional] 
 **CashLetterCount** | **int32** | CashLetterCount identifies the total number of cash letters within the file. | 
 **TotalRecordCount** | **int32** | TotalRecordCount identifies the total number of records of all types sent in the file, including the FileControl. | 
 **TotalItemCount** | **int32** | totalItemCount identifies the total number of Items sent within the file. | 

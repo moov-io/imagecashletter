@@ -16,7 +16,7 @@ import (
 // CashLetterHeader struct for CashLetterHeader
 type CashLetterHeader struct {
 	// CashLetterHeader ID
-	ID string `json:"ID,omitempty"`
+	Id string `json:"id,omitempty"`
 	// CollectionTypeIndicator is a code that identifies the type of cash letter.  * `00` - Preliminary Forward Information * `01` - Forward Presentment * `02` - Forward Presentment - Same-Day Settlement * `03` - Return * `04` - Return Notification * `05` - Preliminary Return Notification * `06` - Final Return Notification * `20` - No Detail * `99` - Bundles not the same collection type. Use of the value is only allowed by clearing arrangement.
 	CollectionTypeIndicator string `json:"collectionTypeIndicator,omitempty"`
 	// DestinationRoutingNumber is the routing and transit number of the institution that receives and processes the cash letter or the bundle.

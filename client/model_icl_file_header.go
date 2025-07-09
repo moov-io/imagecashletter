@@ -16,7 +16,7 @@ import (
 // IclFileHeader struct for IclFileHeader
 type IclFileHeader struct {
 	// FileHeader ID
-	ID string `json:"ID,omitempty"`
+	Id string `json:"id,omitempty"`
 	// StandardLevel identifies the standard level of the file.  * `03` - DSTU X9.37-2003 * `30` - X9.100-187-2008 * `35` - X9.100-187-2013 and X9.100-187-2016
 	StandardLevel string `json:"standardLevel"`
 	// TestIndicator identifies whether the file is a test or production file.  * `T` - Test File * `P` - Production File

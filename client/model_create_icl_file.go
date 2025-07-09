@@ -12,7 +12,7 @@ package openapi
 // CreateIclFile struct for CreateIclFile
 type CreateIclFile struct {
 	// File ID
-	ID          string         `json:"ID,omitempty"`
+	Id          string         `json:"id,omitempty"`
 	FileHeader  IclFileHeader  `json:"fileHeader"`
 	CashLetters []CashLetter   `json:"cashLetters,omitempty"`
 	Bundles     []Bundle       `json:"bundles,omitempty"`

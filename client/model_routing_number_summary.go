@@ -12,7 +12,7 @@ package openapi
 // RoutingNumberSummary struct for RoutingNumberSummary
 type RoutingNumberSummary struct {
 	// RoutingNumberSummary ID
-	ID string `json:"ID,omitempty"`
+	Id string `json:"id,omitempty"`
 	// CashLetterRoutingNumber is a number that identifies a given payor bank within a cash letter containing one or more payor banks.
 	CashLetterRoutingNumber string `json:"cashLetterRoutingNumber"`
 	// RoutingNumberTotalAmount is the total amount for all Check Records associated with the payor bank routing number designated in the Routing Number within the Cash Letter.

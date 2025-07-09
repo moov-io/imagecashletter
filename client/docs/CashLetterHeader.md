@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ID** | **string** | CashLetterHeader ID | [optional] 
+**Id** | **string** | CashLetterHeader ID | [optional] 
 **CollectionTypeIndicator** | **string** | CollectionTypeIndicator is a code that identifies the type of cash letter.  * &#x60;00&#x60; - Preliminary Forward Information * &#x60;01&#x60; - Forward Presentment * &#x60;02&#x60; - Forward Presentment - Same-Day Settlement * &#x60;03&#x60; - Return * &#x60;04&#x60; - Return Notification * &#x60;05&#x60; - Preliminary Return Notification * &#x60;06&#x60; - Final Return Notification * &#x60;20&#x60; - No Detail * &#x60;99&#x60; - Bundles not the same collection type. Use of the value is only allowed by clearing arrangement.  | [optional] 
 **DestinationRoutingNumber** | **string** | DestinationRoutingNumber is the routing and transit number of the institution that receives and processes the cash letter or the bundle. | [optional] 
 **EceInstitutionRoutingNumber** | **string** | ECEInstitutionRoutingNumber is the routing and transit number of the institution that creates the Cash Letter Header record. | [optional] 

@@ -40,7 +40,7 @@ type CheckDetailAddendumB struct {
 	LengthImageReferenceKey string `json:"imageReferenceKeyLength"`
 	// ImageReferenceKey  is used to find the image of the item in the image data system.
 	ImageReferenceKey string `json:"imageReferenceKey"`
-	//Description describes the transaction
+	// Description describes the transaction
 	Description string `json:"description"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`

@@ -12,7 +12,7 @@ package openapi
 // Checks struct for Checks
 type Checks struct {
 	// Check ID
-	ID string `json:"ID,omitempty"`
+	Id string `json:"id,omitempty"`
 	// AuxiliaryOnUs identifies a code used on commercial checks at the discretion of the payor bank.
 	AuxiliaryOnUs string `json:"auxiliaryOnUs,omitempty"`
 	// ExternalProcessingCode identifies a code used for special purposes as authorized by the Accredited Standards Committee X9. Also known as Position 44.
@@ -32,9 +32,9 @@ type Checks struct {
 	// ReturnAcceptanceIndicator is a code that indicates whether the institution that creates the Check will or will not support electronic return processing.  * `0` - Will not accept any electronic information * `1` - Will accept preliminary return notifications, returns, and final return notifications * `2` - Will accept preliminary return notifications and returns * `3` - Will accept preliminary return notifications and final return notifications * `4` - Will accept returns and final return notifications * `5` - Will accept preliminary return notifications only * `6` - Will accept returns only * `7` - Will accept final return notifications only * `8` - Will accept preliminary return notifications, returns, final return notifications, and image returns * `9` - Will accept preliminary return notifications, returns and image returns * `A` - Will accept preliminary return notifications, final return notifications and image returns * `B` - Will accept returns, final return notifications and image returns * `C` - Will accept preliminary return notifications and image returns * `D` - Will accept returns and image returns * `E` - Will accept final return notifications and image returns * `F` - Will accept image returns only
 	ReturnAcceptanceIndicator string `json:"returnAcceptanceIndicator,omitempty"`
 	// MICRValidIndicator is a code that indicates whether any character in the Magnetic Ink Character Recognition (MICR) property is unreadable, or the OnUs property is missing from the Check. * `1` - Good read * `2` - Good read, missing field * `3` - Read error encountered * `4` - Missing field and read error encountered
-	MICRValidIndicator int32 `json:"mICRValidIndicator,omitempty"`
+	MicrValidIndicator int32 `json:"micrValidIndicator,omitempty"`
 	// BOFDIndicator is a code that indicates whether the ECE institution indicated on the Bundle Header Record (Type 20) is the Bank of First Deposit (BOFD). This field shall be consistent with values contained in the Check Detail Addendum A Record (Type 26) and Check Detail Addendum C Record (Type 28). * `Y` - ECE institution is BOFD * `N` - ECE institution is not BOFD * `U` - ECE institution relationship to BOFD is undetermined
-	BOFDIndicator string `json:"bOFDIndicator,omitempty"`
+	BofdIndicator string `json:"bofdIndicator,omitempty"`
 	// AddendumCount is a number of Check Detail Record Addenda to follow. This represents the number of CheckDetailAddendumA, CheckDetailAddendumB, and CheckDetailAddendumC types. It matches the total number of addendum records associated with this item. The standard supports up to 99 addendum records.
 	AddendumCount int32 `json:"addendumCount,omitempty"`
 	// CorrectionIndicator identifies whether and how the MICR line was repaired, for fields other than Payor Bank Routing Number and Amount. * `0` - No Repair * `1` - Repaired (form of repair unknown) * `2` - Repaired without Operator intervention * `3` - Repaired with Operator intervention * `4` - Undetermined if repair has been done or not

@@ -12,7 +12,7 @@ package openapi
 // ReturnDetailAddendumC struct for ReturnDetailAddendumC
 type ReturnDetailAddendumC struct {
 	// ReturnDetailAddendumC ID
-	ID string `json:"ID,omitempty"`
+	Id string `json:"id,omitempty"`
 	// ImageReferenceKeyIndicator identifies whether ImageReferenceKeyLength contains a variable value within the allowable range, or contains a defined value and the content is ItemReferenceKey.  * `0` - ImageReferenceKeyIndicator has a Defined Value of 0034 and ImageReferenceKey contains the Image Reference Key. * `1`- ImageReferenceKeyIndicator contains a value other than 0034; or ImageReferenceKeyIndicator contains Value 0034, which is not a Defined Value, and the content of ImageReferenceKey has no special significance with regards to an Image Reference Key; or ImageReferenceKeyIndicator is 0000, meaning the ImageReferenceKey is not present.
 	ImageReferenceKeyIndicator int32 `json:"imageReferenceKeyIndicator,omitempty"`
 	// microfilmArchiveSequenceNumber is a number that identifies the item in the microfilm archive system; it may be different than the Check.ECEInstitutionItemSequenceNumber and from the ImageReferenceKey.
@@ -21,8 +21,8 @@ type ReturnDetailAddendumC struct {
 	LengthImageReferenceKey string `json:"lengthImageReferenceKey,omitempty"`
 	// ImageReferenceKey is used to find the image of the item in the image data system.  Size is variable based on lengthImageReferenceKey. The position within the file is variable based on the lengthImageReferenceKey.
 	ImageReferenceKey string `json:"imageReferenceKey,omitempty"`
-	// Descript describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
-	Descript string `json:"descript,omitempty"`
+	// Description describes the transaction.  The position within the file is variable based on the lengthImageReferenceKey.
+	Description string `json:"description,omitempty"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField,omitempty"`
 }
