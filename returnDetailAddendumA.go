@@ -7,7 +7,6 @@ package imagecashletter
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -60,7 +59,7 @@ type ReturnDetailAddendumA struct {
 	// BOFDConversionIndicator is a code that indicates the conversion within the processing institution between
 	// original paper check, image and IRD. The indicator is specific to the action of institution that created
 	// this record.
-	//Values:
+	// Values:
 	// 0: Did not convert physical document
 	// 1: Original paper converted to IRD
 	// 2: Original paper converted to image
@@ -326,7 +325,6 @@ func (rdAddendumA *ReturnDetailAddendumA) reservedField() string {
 
 // SetBOFDItemSequenceNumber sets BOFDItemSequenceNumber
 func (rdAddendumA *ReturnDetailAddendumA) SetBOFDItemSequenceNumber(seq int) string {
-	itemSequence := strconv.Itoa(seq)
-	rdAddendumA.BOFDItemSequenceNumber = itemSequence
+	rdAddendumA.BOFDItemSequenceNumber = rdAddendumA.numericField(seq, 15)
 	return rdAddendumA.BOFDItemSequenceNumber
 }

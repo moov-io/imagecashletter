@@ -7,7 +7,6 @@ package imagecashletter
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -318,7 +317,6 @@ func (rdAddendumD *ReturnDetailAddendumD) reservedField() string {
 
 // SetEndorsingBankItemSequenceNumber sets EndorsingBankItemSequenceNumber
 func (rdAddendumD *ReturnDetailAddendumD) SetEndorsingBankItemSequenceNumber(seq int) string {
-	itemSequence := strconv.Itoa(seq)
-	rdAddendumD.EndorsingBankItemSequenceNumber = itemSequence
+	rdAddendumD.EndorsingBankItemSequenceNumber = rdAddendumD.numericField(seq, 15)
 	return rdAddendumD.EndorsingBankItemSequenceNumber
 }

@@ -62,3 +62,49 @@ func TestCashLetterRoutingNumberSummary(t *testing.T) {
 	require.ErrorAs(t, err, &e)
 	require.Equal(t, "CollectionTypeIndicator", e.FieldName)
 }
+
+func TestCashLetter_customSequenceNumber(t *testing.T) {
+	// Create a forward check bundle
+	checkBundleHeader := mockBundleHeader()
+	checkBundleHeader.SetBundleSequenceNumber(564)
+	checkBundle := NewBundle(checkBundleHeader)
+	cd := mockCheckDetail()
+	cd.SetEceInstitutionItemSequenceNumber(283)
+	cd.AddendumCount = 2
+	cd.AddCheckDetailAddendumA(mockCheckDetailAddendumA())
+	cd.AddCheckDetailAddendumC(mockCheckDetailAddendumC())
+	checkBundle.AddCheckDetail(cd)
+
+	// Create a return bundle
+	returnBundleHeader := mockBundleHeader()
+	returnBundleHeader.BundleSequenceNumber = "" // test auto-increment behavior
+	returnBundle := NewBundle(returnBundleHeader)
+	rd := mockReturnDetail()
+	rd.SetEceInstitutionItemSequenceNumber(4923)
+	rd.AddendumCount = 2
+	rd.AddReturnDetailAddendumA(mockReturnDetailAddendumA())
+	rd.AddReturnDetailAddendumD(mockReturnDetailAddendumD())
+	returnBundle.AddReturnDetail(rd)
+
+	clh := mockCashLetterHeader()
+	cl := NewCashLetter(clh)
+	cl.AddBundle(checkBundle)
+	cl.AddBundle(returnBundle)
+	require.NoError(t, cl.Create())
+
+	require.Len(t, cl.Bundles, 2)
+	require.Equal(t, "0564", cl.Bundles[0].BundleHeader.BundleSequenceNumber)
+	require.Equal(t, "0565", cl.Bundles[1].BundleHeader.BundleSequenceNumber)
+
+	require.Len(t, cl.Bundles[0].Checks, 1)
+	wantCheckSeq := "000000000000283"
+	require.Equal(t, wantCheckSeq, cl.Bundles[0].Checks[0].EceInstitutionItemSequenceNumber)
+	require.Equal(t, wantCheckSeq, cl.Bundles[0].Checks[0].CheckDetailAddendumC[0].EndorsingBankItemSequenceNumber)
+	require.Equal(t, wantCheckSeq, cl.Bundles[0].Checks[0].CheckDetailAddendumA[0].BOFDItemSequenceNumber)
+
+	require.Len(t, cl.Bundles[1].Returns, 1)
+	wantReturnSeq := "000000000004923"
+	require.Equal(t, wantReturnSeq, cl.Bundles[1].Returns[0].EceInstitutionItemSequenceNumber)
+	require.Equal(t, wantReturnSeq, cl.Bundles[1].Returns[0].ReturnDetailAddendumA[0].BOFDItemSequenceNumber)
+	require.Equal(t, wantReturnSeq, cl.Bundles[1].Returns[0].ReturnDetailAddendumD[0].EndorsingBankItemSequenceNumber)
+}

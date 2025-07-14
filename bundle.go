@@ -50,6 +50,8 @@ type Bundle struct {
 	Returns []*ReturnDetail `json:"returns,omitempty"`
 	// BundleControl is a Bundle Control Record
 	BundleControl *BundleControl `json:"bundleControl,omitempty"`
+
+	converters
 }
 
 // NewBundle takes a BundleHeader and returns a Bundle

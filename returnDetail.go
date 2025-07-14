@@ -499,8 +499,7 @@ func (rd *ReturnDetail) GetImageViewAnalysis() []ImageViewAnalysis {
 
 // SetEceInstitutionItemSequenceNumber sets EceInstitutionItemSequenceNumber
 func (rd *ReturnDetail) SetEceInstitutionItemSequenceNumber(seq int) string {
-	itemSequence := strconv.Itoa(seq)
-	rd.EceInstitutionItemSequenceNumber = itemSequence
+	rd.EceInstitutionItemSequenceNumber = rd.numericField(seq, 15)
 	return rd.EceInstitutionItemSequenceNumber
 }
 
