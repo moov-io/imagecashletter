@@ -7,7 +7,6 @@ package imagecashletter
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -74,7 +73,7 @@ type CheckDetailAddendumC struct {
 	ReturnReason string `json:"returnReason"`
 	// UserField identifies a field used at the discretion of users of the standard.
 	UserField string `json:"userField"`
-	//EndorsingBankIdentifier
+	// EndorsingBankIdentifier
 	// Values:
 	// 0: Depository Bank (BOFD) - this value is used when the CheckDetailAddendumC Record reflects the Return
 	// Processing Bank in lieu of BOFD.
@@ -318,7 +317,6 @@ func (cdAddendumC *CheckDetailAddendumC) reservedField() string {
 
 // SetEndorsingBankItemSequenceNumber sets EndorsingBankItemSequenceNumber
 func (cdAddendumC *CheckDetailAddendumC) SetEndorsingBankItemSequenceNumber(seq int) string {
-	itemSequence := strconv.Itoa(seq)
-	cdAddendumC.EndorsingBankItemSequenceNumber = itemSequence
+	cdAddendumC.EndorsingBankItemSequenceNumber = cdAddendumC.numericField(seq, 15)
 	return cdAddendumC.EndorsingBankItemSequenceNumber
 }

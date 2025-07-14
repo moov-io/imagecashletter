@@ -146,6 +146,9 @@ func (cl *CashLetter) build() error {
 	for _, b := range cl.Bundles {
 
 		// Set Bundle Sequence Numbers
+		if b.BundleHeader.BundleSequenceNumber != "" {
+			bundleSequenceNumber = b.parseNumField(b.BundleHeader.BundleSequenceNumber)
+		}
 		b.BundleHeader.SetBundleSequenceNumber(bundleSequenceNumber)
 
 		// Sequence  Number
@@ -155,8 +158,7 @@ func (cl *CashLetter) build() error {
 		for _, cd := range b.Checks {
 
 			if cd.EceInstitutionItemSequenceNumber != "" {
-				i := cd.parseNumField(cd.EceInstitutionItemSequenceNumber)
-				cdSequenceNumber = i
+				cdSequenceNumber = cd.parseNumField(cd.EceInstitutionItemSequenceNumber)
 			}
 
 			// Record Numbers
@@ -190,19 +192,22 @@ func (cl *CashLetter) build() error {
 			cashLetterImagesCount = cashLetterImagesCount + len(cd.ImageViewDetail)
 		}
 
+		rdSequenceNumber := 1
+
 		// Returns Items
 		for _, rd := range b.Returns {
 
-			// Sequence  Number
-			var rdSequenceNumber int
-			rdSequenceNumber++
+			// Override the default sequence number if set
+			if rd.EceInstitutionItemSequenceNumber != "" {
+				rdSequenceNumber = rd.parseNumField(rd.EceInstitutionItemSequenceNumber)
+			}
+
+			// Set ReturnDetail Sequence Numbers
+			rd.SetEceInstitutionItemSequenceNumber(rdSequenceNumber)
 
 			// Record Numbers
 			rdAddendumARecordNumber := 1
 			rdAddendumDRecordNumber := 1
-
-			// Set ReturnDetail Sequence Numbers
-			rd.SetEceInstitutionItemSequenceNumber(rdSequenceNumber)
 
 			// Set Addenda SequenceNumber and RecordNumber
 			for i := range rd.ReturnDetailAddendumA {
