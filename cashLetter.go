@@ -179,7 +179,7 @@ func (cl *CashLetter) build() error {
 			}
 			for x := range cd.CheckDetailAddendumC {
 				cd.CheckDetailAddendumC[x].SetEndorsingBankItemSequenceNumber(cdSequenceNumber)
-				cd.CheckDetailAddendumC[x].RecordNumber = cdAddendumARecordNumber
+				cd.CheckDetailAddendumC[x].RecordNumber = cdAddendumCRecordNumber
 				cdAddendumCRecordNumber++
 				if cdAddendumCRecordNumber > 99 {
 					cdAddendumCRecordNumber = 1
