@@ -178,7 +178,9 @@ func (cl *CashLetter) build() error {
 				}
 			}
 			for x := range cd.CheckDetailAddendumC {
-				cd.CheckDetailAddendumC[x].SetEndorsingBankItemSequenceNumber(cdSequenceNumber)
+				if cd.CheckDetailAddendumC[x].EndorsingBankItemSequenceNumber != "" {
+					cd.CheckDetailAddendumC[x].SetEndorsingBankItemSequenceNumber(cdSequenceNumber)
+				}
 				cd.CheckDetailAddendumC[x].RecordNumber = cdAddendumCRecordNumber
 				cdAddendumCRecordNumber++
 				if cdAddendumCRecordNumber > 99 {
