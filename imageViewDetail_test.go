@@ -270,16 +270,20 @@ func TestIVDetailFIRecordType(t *testing.T) {
 func TestIVDetailFIImageCreatorRoutingNumber(t *testing.T) {
 	ivDetail := mockImageViewDetail()
 	ivDetail.ImageCreatorRoutingNumber = ""
+	t.Setenv(FRBCompatibilityMode, "false")
 	err := ivDetail.Validate()
 	var e *FieldError
 	require.ErrorAs(t, err, &e)
 	require.Equal(t, "ImageCreatorRoutingNumber", e.FieldName)
+	t.Setenv(FRBCompatibilityMode, "true")
+	require.NoError(t, ivDetail.Validate())
 }
 
 // TestIVDetailFIImageCreatorRoutingNumberFRB validation
 func TestIVDetailFIImageCreatorRoutingNumberFRB(t *testing.T) {
 	ivDetail := mockImageViewDetail()
 	ivDetail.ImageCreatorRoutingNumber = "00000000"
+	t.Setenv(FRBCompatibilityMode, "false")
 	err := ivDetail.Validate()
 	var e *FieldError
 	require.ErrorAs(t, err, &e)
@@ -292,10 +296,14 @@ func TestIVDetailFIImageCreatorRoutingNumberFRB(t *testing.T) {
 func TestIVDetailFIImageCreatorRoutingNumberZero(t *testing.T) {
 	ivDetail := mockImageViewDetail()
 	ivDetail.ImageCreatorRoutingNumber = "000000000"
+	t.Setenv(FRBCompatibilityMode, "false")
 	err := ivDetail.Validate()
 	var e *FieldError
 	require.ErrorAs(t, err, &e)
 	require.Equal(t, "ImageCreatorRoutingNumber", e.FieldName)
+
+	t.Setenv(FRBCompatibilityMode, "true")
+	require.NoError(t, ivDetail.Validate())
 }
 
 // TestIVDetailFIImageCreatorDate validation
