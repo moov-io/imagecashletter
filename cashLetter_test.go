@@ -70,9 +70,19 @@ func TestCashLetter_customSequenceNumber(t *testing.T) {
 	checkBundle := NewBundle(checkBundleHeader)
 	cd := mockCheckDetail()
 	cd.SetEceInstitutionItemSequenceNumber(283)
-	cd.AddendumCount = 2
-	cd.AddCheckDetailAddendumA(mockCheckDetailAddendumA())
-	cd.AddCheckDetailAddendumC(mockCheckDetailAddendumC())
+	cd.AddendumCount = 4
+	firstAddendumA := mockCheckDetailAddendumA()
+	firstAddendumA.RecordNumber = 1
+	cd.AddCheckDetailAddendumA(firstAddendumA)
+	secondAddendumA := mockCheckDetailAddendumA()
+	secondAddendumA.RecordNumber = 2
+	cd.AddCheckDetailAddendumA(secondAddendumA)
+	firstAddendumC := mockCheckDetailAddendumC()
+	firstAddendumC.RecordNumber = 1
+	cd.AddCheckDetailAddendumC(firstAddendumC)
+	secondAddendumC := mockCheckDetailAddendumC()
+	secondAddendumC.RecordNumber = 2
+	cd.AddCheckDetailAddendumC(secondAddendumC)
 	checkBundle.AddCheckDetail(cd)
 
 	// Create a return bundle
@@ -99,8 +109,18 @@ func TestCashLetter_customSequenceNumber(t *testing.T) {
 	require.Len(t, cl.Bundles[0].Checks, 1)
 	wantCheckSeq := "000000000000283"
 	require.Equal(t, wantCheckSeq, cl.Bundles[0].Checks[0].EceInstitutionItemSequenceNumber)
-	require.Equal(t, wantCheckSeq, cl.Bundles[0].Checks[0].CheckDetailAddendumC[0].EndorsingBankItemSequenceNumber)
+
+	// CheckDetailAddendumA
+	require.Len(t, cl.Bundles[0].Checks[0].CheckDetailAddendumA, 2)
+	require.Equal(t, 1, cl.Bundles[0].Checks[0].CheckDetailAddendumA[0].RecordNumber)
+	require.Equal(t, 2, cl.Bundles[0].Checks[0].CheckDetailAddendumA[1].RecordNumber)
 	require.Equal(t, wantCheckSeq, cl.Bundles[0].Checks[0].CheckDetailAddendumA[0].BOFDItemSequenceNumber)
+
+	// CheckDetailAddendumC
+	require.Len(t, cl.Bundles[0].Checks[0].CheckDetailAddendumC, 2)
+	require.Equal(t, 1, cl.Bundles[0].Checks[0].CheckDetailAddendumC[0].RecordNumber)
+	require.Equal(t, 2, cl.Bundles[0].Checks[0].CheckDetailAddendumC[1].RecordNumber)
+	require.Equal(t, wantCheckSeq, cl.Bundles[0].Checks[0].CheckDetailAddendumC[0].EndorsingBankItemSequenceNumber)
 
 	require.Len(t, cl.Bundles[1].Returns, 1)
 	wantReturnSeq := "000000000004923"
