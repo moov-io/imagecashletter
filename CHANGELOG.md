@@ -1,3 +1,5 @@
+**Note:** Starting with version v0.13.0, changelog entries are maintained in [GitHub Releases](https://github.com/moov-io/imagecashletter/releases).
+
 ## v0.12.0 (Released 2025-04-30)
 
 IMPROVEMENTS

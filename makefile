@@ -108,10 +108,6 @@ AUTHORS:
 	@$(file >>$@,# For how it is generated, see `make AUTHORS`.)
 	@echo "$(shell git log --format='\n%aN <%aE>' | LC_ALL=C.UTF-8 sort -uf)" >> $@
 
-.PHONY: tagged-release
-tagged-release:
-	@./tagged-release.sh $(VERSION)
-
 .PHONY: preview-openapi
 preview-openapi:
 	@docker run --rm -p 8080:8080 -e SWAGGER_JSON=/openapi.yaml -v $(shell pwd)/openapi.yaml:/openapi.yaml swaggerapi/swagger-ui
