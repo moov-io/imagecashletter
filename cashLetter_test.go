@@ -79,9 +79,11 @@ func TestCashLetter_customSequenceNumber(t *testing.T) {
 	cd.AddCheckDetailAddendumA(secondAddendumA)
 	firstAddendumC := mockCheckDetailAddendumC()
 	firstAddendumC.RecordNumber = 1
+	firstAddendumC.EndorsingBankItemSequenceNumber = "7"
 	cd.AddCheckDetailAddendumC(firstAddendumC)
 	secondAddendumC := mockCheckDetailAddendumC()
 	secondAddendumC.RecordNumber = 2
+	secondAddendumC.EndorsingBankItemSequenceNumber = ""
 	cd.AddCheckDetailAddendumC(secondAddendumC)
 	checkBundle.AddCheckDetail(cd)
 
@@ -120,7 +122,8 @@ func TestCashLetter_customSequenceNumber(t *testing.T) {
 	require.Len(t, cl.Bundles[0].Checks[0].CheckDetailAddendumC, 2)
 	require.Equal(t, 1, cl.Bundles[0].Checks[0].CheckDetailAddendumC[0].RecordNumber)
 	require.Equal(t, 2, cl.Bundles[0].Checks[0].CheckDetailAddendumC[1].RecordNumber)
-	require.Equal(t, wantCheckSeq, cl.Bundles[0].Checks[0].CheckDetailAddendumC[0].EndorsingBankItemSequenceNumber)
+	require.Equal(t, "7", cl.Bundles[0].Checks[0].CheckDetailAddendumC[0].EndorsingBankItemSequenceNumber, "should not have overwritten custom sequence number")
+	require.Equal(t, wantCheckSeq, cl.Bundles[0].Checks[0].CheckDetailAddendumC[1].EndorsingBankItemSequenceNumber, "should have populated empty sequence number")
 
 	require.Len(t, cl.Bundles[1].Returns, 1)
 	wantReturnSeq := "000000000004923"
