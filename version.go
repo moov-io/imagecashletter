@@ -5,4 +5,4 @@
 package imagecashletter
 
 // Version is the current version
-const Version = "v0.13.2"
+const Version = "v0.13.3"
