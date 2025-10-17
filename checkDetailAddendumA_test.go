@@ -211,6 +211,15 @@ func TestCDAddendumABOFDCorrectionIndicator(t *testing.T) {
 	require.Equal(t, "BOFDCorrectionIndicator", e.FieldName)
 }
 
+// TestCDAddendumABOFDCorrectionIndicator FRB Compatibilty
+func TestCDAddendumABOFDCorrectionIndicatorFRB(t *testing.T) {
+	cdAddendumA := mockCheckDetailAddendumA()
+	cdAddendumA.BOFDCorrectionIndicator = 10
+
+	t.Setenv(FRBCompatibilityMode, "true")
+	require.NoError(t, cdAddendumA.Validate())
+}
+
 // TestCDAddendumAUserField validation
 func TestCDAddendumAUserField(t *testing.T) {
 	cdAddendumA := mockCheckDetailAddendumA()

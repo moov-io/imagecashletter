@@ -210,7 +210,7 @@ func (cdAddendumA *CheckDetailAddendumA) Validate() error {
 		}
 	}
 	// Conditional
-	if cdAddendumA.BOFDCorrectionIndicatorField() != "" {
+	if cdAddendumA.BOFDCorrectionIndicatorField() != "" && !IsFRBCompatibilityModeEnabled() {
 		if err := cdAddendumA.isCorrectionIndicator(cdAddendumA.BOFDCorrectionIndicator); err != nil {
 			return &FieldError{FieldName: "BOFDCorrectionIndicator",
 				Value: cdAddendumA.BOFDCorrectionIndicatorField(), Msg: err.Error()}
