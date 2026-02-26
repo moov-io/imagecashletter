@@ -307,7 +307,7 @@ msg := fmt.Sprintf("ImageViewData count (%d) does not match ImageViewDetail coun
 	}
 	// num of details must match num of analysis
 	if detailCount != len(ivAnalysis) {
-		msg := fmt.Sprintf(msgBundleImageDetailCount, len(ivAnalysis))
+msg := fmt.Sprintf("ImageViewAnalysis count (%d) does not match ImageViewDetail count (%d)", len(ivAnalysis), detailCount)
 		return &BundleError{FieldName: "ImageViewAnalysis", Msg: msg}
 	}
 
