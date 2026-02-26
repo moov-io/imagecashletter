@@ -302,7 +302,7 @@ func (w *Writer) writeImageView(ivDetail []ImageViewDetail, ivData []ImageViewDa
 
 	// num of details must match num of data
 	if detailCount != len(ivData) {
-		msg := fmt.Sprintf(msgBundleImageDetailCount, len(ivData))
+msg := fmt.Sprintf("ImageViewData count (%d) does not match ImageViewDetail count (%d)", len(ivData), detailCount)
 		return &BundleError{FieldName: "ImageViewData", Msg: msg}
 	}
 	// num of details must match num of analysis
