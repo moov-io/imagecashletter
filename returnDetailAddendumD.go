@@ -247,7 +247,7 @@ func (rdAddendumD *ReturnDetailAddendumD) fieldInclusion() error {
 			Value: rdAddendumD.EndorsingBankRoutingNumber,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumD()?"}
 	}
-	if rdAddendumD.BOFDEndorsementBusinessDate.IsZero() {
+	if rdAddendumD.BOFDEndorsementBusinessDate.IsZero() && !IsFRBCompatibilityModeEnabled() {
 		return &FieldError{FieldName: "BOFDEndorsementBusinessDate",
 			Value: rdAddendumD.BOFDEndorsementBusinessDate.String(),
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumD()?"}
