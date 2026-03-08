@@ -464,10 +464,10 @@ func (ivData *ImageViewData) ClippingCoordinateH2Field() string {
 
 // ClippingCoordinateV1Field gets the ClippingCoordinateV1 field
 func (ivData *ImageViewData) ClippingCoordinateV1Field() string {
-	return ivData.alphaField(ivData.ClippingCoordinateH1, 4)
+	return ivData.alphaField(ivData.ClippingCoordinateV1, 4)
 }
 
-// ClippingCoordinateV2Field gets the ClippingCoordinateH2 field
+// ClippingCoordinateV2Field gets the ClippingCoordinateV2 field
 func (ivData *ImageViewData) ClippingCoordinateV2Field() string {
 	return ivData.alphaField(ivData.ClippingCoordinateV2, 4)
 }

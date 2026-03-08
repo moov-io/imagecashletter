@@ -227,6 +227,25 @@ func TestDecodeImageData(t *testing.T) {
 	require.Equal(t, "hello, world", string(decoded))
 }
 
+// TestClippingCoordinateFieldMethods verifies that each ClippingCoordinate
+// field method returns the value from the correct struct field. This is a
+// regression test for a copy-paste bug where ClippingCoordinateV1Field
+// returned ClippingCoordinateH1 and ClippingCoordinateV2Field's comment
+// referenced H2 instead of V2.
+func TestClippingCoordinateFieldMethods(t *testing.T) {
+	ivData := NewImageViewData()
+	ivData.ClippingOrigin = 1
+	ivData.ClippingCoordinateH1 = "0001"
+	ivData.ClippingCoordinateH2 = "0002"
+	ivData.ClippingCoordinateV1 = "0003"
+	ivData.ClippingCoordinateV2 = "0004"
+
+	require.Equal(t, "0001", ivData.ClippingCoordinateH1Field())
+	require.Equal(t, "0002", ivData.ClippingCoordinateH2Field())
+	require.Equal(t, "0003", ivData.ClippingCoordinateV1Field())
+	require.Equal(t, "0004", ivData.ClippingCoordinateV2Field())
+}
+
 func base64Encode(in string) []byte {
 	input := []byte(in)
 	out := make([]byte, base64.StdEncoding.EncodedLen(len(input)))
