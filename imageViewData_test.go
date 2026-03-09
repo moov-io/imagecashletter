@@ -240,10 +240,21 @@ func TestClippingCoordinateFieldMethods(t *testing.T) {
 	ivData.ClippingCoordinateV1 = "0003"
 	ivData.ClippingCoordinateV2 = "0004"
 
-	require.Equal(t, "0001", ivData.ClippingCoordinateH1Field())
-	require.Equal(t, "0002", ivData.ClippingCoordinateH2Field())
-	require.Equal(t, "0003", ivData.ClippingCoordinateV1Field())
-	require.Equal(t, "0004", ivData.ClippingCoordinateV2Field())
+	tests := []struct {
+		name string
+		fn   func() string
+		want string
+	}{
+		{"H1", ivData.ClippingCoordinateH1Field, "0001"},
+		{"H2", ivData.ClippingCoordinateH2Field, "0002"},
+		{"V1", ivData.ClippingCoordinateV1Field, "0003"},
+		{"V2", ivData.ClippingCoordinateV2Field, "0004"},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			require.Equal(t, tc.want, tc.fn())
+		})
+	}
 }
 
 func base64Encode(in string) []byte {
