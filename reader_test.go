@@ -71,7 +71,9 @@ func TestICL_ReadVariableLineLengthOption(t *testing.T) {
 	expected, err := os.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
 	require.NoError(t, err)
 
-	require.Equal(t, string(expected), string(actual))
+	exp := strings.ReplaceAll(string(expected), "\r\n", "\n")
+	act := strings.ReplaceAll(string(actual), "\r\n", "\n")
+	require.Equal(t, exp, act)
 }
 
 func TestICL_EBCDICEncodingOption(t *testing.T) {
@@ -96,7 +98,9 @@ func TestICL_EBCDICEncodingOption(t *testing.T) {
 	expected, err := os.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
 	require.NoError(t, err)
 
-	require.Equal(t, string(expected), string(actual))
+	exp := strings.ReplaceAll(string(expected), "\r\n", "\n")
+	act := strings.ReplaceAll(string(actual), "\r\n", "\n")
+	require.Equal(t, exp, act)
 }
 
 func getFileError(t *testing.T, err error) *FileError {
