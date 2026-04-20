@@ -270,6 +270,15 @@ func TestRDAddendumBFIPayorBankSequenceNumber(t *testing.T) {
 	require.Equal(t, "PayorBankSequenceNumber", e.FieldName)
 }
 
+// TestRDAddendumBFIPayorBankSequenceNumber validation with FRB Mode
+func TestRDAddendumBFIPayorBankSequenceNumberWithFRBMode(t *testing.T) {
+	rdAddendumB := mockReturnDetailAddendumB()
+	rdAddendumB.PayorBankSequenceNumber = "               "
+	
+	t.Setenv(FRBCompatibilityMode, "true")
+	require.NoError(t, rdAddendumB.Validate())
+}
+
 // TestRDAddendumBFIPayorBankBusinessDate validation
 func TestRDAddendumPayorBankBusinessDate(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()
