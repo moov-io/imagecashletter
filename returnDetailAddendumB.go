@@ -179,7 +179,7 @@ func (rdAddendumB *ReturnDetailAddendumB) fieldInclusion() error {
 			Value: rdAddendumB.recordType,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
 	}
-	if rdAddendumB.PayorBankSequenceNumberField() == "               " {
+	if rdAddendumB.PayorBankSequenceNumberField() == "               " && !IsFRBCompatibilityModeEnabled() {
 		return &FieldError{FieldName: "PayorBankSequenceNumber",
 			Value: rdAddendumB.PayorBankSequenceNumber,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetailAddendumB()?"}
