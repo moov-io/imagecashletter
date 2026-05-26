@@ -51,3 +51,35 @@ func TestFile_FileFromJSON(t *testing.T) {
 	require.Nil(t, f)
 	require.Error(t, err)
 }
+
+func TestFileFromJSONWithOpts(t *testing.T) {
+	bs, err := os.ReadFile(filepath.Join("test", "testdata", "icl-valid.json"))
+	require.NoError(t, err)
+
+	// Strict should work on valid
+	file, err := FileFromJSONWithOpts(bs, nil)
+	require.NoError(t, err)
+	require.NoError(t, file.Validate())
+
+	// With SkipAll should also succeed (and set opts on result)
+	opts := &ValidateOpts{SkipAll: true}
+	file, err = FileFromJSONWithOpts(bs, opts)
+	require.NoError(t, err)
+	require.NoError(t, file.Validate()) // still no error
+	require.True(t, file.validateOpts != nil && file.validateOpts.SkipAll)
+}
+
+func TestFileCreateSkipAllLenient(t *testing.T) {
+	// Under SkipAll, Create should succeed for degenerate/empty structures
+	// that would fail strict validation (useful for partial archived data handling)
+	f := NewFile()
+	f.SetHeader(mockFileHeader())
+	f.SetValidation(&ValidateOpts{SkipAll: true})
+
+	// No CashLetters, no Bundles etc. -- would fail without SkipAll
+	err := f.Create()
+	require.NoError(t, err)
+
+	// Also Validate is lenient
+	require.NoError(t, f.Validate())
+}

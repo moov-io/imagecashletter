@@ -33,5 +33,6 @@ The following options are currently supported:
 |-----|-----|
 | `ReadVariableLineLengthOption` | Allows Reader to split ICL files based on the Inserted Length Field. |
 | `ReadEbcdicEncodingOption` | Allows Reader to decode scanned lines from EBCDIC to UTF-8. |
+| `ReadValidateOpts` | Allows skipping validation checks for archived or non-compliant ICL files via ValidateOpts (e.g. SkipAll). Use `file.SetValidation(opts)` after read if needed for later Validate/Create calls. |
 | `WriteVariableLineLengthOption` | Instructs the Writer to begin each record with the appropriate Inserted Length Field. |
 | `WriteEbcdicEncodingOption` | Allows Writer to write file in EBCDIC. |

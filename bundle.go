@@ -5,6 +5,7 @@
 package imagecashletter
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -51,6 +52,9 @@ type Bundle struct {
 	// BundleControl is a Bundle Control Record
 	BundleControl *BundleControl `json:"bundleControl,omitempty"`
 
+	// validateOpts holds the options for validating this Bundle
+	validateOpts *ValidateOpts
+
 	converters
 }
 
@@ -76,8 +80,11 @@ func (b *Bundle) setRecordType() {
 	b.BundleControl.setRecordType()
 }
 
-// Validate performs imagecashletter validations and format rule checks and returns an error if not Validated
+// Validate performs imagecashletter validations and format rule checks and returns an error if not Validated.
 func (b *Bundle) Validate() error {
+	if b.validateOpts != nil && b.validateOpts.SkipAll {
+		return nil
+	}
 	if (len(b.Checks) <= 0) && (len(b.Returns) <= 0) {
 		seqNumber := ""
 		if b.BundleHeader != nil {
@@ -104,17 +111,25 @@ func (b *Bundle) build() error {
 	if b == nil {
 		return nil
 	}
+	if b.BundleHeader == nil {
+		return errors.New("nil BundleHeader")
+	}
 
-	// Requires a valid BundleHeader
-	if err := b.BundleHeader.Validate(); err != nil {
-		return err
+	// Requires a valid BundleHeader (skipped under SkipAll)
+	if b.validateOpts == nil || !b.validateOpts.SkipAll {
+		if err := b.BundleHeader.Validate(); err != nil {
+			return err
+		}
 	}
 	if (len(b.Checks) <= 0) && (len(b.Returns) <= 0) {
 		seqNumber := ""
 		if b.BundleHeader != nil {
 			seqNumber = b.BundleHeader.BundleSequenceNumber
 		}
-		return &BundleError{BundleSequenceNumber: seqNumber, FieldName: "entries", Msg: msgBundleEntries}
+		// Under SkipAll we allow building even with no entries (for archived files)
+		if b.validateOpts == nil || !b.validateOpts.SkipAll {
+			return &BundleError{BundleSequenceNumber: seqNumber, FieldName: "entries", Msg: msgBundleEntries}
+		}
 	}
 
 	itemCount := 0
@@ -127,9 +142,11 @@ func (b *Bundle) build() error {
 	// Forward Items
 	for _, cd := range b.Checks {
 
-		// Validate CheckDetailAddendum* and ImageView*
-		if err := b.ValidateForwardItems(cd); err != nil {
-			return err
+		// Validate CheckDetailAddendum* and ImageView* (skipped under SkipAll)
+		if b.validateOpts == nil || !b.validateOpts.SkipAll {
+			if err := b.ValidateForwardItems(cd); err != nil {
+				return err
+			}
 		}
 
 		itemCount = itemCount + 1
@@ -144,9 +161,11 @@ func (b *Bundle) build() error {
 	// Return Items
 	for _, rd := range b.Returns {
 
-		// Validate ReturnDetailAddendum* and ImageView*
-		if err := b.ValidateReturnItems(rd); err != nil {
-			return err
+		// Validate ReturnDetailAddendum* and ImageView* (skipped under SkipAll)
+		if b.validateOpts == nil || !b.validateOpts.SkipAll {
+			if err := b.ValidateReturnItems(rd); err != nil {
+				return err
+			}
 		}
 		itemCount = itemCount + 1
 		bundleTotalAmount = bundleTotalAmount + rd.ItemAmount
@@ -182,6 +201,14 @@ func (b *Bundle) SetControl(bundleControl *BundleControl) {
 // GetControl returns the current Bundle Control
 func (b *Bundle) GetControl() *BundleControl {
 	return b.BundleControl
+}
+
+// SetValidation sets ValidateOpts for this Bundle (and is also called recursively by CashLetter/File).
+func (b *Bundle) SetValidation(opts *ValidateOpts) {
+	if b == nil {
+		return
+	}
+	b.validateOpts = opts
 }
 
 // AddCheckDetail appends a CheckDetail to the Bundle
@@ -294,9 +321,11 @@ func (b *Bundle) checkDetailAddendumCount() error {
 		bundleSequenceNumber = b.BundleHeader.BundleSequenceNumber
 	}
 
+	skipMismatch := b.validateOpts != nil && (b.validateOpts.SkipAll || b.validateOpts.SkipCountValidation)
+
 	// Check Items
 	for _, cd := range b.Checks {
-		if cd.AddendumCount != len(cd.CheckDetailAddendumA)+len(cd.CheckDetailAddendumB)+len(cd.CheckDetailAddendumC) {
+		if !skipMismatch && cd.AddendumCount != len(cd.CheckDetailAddendumA)+len(cd.CheckDetailAddendumB)+len(cd.CheckDetailAddendumC) {
 			msg := fmt.Sprintf(msgBundleAddendumCount, cd.AddendumCount)
 			return &BundleError{BundleSequenceNumber: bundleSequenceNumber, FieldName: "AddendumCount", Msg: msg}
 		}
@@ -324,8 +353,10 @@ func (b *Bundle) returnDetailAddendumCount() error {
 		bundleSequenceNumber = b.BundleHeader.BundleSequenceNumber
 	}
 
+	skipMismatch := b.validateOpts != nil && (b.validateOpts.SkipAll || b.validateOpts.SkipCountValidation)
+
 	for _, rd := range b.Returns {
-		if rd.AddendumCount != len(rd.ReturnDetailAddendumA)+len(rd.ReturnDetailAddendumB)+len(rd.ReturnDetailAddendumC)+len(rd.ReturnDetailAddendumD) {
+		if !skipMismatch && rd.AddendumCount != len(rd.ReturnDetailAddendumA)+len(rd.ReturnDetailAddendumB)+len(rd.ReturnDetailAddendumC)+len(rd.ReturnDetailAddendumD) {
 			msg := fmt.Sprintf(msgBundleAddendumCount, rd.AddendumCount)
 			return &BundleError{BundleSequenceNumber: bundleSequenceNumber, FieldName: "AddendumCount", Msg: msg}
 		}

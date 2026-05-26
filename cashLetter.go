@@ -47,6 +47,9 @@ type CashLetter struct {
 	currentRoutingNumberSummary *RoutingNumberSummary
 	// CashLetterControl is a Cash Letter Control Record
 	CashLetterControl *CashLetterControl `json:"cashLetterControl,omitempty"`
+
+	// validateOpts holds the options for validating this CashLetter
+	validateOpts *ValidateOpts
 }
 
 // NewCashLetter takes a CashLetterHeader and returns a CashLetter
@@ -79,6 +82,9 @@ func (cl *CashLetter) setRecordType() {
 func (cl *CashLetter) Validate() error {
 	if cl.CashLetterHeader == nil {
 		return errors.New("nil CashLetterHeader")
+	}
+	if cl.validateOpts != nil && cl.validateOpts.SkipAll {
+		return nil
 	}
 
 	if cl.CashLetterHeader.RecordTypeIndicator == "N" {
@@ -121,10 +127,15 @@ func (cl *CashLetter) Validate() error {
 // build a valid CashLetter by building a CashLetterControl. An error is returned if
 // the CashLetter being built has invalid records.
 func (cl *CashLetter) build() error {
+	if cl.CashLetterHeader == nil {
+		return errors.New("nil CashLetterHeader")
+	}
 
-	// Requires a valid CashLetterHeader
-	if err := cl.CashLetterHeader.Validate(); err != nil {
-		return err
+	// Requires a valid CashLetterHeader (skipped under SkipAll)
+	if cl.validateOpts == nil || !cl.validateOpts.SkipAll {
+		if err := cl.CashLetterHeader.Validate(); err != nil {
+			return err
+		}
 	}
 
 	// CashLetterControl Counts
@@ -252,7 +263,7 @@ func (cl *CashLetter) build() error {
 	clc.CashLetterItemsCount = cashLetterItemsCount
 	clc.CashLetterTotalAmount = cashLetterTotalAmount
 	clc.CashLetterImagesCount = cashLetterImagesCount
-	if cl.CashLetterControl.ECEInstitutionName != "" {
+	if cl.CashLetterControl != nil && cl.CashLetterControl.ECEInstitutionName != "" {
 		clc.ECEInstitutionName = cl.CashLetterControl.ECEInstitutionName
 	} else {
 		clc.ECEInstitutionName = cl.GetHeader().ECEInstitutionRoutingNumber
@@ -288,6 +299,17 @@ func (cl *CashLetter) SetControl(cashLetterControl *CashLetterControl) {
 // GetControl returns the current CashLetter Control
 func (cl *CashLetter) GetControl() *CashLetterControl {
 	return cl.CashLetterControl
+}
+
+// SetValidation sets ValidateOpts for this CashLetter and propagates to all Bundles.
+func (cl *CashLetter) SetValidation(opts *ValidateOpts) {
+	if cl == nil {
+		return
+	}
+	cl.validateOpts = opts
+	for i := range cl.Bundles {
+		cl.Bundles[i].SetValidation(opts)
+	}
 }
 
 // AddBundle appends a Bundle to the CashLetter

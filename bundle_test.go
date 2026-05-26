@@ -270,3 +270,50 @@ func TestReturnDetailAddendumDCount(t *testing.T) {
 	require.ErrorAs(t, err, &bundleErr)
 	require.Equal(t, "ReturnDetailAddendumD", bundleErr.FieldName)
 }
+
+// TestBundleValidateSkipCountValidation verifies that SkipCountValidation (and SkipAll) relax count checks inside bundles.
+func TestBundleValidateSkipCountValidation(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.AddendumCount = 0 // declared 0 but we'll attach one addendum -> mismatch
+	cd.AddCheckDetailAddendumA(mockCheckDetailAddendumA())
+	cd.AddImageViewDetail(mockImageViewDetail())
+	cd.AddImageViewData(mockImageViewData())
+	cd.AddImageViewAnalysis(mockImageViewAnalysis())
+
+	bundle := NewBundle(mockBundleHeader())
+	bundle.AddCheckDetail(cd)
+
+	// Without skip: should fail with the exact error users report
+	err := bundle.Validate()
+	var bundleErr *BundleError
+	require.ErrorAs(t, err, &bundleErr)
+	require.Equal(t, "AddendumCount", bundleErr.FieldName)
+
+	// With the count validation skip: succeeds
+	bundle.SetValidation(&ValidateOpts{SkipCountValidation: true})
+	err = bundle.Validate()
+	require.NoError(t, err)
+
+	// Also still works with the broad SkipAll
+	bundle.SetValidation(&ValidateOpts{SkipAll: true})
+	err = bundle.Validate()
+	require.NoError(t, err)
+}
+
+// TestBundleBuild_NilHeader verifies that a nil BundleHeader is always an error
+// from build(), even under SkipAll (structural integrity, prevents malformed bundles).
+func TestBundleBuild_NilHeader(t *testing.T) {
+	bundle := &Bundle{} // no header
+	err := bundle.build()
+	require.Error(t, err)
+	require.Equal(t, "nil BundleHeader", err.Error())
+}
+
+func TestBundleBuild_NilHeaderSkipAll(t *testing.T) {
+	bundle := &Bundle{}
+	bundle.SetValidation(&ValidateOpts{SkipAll: true})
+	// Structural nil check happens regardless of SkipAll
+	err := bundle.build()
+	require.Error(t, err)
+	require.Equal(t, "nil BundleHeader", err.Error())
+}

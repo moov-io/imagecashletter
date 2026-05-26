@@ -867,6 +867,18 @@ func TestICLFile_LargeCheckImage(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func TestReaderSkipAllViaShouldValidate(t *testing.T) {
+	// Verify the reader helper and guards allow proceeding past record Validates
+	r := NewReader(strings.NewReader(""), ReadValidateOpts(&ValidateOpts{SkipAll: true}))
+	require.False(t, r.shouldValidate()) // when SkipAll, shouldValidate returns false
+
+	r2 := NewReader(strings.NewReader(""), ReadValidateOpts(&ValidateOpts{SkipCountValidation: true}))
+	require.True(t, r2.shouldValidate()) // count skip does not affect reader-wide shouldValidate
+
+	r3 := NewReader(strings.NewReader(""))
+	require.True(t, r3.shouldValidate())
+}
+
 func Test_DecodeEBCDIC(t *testing.T) {
 	// test with valid sample
 	decoded, err := DecodeEBCDIC(string([]byte{0xF0, 0xF1, 0xF2}))
