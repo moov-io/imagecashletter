@@ -119,6 +119,9 @@ type File struct {
 	Bundles []Bundle `json:"bundle,omitempty"`
 	// FileControl is an imagecashletter FileControl
 	Control FileControl `json:"fileControl"`
+
+	// validateOpts holds the options for validating this File
+	validateOpts *ValidateOpts
 }
 
 // NewFile constructs a file template with a FileHeader and FileControl.
@@ -144,6 +147,16 @@ type fileControl struct {
 // The File returned may not be valid and callers should confirm with Validate().
 // Invalid files may be rejected by other Financial Institutions or ICL tools.
 func FileFromJSON(bs []byte) (*File, error) {
+	return fileFromJSON(bs, nil)
+}
+
+// FileFromJSONWithOpts is like FileFromJSON but applies the provided ValidateOpts
+// before the internal Create and Validate calls.
+func FileFromJSONWithOpts(bs []byte, opts *ValidateOpts) (*File, error) {
+	return fileFromJSON(bs, opts)
+}
+
+func fileFromJSON(bs []byte, opts *ValidateOpts) (*File, error) {
 	if len(bs) == 0 {
 		return nil, errors.New("no JSON data provided")
 	}
@@ -178,6 +191,10 @@ func FileFromJSON(bs []byte) (*File, error) {
 
 	file.setRecordTypes()
 
+	if opts != nil {
+		file.SetValidation(opts)
+	}
+
 	if err := file.Create(); err != nil {
 		return file, err
 	}
@@ -192,13 +209,18 @@ func (f *File) Create() error {
 	if f == nil {
 		return ErrNilFile
 	}
-	// Requires a valid FileHeader to build FileControl
-	if err := f.Header.Validate(); err != nil {
-		return err
+	// Requires a valid FileHeader to build FileControl (skipped under SkipAll)
+	if f.validateOpts == nil || !f.validateOpts.SkipAll {
+		if err := f.Header.Validate(); err != nil {
+			return err
+		}
 	}
 
 	if len(f.CashLetters) <= 0 {
-		return &FileError{FieldName: "CashLetters", Value: strconv.Itoa(len(f.CashLetters)), Msg: "must have []*CashLetters to be built"}
+		// Under SkipAll allow building files with no cash letters (for archived/non-compliant data)
+		if f.validateOpts == nil || !f.validateOpts.SkipAll {
+			return &FileError{FieldName: "CashLetters", Value: strconv.Itoa(len(f.CashLetters)), Msg: "must have []*CashLetters to be built"}
+		}
 	}
 
 	// File Control Counts
@@ -282,10 +304,28 @@ func (f *File) Validate() error {
 	if f == nil {
 		return ErrNilFile
 	}
+	if f.validateOpts != nil && f.validateOpts.SkipAll {
+		return nil
+	}
 	if err := f.CashLetterIDUnique(); err != nil {
 		return err
 	}
 	return nil
+}
+
+// SetValidation sets ValidateOpts for this File and propagates to CashLetters and Bundles.
+func (f *File) SetValidation(opts *ValidateOpts) {
+	if f == nil {
+		return
+	}
+	f.validateOpts = opts
+	for i := range f.CashLetters {
+		f.CashLetters[i].SetValidation(opts)
+	}
+	// Also propagate to any top-level Bundles (used in some JSON/manual scenarios)
+	for i := range f.Bundles {
+		f.Bundles[i].SetValidation(opts)
+	}
 }
 
 // SetHeader allows for header to be built.

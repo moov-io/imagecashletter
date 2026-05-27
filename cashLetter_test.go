@@ -131,3 +131,28 @@ func TestCashLetter_customSequenceNumber(t *testing.T) {
 	require.Equal(t, wantReturnSeq, cl.Bundles[1].Returns[0].ReturnDetailAddendumA[0].BOFDItemSequenceNumber)
 	require.Equal(t, wantReturnSeq, cl.Bundles[1].Returns[0].ReturnDetailAddendumD[0].EndorsingBankItemSequenceNumber)
 }
+
+// TestCashLetterValidate_NilHeader verifies basic structural check for CashLetterHeader
+// is enforced even when SkipAll is set (to avoid later nil derefs in build/processing).
+func TestCashLetterValidate_NilHeader(t *testing.T) {
+	cl := CashLetter{} // no header set
+	err := cl.Validate()
+	require.Error(t, err)
+	require.Equal(t, "nil CashLetterHeader", err.Error())
+}
+
+func TestCashLetterValidate_NilHeaderSkipAll(t *testing.T) {
+	cl := CashLetter{}
+	cl.SetValidation(&ValidateOpts{SkipAll: true})
+	// Nil header check happens before SkipAll for structural safety
+	err := cl.Validate()
+	require.Error(t, err)
+	require.Equal(t, "nil CashLetterHeader", err.Error())
+}
+
+func TestCashLetterBuild_NilHeader(t *testing.T) {
+	cl := NewCashLetter(nil)
+	err := cl.build()
+	require.Error(t, err)
+	require.Equal(t, "nil CashLetterHeader", err.Error())
+}

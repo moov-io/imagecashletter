@@ -50,6 +50,8 @@ type Reader struct {
 	lineNum int
 	// recordName holds the current record name being parsed.
 	recordName string
+	// validateOpts holds options for relaxing validation during reads of non-compliant files.
+	validateOpts *ValidateOpts
 }
 
 // error creates a new ParseError based on err.
@@ -164,6 +166,39 @@ func BufferSizeOption(size int) ReaderOption {
 	}
 }
 
+// ValidateOpts defines options for validating an ICL file. These can be used to
+// relax certain checks when parsing non-standard or archived files.
+//
+// Apply via NewReader(..., ReadValidateOpts(opts)) for parsing, or
+// file.SetValidation(opts) / bundle.SetValidation(opts) etc. for Validate/Create
+// on manually constructed or JSON-loaded files.
+type ValidateOpts struct {
+	// SkipAll disables all validation checks.
+	SkipAll bool
+
+	// SkipCountValidation disables certain count-related validation checks
+	// (such as addenda counts on items inside bundles).
+	SkipCountValidation bool
+}
+
+// ReadValidateOpts passes the ValidateOpts to the Reader for parsing ICL files
+// that may not be strictly compliant.
+func ReadValidateOpts(opts *ValidateOpts) ReaderOption {
+	return func(r *Reader) {
+		r.validateOpts = opts
+	}
+}
+
+// shouldValidate returns false when SkipAll is set (via ReadValidateOpts), allowing
+// parse of non-compliant or archived files that would otherwise fail record-level
+// validations. Count-related skips are handled inside Bundle validation.
+func (r *Reader) shouldValidate() bool {
+	if r.validateOpts == nil {
+		return true
+	}
+	return !r.validateOpts.SkipAll
+}
+
 // Read reads each line of the imagecashletter file and defines which parser to use based
 // on the first character of each line. It also enforces imagecashletter formatting rules and returns
 // the appropriate error if issues are found.
@@ -200,6 +235,9 @@ func (r *Reader) Read() (File, error) {
 		// There must be at least one File Control
 		r.recordName = "FileControl"
 		return r.File, r.error(&FileError{Msg: msgFileControl})
+	}
+	if r.validateOpts != nil {
+		r.File.SetValidation(r.validateOpts)
 	}
 	return r.File, nil
 }
@@ -283,6 +321,9 @@ func (r *Reader) parseLine() error { //nolint:gocyclo
 		}
 		// Add Bundle or ReturnBundle to CashLetter
 		if r.currentCashLetter.currentBundle != nil {
+			if r.validateOpts != nil {
+				r.currentCashLetter.currentBundle.SetValidation(r.validateOpts)
+			}
 			if err := r.currentCashLetter.currentBundle.Validate(); err != nil {
 				r.recordName = "Bundles"
 				return r.error(err)
@@ -305,6 +346,9 @@ func (r *Reader) parseLine() error { //nolint:gocyclo
 		}
 		if err := r.parseCashLetterControl(); err != nil {
 			return err
+		}
+		if r.validateOpts != nil {
+			r.currentCashLetter.SetValidation(r.validateOpts)
 		}
 		if err := r.currentCashLetter.Validate(); err != nil {
 			r.recordName = "CashLetters"
@@ -335,9 +379,11 @@ func (r *Reader) parseFileHeader() error {
 		return err
 	}
 	r.File.Header.Parse(lineOut)
-	// Ensure valid FileHeader
-	if err := r.File.Header.Validate(); err != nil {
-		return r.error(err)
+	// Ensure valid FileHeader (skipped under SkipAll for archived/non-compliant files)
+	if r.shouldValidate() {
+		if err := r.File.Header.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	return nil
 }
@@ -355,9 +401,11 @@ func (r *Reader) parseCashLetterHeader() error {
 	}
 	clh := NewCashLetterHeader()
 	clh.Parse(lineOut)
-	// Ensure we have a valid CashLetterHeader
-	if err := clh.Validate(); err != nil {
-		return r.error(err)
+	// Ensure we have a valid CashLetterHeader (skipped under SkipAll for archived/non-compliant files)
+	if r.shouldValidate() {
+		if err := clh.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	// Passing CashLetterHeader into NewCashLetter creates a CashLetter
 	cl := NewCashLetter(clh)
@@ -381,8 +429,10 @@ func (r *Reader) parseBundleHeader() error {
 	}
 	bh := NewBundleHeader()
 	bh.Parse(lineOut)
-	if err := bh.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := bh.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	// Passing BundleHeader into NewBundle creates a Bundle
 	bundle := NewBundle(bh)
@@ -403,9 +453,11 @@ func (r *Reader) parseCheckDetail() error {
 	}
 	cd := new(CheckDetail)
 	cd.Parse(lineOut)
-	// Ensure valid CheckDetail
-	if err := cd.Validate(); err != nil {
-		return r.error(err)
+	// Ensure valid CheckDetail (skipped under SkipAll for archived/non-compliant files)
+	if r.shouldValidate() {
+		if err := cd.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	// Add CheckDetail
 	if r.currentCashLetter.currentBundle.BundleHeader != nil {
@@ -430,8 +482,10 @@ func (r *Reader) parseCheckDetailAddendumA() error {
 
 	cdAddendumA := NewCheckDetailAddendumA()
 	cdAddendumA.Parse(lineOut)
-	if err := cdAddendumA.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := cdAddendumA.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 	// r.currentCashLetter.currentBundle.Checks[entryIndex].CheckDetailAddendumA = cdAddendumA
@@ -475,8 +529,10 @@ func (r *Reader) parseCheckDetailAddendumB() error {
 	}
 	cdAddendumB := NewCheckDetailAddendumB()
 	cdAddendumB.Parse(lineOut)
-	if err := cdAddendumB.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := cdAddendumB.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumB(cdAddendumB)
@@ -496,8 +552,10 @@ func (r *Reader) parseCheckDetailAddendumC() error {
 	}
 	cdAddendumC := NewCheckDetailAddendumC()
 	cdAddendumC.Parse(lineOut)
-	if err := cdAddendumC.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := cdAddendumC.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 	r.currentCashLetter.currentBundle.Checks[entryIndex].AddCheckDetailAddendumC(cdAddendumC)
@@ -516,8 +574,10 @@ func (r *Reader) parseReturnDetail() error {
 	}
 	rd := new(ReturnDetail)
 	rd.Parse(lineOut)
-	if err := rd.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := rd.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	if r.currentCashLetter.currentBundle.BundleHeader != nil {
 		r.currentCashLetter.currentBundle.AddReturnDetail(rd)
@@ -538,8 +598,10 @@ func (r *Reader) parseReturnDetailAddendumA() error {
 	}
 	rdAddendumA := NewReturnDetailAddendumA()
 	rdAddendumA.Parse(lineOut)
-	if err := rdAddendumA.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := rdAddendumA.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 	// r.currentCashLetter.currentBundle.Returns[entryIndex].ReturnDetailAddendumA = rdAddendumA
@@ -560,8 +622,10 @@ func (r *Reader) parseReturnDetailAddendumB() error {
 	}
 	rdAddendumB := NewReturnDetailAddendumB()
 	rdAddendumB.Parse(lineOut)
-	if err := rdAddendumB.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := rdAddendumB.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumB(rdAddendumB)
@@ -581,8 +645,10 @@ func (r *Reader) parseReturnDetailAddendumC() error {
 	}
 	rdAddendumC := NewReturnDetailAddendumC()
 	rdAddendumC.Parse(lineOut)
-	if err := rdAddendumC.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := rdAddendumC.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumC(rdAddendumC)
@@ -603,8 +669,10 @@ func (r *Reader) parseReturnDetailAddendumD() error {
 	}
 	rdAddendumD := NewReturnDetailAddendumD()
 	rdAddendumD.Parse(lineOut)
-	if err := rdAddendumD.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := rdAddendumD.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 	r.currentCashLetter.currentBundle.Returns[entryIndex].AddReturnDetailAddendumD(rdAddendumD)
@@ -629,8 +697,10 @@ func (r *Reader) ImageViewDetail() error {
 		}
 		ivDetail := NewImageViewDetail()
 		ivDetail.Parse(lineOut)
-		if err := ivDetail.Validate(); err != nil {
-			return r.error(err)
+		if r.shouldValidate() {
+			if err := ivDetail.Validate(); err != nil {
+				return r.error(err)
+			}
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewDetail(ivDetail)
@@ -642,8 +712,10 @@ func (r *Reader) ImageViewDetail() error {
 		}
 		ivDetail := NewImageViewDetail()
 		ivDetail.Parse(lineOut)
-		if err := ivDetail.Validate(); err != nil {
-			return r.error(err)
+		if r.shouldValidate() {
+			if err := ivDetail.Validate(); err != nil {
+				return r.error(err)
+			}
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewDetail(ivDetail)
@@ -669,8 +741,10 @@ func (r *Reader) ImageViewData() error {
 	if r.currentCashLetter.currentBundle.GetChecks() != nil {
 		ivData := NewImageViewData()
 		ivData.ParseAndDecode(r.line, r.decodeLine)
-		if err := ivData.Validate(); err != nil {
-			return r.error(err)
+		if r.shouldValidate() {
+			if err := ivData.Validate(); err != nil {
+				return r.error(err)
+			}
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewData(ivData)
@@ -678,8 +752,10 @@ func (r *Reader) ImageViewData() error {
 	} else if r.currentCashLetter.currentBundle.GetReturns() != nil {
 		ivData := NewImageViewData()
 		ivData.ParseAndDecode(r.line, r.decodeLine)
-		if err := ivData.Validate(); err != nil {
-			return r.error(err)
+		if r.shouldValidate() {
+			if err := ivData.Validate(); err != nil {
+				return r.error(err)
+			}
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewData(ivData)
@@ -709,8 +785,10 @@ func (r *Reader) ImageViewAnalysis() error {
 		}
 		ivAnalysis := NewImageViewAnalysis()
 		ivAnalysis.Parse(lineOut)
-		if err := ivAnalysis.Validate(); err != nil {
-			return r.error(err)
+		if r.shouldValidate() {
+			if err := ivAnalysis.Validate(); err != nil {
+				return r.error(err)
+			}
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetChecks()) - 1
 		r.currentCashLetter.currentBundle.Checks[entryIndex].AddImageViewAnalysis(ivAnalysis)
@@ -722,8 +800,10 @@ func (r *Reader) ImageViewAnalysis() error {
 		}
 		ivAnalysis := NewImageViewAnalysis()
 		ivAnalysis.Parse(lineOut)
-		if err := ivAnalysis.Validate(); err != nil {
-			return r.error(err)
+		if r.shouldValidate() {
+			if err := ivAnalysis.Validate(); err != nil {
+				return r.error(err)
+			}
 		}
 		entryIndex := len(r.currentCashLetter.currentBundle.GetReturns()) - 1
 		r.currentCashLetter.currentBundle.Returns[entryIndex].AddImageViewAnalysis(ivAnalysis)
@@ -748,8 +828,10 @@ func (r *Reader) parseCredit() error {
 	}
 	cr := new(Credit)
 	cr.Parse(lineOut)
-	if err := cr.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := cr.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	r.currentCashLetter.AddCredit(cr)
 	return nil
@@ -768,8 +850,10 @@ func (r *Reader) parseCreditItem() error {
 	}
 	ci := new(CreditItem)
 	ci.Parse(lineOut)
-	if err := ci.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := ci.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	r.currentCashLetter.AddCreditItem(ci)
 	return nil
@@ -786,8 +870,10 @@ func (r *Reader) parseBundleControl() error {
 		return err
 	}
 	r.currentCashLetter.currentBundle.GetControl().Parse(lineOut)
-	if err := r.currentCashLetter.currentBundle.GetControl().Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := r.currentCashLetter.currentBundle.GetControl().Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	return nil
 }
@@ -804,8 +890,10 @@ func (r *Reader) parseRoutingNumberSummary() error {
 	}
 	rns := NewRoutingNumberSummary()
 	rns.Parse(lineOut)
-	if err := rns.Validate(); err != nil {
-		return r.error(err)
+	if r.shouldValidate() {
+		if err := rns.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	return nil
 }
@@ -822,9 +910,11 @@ func (r *Reader) parseCashLetterControl() error {
 		return err
 	}
 	r.currentCashLetter.GetControl().Parse(lineOut)
-	// Ensure valid CashLetterControl
-	if err := r.currentCashLetter.GetControl().Validate(); err != nil {
-		return r.error(err)
+	// Ensure valid CashLetterControl (skipped under SkipAll for archived/non-compliant files)
+	if r.shouldValidate() {
+		if err := r.currentCashLetter.GetControl().Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	return nil
 }
@@ -841,9 +931,11 @@ func (r *Reader) parseFileControl() error {
 		return err
 	}
 	r.File.Control.Parse(lineOut)
-	// Ensure valid FileControl
-	if err := r.File.Control.Validate(); err != nil {
-		return r.error(err)
+	// Ensure valid FileControl (skipped under SkipAll for archived/non-compliant files)
+	if r.shouldValidate() {
+		if err := r.File.Control.Validate(); err != nil {
+			return r.error(err)
+		}
 	}
 	return nil
 }

@@ -15,7 +15,8 @@ var (
 	fPath      = flag.String("fPath", "BNK20181015-A.icl", "File Path")
 	cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 
-	flagJson = flag.Bool("json", false, "Output ICL File in JSON to stdout")
+	flagJson           = flag.Bool("json", false, "Output ICL File in JSON to stdout")
+	flagSkipValidation = flag.Bool("skip-validation", false, "Skip validation checks for non-compliant or archived files")
 )
 
 func main() {
@@ -40,20 +41,33 @@ func main() {
 		os.Exit(1)
 	}
 
-	r := imagecashletter.NewReader(f)
+	var opts *imagecashletter.ValidateOpts
+	if *flagSkipValidation {
+		// Use SkipAll for the broad "skip validation" use case documented on the flag.
+		// (SkipCountValidation is a narrower option for specific count checks.)
+		opts = &imagecashletter.ValidateOpts{SkipAll: true}
+	}
+	r := imagecashletter.NewReader(f, imagecashletter.ReadValidateOpts(opts))
 	ICLFile, err := r.Read()
 	if err != nil {
 		fmt.Printf("Issue reading file: %+v \n", err)
+		os.Exit(1)
+	}
+
+	if opts != nil {
+		ICLFile.SetValidation(opts)
 	}
 
 	// ensure we have a validated file structure
-	if ICLFile.Validate(); err != nil {
+	if err := ICLFile.Validate(); err != nil {
 		fmt.Printf("Could not validate entire read file: %v", err)
+		os.Exit(1)
 	}
 
 	// If you trust the file but it's formatting is off building will probably resolve the malformed file.
-	if ICLFile.Create(); err != nil {
+	if err := ICLFile.Create(); err != nil {
 		fmt.Printf("Could not build file with read properties: %v", err)
+		os.Exit(1)
 	}
 
 	// Output file contents
