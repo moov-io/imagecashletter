@@ -146,12 +146,13 @@ null
 
 The following environmental variables can be set to configure behavior in ImageCashLetter.
 
-| Environmental Variable | Description | Default |
-|-----|-----|-----|
-| `READER_BUFFER_SIZE` | Size of buffer to use with `bufio.Scanner`. | Check `bufio.MaxScanTokenSize` |
-| `HTTPS_CERT_FILE` | Filepath containing a certificate (or intermediate chain) to be served by the HTTP server. Requires all traffic be over secure HTTP. | Empty |
-| `HTTPS_KEY_FILE`  | Filepath of a private key matching the leaf certificate from `HTTPS_CERT_FILE`. | Empty |
-| `FRB_COMPATIBILITY_MODE`  | If set, enables Federal Reserve Bank (FRB) compatibility mode. | Empty |
+| Environmental Variable   | Description                                                                                                                                       | Default                        |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
+| `READER_BUFFER_SIZE`     | Size of buffer to use with `bufio.Scanner`.                                                                                                       | Check `bufio.MaxScanTokenSize` |
+| `MAX_UPLOAD_SIZE`        | Maximum size (in bytes) of HTTP request bodies accepted when creating files via the v2 API. Applies to both JSON and multipart/form-data uploads. | `104857600` (100MB)            |
+| `HTTPS_CERT_FILE`        | Filepath containing a certificate (or intermediate chain) to be served by the HTTP server. Requires all traffic be over secure HTTP.              | Empty                          |
+| `HTTPS_KEY_FILE`         | Filepath of a private key matching the leaf certificate from `HTTPS_CERT_FILE`.                                                                   | Empty                          |
+| `FRB_COMPATIBILITY_MODE` | If set, enables Federal Reserve Bank (FRB) compatibility mode.                                                                                    | Empty                          |
 
 ### Data persistence
 By design, ImageCashLetter  **does not persist** (save) any data about the files or entry details created. The only storage occurs in memory of the process and upon restart ImageCashLetter will have no files or data saved. Also, no in-memory encryption of the data is performed.

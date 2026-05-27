@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"strconv"
@@ -26,6 +27,15 @@ var (
 			return int(n)
 		}
 		return bufio.MaxScanTokenSize
+	}()
+
+	maxUploadSize = func() int64 {
+		v, exists := os.LookupEnv("MAX_UPLOAD_SIZE")
+		if exists {
+			n, _ := strconv.ParseInt(v, 10, 64)
+			return n
+		}
+		return 100 * 1024 * 1024 // 100MB default
 	}()
 )
 
@@ -54,6 +64,9 @@ func (c Controller) AddRoutes(router *mux.Router) {
 func (c Controller) createFile(w http.ResponseWriter, r *http.Request) {
 	w = metrics.WrapResponseWriter(c.logger, w, r)
 	respond := responder.NewResponder(c.logger, w, r)
+
+	// Bound request body size to mitigate DoS via large uploads (G120)
+	r.Body = http.MaxBytesReader(w, r.Body, maxUploadSize)
 
 	var created *imagecashletter.File
 	var err error
@@ -112,14 +125,30 @@ func (c Controller) fileFromJSON(r *http.Request) (*imagecashletter.File, error)
 }
 
 func (c Controller) fileFromForm(r *http.Request) (*imagecashletter.File, error) {
-	if err := r.ParseMultipartForm(int64(maxReaderBufferSize)); err != nil {
-		return nil, fmt.Errorf("parsing multipart form: %v", err)
+	mr, err := r.MultipartReader()
+	if err != nil {
+		return nil, fmt.Errorf("getting multipart reader: %w", err)
 	}
 
-	formFile, hdr, err := r.FormFile("file")
-	if err != nil {
-		return nil, fmt.Errorf("reading form file: %w", err)
+	var part *multipart.Part
+	for {
+		p, err := mr.NextPart()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, fmt.Errorf("reading multipart part: %w", err)
+		}
+		if p.FormName() == "file" {
+			part = p
+			break
+		}
+		p.Close()
 	}
+	if part == nil {
+		return nil, fmt.Errorf("missing file part in multipart form")
+	}
+	defer part.Close()
 
 	opts := []imagecashletter.ReaderOption{
 		imagecashletter.ReadVariableLineLengthOption(),
@@ -128,12 +157,12 @@ func (c Controller) fileFromForm(r *http.Request) (*imagecashletter.File, error)
 
 	// Industry standard encoding is EBCDIC, so unless plain/text was
 	// explicitly requested, default to EBCDIC.
-	contentType := hdr.Header.Get("Content-Type")
+	contentType := part.Header.Get("Content-Type")
 	if contentType != "text/plain" {
 		opts = append(opts, imagecashletter.ReadEbcdicEncodingOption())
 	}
 
-	file, err := imagecashletter.NewReader(formFile, opts...).Read()
+	file, err := imagecashletter.NewReader(part, opts...).Read()
 	if err != nil {
 		return nil, fmt.Errorf("parsing file: %w", err)
 	}
