@@ -198,7 +198,7 @@ func (rdAddendumC *ReturnDetailAddendumC) ImageReferenceKeyField() string {
 	if !validSizeInt(max) {
 		return ""
 	}
-	return rdAddendumC.alphaField(rdAddendumC.ImageReferenceKey, uint(max)) //nolint:gosec
+	return rdAddendumC.alphaField(rdAddendumC.ImageReferenceKey, uint(max))
 }
 
 // DescriptionField gets the Description field

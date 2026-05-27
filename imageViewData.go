@@ -483,7 +483,7 @@ func (ivData *ImageViewData) ImageReferenceKeyField() string {
 	if !validSizeInt(max) {
 		return ""
 	}
-	return ivData.alphaField(ivData.ImageReferenceKey, uint(max)) //nolint:gosec
+	return ivData.alphaField(ivData.ImageReferenceKey, uint(max))
 }
 
 // LengthDigitalSignatureField gets the LengthDigitalSignature field
@@ -498,7 +498,7 @@ func (ivData *ImageViewData) DigitalSignatureField() string {
 	if !validSizeInt(max) {
 		return ""
 	}
-	return ivData.alphaField(s, uint(max)) //nolint:gosec
+	return ivData.alphaField(s, uint(max))
 }
 
 // LengthImageDataField gets the LengthImageData field
@@ -520,7 +520,7 @@ func (ivData *ImageViewData) ImageDataField() string {
 	if !validSizeInt(max) {
 		return ""
 	}
-	return ivData.alphaField(s, uint(max)) //nolint:gosec
+	return ivData.alphaField(s, uint(max))
 }
 
 // DecodeImageData attempts to read ImageData as a base64 blob. Other formats may be

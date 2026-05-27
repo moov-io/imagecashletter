@@ -62,7 +62,7 @@ func (c *converters) alphaField(s string, max uint) string {
 	if !validSizeUint(rem) {
 		return ""
 	} else {
-		s += strings.Repeat(" ", int(rem)) //nolint:gosec
+		s += strings.Repeat(" ", int(rem))
 	}
 	return s
 }
@@ -79,7 +79,7 @@ func (c *converters) numericField(n int, max uint) string {
 	if !validSizeUint(rem) {
 		return ""
 	} else {
-		s = strings.Repeat("0", int(rem)) + s //nolint:gosec
+		s = strings.Repeat("0", int(rem)) + s
 	}
 	return s
 }
@@ -96,7 +96,7 @@ func (c *converters) nbsmField(s string, max uint) string {
 	if !validSizeUint(rem) {
 		return ""
 	} else {
-		s = strings.Repeat(" ", int(rem)) + s //nolint:gosec
+		s = strings.Repeat(" ", int(rem)) + s
 	}
 	return s
 }
@@ -112,7 +112,7 @@ func (c *converters) stringField(s string, max uint) string {
 	if !validSizeUint(rem) {
 		return ""
 	} else {
-		s = strings.Repeat("0", int(rem)) + s //nolint:gosec
+		s = strings.Repeat("0", int(rem)) + s
 	}
 	return s
 }

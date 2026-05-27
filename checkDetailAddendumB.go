@@ -196,7 +196,7 @@ func (cdAddendumB *CheckDetailAddendumB) ImageReferenceKeyField() string {
 	if !validSizeInt(max) {
 		return ""
 	}
-	return cdAddendumB.alphaField(cdAddendumB.ImageReferenceKey, uint(max)) //nolint:gosec
+	return cdAddendumB.alphaField(cdAddendumB.ImageReferenceKey, uint(max))
 }
 
 // DescriptionField gets the Description field

@@ -273,5 +273,5 @@ func (ug *UserGeneral) UserDataField() string {
 	if !validSizeInt(max) {
 		return ""
 	}
-	return ug.alphaField(ug.UserData, uint(max)) //nolint:gosec
+	return ug.alphaField(ug.UserData, uint(max))
 }
