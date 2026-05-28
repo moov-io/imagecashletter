@@ -4,5 +4,4 @@
 
 package imagecashletter
 
-// Version is the current version
-const Version = "v0.14.0"
+var Version string

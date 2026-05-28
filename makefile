@@ -1,12 +1,24 @@
 PLATFORM=$(shell uname -s | tr '[:upper:]' '[:lower:]')
-VERSION := $(shell grep -Eo '(v[0-9]+[\.][0-9]+[\.][0-9]+(-[a-zA-Z0-9]*)?)' version.go)
+PWD := $(shell pwd)
+
+ifndef VERSION
+	VERSION := $(shell git describe --tags --abbrev=0)
+endif
+
+COMMIT_HASH :=$(shell git rev-parse --short HEAD)
+DEV_VERSION := dev-${COMMIT_HASH}
+
+USERID := $(shell id -u $$USER)
+GROUPID:= $(shell id -g $$USER)
+
+ARCH ?= amd64
 
 .PHONY: build build-server docker release check
 
 build: check build-server build-webui
 
 build-server:
-	CGO_ENABLED=1 go build -o ./bin/server github.com/moov-io/imagecashletter/cmd/server
+	CGO_ENABLED=1 go build -ldflags "-X github.com/moov-io/imagecashletter.Version=${VERSION}" -o ./bin/server github.com/moov-io/imagecashletter/cmd/server
 
 GOROOT_PATH=$(shell go env GOROOT)
 WASM_124=$(GOROOT_PATH)/lib/wasm/wasm_exec.js
@@ -19,7 +31,7 @@ build-webui:
 	else \
 		cp "$(WASM_123)" "$(TARGET_DIR)/wasm_exec.js"; \
 	fi
-	GOOS=js GOARCH=wasm go build -o $(TARGET_DIR)/imagecashletter.wasm github.com/moov-io/imagecashletter/docs/webui/
+	GOOS=js GOARCH=wasm go build -ldflags "-X github.com/moov-io/imagecashletter.Version=${VERSION}" -o $(TARGET_DIR)/imagecashletter.wasm github.com/moov-io/imagecashletter/docs/webui/
 
 .PHONY: check
 check:
@@ -52,9 +64,9 @@ endif
 
 dist: clean client build
 ifeq ($(OS),Windows_NT)
-	CGO_ENABLED=1 GOOS=windows go build -o bin/imagecashletter.exe github.com/moov-io/imagecashletter/cmd/server
+	CGO_ENABLED=1 GOOS=windows go build -ldflags "-X github.com/moov-io/imagecashletter.Version=${VERSION}" -o bin/imagecashletter.exe github.com/moov-io/imagecashletter/cmd/server
 else
-	CGO_ENABLED=1 GOOS=$(PLATFORM) go build -o bin/imagecashletter-$(PLATFORM)-amd64 github.com/moov-io/imagecashletter/cmd/server
+	CGO_ENABLED=1 GOOS=$(PLATFORM) go build -ldflags "-X github.com/moov-io/imagecashletter.Version=${VERSION}" -o bin/imagecashletter-$(PLATFORM)-amd64 github.com/moov-io/imagecashletter/cmd/server
 endif
 
 dist-webui: build-webui
