@@ -127,6 +127,66 @@ func TestFiles_createFileJSON(t *testing.T) {
 	require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
 }
 
+func TestFiles_createFile_withValidateOpts(t *testing.T) {
+	t.Run("json: mismatch rejected by default", func(t *testing.T) {
+		env := newTestEnvironment(t)
+		resp, _ := env.createFileWithQuery(t, "application/json", mismatchedAddendumJSON(t), "skipAll=false")
+		require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
+	})
+
+	t.Run("json: SkipAll allows the file", func(t *testing.T) {
+		env := newTestEnvironment(t, withValidateOpts(&imagecashletter.ValidateOpts{SkipAll: true}))
+		resp, file := env.createFile(t, "application/json", mismatchedAddendumJSON(t))
+		require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+		require.NotEmpty(t, file.ID)
+	})
+
+	t.Run("json: SkipCountValidation allows the file", func(t *testing.T) {
+		env := newTestEnvironment(t, withValidateOpts(&imagecashletter.ValidateOpts{SkipCountValidation: true}))
+		resp, _ := env.createFile(t, "application/json", mismatchedAddendumJSON(t))
+		require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+	})
+
+	t.Run("json: SkipAll via per-request query param allows the file", func(t *testing.T) {
+		env := newTestEnvironment(t) // no controller opts
+		resp, file := env.createFileWithQuery(t, "application/json", mismatchedAddendumJSON(t), "skipAll=true")
+		require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+		require.NotEmpty(t, file.ID)
+	})
+
+	t.Run("json: SkipCountValidation via per-request query param allows the file", func(t *testing.T) {
+		env := newTestEnvironment(t)
+		resp, _ := env.createFileWithQuery(t, "application/json", mismatchedAddendumJSON(t), "skipCountValidation=true")
+		require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+	})
+
+	t.Run("json: controller SkipCount + per-request SkipAll merge", func(t *testing.T) {
+		env := newTestEnvironment(t, withValidateOpts(&imagecashletter.ValidateOpts{SkipCountValidation: true}))
+		resp, _ := env.createFileWithQuery(t, "application/json", mismatchedAddendumJSON(t), "skipAll=true")
+		require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+	})
+
+	t.Run("upload: mismatch rejected by default", func(t *testing.T) {
+		env := newTestEnvironment(t)
+		resp, _ := env.createFileWithQuery(t, "", bytes.NewReader(addendumCountMismatchX937(t)), "skipAll=false")
+		require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
+	})
+
+	t.Run("upload: SkipAll allows the file", func(t *testing.T) {
+		env := newTestEnvironment(t, withValidateOpts(&imagecashletter.ValidateOpts{SkipAll: true}))
+		resp, file := env.createFile(t, "", bytes.NewReader(addendumCountMismatchX937(t)))
+		require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+		require.NotEmpty(t, file.ID)
+	})
+
+	t.Run("upload: SkipAll via per-request query param allows the file", func(t *testing.T) {
+		env := newTestEnvironment(t)
+		resp, file := env.createFileWithQuery(t, "", bytes.NewReader(addendumCountMismatchX937(t)), "skipAll=true")
+		require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+		require.NotEmpty(t, file.ID)
+	})
+}
+
 func TestFiles_getFile(t *testing.T) {
 	fileID := base.ID()
 	repo := &testICLFileRepository{

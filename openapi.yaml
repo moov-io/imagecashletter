@@ -67,6 +67,16 @@ paths:
           example: rs4f9915
           schema:
             type: string
+        - name: skipAll
+          in: query
+          description: When true, skip all validation checks when creating this file (for archived/non-compliant data)
+          schema:
+            type: boolean
+        - name: skipCountValidation
+          in: query
+          description: When true, skip count validation checks (e.g. addenda record counts) when creating this file
+          schema:
+            type: boolean
       requestBody:
         description: Content of the ImageCashLetter file (in json or raw text)
         required: true
@@ -336,6 +346,17 @@ paths:
       tags: ['Image Cash Letter Files']
       summary: Create file
       operationId: createICLFileV2
+      parameters:
+        - name: skipAll
+          in: query
+          description: When true, skip all validation checks when creating this file (for archived/non-compliant data)
+          schema:
+            type: boolean
+        - name: skipCountValidation
+          in: query
+          description: When true, skip count validation checks (e.g. addenda record counts) when creating this file
+          schema:
+            type: boolean
       requestBody:
         description: |
           Content of the ImageCashLetter file in JSON, or X9 (ASCII or EBCDIC) format.

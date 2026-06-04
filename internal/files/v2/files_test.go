@@ -68,7 +68,7 @@ func TestController_createJSONFile(t *testing.T) {
 		require.NoError(t, json.NewDecoder(resp.Body).Decode(&created))
 
 		require.NotEmpty(t, created.ID)
-		require.Equal(t, "https://some.domain.io/files/"+created.ID, resp.Header().Get("Location"))
+		require.Equal(t, "/v2/files/"+created.ID, resp.Header().Get("Location"))
 		require.NotEmpty(t, created)
 		require.Equal(t, "231380104", created.Header.ImmediateDestination)
 		require.Len(t, created.CashLetters, 2)
@@ -84,7 +84,7 @@ func TestController_createJSONFile(t *testing.T) {
 		var created imagecashletter.File
 		require.NoError(t, json.NewDecoder(resp.Body).Decode(&created))
 
-		require.Contains(t, resp.Header().Get("Location"), created.ID)
+		require.Contains(t, resp.Header().Get("Location"), "/v2/files/"+created.ID)
 		require.NotEmpty(t, created.ID)
 		require.NotEmpty(t, created)
 		require.Equal(t, "231380104", created.Header.ImmediateDestination)
@@ -204,8 +204,8 @@ func TestController_uploadASCIIFile(t *testing.T) {
 		require.Contains(t, resp.Header().Get("Content-Type"), "text/plain")
 		require.Contains(t, resp.Header().Get("Content-Disposition"), ".x9")
 		location := resp.Header().Get("Location")
-		require.True(t, strings.HasPrefix(location, "https://some.domain.io/files/"))
-		resourceID := strings.TrimPrefix(location, "https://some.domain.io/files/")
+		require.True(t, strings.HasPrefix(location, "/v2/files/"))
+		resourceID := strings.TrimPrefix(location, "/v2/files/")
 		require.NotEmpty(t, resourceID)
 		_, err := uuid.Parse(resourceID)
 		require.NoError(t, err)
@@ -256,8 +256,12 @@ func TestController_uploadASCIIFile(t *testing.T) {
 	})
 }
 
-func createFile(t *testing.T, router *mux.Router, body io.Reader, contentType string, accept string) (*httptest.ResponseRecorder, openapi.Error) {
-	req, err := http.NewRequest(http.MethodPost, "https://some.domain.io/v2/files", body)
+func createFile(t *testing.T, router *mux.Router, body io.Reader, contentType string, accept string, queryParams ...string) (*httptest.ResponseRecorder, openapi.Error) {
+	urlStr := "https://some.domain.io/v2/files"
+	if len(queryParams) > 0 && queryParams[0] != "" {
+		urlStr += "?" + queryParams[0]
+	}
+	req, err := http.NewRequest(http.MethodPost, urlStr, body)
 	require.NoError(t, err)
 
 	req.Header.Set("Content-Type", contentType)
@@ -275,7 +279,7 @@ func createFile(t *testing.T, router *mux.Router, body io.Reader, contentType st
 	return w, apiErr
 }
 
-func uploadFile(t *testing.T, router *mux.Router, file io.Reader, contentType, accept string) (*httptest.ResponseRecorder, openapi.Error) {
+func uploadFile(t *testing.T, router *mux.Router, file io.Reader, contentType, accept string, queryParams ...string) (*httptest.ResponseRecorder, openapi.Error) {
 	// create the multipart-form writer
 	body := new(bytes.Buffer)
 	mw := multipart.NewWriter(body)
@@ -294,7 +298,11 @@ func uploadFile(t *testing.T, router *mux.Router, file io.Reader, contentType, a
 	require.NoError(t, err)
 	require.NoError(t, mw.Close())
 
-	req, err := http.NewRequest(http.MethodPost, "https://some.domain.io/v2/files", body)
+	urlStr := "https://some.domain.io/v2/files"
+	if len(queryParams) > 0 && queryParams[0] != "" {
+		urlStr += "?" + queryParams[0]
+	}
+	req, err := http.NewRequest(http.MethodPost, urlStr, body)
 	require.NoError(t, err)
 	req.Header.Set("Content-Type", mw.FormDataContentType())
 	req.Header.Set("Accept", accept)
@@ -312,7 +320,11 @@ func uploadFile(t *testing.T, router *mux.Router, file io.Reader, contentType, a
 }
 
 func newRouter(t *testing.T) *mux.Router {
-	c := v2.NewController(log.NewTestLogger(), storage.NewInMemoryRepo())
+	return newRouterWithOpts(t, nil)
+}
+
+func newRouterWithOpts(t *testing.T, validateOpts *imagecashletter.ValidateOpts) *mux.Router {
+	c := v2.NewController(log.NewTestLogger(), storage.NewInMemoryRepo(), validateOpts)
 	router := mux.NewRouter()
 	c.AddRoutes(router)
 
@@ -327,4 +339,137 @@ func getTestData(t *testing.T, filename string) io.Reader {
 	})
 
 	return fd
+}
+
+// mismatchedAddendumJSONReader returns a JSON reader for a file containing a
+// CheckDetail with AddendumCount that does not match the number of addenda
+// records. This triggers count validation errors under default (strict) opts.
+func mismatchedAddendumJSONReader(t *testing.T) io.Reader {
+	t.Helper()
+
+	bs, err := os.ReadFile(filepath.Join("..", "..", "..", "test", "testdata", "icl-valid.json"))
+	require.NoError(t, err)
+
+	var f imagecashletter.File
+	require.NoError(t, json.NewDecoder(bytes.NewReader(bs)).Decode(&f))
+
+	for _, cl := range f.CashLetters {
+		for _, b := range cl.Bundles {
+			for _, cd := range b.Checks {
+				if len(cd.CheckDetailAddendumA)+len(cd.CheckDetailAddendumB)+len(cd.CheckDetailAddendumC) > 0 {
+					cd.AddendumCount = 0
+					out, err := json.Marshal(f)
+					require.NoError(t, err)
+					return bytes.NewReader(out)
+				}
+			}
+		}
+	}
+	t.Fatal("valid fixture contains no CheckDetail with addenda to create mismatch from")
+	return nil
+}
+
+// addendumCountMismatchX937 returns raw X9.37 bytes with a deliberate
+// AddendumCount mismatch (for exercising the binary upload path with/without opts).
+func addendumCountMismatchX937(t *testing.T) []byte {
+	t.Helper()
+
+	bs, err := os.ReadFile(filepath.Join("..", "..", "..", "test", "testdata", "icl-valid.json"))
+	require.NoError(t, err)
+
+	var f imagecashletter.File
+	require.NoError(t, json.NewDecoder(bytes.NewReader(bs)).Decode(&f))
+
+	found := false
+	for _, cl := range f.CashLetters {
+		for _, b := range cl.Bundles {
+			for _, cd := range b.Checks {
+				if len(cd.CheckDetailAddendumA)+len(cd.CheckDetailAddendumB)+len(cd.CheckDetailAddendumC) > 0 {
+					cd.AddendumCount = 0
+					found = true
+					break
+				}
+			}
+			if found {
+				break
+			}
+		}
+		if found {
+			break
+		}
+	}
+	require.True(t, found, "fixture must contain a check with addenda to mismatch")
+
+	f.SetValidation(&imagecashletter.ValidateOpts{SkipAll: true})
+	require.NoError(t, f.Create())
+
+	var buf bytes.Buffer
+	require.NoError(t, imagecashletter.NewWriter(&buf, imagecashletter.WriteVariableLineLengthOption()).Write(&f))
+
+	return buf.Bytes()
+}
+
+func TestController_createFile_withValidateOpts(t *testing.T) {
+	t.Run("json: mismatch rejected by default", func(t *testing.T) {
+		router := newRouter(t)
+		resp, apiErr := createFile(t, router, mismatchedAddendumJSONReader(t), "application/json", "application/json", "skipAll=false")
+		require.Equal(t, http.StatusBadRequest, resp.Code)
+		require.Contains(t, apiErr.Error, "does not match Addenda Records")
+	})
+
+	t.Run("json: SkipAll allows the file", func(t *testing.T) {
+		router := newRouterWithOpts(t, &imagecashletter.ValidateOpts{SkipAll: true})
+		resp, apiErr := createFile(t, router, mismatchedAddendumJSONReader(t), "application/json", "application/json")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
+
+	t.Run("json: SkipCountValidation allows the file", func(t *testing.T) {
+		router := newRouterWithOpts(t, &imagecashletter.ValidateOpts{SkipCountValidation: true})
+		resp, apiErr := createFile(t, router, mismatchedAddendumJSONReader(t), "application/json", "application/json")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
+
+	t.Run("json: SkipAll via per-request query param allows the file", func(t *testing.T) {
+		router := newRouter(t)
+		resp, apiErr := createFile(t, router, mismatchedAddendumJSONReader(t), "application/json", "application/json", "skipAll=true")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
+
+	t.Run("json: SkipCountValidation via per-request query param allows the file", func(t *testing.T) {
+		router := newRouter(t)
+		resp, apiErr := createFile(t, router, mismatchedAddendumJSONReader(t), "application/json", "application/json", "skipCountValidation=true")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
+
+	t.Run("json: controller SkipCount + per-request SkipAll merge", func(t *testing.T) {
+		router := newRouterWithOpts(t, &imagecashletter.ValidateOpts{SkipCountValidation: true})
+		resp, apiErr := createFile(t, router, mismatchedAddendumJSONReader(t), "application/json", "application/json", "skipAll=true")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
+
+	t.Run("upload: mismatch rejected by default", func(t *testing.T) {
+		router := newRouter(t)
+		resp, apiErr := uploadFile(t, router, bytes.NewReader(addendumCountMismatchX937(t)), "text/plain", "application/json", "skipAll=false")
+		require.Equal(t, http.StatusBadRequest, resp.Code)
+		require.Contains(t, apiErr.Error, "does not match Addenda Records")
+	})
+
+	t.Run("upload: SkipAll allows the file", func(t *testing.T) {
+		router := newRouterWithOpts(t, &imagecashletter.ValidateOpts{SkipAll: true})
+		resp, apiErr := uploadFile(t, router, bytes.NewReader(addendumCountMismatchX937(t)), "text/plain", "application/json")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
+
+	t.Run("upload: SkipAll via per-request query param allows the file", func(t *testing.T) {
+		router := newRouter(t)
+		resp, apiErr := uploadFile(t, router, bytes.NewReader(addendumCountMismatchX937(t)), "text/plain", "application/json", "skipAll=true")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
 }

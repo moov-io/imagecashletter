@@ -172,6 +172,11 @@ func BufferSizeOption(size int) ReaderOption {
 // Apply via NewReader(..., ReadValidateOpts(opts)) for parsing, or
 // file.SetValidation(opts) / bundle.SetValidation(opts) etc. for Validate/Create
 // on manually constructed or JSON-loaded files.
+//
+// When using the HTTP API, per-request opts can be supplied on file creation
+// via query parameters (e.g. ?skipAll=true or ?skipCountValidation=true) on
+// POST /files/create and POST /v2/files. Server-wide defaults can be set via
+// SKIP_ALL_ON_FILE_CREATE and SKIP_COUNT_VALIDATION_ON_FILE_CREATE env vars.
 type ValidateOpts struct {
 	// SkipAll disables all validation checks.
 	SkipAll bool
@@ -179,6 +184,26 @@ type ValidateOpts struct {
 	// SkipCountValidation disables certain count-related validation checks
 	// (such as addenda counts on items inside bundles).
 	SkipCountValidation bool
+}
+
+// Merge combines this ValidateOpts with another (e.g. controller-level defaults
+// merged with per-request ValidateOpts from an individual API request).
+// Skip flags are OR-ed: a skip enabled in either input will be enabled in the
+// result. Nil inputs are treated as empty (no skips).
+func (o *ValidateOpts) Merge(other *ValidateOpts) *ValidateOpts {
+	if o == nil && other == nil {
+		return nil
+	}
+	res := &ValidateOpts{}
+	if o != nil {
+		res.SkipAll = o.SkipAll
+		res.SkipCountValidation = o.SkipCountValidation
+	}
+	if other != nil {
+		res.SkipAll = res.SkipAll || other.SkipAll
+		res.SkipCountValidation = res.SkipCountValidation || other.SkipCountValidation
+	}
+	return res
 }
 
 // ReadValidateOpts passes the ValidateOpts to the Reader for parsing ICL files

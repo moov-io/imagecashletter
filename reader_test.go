@@ -879,6 +879,51 @@ func TestReaderSkipAllViaShouldValidate(t *testing.T) {
 	require.True(t, r3.shouldValidate())
 }
 
+func TestValidateOpts_Merge(t *testing.T) {
+	t.Run("both nil", func(t *testing.T) {
+		require.Nil(t, (*ValidateOpts)(nil).Merge(nil))
+	})
+
+	t.Run("nil base", func(t *testing.T) {
+		other := &ValidateOpts{SkipCountValidation: true}
+		got := (*ValidateOpts)(nil).Merge(other)
+		require.NotNil(t, got)
+		require.False(t, got.SkipAll)
+		require.True(t, got.SkipCountValidation)
+	})
+
+	t.Run("nil other", func(t *testing.T) {
+		base := &ValidateOpts{SkipAll: true}
+		got := base.Merge(nil)
+		require.NotNil(t, got)
+		require.True(t, got.SkipAll)
+		require.False(t, got.SkipCountValidation)
+	})
+
+	t.Run("merge combines skips (OR)", func(t *testing.T) {
+		base := &ValidateOpts{SkipCountValidation: true}
+		req := &ValidateOpts{SkipAll: true}
+		got := base.Merge(req)
+		require.True(t, got.SkipAll)
+		require.True(t, got.SkipCountValidation)
+	})
+
+	t.Run("request can add skips to controller defaults", func(t *testing.T) {
+		controller := &ValidateOpts{SkipCountValidation: true}
+		request := &ValidateOpts{SkipAll: true}
+		got := controller.Merge(request)
+		require.True(t, got.SkipAll)
+		require.True(t, got.SkipCountValidation)
+	})
+
+	t.Run("no double pointer mutation", func(t *testing.T) {
+		base := &ValidateOpts{SkipCountValidation: true}
+		orig := *base
+		_ = base.Merge(&ValidateOpts{SkipAll: true})
+		require.Equal(t, orig, *base) // base unchanged
+	})
+}
+
 func Test_DecodeEBCDIC(t *testing.T) {
 	// test with valid sample
 	decoded, err := DecodeEBCDIC(string([]byte{0xF0, 0xF1, 0xF2}))
