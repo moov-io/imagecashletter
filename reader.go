@@ -172,6 +172,11 @@ func BufferSizeOption(size int) ReaderOption {
 // Apply via NewReader(..., ReadValidateOpts(opts)) for parsing, or
 // file.SetValidation(opts) / bundle.SetValidation(opts) etc. for Validate/Create
 // on manually constructed or JSON-loaded files.
+//
+// When using the HTTP API, per-request opts can be supplied on file creation
+// via query parameters (e.g. ?skipAll=true or ?skipCountValidation=true) on
+// POST /files/create and POST /v2/files. Server-wide defaults can be set via
+// SKIP_ALL_ON_FILE_CREATE and SKIP_COUNT_VALIDATION_ON_FILE_CREATE env vars.
 type ValidateOpts struct {
 	// SkipAll disables all validation checks.
 	SkipAll bool

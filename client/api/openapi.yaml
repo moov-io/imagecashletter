@@ -74,6 +74,22 @@ paths:
         schema:
           type: string
         style: simple
+      - description: When true, skip all validation checks when creating this file (for archived/non-compliant data)
+        explode: false
+        in: query
+        name: skipAll
+        required: false
+        schema:
+          type: boolean
+        style: simple
+      - description: When true, skip count validation checks (e.g. addenda record counts) when creating this file
+        explode: false
+        in: query
+        name: skipCountValidation
+        required: false
+        schema:
+          type: boolean
+        style: simple
       requestBody:
         content:
           application/json:
@@ -407,6 +423,23 @@ paths:
   /v2/files:
     post:
       operationId: createICLFileV2
+      parameters:
+      - description: When true, skip all validation checks when creating this file (for archived/non-compliant data)
+        explode: false
+        in: query
+        name: skipAll
+        required: false
+        schema:
+          type: boolean
+        style: simple
+      - description: When true, skip count validation checks (e.g. addenda record counts) when creating this file
+        explode: false
+        in: query
+        name: skipCountValidation
+        required: false
+        schema:
+          type: boolean
+        style: simple
       requestBody:
         content:
           application/json:

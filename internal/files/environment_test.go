@@ -118,6 +118,31 @@ func (env *testEnvironment) createFile(t *testing.T, contentType string, file io
 	return w, resp
 }
 
+func (env *testEnvironment) createFileWithQuery(t *testing.T, contentType string, file io.Reader, query string) (*httptest.ResponseRecorder, *imagecashletter.File) {
+	t.Helper()
+
+	w := httptest.NewRecorder()
+	path := "/files/create"
+	if query != "" {
+		path += "?" + query
+	}
+	req := httptest.NewRequest("POST", path, file)
+	req.Header.Set("Accept", "application/json")
+	if contentType != "" {
+		req.Header.Set("Content-Type", contentType)
+	}
+
+	env.router.ServeHTTP(w, req)
+	w.Flush()
+
+	var resp *imagecashletter.File
+	if w.Code == http.StatusCreated {
+		require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
+	}
+
+	return w, resp
+}
+
 func (env *testEnvironment) validateFile(t *testing.T, fileID string) *httptest.ResponseRecorder {
 	t.Helper()
 

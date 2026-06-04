@@ -107,7 +107,9 @@ func (a *ImageCashLetterFilesApiService) AddICLToFile(ctx _context.Context, file
 
 // CreateICLFileOpts Optional parameters for the method 'CreateICLFile'
 type CreateICLFileOpts struct {
-	XRequestID optional.String
+	XRequestID          optional.String
+	SkipAll             optional.Bool
+	SkipCountValidation optional.Bool
 }
 
 /*
@@ -116,6 +118,8 @@ CreateICLFile Create file
   - @param createIclFile Content of the ImageCashLetter file (in json or raw text)
   - @param optional nil or *CreateICLFileOpts - Optional Parameters:
   - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param "SkipAll" (optional.Bool) - When true, skip all validation checks when creating this file (for archived/non-compliant data)
+  - @param "SkipCountValidation" (optional.Bool) - When true, skip count validation checks (e.g. addenda record counts) when creating this file
 
 @return IclFile
 */
@@ -154,6 +158,12 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 	}
 	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
 		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
+	}
+	if localVarOptionals != nil && localVarOptionals.SkipAll.IsSet() {
+		localVarQueryParams.Add("skipAll", parameterToString(localVarOptionals.SkipAll.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.SkipCountValidation.IsSet() {
+		localVarQueryParams.Add("skipCountValidation", parameterToString(localVarOptionals.SkipCountValidation.Value(), ""))
 	}
 	// body params
 	localVarPostBody = &createIclFile
@@ -202,14 +212,23 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+// CreateICLFileV2Opts Optional parameters for the method 'CreateICLFileV2'
+type CreateICLFileV2Opts struct {
+	SkipAll             optional.Bool
+	SkipCountValidation optional.Bool
+}
+
 /*
 CreateICLFileV2 Create file
   - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
   - @param createIclFile Content of the ImageCashLetter file in JSON, or X9 (ASCII or EBCDIC) format. Use the `Accept` header to specify the response format.
+  - @param optional nil or *CreateICLFileV2Opts - Optional Parameters:
+  - @param "SkipAll" (optional.Bool) - When true, skip all validation checks when creating this file (for archived/non-compliant data)
+  - @param "SkipCountValidation" (optional.Bool) - When true, skip count validation checks (e.g. addenda record counts) when creating this file
 
 @return IclFile
 */
-func (a *ImageCashLetterFilesApiService) CreateICLFileV2(ctx _context.Context, createIclFile CreateIclFile) (IclFile, *_nethttp.Response, error) {
+func (a *ImageCashLetterFilesApiService) CreateICLFileV2(ctx _context.Context, createIclFile CreateIclFile, localVarOptionals *CreateICLFileV2Opts) (IclFile, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -241,6 +260,12 @@ func (a *ImageCashLetterFilesApiService) CreateICLFileV2(ctx _context.Context, c
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if localVarOptionals != nil && localVarOptionals.SkipAll.IsSet() {
+		localVarQueryParams.Add("skipAll", parameterToString(localVarOptionals.SkipAll.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.SkipCountValidation.IsSet() {
+		localVarQueryParams.Add("skipCountValidation", parameterToString(localVarOptionals.SkipCountValidation.Value(), ""))
 	}
 	// body params
 	localVarPostBody = &createIclFile

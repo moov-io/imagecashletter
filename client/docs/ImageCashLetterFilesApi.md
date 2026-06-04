@@ -87,6 +87,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
+ **skipAll** | **optional.Bool** | When true, skip all validation checks when creating this file (for archived/non-compliant data) | 
+ **skipCountValidation** | **optional.Bool** | When true, skip count validation checks (e.g. addenda record counts) when creating this file | 
 
 ### Return type
 
@@ -108,7 +110,7 @@ No authorization required
 
 ## CreateICLFileV2
 
-> IclFile CreateICLFileV2(ctx, createIclFile)
+> IclFile CreateICLFileV2(ctx, createIclFile, optional)
 
 Create file
 
@@ -119,6 +121,13 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
 **createIclFile** | [**CreateIclFile**](CreateIclFile.md)| Content of the ImageCashLetter file in JSON, or X9 (ASCII or EBCDIC) format. Use the &#x60;Accept&#x60; header to specify the response format.  | 
+**optional** | ***CreateICLFileV2Opts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **skipAll** | **optional.Bool** | When true, skip all validation checks when creating this file (for archived/non-compliant data) | 
+ **skipCountValidation** | **optional.Bool** | When true, skip count validation checks (e.g. addenda record counts) when creating this file | 
 
 ### Return type
 

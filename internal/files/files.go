@@ -101,6 +101,39 @@ func determineBufferSize(env string, nominal int) int {
 	return nominal
 }
 
+// ValidateOptsFromRequest extracts ValidateOpts (e.g. skipAll, skipCountValidation)
+// from query parameters on the HTTP request. This enables per-request control over
+// validation when creating files via the API. Unrecognized or absent params are ignored.
+func ValidateOptsFromRequest(r *http.Request) *imagecashletter.ValidateOpts {
+	q := r.URL.Query()
+
+	var opts imagecashletter.ValidateOpts
+	if vals := q["skipAll"]; len(vals) > 0 {
+		v := vals[0]
+		if v == "" {
+			opts.SkipAll = true
+		} else if b, err := strconv.ParseBool(v); err == nil {
+			opts.SkipAll = b
+		} else {
+			opts.SkipAll = true
+		}
+	}
+	if vals := q["skipCountValidation"]; len(vals) > 0 {
+		v := vals[0]
+		if v == "" {
+			opts.SkipCountValidation = true
+		} else if b, err := strconv.ParseBool(v); err == nil {
+			opts.SkipCountValidation = b
+		} else {
+			opts.SkipCountValidation = true
+		}
+	}
+	if !opts.SkipAll && !opts.SkipCountValidation {
+		return nil
+	}
+	return &opts
+}
+
 // createFile returns a handler. controllerOpts provides base ValidateOpts (merged
 // with per-request opts from the request).
 func createFile(logger log.Logger, repo storage.ICLFileRepository, controllerOpts *imagecashletter.ValidateOpts) http.HandlerFunc {
@@ -127,10 +160,7 @@ func createFile(logger log.Logger, repo storage.ICLFileRepository, controllerOpt
 
 		// Per-request ValidateOpts (e.g. from the HTTP request) are merged with
 		// any controller-level opts passed to createFile/AppendRoutes.
-		var requestOpts *imagecashletter.ValidateOpts
-		// TODO: in the future, requestOpts may be populated by inspecting r
-		// (query params, etc). The merge is performed below.
-
+		requestOpts := ValidateOptsFromRequest(r)
 		effectiveOpts := controllerOpts.Merge(requestOpts)
 
 		if strings.Contains(h, "application/json") {

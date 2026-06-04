@@ -14,6 +14,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/moov-io/base/log"
 	"github.com/moov-io/imagecashletter"
+	"github.com/moov-io/imagecashletter/internal/files"
 	"github.com/moov-io/imagecashletter/internal/metrics"
 	"github.com/moov-io/imagecashletter/internal/responder"
 	"github.com/moov-io/imagecashletter/internal/storage"
@@ -80,10 +81,7 @@ func (c Controller) createFile(w http.ResponseWriter, r *http.Request) {
 
 	// Per-request ValidateOpts (e.g. derived from the incoming HTTP request)
 	// are merged with any Controller-level defaults.
-	var requestOpts *imagecashletter.ValidateOpts
-	// TODO: populate requestOpts from r when per-request configuration is needed
-	// (for example from query parameters). Use c.validateOpts.Merge(requestOpts)
-	// (already performed inside the fileFrom* helpers).
+	requestOpts := files.ValidateOptsFromRequest(r)
 
 	switch {
 	case strings.Contains(contentType, "application/json"):
@@ -106,8 +104,7 @@ func (c Controller) createFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Update to the v2 API endpoint once the GET file endpoint is implemented
-	location := fmt.Sprintf("%s://%s/files/%s", r.URL.Scheme, r.URL.Host, created.ID)
+	location := fmt.Sprintf("/v2/files/%s", created.ID)
 	respond = respond.WithLocation(location)
 	if expectingFile(r) {
 		respond.File(http.StatusCreated, *created, fmt.Sprintf("%s.x9", created.ID))

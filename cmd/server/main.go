@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -80,12 +81,15 @@ func main() {
 	// Persistence layer shared between API versions for interoperability
 	repository := storage.NewInMemoryRepo()
 
-	// Setup business HTTP routes
+	// Setup business HTTP routes. Base ValidateOpts (from env) are merged with any
+	// per-request opts (e.g. query params on create) for file creation.
+	serverValidateOpts := getValidateOptsFromEnv()
+
 	router := mux.NewRouter()
 	moovhttp.AddCORSHandler(router)
 	addPingRoute(router)
-	files.AppendRoutes(logger, router, repository, nil)
-	v2files.NewController(logger, repository, nil).AddRoutes(router)
+	files.AppendRoutes(logger, router, repository, serverValidateOpts)
+	v2files.NewController(logger, repository, serverValidateOpts).AddRoutes(router)
 
 	// Start business HTTP server
 	readTimeout, _ := time.ParseDuration("30s")
@@ -148,4 +152,30 @@ func addPingRoute(r *mux.Router) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("PONG"))
 	})
+}
+
+// getValidateOptsFromEnv returns base ValidateOpts derived from environment
+// variables (or nil). These are intended to be passed to the file controllers
+// as defaults, and will be merged (OR) with any per-request opts on creates.
+func getValidateOptsFromEnv() *imagecashletter.ValidateOpts {
+	var opts imagecashletter.ValidateOpts
+	changed := false
+	for _, key := range []struct {
+		env string
+		set *bool
+	}{
+		{"SKIP_ALL_ON_FILE_CREATE", &opts.SkipAll},
+		{"SKIP_COUNT_VALIDATION_ON_FILE_CREATE", &opts.SkipCountValidation},
+	} {
+		if v := os.Getenv(key.env); v != "" {
+			if b, err := strconv.ParseBool(v); err == nil && b {
+				*key.set = true
+				changed = true
+			}
+		}
+	}
+	if !changed {
+		return nil
+	}
+	return &opts
 }
