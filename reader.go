@@ -181,6 +181,26 @@ type ValidateOpts struct {
 	SkipCountValidation bool
 }
 
+// Merge combines this ValidateOpts with another (e.g. controller-level defaults
+// merged with per-request ValidateOpts from an individual API request).
+// Skip flags are OR-ed: a skip enabled in either input will be enabled in the
+// result. Nil inputs are treated as empty (no skips).
+func (o *ValidateOpts) Merge(other *ValidateOpts) *ValidateOpts {
+	if o == nil && other == nil {
+		return nil
+	}
+	res := &ValidateOpts{}
+	if o != nil {
+		res.SkipAll = o.SkipAll
+		res.SkipCountValidation = o.SkipCountValidation
+	}
+	if other != nil {
+		res.SkipAll = res.SkipAll || other.SkipAll
+		res.SkipCountValidation = res.SkipCountValidation || other.SkipCountValidation
+	}
+	return res
+}
+
 // ReadValidateOpts passes the ValidateOpts to the Reader for parsing ICL files
 // that may not be strictly compliant.
 func ReadValidateOpts(opts *ValidateOpts) ReaderOption {

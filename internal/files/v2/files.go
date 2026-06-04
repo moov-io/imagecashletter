@@ -40,14 +40,19 @@ var (
 )
 
 type Controller struct {
-	logger log.Logger
-	repo   storage.ICLFileRepository
+	logger       log.Logger
+	repo         storage.ICLFileRepository
+	validateOpts *imagecashletter.ValidateOpts // base opts; merged with per-request for creates
 }
 
-func NewController(logger log.Logger, fileRepo storage.ICLFileRepository) Controller {
+// NewController constructs a v2 files controller. If validateOpts is non-nil it
+// provides base options that are merged (per-request opts from the HTTP request
+// take precedence via Merge) on file creation.
+func NewController(logger log.Logger, fileRepo storage.ICLFileRepository, validateOpts *imagecashletter.ValidateOpts) Controller {
 	return Controller{
-		logger: logger,
-		repo:   fileRepo,
+		logger:       logger,
+		repo:         fileRepo,
+		validateOpts: validateOpts,
 	}
 }
 
@@ -72,11 +77,19 @@ func (c Controller) createFile(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	contentType := r.Header.Get("Content-Type")
+
+	// Per-request ValidateOpts (e.g. derived from the incoming HTTP request)
+	// are merged with any Controller-level defaults.
+	var requestOpts *imagecashletter.ValidateOpts
+	// TODO: populate requestOpts from r when per-request configuration is needed
+	// (for example from query parameters). Use c.validateOpts.Merge(requestOpts)
+	// (already performed inside the fileFrom* helpers).
+
 	switch {
 	case strings.Contains(contentType, "application/json"):
-		created, err = c.fileFromJSON(r)
+		created, err = c.fileFromJSON(r, requestOpts)
 	case strings.Contains(contentType, "multipart/form-data"):
-		created, err = c.fileFromForm(r)
+		created, err = c.fileFromForm(r, requestOpts)
 	default:
 		err = fmt.Errorf("missing or unsupported Content-Type: %s", contentType)
 	}
@@ -109,13 +122,14 @@ func expectingFile(r *http.Request) bool {
 	return mimeType == "application/octet-stream" || mimeType == "text/plain"
 }
 
-func (c Controller) fileFromJSON(r *http.Request) (*imagecashletter.File, error) {
+func (c Controller) fileFromJSON(r *http.Request, requestOpts *imagecashletter.ValidateOpts) (*imagecashletter.File, error) {
 	contents, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("reading request body: %w", err)
 	}
 
-	file, err := imagecashletter.FileFromJSON(contents)
+	merged := c.validateOpts.Merge(requestOpts)
+	file, err := imagecashletter.FileFromJSONWithOpts(contents, merged)
 	if err != nil {
 		return nil, fmt.Errorf("parsing request body: %w", err)
 	}
@@ -124,7 +138,7 @@ func (c Controller) fileFromJSON(r *http.Request) (*imagecashletter.File, error)
 	return file, nil
 }
 
-func (c Controller) fileFromForm(r *http.Request) (*imagecashletter.File, error) {
+func (c Controller) fileFromForm(r *http.Request, requestOpts *imagecashletter.ValidateOpts) (*imagecashletter.File, error) {
 	mr, err := r.MultipartReader()
 	if err != nil {
 		return nil, fmt.Errorf("getting multipart reader: %w", err)
@@ -160,6 +174,11 @@ func (c Controller) fileFromForm(r *http.Request) (*imagecashletter.File, error)
 	contentType := part.Header.Get("Content-Type")
 	if contentType != "text/plain" {
 		opts = append(opts, imagecashletter.ReadEbcdicEncodingOption())
+	}
+
+	merged := c.validateOpts.Merge(requestOpts)
+	if merged != nil {
+		opts = append(opts, imagecashletter.ReadValidateOpts(merged))
 	}
 
 	file, err := imagecashletter.NewReader(part, opts...).Read()

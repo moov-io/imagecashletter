@@ -30,9 +30,12 @@ var (
 	errNoCashLetterId = errors.New("no CashLetter ID found")
 )
 
-func AppendRoutes(logger log.Logger, r *mux.Router, repo storage.ICLFileRepository) {
+// AppendRoutes registers the v1 file routes. controllerOpts (if non-nil) provides
+// base ValidateOpts that are merged (via ValidateOpts.Merge) with any per-request
+// opts for create file paths.
+func AppendRoutes(logger log.Logger, r *mux.Router, repo storage.ICLFileRepository, controllerOpts *imagecashletter.ValidateOpts) {
 	r.Methods("GET").Path("/files").HandlerFunc(getFiles(logger, repo))
-	r.Methods("POST").Path("/files/create").HandlerFunc(createFile(logger, repo))
+	r.Methods("POST").Path("/files/create").HandlerFunc(createFile(logger, repo, controllerOpts))
 	r.Methods("GET").Path("/files/{fileId}").HandlerFunc(getFile(logger, repo))
 	r.Methods("POST").Path("/files/{fileId}").HandlerFunc(updateFileHeader(logger, repo))
 	r.Methods("DELETE").Path("/files/{fileId}").HandlerFunc(deleteFile(logger, repo))
@@ -98,7 +101,9 @@ func determineBufferSize(env string, nominal int) int {
 	return nominal
 }
 
-func createFile(logger log.Logger, repo storage.ICLFileRepository) http.HandlerFunc {
+// createFile returns a handler. controllerOpts provides base ValidateOpts (merged
+// with per-request opts from the request).
+func createFile(logger log.Logger, repo storage.ICLFileRepository, controllerOpts *imagecashletter.ValidateOpts) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if requestID := moovhttp.GetRequestID(r); requestID != "" {
 			logger = logger.Set("requestID", log.String(requestID))
@@ -119,8 +124,17 @@ func createFile(logger log.Logger, repo storage.ICLFileRepository) http.HandlerF
 		}
 
 		h := r.Header.Get("Content-Type")
+
+		// Per-request ValidateOpts (e.g. from the HTTP request) are merged with
+		// any controller-level opts passed to createFile/AppendRoutes.
+		var requestOpts *imagecashletter.ValidateOpts
+		// TODO: in the future, requestOpts may be populated by inspecting r
+		// (query params, etc). The merge is performed below.
+
+		effectiveOpts := controllerOpts.Merge(requestOpts)
+
 		if strings.Contains(h, "application/json") {
-			file, err := imagecashletter.FileFromJSON(bs)
+			file, err := imagecashletter.FileFromJSONWithOpts(bs, effectiveOpts)
 			if err != nil {
 				err = logger.LogErrorf("error creating file from JSON: %v", err).Err()
 				moovhttp.Problem(w, err)
@@ -134,6 +148,9 @@ func createFile(logger log.Logger, repo storage.ICLFileRepository) http.HandlerF
 				imagecashletter.ReadVariableLineLengthOption(),
 				imagecashletter.ReadEbcdicEncodingOption(),
 				imagecashletter.BufferSizeOption(maxReaderBufferSize),
+			}
+			if effectiveOpts != nil {
+				opts = append(opts, imagecashletter.ReadValidateOpts(effectiveOpts))
 			}
 			f, err := imagecashletter.NewReader(reader, opts...).Read()
 			if err != nil {

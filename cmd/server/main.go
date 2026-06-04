@@ -84,8 +84,8 @@ func main() {
 	router := mux.NewRouter()
 	moovhttp.AddCORSHandler(router)
 	addPingRoute(router)
-	files.AppendRoutes(logger, router, repository)
-	v2files.NewController(logger, repository).AddRoutes(router)
+	files.AppendRoutes(logger, router, repository, nil)
+	v2files.NewController(logger, repository, nil).AddRoutes(router)
 
 	// Start business HTTP server
 	readTimeout, _ := time.ParseDuration("30s")

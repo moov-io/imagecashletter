@@ -312,7 +312,11 @@ func uploadFile(t *testing.T, router *mux.Router, file io.Reader, contentType, a
 }
 
 func newRouter(t *testing.T) *mux.Router {
-	c := v2.NewController(log.NewTestLogger(), storage.NewInMemoryRepo())
+	return newRouterWithOpts(t, nil)
+}
+
+func newRouterWithOpts(t *testing.T, validateOpts *imagecashletter.ValidateOpts) *mux.Router {
+	c := v2.NewController(log.NewTestLogger(), storage.NewInMemoryRepo(), validateOpts)
 	router := mux.NewRouter()
 	c.AddRoutes(router)
 
@@ -327,4 +331,109 @@ func getTestData(t *testing.T, filename string) io.Reader {
 	})
 
 	return fd
+}
+
+// mismatchedAddendumJSONReader returns a JSON reader for a file containing a
+// CheckDetail with AddendumCount that does not match the number of addenda
+// records. This triggers count validation errors under default (strict) opts.
+func mismatchedAddendumJSONReader(t *testing.T) io.Reader {
+	t.Helper()
+
+	bs, err := os.ReadFile(filepath.Join("..", "..", "..", "test", "testdata", "icl-valid.json"))
+	require.NoError(t, err)
+
+	var f imagecashletter.File
+	require.NoError(t, json.NewDecoder(bytes.NewReader(bs)).Decode(&f))
+
+	for _, cl := range f.CashLetters {
+		for _, b := range cl.Bundles {
+			for _, cd := range b.Checks {
+				if len(cd.CheckDetailAddendumA)+len(cd.CheckDetailAddendumB)+len(cd.CheckDetailAddendumC) > 0 {
+					cd.AddendumCount = 0
+					out, err := json.Marshal(f)
+					require.NoError(t, err)
+					return bytes.NewReader(out)
+				}
+			}
+		}
+	}
+	t.Fatal("valid fixture contains no CheckDetail with addenda to create mismatch from")
+	return nil
+}
+
+// addendumCountMismatchX937 returns raw X9.37 bytes with a deliberate
+// AddendumCount mismatch (for exercising the binary upload path with/without opts).
+func addendumCountMismatchX937(t *testing.T) []byte {
+	t.Helper()
+
+	bs, err := os.ReadFile(filepath.Join("..", "..", "..", "test", "testdata", "icl-valid.json"))
+	require.NoError(t, err)
+
+	var f imagecashletter.File
+	require.NoError(t, json.NewDecoder(bytes.NewReader(bs)).Decode(&f))
+
+	found := false
+	for _, cl := range f.CashLetters {
+		for _, b := range cl.Bundles {
+			for _, cd := range b.Checks {
+				if len(cd.CheckDetailAddendumA)+len(cd.CheckDetailAddendumB)+len(cd.CheckDetailAddendumC) > 0 {
+					cd.AddendumCount = 0
+					found = true
+					break
+				}
+			}
+			if found {
+				break
+			}
+		}
+		if found {
+			break
+		}
+	}
+	require.True(t, found, "fixture must contain a check with addenda to mismatch")
+
+	f.SetValidation(&imagecashletter.ValidateOpts{SkipAll: true})
+	require.NoError(t, f.Create())
+
+	var buf bytes.Buffer
+	require.NoError(t, imagecashletter.NewWriter(&buf, imagecashletter.WriteVariableLineLengthOption()).Write(&f))
+
+	return buf.Bytes()
+}
+
+func TestController_createFile_withValidateOpts(t *testing.T) {
+	t.Run("json: mismatch rejected by default", func(t *testing.T) {
+		router := newRouter(t)
+		resp, apiErr := createFile(t, router, mismatchedAddendumJSONReader(t), "application/json", "application/json")
+		require.Equal(t, http.StatusBadRequest, resp.Code)
+		require.Contains(t, apiErr.Error, "does not match Addenda Records")
+	})
+
+	t.Run("json: SkipAll allows the file", func(t *testing.T) {
+		router := newRouterWithOpts(t, &imagecashletter.ValidateOpts{SkipAll: true})
+		resp, apiErr := createFile(t, router, mismatchedAddendumJSONReader(t), "application/json", "application/json")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
+
+	t.Run("json: SkipCountValidation allows the file", func(t *testing.T) {
+		router := newRouterWithOpts(t, &imagecashletter.ValidateOpts{SkipCountValidation: true})
+		resp, apiErr := createFile(t, router, mismatchedAddendumJSONReader(t), "application/json", "application/json")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
+
+	t.Run("upload: mismatch rejected by default", func(t *testing.T) {
+		router := newRouter(t)
+		resp, apiErr := uploadFile(t, router, bytes.NewReader(addendumCountMismatchX937(t)), "text/plain", "application/json")
+		require.Equal(t, http.StatusBadRequest, resp.Code)
+		require.Contains(t, apiErr.Error, "does not match Addenda Records")
+	})
+
+	t.Run("upload: SkipAll allows the file", func(t *testing.T) {
+		router := newRouterWithOpts(t, &imagecashletter.ValidateOpts{SkipAll: true})
+		resp, apiErr := uploadFile(t, router, bytes.NewReader(addendumCountMismatchX937(t)), "text/plain", "application/json")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
 }
