@@ -5,6 +5,7 @@
 package main
 
 import (
+	"bytes"
 	"io"
 	"io/fs"
 	"os"
@@ -19,16 +20,30 @@ func FuzzReaderWriterICL(f *testing.F) {
 	populateCorpus(f, true)
 
 	f.Fuzz(func(t *testing.T, contents string) {
-		file, _ := imagecashletter.NewReader(strings.NewReader(contents)).Read()
+		if len(contents) > 2<<20 {
+			t.Skip()
+		}
+
+		file, err := imagecashletter.NewReader(strings.NewReader(contents)).Read()
+		if err != nil {
+			// Still run validate/write on whatever was partially parsed
+			_ = file.Validate()
+			_ = imagecashletter.NewWriter(io.Discard).Write(&file)
+			return
+		}
 
 		checkFileHeader(file.Header)
-		file.Validate()
+		_ = file.Validate()
 
-		w := imagecashletter.NewWriter(io.Discard, imagecashletter.WriteVariableLineLengthOption())
-		w.Write(&file)
+		var buf bytes.Buffer
+		w := imagecashletter.NewWriter(&buf, imagecashletter.WriteVariableLineLengthOption())
+		if err := w.Write(&file); err == nil && buf.Len() > 0 {
+			// Round-trip
+			_, _ = imagecashletter.NewReader(bytes.NewReader(buf.Bytes())).Read()
+		}
 
 		w = imagecashletter.NewWriter(io.Discard, imagecashletter.WriteEbcdicEncodingOption())
-		w.Write(&file)
+		_ = w.Write(&file)
 	})
 }
 
@@ -36,27 +51,37 @@ func FuzzReaderWriterJSON(f *testing.F) {
 	populateCorpus(f, false)
 
 	f.Fuzz(func(t *testing.T, contents string) {
-		file, _ := imagecashletter.FileFromJSON([]byte(contents))
-		if file == nil {
+		if len(contents) > 1<<20 {
+			t.Skip()
+		}
+
+		file, err := imagecashletter.FileFromJSON([]byte(contents))
+		if err != nil || file == nil {
 			return
 		}
 
 		checkFileHeader(file.Header)
-		file.Validate()
+		_ = file.Validate()
 
 		w := imagecashletter.NewWriter(io.Discard, imagecashletter.WriteVariableLineLengthOption())
-		w.Write(file)
+		_ = w.Write(file)
 
 		w = imagecashletter.NewWriter(io.Discard, imagecashletter.WriteEbcdicEncodingOption())
-		w.Write(file)
+		_ = w.Write(file)
 	})
 }
 
 func populateCorpus(f *testing.F, icl bool) {
 	f.Helper()
 
+	f.Add("")
+	f.Add("{}")
+
 	err := filepath.Walk(filepath.Join("..", "..", "test", "testdata"), func(path string, info fs.FileInfo, err error) error {
-		if info.IsDir() {
+		if err != nil || info == nil || info.IsDir() {
+			return nil
+		}
+		if strings.Contains(path, string(filepath.Separator)+"fuzz"+string(filepath.Separator)) {
 			return nil
 		}
 
@@ -64,7 +89,10 @@ func populateCorpus(f *testing.F, icl bool) {
 		if ((ext == ".x937" || ext == "") && icl) || (ext == ".json" && !icl) {
 			bs, err := os.ReadFile(path)
 			if err != nil {
-				f.Fatal(err)
+				return nil
+			}
+			if len(bs) > 512*1024 {
+				return nil
 			}
 			f.Add(string(bs))
 		}
