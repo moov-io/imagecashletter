@@ -34,18 +34,27 @@ jobs:
     needs: [testing]
     runs-on: ubuntu-latest
     steps:
-    - name: Create Release
+    # actions/create-release@v1 fails when the release already exists (e.g. created by
+    # `gh release create` before the tag workflow runs) and used github.ref
+    # ("refs/tags/vX.Y.Z") as the tag name. Ensure the release exists idempotently.
+    - name: Ensure GitHub Release
       id: create_release
-      uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        prerelease: true
-
-    - name: Output Release URL File
-      run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        set -euo pipefail
+        TAG="${{ github.ref_name }}"
+        if gh release view "$TAG" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+          echo "Release $TAG already exists — reusing"
+        else
+          gh release create "$TAG" \
+            --repo "${{ github.repository }}" \
+            --title "$TAG" \
+            --generate-notes
+        fi
+        upload_url=$(gh api "repos/${{ github.repository }}/releases/tags/${TAG}" --jq .upload_url)
+        echo "upload_url=${upload_url}" >> "$GITHUB_OUTPUT"
+        echo "${upload_url}" > release_url.txt
 
     - name: Save Release URL File for publish
       uses: actions/upload-artifact@v7
@@ -82,11 +91,8 @@ jobs:
       id: get_release_info
       shell: bash
       run: |
-        value=`cat release_url.txt`
-        echo ::set-output name=upload_url::$value
-      env:
-        TAG_REF_NAME: ${{ github.ref }}
-        REPOSITORY_NAME: ${{ github.repository }}
+        value=$(cat release_url.txt)
+        echo "upload_url=${value}" >> "$GITHUB_OUTPUT"
 
     - name: Upload Linux Binary
       if: runner.os == 'Linux'
