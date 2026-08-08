@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"strings"
 
-	moovhttp "github.com/moov-io/base/http"
 	"github.com/moov-io/base/log"
 
 	"github.com/go-kit/kit/metrics/prometheus"
@@ -27,7 +26,7 @@ var (
 
 func WrapResponseWriter(logger log.Logger, w http.ResponseWriter, r *http.Request) http.ResponseWriter {
 	route := fmt.Sprintf("%s-%s", strings.ToLower(r.Method), cleanMetricsPath(r.URL.Path))
-	return moovhttp.Wrap(logger, routeHistogram.With("route", route), w, r)
+	return wrapResponseWriterAllowlist(logger, routeHistogram.With("route", route), w, r)
 }
 
 var baseIdRegex = regexp.MustCompile(`([a-f0-9]{40})`)
