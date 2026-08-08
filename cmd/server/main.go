@@ -19,12 +19,12 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/moov-io/base/admin"
-	moovhttp "github.com/moov-io/base/http"
 	"github.com/moov-io/base/http/bind"
 	"github.com/moov-io/base/log"
 	"github.com/moov-io/imagecashletter"
 	"github.com/moov-io/imagecashletter/internal/files"
 	v2files "github.com/moov-io/imagecashletter/internal/files/v2"
+	"github.com/moov-io/imagecashletter/internal/metrics"
 	"github.com/moov-io/imagecashletter/internal/storage"
 )
 
@@ -86,7 +86,7 @@ func main() {
 	serverValidateOpts := getValidateOptsFromEnv()
 
 	router := mux.NewRouter()
-	moovhttp.AddCORSHandler(router)
+	addCORSHandler(router)
 	addPingRoute(router)
 	files.AppendRoutes(logger, router, repository, serverValidateOpts)
 	v2files.NewController(logger, repository, serverValidateOpts).AddRoutes(router)
@@ -145,9 +145,21 @@ func main() {
 	}
 }
 
+func addCORSHandler(r *mux.Router) {
+	r.Methods("OPTIONS").HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		metrics.SetAccessControlAllowHeaders(w, origin)
+		w.WriteHeader(http.StatusOK)
+	})
+}
+
 func addPingRoute(r *mux.Router) {
 	r.Methods("GET").Path("/ping").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		moovhttp.SetAccessControlAllowHeaders(w, r.Header.Get("Origin"))
+		metrics.SetAccessControlAllowHeaders(w, r.Header.Get("Origin"))
 		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("PONG"))
