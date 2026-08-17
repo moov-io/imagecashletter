@@ -19,6 +19,19 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestValidateOptsFromRequest_invalidBoolDoesNotSkip(t *testing.T) {
+	req := httptest.NewRequest("POST", "/files/create?skipAll=xyzzy", nil)
+	require.Nil(t, ValidateOptsFromRequest(req))
+
+	req = httptest.NewRequest("POST", "/files/create?skipCountValidation=xyzzy", nil)
+	require.Nil(t, ValidateOptsFromRequest(req))
+
+	req = httptest.NewRequest("POST", "/files/create?skipAll=true", nil)
+	opts := ValidateOptsFromRequest(req)
+	require.NotNil(t, opts)
+	require.True(t, opts.SkipAll)
+}
+
 func TestFileId(t *testing.T) {
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "/foo", nil)
@@ -152,6 +165,18 @@ func TestFiles_createFile_withValidateOpts(t *testing.T) {
 		resp, file := env.createFileWithQuery(t, "application/json", mismatchedAddendumJSON(t), "skipAll=true")
 		require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
 		require.NotEmpty(t, file.ID)
+	})
+
+	t.Run("json: invalid skipAll does not bypass validation", func(t *testing.T) {
+		env := newTestEnvironment(t)
+		resp, _ := env.createFileWithQuery(t, "application/json", mismatchedAddendumJSON(t), "skipAll=xyzzy")
+		require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
+	})
+
+	t.Run("json: invalid skipCountValidation does not bypass validation", func(t *testing.T) {
+		env := newTestEnvironment(t)
+		resp, _ := env.createFileWithQuery(t, "application/json", mismatchedAddendumJSON(t), "skipCountValidation=xyzzy")
+		require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
 	})
 
 	t.Run("json: SkipCountValidation via per-request query param allows the file", func(t *testing.T) {
