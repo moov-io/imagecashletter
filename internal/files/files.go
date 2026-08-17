@@ -103,7 +103,8 @@ func determineBufferSize(env string, nominal int) int {
 
 // ValidateOptsFromRequest extracts ValidateOpts (e.g. skipAll, skipCountValidation)
 // from query parameters on the HTTP request. This enables per-request control over
-// validation when creating files via the API. Unrecognized or absent params are ignored.
+// validation when creating files via the API. Unrecognized, absent, or non-boolean
+// params are ignored (invalid values must not enable a skip).
 func ValidateOptsFromRequest(r *http.Request) *imagecashletter.ValidateOpts {
 	q := r.URL.Query()
 
@@ -114,8 +115,6 @@ func ValidateOptsFromRequest(r *http.Request) *imagecashletter.ValidateOpts {
 			opts.SkipAll = true
 		} else if b, err := strconv.ParseBool(v); err == nil {
 			opts.SkipAll = b
-		} else {
-			opts.SkipAll = true
 		}
 	}
 	if vals := q["skipCountValidation"]; len(vals) > 0 {
@@ -124,8 +123,6 @@ func ValidateOptsFromRequest(r *http.Request) *imagecashletter.ValidateOpts {
 			opts.SkipCountValidation = true
 		} else if b, err := strconv.ParseBool(v); err == nil {
 			opts.SkipCountValidation = b
-		} else {
-			opts.SkipCountValidation = true
 		}
 	}
 	if !opts.SkipAll && !opts.SkipCountValidation {
