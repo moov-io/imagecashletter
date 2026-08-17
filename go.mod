@@ -12,7 +12,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/moov-io/base v0.63.1
 	github.com/prometheus/client_golang v1.24.1
-	github.com/stretchr/testify v1.11.1
+	github.com/stretchr/testify v1.12.0
 	github.com/vincent-petithory/dataurl v1.0.0
 	golang.org/x/oauth2 v0.36.0
 )
