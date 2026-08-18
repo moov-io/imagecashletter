@@ -1,3 +1,4 @@
+# Use https://app.stepsecurity.io/ to improve workflow security
 name: Create Release
 
 on:
@@ -5,7 +6,7 @@ on:
     tags: [ "v*.*.*" ]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   testing:
@@ -16,20 +17,24 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
     - name: Set up Go 1.x
-      uses: actions/setup-go@v7
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
       with:
         go-version: stable
+        cache: false
       id: go
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v7
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         fetch-depth: 0
+        persist-credentials: false
 
     - name: Check
       run: make check
 
   create_release:
+    permissions:
+      contents: write
     name: Create Release
     needs: [testing]
     runs-on: ubuntu-latest
@@ -38,31 +43,24 @@ jobs:
     # `gh release create` before the tag workflow runs) and used github.ref
     # ("refs/tags/vX.Y.Z") as the tag name. Ensure the release exists idempotently.
     - name: Ensure GitHub Release
-      id: create_release
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG: ${{ github.ref_name }}
+        REPO: ${{ github.repository }}
       run: |
         set -euo pipefail
-        TAG="${{ github.ref_name }}"
-        if gh release view "$TAG" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+        if gh release view "$TAG" --repo "$REPO" >/dev/null 2>&1; then
           echo "Release $TAG already exists — reusing"
         else
           gh release create "$TAG" \
-            --repo "${{ github.repository }}" \
+            --repo "$REPO" \
             --title "$TAG" \
             --generate-notes
         fi
-        upload_url=$(gh api "repos/${{ github.repository }}/releases/tags/${TAG}" --jq .upload_url)
-        echo "upload_url=${upload_url}" >> "$GITHUB_OUTPUT"
-        echo "${upload_url}" > release_url.txt
-
-    - name: Save Release URL File for publish
-      uses: actions/upload-artifact@v7
-      with:
-        name: release_url
-        path: release_url.txt
 
   publish:
+    permissions:
+      contents: write
     name: Publish
     needs: [testing, create_release]
     runs-on: ${{ matrix.os }}
@@ -71,61 +69,36 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
     - name: Set up Go 1.x
-      uses: actions/setup-go@v7
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
       with:
         go-version: stable
+        cache: false
       id: go
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v7
-
-    - name: Load Release URL File from release job
-      uses: actions/download-artifact@v8
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
-        name: release_url
+        persist-credentials: false
 
     - name: Distribute
       run: make dist
 
-    - name: Get Release File Name & Upload URL
-      id: get_release_info
+    - name: Upload release asset
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG: ${{ github.ref_name }}
+        REPO: ${{ github.repository }}
       shell: bash
       run: |
-        value=$(cat release_url.txt)
-        echo "upload_url=${value}" >> "$GITHUB_OUTPUT"
-
-    - name: Upload Linux Binary
-      if: runner.os == 'Linux'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-        asset_path: ./bin/imagecashletter-linux-amd64
-        asset_name: imagecashletter-linux-amd64
-        asset_content_type: application/octet-stream
-
-    - name: Upload macOS Binary
-      if: runner.os == 'macOS'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-        asset_path: ./bin/imagecashletter-darwin-amd64
-        asset_name: imagecashletter-darwin-amd64
-        asset_content_type: application/octet-stream
-
-    - name: Upload Windows Binary
-      if: runner.os == 'Windows'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-        asset_path: ./bin/imagecashletter.exe
-        asset_name: imagecashletter.exe
-        asset_content_type: application/octet-stream
+        set -euo pipefail
+        if [ "$RUNNER_OS" = "Linux" ]; then
+          asset=./bin/imagecashletter-linux-amd64
+        elif [ "$RUNNER_OS" = "macOS" ]; then
+          asset=./bin/imagecashletter-darwin-amd64
+        else
+          asset=./bin/imagecashletter.exe
+        fi
+        gh release upload "$TAG" "$asset" --repo "$REPO" --clobber
 
   webui:
     name: WebUI
@@ -133,13 +106,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Set up Go 1.x
-      uses: actions/setup-go@v7
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
       with:
         go-version: stable
+        cache: false
       id: go
 
     - name: Check out code
-      uses: actions/checkout@v7
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
 
     - name: Switch to master
       run: |
@@ -155,32 +131,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Set up Go 1.x
-      uses: actions/setup-go@v7
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
       with:
         go-version: stable
+        cache: false
       id: go
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v7
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         fetch-depth: 0
         fetch-tags: true
+        persist-credentials: false
 
     - name: Docker
       run: make docker
 
     - name: Docker Push
-      run: |+
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-          make release-push
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        make release-push
 
     - name: Quay.io Push
-      run: |+
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin quay.io
-          make quay-push
       env:
         DOCKER_USERNAME: ${{ secrets.QUAY_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+      run: |
+        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin quay.io
+        make quay-push
