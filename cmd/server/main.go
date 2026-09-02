@@ -166,6 +166,7 @@ func getValidateOptsFromEnv() *imagecashletter.ValidateOpts {
 	}{
 		{"SKIP_ALL_ON_FILE_CREATE", &opts.SkipAll},
 		{"SKIP_COUNT_VALIDATION_ON_FILE_CREATE", &opts.SkipCountValidation},
+		{"SKIP_INVALID_CONTACT_PHONE_NUMBERS_ON_FILE_CREATE", &opts.SkipInvalidContactPhoneNumbers},
 	} {
 		if v := os.Getenv(key.env); v != "" {
 			if b, err := strconv.ParseBool(v); err == nil && b {

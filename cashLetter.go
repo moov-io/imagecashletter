@@ -301,12 +301,14 @@ func (cl *CashLetter) GetControl() *CashLetterControl {
 	return cl.CashLetterControl
 }
 
-// SetValidation sets ValidateOpts for this CashLetter and propagates to all Bundles.
+// SetValidation sets ValidateOpts for this CashLetter and propagates to its
+// CashLetterHeader and all Bundles.
 func (cl *CashLetter) SetValidation(opts *ValidateOpts) {
 	if cl == nil {
 		return
 	}
 	cl.validateOpts = opts
+	cl.CashLetterHeader.SetValidation(opts)
 	for i := range cl.Bundles {
 		cl.Bundles[i].SetValidation(opts)
 	}

@@ -18,6 +18,7 @@ The following environmental variables can be set to configure behavior in ImageC
 | `READER_BUFFER_SIZE`   | Size (in bytes) of the buffer used when reading ICL files (JSON or raw uploads). | `bufio.MaxScanTokenSize` (64KB) |
 | `SKIP_ALL_ON_FILE_CREATE` | If true, the server will use `ValidateOpts.SkipAll` as a base for all file creates (merged with any per-request opts like `?skipAll=...`). Useful for archived/non-compliant data. | false |
 | `SKIP_COUNT_VALIDATION_ON_FILE_CREATE` | If true, the server will use `ValidateOpts.SkipCountValidation` as a base for all file creates (merged with per-request). | false |
+| `SKIP_INVALID_CONTACT_PHONE_NUMBERS_ON_FILE_CREATE` | If true, the server will use `ValidateOpts.SkipInvalidContactPhoneNumbers` as a base for all file creates (merged with per-request). Accepts non-numeric `FileControl.ImmediateOriginContactPhoneNumber` / `CashLetterHeader.OriginatorContactPhoneNumber` values as-is. These fields are fixed-width (10 chars); a human-formatted phone number (e.g. `(831) 555-1234`) will already have been truncated by the file's writer before this library sees it, so enabling this does not recover lost digits -- it only stops rejecting the file. | false |
 
 ## Data persistence
 By design, ImageCashLetter  **does not persist** (save) any data about the files or entry details created. The only storage occurs in memory of the process and upon restart ImageCashLetter will have no files or data saved. Also, no in-memory encryption of the data is performed.

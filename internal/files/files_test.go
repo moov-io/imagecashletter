@@ -30,6 +30,14 @@ func TestValidateOptsFromRequest_invalidBoolDoesNotSkip(t *testing.T) {
 	opts := ValidateOptsFromRequest(req)
 	require.NotNil(t, opts)
 	require.True(t, opts.SkipAll)
+
+	req = httptest.NewRequest("POST", "/files/create?skipInvalidContactPhoneNumbers=xyzzy", nil)
+	require.Nil(t, ValidateOptsFromRequest(req))
+
+	req = httptest.NewRequest("POST", "/files/create?skipInvalidContactPhoneNumbers=true", nil)
+	opts = ValidateOptsFromRequest(req)
+	require.NotNil(t, opts)
+	require.True(t, opts.SkipInvalidContactPhoneNumbers)
 }
 
 func TestFileId(t *testing.T) {

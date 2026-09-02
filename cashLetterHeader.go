@@ -141,6 +141,8 @@ type CashLetterHeader struct {
 	UserField string `json:"userField"`
 	// reserved is a field reserved for future use.  Reserved should be blank.
 	reserved string
+	// validateOpts holds the options for validating this CashLetterHeader
+	validateOpts *ValidateOpts
 	// validator is composed for imagecashletter data validation
 	validator
 	// converters is composed for imagecashletter to golang Converters
@@ -273,8 +275,10 @@ func (clh *CashLetterHeader) Validate() error {
 	if err := clh.isAlphanumericSpecial(clh.OriginatorContactName); err != nil {
 		return &FieldError{FieldName: "OriginatorContactName", Value: clh.OriginatorContactName, Msg: err.Error()}
 	}
-	if err := clh.isNumeric(clh.OriginatorContactPhoneNumber); err != nil {
-		return &FieldError{FieldName: "OriginatorContactPhoneNumber", Value: clh.OriginatorContactPhoneNumber, Msg: err.Error()}
+	if clh.validateOpts == nil || !clh.validateOpts.SkipInvalidContactPhoneNumbers {
+		if err := clh.isNumeric(clh.OriginatorContactPhoneNumber); err != nil {
+			return &FieldError{FieldName: "OriginatorContactPhoneNumber", Value: clh.OriginatorContactPhoneNumber, Msg: err.Error()}
+		}
 	}
 	if err := clh.isAlphanumeric(clh.FedWorkType); err != nil {
 		return &FieldError{FieldName: "FedWorkType", Value: clh.FedWorkType, Msg: err.Error()}
@@ -287,6 +291,14 @@ func (clh *CashLetterHeader) Validate() error {
 		return &FieldError{FieldName: "UserField", Value: clh.UserField, Msg: err.Error()}
 	}
 	return nil
+}
+
+// SetValidation sets ValidateOpts for this CashLetterHeader.
+func (clh *CashLetterHeader) SetValidation(opts *ValidateOpts) {
+	if clh == nil {
+		return
+	}
+	clh.validateOpts = opts
 }
 
 // fieldInclusion validate mandatory fields are not default values. If fields are

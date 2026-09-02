@@ -173,6 +173,43 @@ func TestCashLetterHeaderErr(t *testing.T) {
 	require.Contains(t, fieldErr.Msg, msgFieldInclusion)
 }
 
+// TestCashLetterHeaderErr_SkipInvalidContactPhoneNumbers validates that a formatted (non-numeric)
+// contact phone number fails by default but is accepted when SkipInvalidContactPhoneNumbers is set.
+func TestCashLetterHeaderErr_SkipInvalidContactPhoneNumbers(t *testing.T) {
+	clh := mockCashLetterHeader()
+	clh.OriginatorContactPhoneNumber = "(831) 555-"
+	// A trailing FileControl line completes the (otherwise minimal) file so Read()
+	// only fails on the CashLetterHeader's phone number, not on a missing FileControl.
+	fc := mockFileControl()
+	raw := clh.String() + "\n" + fc.String()
+
+	r := NewReader(strings.NewReader(raw))
+	_, err := r.Read()
+	fieldErr := getFieldError(t, err)
+	require.Equal(t, "OriginatorContactPhoneNumber", fieldErr.FieldName)
+
+	r2 := NewReader(strings.NewReader(raw), ReadValidateOpts(&ValidateOpts{SkipInvalidContactPhoneNumbers: true}))
+	_, err = r2.Read()
+	require.NoError(t, err)
+}
+
+// TestFileControlErr_SkipInvalidContactPhoneNumbers validates that a formatted (non-numeric)
+// contact phone number fails by default but is accepted when SkipInvalidContactPhoneNumbers is set.
+func TestFileControlErr_SkipInvalidContactPhoneNumbers(t *testing.T) {
+	fc := mockFileControl()
+	fc.ImmediateOriginContactPhoneNumber = "(831) 555-"
+	raw := fc.String()
+
+	r := NewReader(strings.NewReader(raw))
+	_, err := r.Read()
+	fieldErr := getFieldError(t, err)
+	require.Equal(t, "ImmediateOriginContactPhoneNumber", fieldErr.FieldName)
+
+	r2 := NewReader(strings.NewReader(raw), ReadValidateOpts(&ValidateOpts{SkipInvalidContactPhoneNumbers: true}))
+	_, err = r2.Read()
+	require.NoError(t, err)
+}
+
 // TestCashLetterHeaderDuplicate validates when two CashLetterHeader exists in a current CashLetter
 func TestCashLetterHeaderDuplicate(t *testing.T) {
 	// create a new CashLetter header string
@@ -906,6 +943,12 @@ func TestValidateOpts_Merge(t *testing.T) {
 		got := base.Merge(req)
 		require.True(t, got.SkipAll)
 		require.True(t, got.SkipCountValidation)
+	})
+
+	t.Run("merge combines SkipInvalidContactPhoneNumbers (OR)", func(t *testing.T) {
+		base := &ValidateOpts{SkipInvalidContactPhoneNumbers: true}
+		got := base.Merge(&ValidateOpts{SkipAll: true})
+		require.True(t, got.SkipInvalidContactPhoneNumbers)
 	})
 
 	t.Run("request can add skips to controller defaults", func(t *testing.T) {

@@ -409,6 +409,28 @@ func addendumCountMismatchX937(t *testing.T) []byte {
 	return buf.Bytes()
 }
 
+// invalidContactPhoneNumberX937 returns raw X9.37 bytes whose FileControl has a
+// human-formatted (non-numeric) ImmediateOriginContactPhoneNumber -- mirroring
+// the truncation an upstream writer produces when it packs a formatted phone
+// number into the fixed 10-character field.
+func invalidContactPhoneNumberX937(t *testing.T) []byte {
+	t.Helper()
+
+	bs, err := os.ReadFile(filepath.Join("..", "..", "..", "test", "testdata", "icl-valid.json"))
+	require.NoError(t, err)
+
+	var f imagecashletter.File
+	require.NoError(t, json.NewDecoder(bytes.NewReader(bs)).Decode(&f))
+
+	f.Control.ImmediateOriginContactPhoneNumber = "(831) 555-"
+	require.NoError(t, f.Create())
+
+	var buf bytes.Buffer
+	require.NoError(t, imagecashletter.NewWriter(&buf, imagecashletter.WriteVariableLineLengthOption()).Write(&f))
+
+	return buf.Bytes()
+}
+
 func TestController_createFile_withValidateOpts(t *testing.T) {
 	t.Run("json: mismatch rejected by default", func(t *testing.T) {
 		router := newRouter(t)
@@ -469,6 +491,27 @@ func TestController_createFile_withValidateOpts(t *testing.T) {
 	t.Run("upload: SkipAll via per-request query param allows the file", func(t *testing.T) {
 		router := newRouter(t)
 		resp, apiErr := uploadFile(t, router, bytes.NewReader(addendumCountMismatchX937(t)), "text/plain", "application/json", "skipAll=true")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
+
+	t.Run("upload: invalid contact phone number rejected by default", func(t *testing.T) {
+		router := newRouter(t)
+		resp, apiErr := uploadFile(t, router, bytes.NewReader(invalidContactPhoneNumberX937(t)), "text/plain", "application/json")
+		require.Equal(t, http.StatusBadRequest, resp.Code)
+		require.Contains(t, apiErr.Error, "ImmediateOriginContactPhoneNumber")
+	})
+
+	t.Run("upload: SkipInvalidContactPhoneNumbers allows the file", func(t *testing.T) {
+		router := newRouterWithOpts(t, &imagecashletter.ValidateOpts{SkipInvalidContactPhoneNumbers: true})
+		resp, apiErr := uploadFile(t, router, bytes.NewReader(invalidContactPhoneNumberX937(t)), "text/plain", "application/json")
+		require.Empty(t, apiErr)
+		require.Equal(t, http.StatusCreated, resp.Code)
+	})
+
+	t.Run("upload: SkipInvalidContactPhoneNumbers via per-request query param allows the file", func(t *testing.T) {
+		router := newRouter(t)
+		resp, apiErr := uploadFile(t, router, bytes.NewReader(invalidContactPhoneNumberX937(t)), "text/plain", "application/json", "skipInvalidContactPhoneNumbers=true")
 		require.Empty(t, apiErr)
 		require.Equal(t, http.StatusCreated, resp.Code)
 	})

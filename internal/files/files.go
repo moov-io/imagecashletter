@@ -125,7 +125,15 @@ func ValidateOptsFromRequest(r *http.Request) *imagecashletter.ValidateOpts {
 			opts.SkipCountValidation = b
 		}
 	}
-	if !opts.SkipAll && !opts.SkipCountValidation {
+	if vals := q["skipInvalidContactPhoneNumbers"]; len(vals) > 0 {
+		v := vals[0]
+		if v == "" {
+			opts.SkipInvalidContactPhoneNumbers = true
+		} else if b, err := strconv.ParseBool(v); err == nil {
+			opts.SkipInvalidContactPhoneNumbers = b
+		}
+	}
+	if !opts.SkipAll && !opts.SkipCountValidation && !opts.SkipInvalidContactPhoneNumbers {
 		return nil
 	}
 	return &opts

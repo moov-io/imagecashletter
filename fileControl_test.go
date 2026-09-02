@@ -123,6 +123,15 @@ func TestImmediateOriginContactPhoneNumber(t *testing.T) {
 	require.Equal(t, "ImmediateOriginContactPhoneNumber", e.FieldName)
 }
 
+// TestImmediateOriginContactPhoneNumber_SkipInvalid verifies SkipInvalidContactPhoneNumbers
+// relaxes the numeric-only check.
+func TestImmediateOriginContactPhoneNumber_SkipInvalid(t *testing.T) {
+	fc := mockFileControl()
+	fc.ImmediateOriginContactPhoneNumber = "(831) 555-"
+	fc.SetValidation(&ValidateOpts{SkipInvalidContactPhoneNumbers: true})
+	require.NoError(t, fc.Validate())
+}
+
 // TestCreditTotalIndicator validation
 func TestCreditTotalIndicator(t *testing.T) {
 	fc := mockFileControl()
