@@ -74,22 +74,36 @@ paths:
         schema:
           type: string
         style: simple
-      - description: When true, skip all validation checks when creating this file (for archived/non-compliant data)
-        explode: false
+      - description: When true, skip all validation checks when creating this file
+          (for archived/non-compliant data)
+        explode: true
         in: query
         name: skipAll
         required: false
         schema:
           type: boolean
-        style: simple
-      - description: When true, skip count validation checks (e.g. addenda record counts) when creating this file
-        explode: false
+        style: form
+      - description: When true, skip count validation checks (e.g. addenda record
+          counts) when creating this file
+        explode: true
         in: query
         name: skipCountValidation
         required: false
         schema:
           type: boolean
-        style: simple
+        style: form
+      - description: When true, accept non-numeric contact phone number fields (FileControl.ImmediateOriginContactPhoneNumber,
+          CashLetterHeader.OriginatorContactPhoneNumber) as-is instead of rejecting
+          the file. These fields are fixed-width (10 chars); a human-formatted phone
+          number is typically already truncated by the file's writer before reaching
+          this API, so this does not recover lost digits.
+        explode: true
+        in: query
+        name: skipInvalidContactPhoneNumbers
+        required: false
+        schema:
+          type: boolean
+        style: form
       requestBody:
         content:
           application/json:
@@ -424,22 +438,36 @@ paths:
     post:
       operationId: createICLFileV2
       parameters:
-      - description: When true, skip all validation checks when creating this file (for archived/non-compliant data)
-        explode: false
+      - description: When true, skip all validation checks when creating this file
+          (for archived/non-compliant data)
+        explode: true
         in: query
         name: skipAll
         required: false
         schema:
           type: boolean
-        style: simple
-      - description: When true, skip count validation checks (e.g. addenda record counts) when creating this file
-        explode: false
+        style: form
+      - description: When true, skip count validation checks (e.g. addenda record
+          counts) when creating this file
+        explode: true
         in: query
         name: skipCountValidation
         required: false
         schema:
           type: boolean
-        style: simple
+        style: form
+      - description: When true, accept non-numeric contact phone number fields (FileControl.ImmediateOriginContactPhoneNumber,
+          CashLetterHeader.OriginatorContactPhoneNumber) as-is instead of rejecting
+          the file. These fields are fixed-width (10 chars); a human-formatted phone
+          number is typically already truncated by the file's writer before reaching
+          this API, so this does not recover lost digits.
+        explode: true
+        in: query
+        name: skipInvalidContactPhoneNumbers
+        required: false
+        schema:
+          type: boolean
+        style: form
       requestBody:
         content:
           application/json:

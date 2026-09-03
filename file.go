@@ -313,12 +313,14 @@ func (f *File) Validate() error {
 	return nil
 }
 
-// SetValidation sets ValidateOpts for this File and propagates to CashLetters and Bundles.
+// SetValidation sets ValidateOpts for this File and propagates to its FileControl,
+// CashLetters, and Bundles.
 func (f *File) SetValidation(opts *ValidateOpts) {
 	if f == nil {
 		return
 	}
 	f.validateOpts = opts
+	f.Control.SetValidation(opts)
 	for i := range f.CashLetters {
 		f.CashLetters[i].SetValidation(opts)
 	}
