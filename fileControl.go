@@ -39,6 +39,8 @@ type FileControl struct {
 	CreditTotalIndicator int `json:"creditTotalIndicator"`
 	// reserved is a field reserved for future use.  Reserved should be blank.
 	reserved string
+	// validateOpts holds the options for validating this FileControl
+	validateOpts *ValidateOpts
 	// validator is composed for image cash letter data validation
 	validator
 	// converters is composed for image cash letter to golang Converters
@@ -134,9 +136,11 @@ func (fc *FileControl) Validate() error {
 		return &FieldError{FieldName: "ImmediateOriginContactName",
 			Value: fc.ImmediateOriginContactName, Msg: err.Error()}
 	}
-	if err := fc.isNumeric(fc.ImmediateOriginContactPhoneNumber); err != nil {
-		return &FieldError{FieldName: "ImmediateOriginContactPhoneNumber",
-			Value: fc.ImmediateOriginContactPhoneNumber, Msg: err.Error()}
+	if fc.validateOpts == nil || !fc.validateOpts.SkipInvalidContactPhoneNumbers {
+		if err := fc.isNumeric(fc.ImmediateOriginContactPhoneNumber); err != nil {
+			return &FieldError{FieldName: "ImmediateOriginContactPhoneNumber",
+				Value: fc.ImmediateOriginContactPhoneNumber, Msg: err.Error()}
+		}
 	}
 	// Conditional
 	if fc.CreditTotalIndicatorField() != "" {
@@ -145,6 +149,14 @@ func (fc *FileControl) Validate() error {
 		}
 	}
 	return nil
+}
+
+// SetValidation sets ValidateOpts for this FileControl.
+func (fc *FileControl) SetValidation(opts *ValidateOpts) {
+	if fc == nil {
+		return
+	}
+	fc.validateOpts = opts
 }
 
 // fieldInclusion validate mandatory fields are not default values. If fields are

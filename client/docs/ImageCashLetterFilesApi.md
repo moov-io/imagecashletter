@@ -87,8 +87,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
- **skipAll** | **optional.Bool** | When true, skip all validation checks when creating this file (for archived/non-compliant data) | 
- **skipCountValidation** | **optional.Bool** | When true, skip count validation checks (e.g. addenda record counts) when creating this file | 
+ **skipAll** | **optional.Bool**| When true, skip all validation checks when creating this file (for archived/non-compliant data) | 
+ **skipCountValidation** | **optional.Bool**| When true, skip count validation checks (e.g. addenda record counts) when creating this file | 
+ **skipInvalidContactPhoneNumbers** | **optional.Bool**| When true, accept non-numeric contact phone number fields (FileControl.ImmediateOriginContactPhoneNumber, CashLetterHeader.OriginatorContactPhoneNumber) as-is instead of rejecting the file. These fields are fixed-width (10 chars); a human-formatted phone number is typically already truncated by the file&#39;s writer before reaching this API, so this does not recover lost digits. | 
 
 ### Return type
 
@@ -121,13 +122,19 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
 **createIclFile** | [**CreateIclFile**](CreateIclFile.md)| Content of the ImageCashLetter file in JSON, or X9 (ASCII or EBCDIC) format. Use the &#x60;Accept&#x60; header to specify the response format.  | 
-**optional** | ***CreateICLFileV2Opts** | optional parameters | nil if no parameters
+ **optional** | ***CreateICLFileV2Opts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
+
+Optional parameters are passed through a pointer to a CreateICLFileV2Opts struct
+
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **skipAll** | **optional.Bool** | When true, skip all validation checks when creating this file (for archived/non-compliant data) | 
- **skipCountValidation** | **optional.Bool** | When true, skip count validation checks (e.g. addenda record counts) when creating this file | 
+
+ **skipAll** | **optional.Bool**| When true, skip all validation checks when creating this file (for archived/non-compliant data) | 
+ **skipCountValidation** | **optional.Bool**| When true, skip count validation checks (e.g. addenda record counts) when creating this file | 
+ **skipInvalidContactPhoneNumbers** | **optional.Bool**| When true, accept non-numeric contact phone number fields (FileControl.ImmediateOriginContactPhoneNumber, CashLetterHeader.OriginatorContactPhoneNumber) as-is instead of rejecting the file. These fields are fixed-width (10 chars); a human-formatted phone number is typically already truncated by the file&#39;s writer before reaching this API, so this does not recover lost digits. | 
 
 ### Return type
 

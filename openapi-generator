@@ -23,12 +23,24 @@
 ####
 set -o pipefail
 
-for cmd in {mvn,python,curl}; do
+for cmd in mvn; do
   if ! command -v ${cmd} > /dev/null; then
   >&2 echo "This script requires '${cmd}' to be installed."
     exit 1
   fi
 done
+
+# python and curl are only needed to resolve the "latest" version from GitHub
+# (see latest.tag below), which is skipped entirely when OPENAPI_GENERATOR_VERSION
+# is set.
+if [ -z "${OPENAPI_GENERATOR_VERSION}" ]; then
+  for cmd in python curl; do
+    if ! command -v ${cmd} > /dev/null; then
+    >&2 echo "This script requires '${cmd}' to be installed."
+      exit 1
+    fi
+  done
+fi
 
 function latest.tag {
   local uri="https://api.github.com/repos/${1}/tags"

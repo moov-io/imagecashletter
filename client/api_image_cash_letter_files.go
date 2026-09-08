@@ -107,9 +107,10 @@ func (a *ImageCashLetterFilesApiService) AddICLToFile(ctx _context.Context, file
 
 // CreateICLFileOpts Optional parameters for the method 'CreateICLFile'
 type CreateICLFileOpts struct {
-	XRequestID          optional.String
-	SkipAll             optional.Bool
-	SkipCountValidation optional.Bool
+	XRequestID                     optional.String
+	SkipAll                        optional.Bool
+	SkipCountValidation            optional.Bool
+	SkipInvalidContactPhoneNumbers optional.Bool
 }
 
 /*
@@ -118,8 +119,9 @@ CreateICLFile Create file
   - @param createIclFile Content of the ImageCashLetter file (in json or raw text)
   - @param optional nil or *CreateICLFileOpts - Optional Parameters:
   - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
-  - @param "SkipAll" (optional.Bool) - When true, skip all validation checks when creating this file (for archived/non-compliant data)
-  - @param "SkipCountValidation" (optional.Bool) - When true, skip count validation checks (e.g. addenda record counts) when creating this file
+  - @param "SkipAll" (optional.Bool) -  When true, skip all validation checks when creating this file (for archived/non-compliant data)
+  - @param "SkipCountValidation" (optional.Bool) -  When true, skip count validation checks (e.g. addenda record counts) when creating this file
+  - @param "SkipInvalidContactPhoneNumbers" (optional.Bool) -  When true, accept non-numeric contact phone number fields (FileControl.ImmediateOriginContactPhoneNumber, CashLetterHeader.OriginatorContactPhoneNumber) as-is instead of rejecting the file. These fields are fixed-width (10 chars); a human-formatted phone number is typically already truncated by the file's writer before reaching this API, so this does not recover lost digits.
 
 @return IclFile
 */
@@ -139,6 +141,15 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
+	if localVarOptionals != nil && localVarOptionals.SkipAll.IsSet() {
+		localVarQueryParams.Add("skipAll", parameterToString(localVarOptionals.SkipAll.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.SkipCountValidation.IsSet() {
+		localVarQueryParams.Add("skipCountValidation", parameterToString(localVarOptionals.SkipCountValidation.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.SkipInvalidContactPhoneNumbers.IsSet() {
+		localVarQueryParams.Add("skipInvalidContactPhoneNumbers", parameterToString(localVarOptionals.SkipInvalidContactPhoneNumbers.Value(), ""))
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json", "text/plain"}
 
@@ -158,12 +169,6 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 	}
 	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
 		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
-	}
-	if localVarOptionals != nil && localVarOptionals.SkipAll.IsSet() {
-		localVarQueryParams.Add("skipAll", parameterToString(localVarOptionals.SkipAll.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.SkipCountValidation.IsSet() {
-		localVarQueryParams.Add("skipCountValidation", parameterToString(localVarOptionals.SkipCountValidation.Value(), ""))
 	}
 	// body params
 	localVarPostBody = &createIclFile
@@ -214,8 +219,9 @@ func (a *ImageCashLetterFilesApiService) CreateICLFile(ctx _context.Context, cre
 
 // CreateICLFileV2Opts Optional parameters for the method 'CreateICLFileV2'
 type CreateICLFileV2Opts struct {
-	SkipAll             optional.Bool
-	SkipCountValidation optional.Bool
+	SkipAll                        optional.Bool
+	SkipCountValidation            optional.Bool
+	SkipInvalidContactPhoneNumbers optional.Bool
 }
 
 /*
@@ -223,8 +229,9 @@ CreateICLFileV2 Create file
   - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
   - @param createIclFile Content of the ImageCashLetter file in JSON, or X9 (ASCII or EBCDIC) format. Use the `Accept` header to specify the response format.
   - @param optional nil or *CreateICLFileV2Opts - Optional Parameters:
-  - @param "SkipAll" (optional.Bool) - When true, skip all validation checks when creating this file (for archived/non-compliant data)
-  - @param "SkipCountValidation" (optional.Bool) - When true, skip count validation checks (e.g. addenda record counts) when creating this file
+  - @param "SkipAll" (optional.Bool) -  When true, skip all validation checks when creating this file (for archived/non-compliant data)
+  - @param "SkipCountValidation" (optional.Bool) -  When true, skip count validation checks (e.g. addenda record counts) when creating this file
+  - @param "SkipInvalidContactPhoneNumbers" (optional.Bool) -  When true, accept non-numeric contact phone number fields (FileControl.ImmediateOriginContactPhoneNumber, CashLetterHeader.OriginatorContactPhoneNumber) as-is instead of rejecting the file. These fields are fixed-width (10 chars); a human-formatted phone number is typically already truncated by the file's writer before reaching this API, so this does not recover lost digits.
 
 @return IclFile
 */
@@ -244,6 +251,15 @@ func (a *ImageCashLetterFilesApiService) CreateICLFileV2(ctx _context.Context, c
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
+	if localVarOptionals != nil && localVarOptionals.SkipAll.IsSet() {
+		localVarQueryParams.Add("skipAll", parameterToString(localVarOptionals.SkipAll.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.SkipCountValidation.IsSet() {
+		localVarQueryParams.Add("skipCountValidation", parameterToString(localVarOptionals.SkipCountValidation.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.SkipInvalidContactPhoneNumbers.IsSet() {
+		localVarQueryParams.Add("skipInvalidContactPhoneNumbers", parameterToString(localVarOptionals.SkipInvalidContactPhoneNumbers.Value(), ""))
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json", "multipart/form-data"}
 
@@ -260,12 +276,6 @@ func (a *ImageCashLetterFilesApiService) CreateICLFileV2(ctx _context.Context, c
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if localVarOptionals != nil && localVarOptionals.SkipAll.IsSet() {
-		localVarQueryParams.Add("skipAll", parameterToString(localVarOptionals.SkipAll.Value(), ""))
-	}
-	if localVarOptionals != nil && localVarOptionals.SkipCountValidation.IsSet() {
-		localVarQueryParams.Add("skipCountValidation", parameterToString(localVarOptionals.SkipCountValidation.Value(), ""))
 	}
 	// body params
 	localVarPostBody = &createIclFile

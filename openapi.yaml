@@ -77,6 +77,11 @@ paths:
           description: When true, skip count validation checks (e.g. addenda record counts) when creating this file
           schema:
             type: boolean
+        - name: skipInvalidContactPhoneNumbers
+          in: query
+          description: When true, accept non-numeric contact phone number fields (FileControl.ImmediateOriginContactPhoneNumber, CashLetterHeader.OriginatorContactPhoneNumber) as-is instead of rejecting the file. These fields are fixed-width (10 chars); a human-formatted phone number is typically already truncated by the file's writer before reaching this API, so this does not recover lost digits.
+          schema:
+            type: boolean
       requestBody:
         description: Content of the ImageCashLetter file (in json or raw text)
         required: true
@@ -355,6 +360,11 @@ paths:
         - name: skipCountValidation
           in: query
           description: When true, skip count validation checks (e.g. addenda record counts) when creating this file
+          schema:
+            type: boolean
+        - name: skipInvalidContactPhoneNumbers
+          in: query
+          description: When true, accept non-numeric contact phone number fields (FileControl.ImmediateOriginContactPhoneNumber, CashLetterHeader.OriginatorContactPhoneNumber) as-is instead of rejecting the file. These fields are fixed-width (10 chars); a human-formatted phone number is typically already truncated by the file's writer before reaching this API, so this does not recover lost digits.
           schema:
             type: boolean
       requestBody:

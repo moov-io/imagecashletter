@@ -274,7 +274,7 @@ func TestRDAddendumBFIPayorBankSequenceNumber(t *testing.T) {
 func TestRDAddendumBFIPayorBankSequenceNumberWithFRBMode(t *testing.T) {
 	rdAddendumB := mockReturnDetailAddendumB()
 	rdAddendumB.PayorBankSequenceNumber = "               "
-	
+
 	t.Setenv(FRBCompatibilityMode, "true")
 	require.NoError(t, rdAddendumB.Validate())
 }

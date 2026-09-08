@@ -171,6 +171,15 @@ func TestOriginatorContactPhoneNumber(t *testing.T) {
 	require.Equal(t, "OriginatorContactPhoneNumber", e.FieldName)
 }
 
+// TestOriginatorContactPhoneNumber_SkipInvalid verifies SkipInvalidContactPhoneNumbers
+// relaxes the numeric-only check.
+func TestOriginatorContactPhoneNumber_SkipInvalid(t *testing.T) {
+	clh := mockCashLetterHeader()
+	clh.OriginatorContactPhoneNumber = "(831) 555-"
+	clh.SetValidation(&ValidateOpts{SkipInvalidContactPhoneNumbers: true})
+	require.NoError(t, clh.Validate())
+}
+
 // TestFedWorkType validation
 func TestFedWorkType(t *testing.T) {
 	clh := mockCashLetterHeader()

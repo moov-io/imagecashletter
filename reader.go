@@ -174,9 +174,11 @@ func BufferSizeOption(size int) ReaderOption {
 // on manually constructed or JSON-loaded files.
 //
 // When using the HTTP API, per-request opts can be supplied on file creation
-// via query parameters (e.g. ?skipAll=true or ?skipCountValidation=true) on
-// POST /files/create and POST /v2/files. Server-wide defaults can be set via
-// SKIP_ALL_ON_FILE_CREATE and SKIP_COUNT_VALIDATION_ON_FILE_CREATE env vars.
+// via query parameters (e.g. ?skipAll=true, ?skipCountValidation=true, or
+// ?skipInvalidContactPhoneNumbers=true) on POST /files/create and POST /v2/files.
+// Server-wide defaults can be set via SKIP_ALL_ON_FILE_CREATE,
+// SKIP_COUNT_VALIDATION_ON_FILE_CREATE, and
+// SKIP_INVALID_CONTACT_PHONE_NUMBERS_ON_FILE_CREATE env vars.
 type ValidateOpts struct {
 	// SkipAll disables all validation checks.
 	SkipAll bool
@@ -184,6 +186,18 @@ type ValidateOpts struct {
 	// SkipCountValidation disables certain count-related validation checks
 	// (such as addenda counts on items inside bundles).
 	SkipCountValidation bool
+
+	// SkipInvalidContactPhoneNumbers disables the numeric-only format check on
+	// contact phone number fields (FileControl.ImmediateOriginContactPhoneNumber
+	// and CashLetterHeader.OriginatorContactPhoneNumber).
+	//
+	// These are spec'd as 10-digit numeric fields, but some writers instead pack
+	// a formatted number (e.g. "(831) 555-1234") into the fixed-width slot, which
+	// truncates it to "(831) 555-" -- non-numeric AND missing its last 4 digits.
+	// This flag accepts that value as-is; it does not recover the lost digits.
+	// Prefer fixing the writer over relying on this for phone numbers that matter
+	// downstream.
+	SkipInvalidContactPhoneNumbers bool
 }
 
 // Merge combines this ValidateOpts with another (e.g. controller-level defaults
@@ -198,10 +212,12 @@ func (o *ValidateOpts) Merge(other *ValidateOpts) *ValidateOpts {
 	if o != nil {
 		res.SkipAll = o.SkipAll
 		res.SkipCountValidation = o.SkipCountValidation
+		res.SkipInvalidContactPhoneNumbers = o.SkipInvalidContactPhoneNumbers
 	}
 	if other != nil {
 		res.SkipAll = res.SkipAll || other.SkipAll
 		res.SkipCountValidation = res.SkipCountValidation || other.SkipCountValidation
+		res.SkipInvalidContactPhoneNumbers = res.SkipInvalidContactPhoneNumbers || other.SkipInvalidContactPhoneNumbers
 	}
 	return res
 }
@@ -426,6 +442,9 @@ func (r *Reader) parseCashLetterHeader() error {
 	}
 	clh := NewCashLetterHeader()
 	clh.Parse(lineOut)
+	if r.validateOpts != nil {
+		clh.SetValidation(r.validateOpts)
+	}
 	// Ensure we have a valid CashLetterHeader (skipped under SkipAll for archived/non-compliant files)
 	if r.shouldValidate() {
 		if err := clh.Validate(); err != nil {
@@ -956,6 +975,9 @@ func (r *Reader) parseFileControl() error {
 		return err
 	}
 	r.File.Control.Parse(lineOut)
+	if r.validateOpts != nil {
+		r.File.Control.SetValidation(r.validateOpts)
+	}
 	// Ensure valid FileControl (skipped under SkipAll for archived/non-compliant files)
 	if r.shouldValidate() {
 		if err := r.File.Control.Validate(); err != nil {
