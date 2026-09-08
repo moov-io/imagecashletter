@@ -1,6 +1,6 @@
 module github.com/moov-io/imagecashletter
 
-go 1.25.8
+go 1.26.0
 
 toolchain go1.27.1
 
@@ -14,7 +14,7 @@ require (
 	github.com/prometheus/client_golang v1.24.1
 	github.com/stretchr/testify v1.12.1
 	github.com/vincent-petithory/dataurl v1.0.0
-	golang.org/x/oauth2 v0.36.0
+	golang.org/x/oauth2 v0.37.0
 )
 
 require (
