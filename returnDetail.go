@@ -337,6 +337,11 @@ func (rd *ReturnDetail) fieldInclusion() error {
 			Value: rd.PayorBankCheckDigit,
 			Msg:   msgFieldInclusion + ", did you use ReturnDetail()?"}
 	}
+	if err := rd.routingCheckDigit(rd.PayorBankRoutingNumberField(), rd.PayorBankCheckDigit); err != nil {
+		return &FieldError{FieldName: "PayorBankCheckDigit",
+			Value: rd.PayorBankCheckDigit,
+			Msg:   err.Error()}
+	}
 	if rd.ReturnReason == "" {
 		return &FieldError{FieldName: "ReturnReason",
 			Value: rd.ReturnReason,
