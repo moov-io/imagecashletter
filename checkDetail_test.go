@@ -58,6 +58,15 @@ func TestMockCheckDetail(t *testing.T) {
 	require.Equal(t, "B", cd.ArchiveTypeIndicator)
 }
 
+func TestCheckDetail__badPayorCheckDigit(t *testing.T) {
+	cd := mockCheckDetail()
+	cd.PayorBankCheckDigit = "9"
+	require.Error(t, cd.Validate())
+
+	cd.PayorBankCheckDigit = "2"
+	require.NoError(t, cd.Validate())
+}
+
 // TestParseCheckDetail validates parsing a CheckDetail
 func TestParseCheckDetail(t *testing.T) {
 	var line = "25      123456789 031300012             555888100001000001              GD1Y030B"

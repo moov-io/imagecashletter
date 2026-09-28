@@ -319,6 +319,11 @@ func (cd *CheckDetail) fieldInclusion() error {
 			Value: cd.PayorBankCheckDigit,
 			Msg:   msgFieldInclusion + ", did you use CheckDetail()?"}
 	}
+	if err := cd.routingCheckDigit(cd.PayorBankRoutingNumberField(), cd.PayorBankCheckDigit); err != nil {
+		return &FieldError{FieldName: "PayorBankCheckDigit",
+			Value: cd.PayorBankCheckDigit,
+			Msg:   err.Error()}
+	}
 	if cd.EceInstitutionItemSequenceNumberField() == "               " {
 		return &FieldError{FieldName: "EceInstitutionItemSequenceNumber",
 			Value: cd.EceInstitutionItemSequenceNumber,

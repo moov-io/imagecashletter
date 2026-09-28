@@ -863,3 +863,26 @@ func (v *validator) isNumeric(s string) error {
 	}
 	return nil
 }
+
+// routingCheckDigit checks the ABA mod-10 digit for an 8-digit routing number.
+func (v *validator) routingCheckDigit(routing, checkDigit string) error {
+	if len(routing) != 8 || len(checkDigit) != 1 || checkDigit[0] < '0' || checkDigit[0] > '9' {
+		return errors.New("invalid routing number check digit")
+	}
+
+	weights := [8]int{3, 7, 1, 3, 7, 1, 3, 7}
+	sum := 0
+	for i := 0; i < 8; i++ {
+		if routing[i] < '0' || routing[i] > '9' {
+			return errors.New("invalid routing number check digit")
+		}
+		sum += int(routing[i]-'0') * weights[i]
+	}
+
+	expected := (10 - (sum % 10)) % 10
+	got := int(checkDigit[0] - '0')
+	if got != expected {
+		return fmt.Errorf("routing number checksum mismatch: expected %d but got %d", expected, got)
+	}
+	return nil
+}
