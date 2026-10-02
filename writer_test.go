@@ -271,16 +271,11 @@ func TestICLWrite_EbcdicEncodingOption(t *testing.T) {
 	require.Equal(t, fileBytes, b.Bytes())
 }
 
-func TestWriter_CollateErr(t *testing.T) {
+func TestWriter_ImageViewValidationNoError(t *testing.T) {
 	cd := &CheckDetail{
-		// Create a CheckDetail without a corresponding ImageData or ImageViewAnalysis
-		// so when we attempt to collate them it doesn't crash.
 		ImageViewDetail: []ImageViewDetail{
 			mockImageViewDetail(),
-			mockImageViewDetail(),
 		},
-		// To trigger the crash this issue fixes we need two ImageViewDetails, and one ImageData.
-		// Having one ImageViewAnalysis would work as well
 		ImageViewData: []ImageViewData{
 			mockImageViewData(),
 		},
@@ -291,5 +286,51 @@ func TestWriter_CollateErr(t *testing.T) {
 
 	var buf bytes.Buffer
 	w := NewWriter(&buf)
-	require.ErrorContains(t, w.writeCheckImageView(cd), "ImageViewData does not match Image View Detail count of 1")
+
+	err := w.writeCheckImageView(cd)
+	// should not be an error in this case
+	require.NoError(t, err)
+
+}
+
+func TestWriter_ImageViewValidationDataMismatch(t *testing.T) {
+	cd := &CheckDetail{
+		ImageViewDetail: []ImageViewDetail{
+			mockImageViewDetail(),
+		},
+		// empty imageViewdata parameter
+		ImageViewData: []ImageViewData{},
+		ImageViewAnalysis: []ImageViewAnalysis{
+			mockImageViewAnalysis(),
+		},
+	}
+
+	var buf bytes.Buffer
+	w := NewWriter(&buf)
+
+	err := w.writeCheckImageView(cd)
+	require.Error(t, err)
+
+	require.ErrorContains(t, err, "ImageViewData")
+}
+
+func TestWriter_ImageViewValidationAnalysisMismatch(t *testing.T) {
+	cd := &CheckDetail{
+		ImageViewDetail: []ImageViewDetail{
+			mockImageViewDetail(),
+		},
+		ImageViewData: []ImageViewData{
+			mockImageViewData(),
+		},
+		// empty imageViewAnalysis parameter
+		ImageViewAnalysis: []ImageViewAnalysis{},
+	}
+
+	var buf bytes.Buffer
+	w := NewWriter(&buf)
+
+	err := w.writeCheckImageView(cd)
+	require.Error(t, err)
+
+	require.ErrorContains(t, err, "ImageViewAnalysis")
 }
