@@ -239,6 +239,14 @@ func TestICLWriteRoutingNumber(t *testing.T) {
 	_, err := r.Read()
 	require.NoError(t, err)
 	require.NoError(t, r.File.Validate())
+
+	// The parsed RoutingNumberSummary should keep the values that were written
+	summaries := r.File.CashLetters[0].GetRoutingNumberSummary()
+	require.Len(t, summaries, 1)
+	require.Equal(t, rns.CashLetterRoutingNumber, summaries[0].CashLetterRoutingNumber)
+	require.Equal(t, rns.RoutingNumberTotalAmount, summaries[0].RoutingNumberTotalAmount)
+	require.Equal(t, rns.RoutingNumberItemCount, summaries[0].RoutingNumberItemCount)
+	require.Equal(t, rns.String(), summaries[0].String())
 }
 
 func TestICLWrite_VariableLengthOption(t *testing.T) {

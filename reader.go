@@ -939,6 +939,7 @@ func (r *Reader) parseRoutingNumberSummary() error {
 			return r.error(err)
 		}
 	}
+	r.addCurrentRoutingNumberSummary(rns)
 	return nil
 }
 
