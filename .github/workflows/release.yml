@@ -101,6 +101,9 @@ jobs:
         gh release upload "$TAG" "$asset" --repo "$REPO" --clobber
 
   webui:
+    permissions:
+      contents: write
+      pull-requests: write
     name: WebUI
     needs: [testing, create_release]
     runs-on: ubuntu-latest
@@ -118,12 +121,42 @@ jobs:
         persist-credentials: false
 
     - name: Switch to master
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REPO: ${{ github.repository }}
       run: |
+        git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
         git fetch origin
         git checkout master
 
+    # persist-credentials is false (zizmor), so origin needs the token like moov-io/ach.
+    # The default-branch ruleset still requires a pull request, and GitHub Actions
+    # cannot be added as a bypass actor on this org, so fall back to opening and
+    # merging a PR when a direct push to master is rejected.
     - name: Distribute
-      run: make dist-webui
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+      run: |
+        set -euo pipefail
+        make build-webui
+        git config user.name "moov-bot"
+        git config user.email "oss@moov.io"
+        git add ./docs/webui/assets/wasm_exec.js ./docs/webui/assets/imagecashletter.wasm
+        if git diff --cached --quiet; then
+          echo "No wasm changes to commit"
+          exit 0
+        fi
+        git commit -m "chore: updating wasm webui [skip ci]"
+        if git push origin HEAD:master; then
+          echo "Pushed wasm to master"
+          exit 0
+        fi
+        echo "Direct push to master was rejected; opening a pull request"
+        branch="chore/wasm-webui-${GITHUB_REF_NAME}"
+        git push origin "HEAD:refs/heads/${branch}"
+        pr_url=$(gh pr create --title "chore: updating wasm webui [skip ci]" --body "Rebuild the WASM webui for ${GITHUB_REF_NAME}." --base master --head "$branch")
+        gh pr merge "$pr_url" --squash --delete-branch --subject "chore: updating wasm webui [skip ci]"
 
   docker:
     name: Docker

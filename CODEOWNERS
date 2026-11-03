@@ -12,3 +12,7 @@ Gemfile.lock
 .github/workflows/**
 .github/workflows/*
 **/.github/workflows/*
+
+# WASM assets are rebuilt by the tagged-release WebUI job.
+docs/webui/assets/**
+docs/webui/assets/*
