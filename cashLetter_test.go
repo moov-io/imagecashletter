@@ -93,8 +93,13 @@ func TestCashLetter_customSequenceNumber(t *testing.T) {
 	returnBundle := NewBundle(returnBundleHeader)
 	rd := mockReturnDetail()
 	rd.SetEceInstitutionItemSequenceNumber(4923)
-	rd.AddendumCount = 2
-	rd.AddReturnDetailAddendumA(mockReturnDetailAddendumA())
+	rd.AddendumCount = 3
+	firstReturnAddendumA := mockReturnDetailAddendumA()
+	firstReturnAddendumA.BOFDItemSequenceNumber = "000000000111222"
+	rd.AddReturnDetailAddendumA(firstReturnAddendumA)
+	secondReturnAddendumA := mockReturnDetailAddendumAWithoutBOFDItemSequenceNumber()
+	secondReturnAddendumA.RecordNumber = 2
+	rd.AddReturnDetailAddendumA(secondReturnAddendumA)
 	rd.AddReturnDetailAddendumD(mockReturnDetailAddendumD())
 	returnBundle.AddReturnDetail(rd)
 
@@ -128,7 +133,9 @@ func TestCashLetter_customSequenceNumber(t *testing.T) {
 	require.Len(t, cl.Bundles[1].Returns, 1)
 	wantReturnSeq := "000000000004923"
 	require.Equal(t, wantReturnSeq, cl.Bundles[1].Returns[0].EceInstitutionItemSequenceNumber)
-	require.Equal(t, wantReturnSeq, cl.Bundles[1].Returns[0].ReturnDetailAddendumA[0].BOFDItemSequenceNumber)
+	require.Len(t, cl.Bundles[1].Returns[0].ReturnDetailAddendumA, 2)
+	require.Equal(t, "000000000111222", cl.Bundles[1].Returns[0].ReturnDetailAddendumA[0].BOFDItemSequenceNumber, "should not have overwritten custom sequence number")
+	require.Equal(t, wantReturnSeq, cl.Bundles[1].Returns[0].ReturnDetailAddendumA[1].BOFDItemSequenceNumber, "should have populated empty sequence number")
 	require.Equal(t, wantReturnSeq, cl.Bundles[1].Returns[0].ReturnDetailAddendumD[0].EndorsingBankItemSequenceNumber)
 }
 
