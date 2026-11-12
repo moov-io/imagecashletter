@@ -14,6 +14,16 @@
       "automerge": true
     },
     {
+      "description": "The docs Gemfile pins jekyll ~> 3.10; disable major updates",
+      "matchPackageNames": [
+        "jekyll"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
       "description": "Automerge GitHub Actions updates (including majors)",
       "matchManagers": [
         "github-actions"
