@@ -14,9 +14,10 @@
       "automerge": true
     },
     {
-      "description": "The docs Gemfile pins jekyll ~> 3.10; disable major updates",
+      "description": "The docs Gemfile pins jekyll ~> 3.10, and bulma-clean-theme 1.x requires jekyll >= 4.3; disable major updates",
       "matchPackageNames": [
-        "jekyll"
+        "jekyll",
+        "bulma-clean-theme"
       ],
       "matchUpdateTypes": [
         "major"
