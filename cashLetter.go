@@ -224,7 +224,9 @@ func (cl *CashLetter) build() error {
 
 			// Set Addenda SequenceNumber and RecordNumber
 			for i := range rd.ReturnDetailAddendumA {
-				rd.ReturnDetailAddendumA[i].SetBOFDItemSequenceNumber(rdSequenceNumber)
+				if rd.ReturnDetailAddendumA[i].BOFDItemSequenceNumber == "" {
+					rd.ReturnDetailAddendumA[i].SetBOFDItemSequenceNumber(rdSequenceNumber)
+				}
 				rd.ReturnDetailAddendumA[i].RecordNumber = rdAddendumARecordNumber
 				rdAddendumARecordNumber++
 				if rdAddendumARecordNumber > 9 {
