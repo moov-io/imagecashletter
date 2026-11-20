@@ -232,10 +232,11 @@ ImageCashLetter's file handling behaviors can be modified to accommodate your sp
 The following options are currently supported:
 | Option | Description |
 |-----|-----|
-| `ReadVariableLineLengthOption` | Allows Reader to split ICL files based on the Inserted Length Field. |
+| `ReadVariableLineLengthOption` | Allows Reader to split ICL files based on the Inserted Length Field. The 4-byte length prefix is big-endian (Motorola byte order), which is the Federal Reserve default. |
+| `ReadLittleEndianVariableLengthOption` | Same as `ReadVariableLineLengthOption`, but the length prefix is little-endian (Intel byte order). Use this for X9.37 files produced by JHA teller systems on Windows. Do not combine it with `ReadVariableLineLengthOption`. |
 | `ReadEbcdicEncodingOption` | Allows Reader to decode scanned lines from EBCDIC to UTF-8. |
 | `ReadValidateOpts` | Allows skipping validation checks for archived or non-compliant ICL files via ValidateOpts (e.g. SkipAll). Use `file.SetValidation(opts)` after read if needed for later Validate/Create calls. |
-| `WriteVariableLineLengthOption` | Instructs the Writer to begin each record with the appropriate Inserted Length Field. |
+| `WriteVariableLineLengthOption` | Instructs the Writer to begin each record with a big-endian Inserted Length Field. The writer has no little-endian counterpart. |
 | `WriteEbcdicEncodingOption` | Allows Writer to write file in EBCDIC. |
 
 
