@@ -8,6 +8,7 @@ import (
 	"bufio"
 	"bytes"
 	"crypto/rand"
+	"encoding/binary"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -63,6 +64,52 @@ func TestICL_ReadVariableLineLengthOption(t *testing.T) {
 	}
 
 	// ensure we have a validated file structure
+	require.NoError(t, iclFile.Validate())
+
+	actual, err := json.MarshalIndent(iclFile, "", "    ")
+	require.NoError(t, err)
+
+	expected, err := os.ReadFile(filepath.Join("test", "testdata", "valid-x937.json"))
+	require.NoError(t, err)
+
+	exp := strings.ReplaceAll(string(expected), "\r\n", "\n")
+	act := strings.ReplaceAll(string(actual), "\r\n", "\n")
+	require.Equal(t, exp, act)
+}
+
+// convertBigEndianToLittleEndian rewrites the 4-byte record-length prefixes of an
+// X937 variable-length file from big-endian to little-endian byte order.
+func convertBigEndianToLittleEndian(data []byte) []byte {
+	result := make([]byte, len(data))
+	pos := 0
+	for pos+4 <= len(data) {
+		size := binary.BigEndian.Uint32(data[pos : pos+4])
+		binary.LittleEndian.PutUint32(result[pos:pos+4], size)
+		recordEnd := pos + 4 + int(size)
+		if recordEnd > len(data) {
+			copy(result[pos+4:], data[pos+4:])
+			break
+		}
+		copy(result[pos+4:recordEnd], data[pos+4:recordEnd])
+		pos = recordEnd
+	}
+	return result
+}
+
+func TestICL_ReadLittleEndianVariableLengthOption(t *testing.T) {
+	// Build a little-endian version of the EBCDIC fixture on the fly so we
+	// don't need a separate test file.
+	bigEndianData, err := os.ReadFile(filepath.Join("test", "testdata", "valid-ebcdic.x937"))
+	require.NoError(t, err)
+
+	littleEndianData := convertBigEndianToLittleEndian(bigEndianData)
+
+	r := NewReader(bytes.NewReader(littleEndianData),
+		ReadLittleEndianVariableLengthOption(),
+		ReadEbcdicEncodingOption(),
+	)
+	iclFile, err := r.Read()
+	require.NoError(t, err)
 	require.NoError(t, iclFile.Validate())
 
 	actual, err := json.MarshalIndent(iclFile, "", "    ")
