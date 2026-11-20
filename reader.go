@@ -150,6 +150,32 @@ func ReadVariableLineLengthOption() ReaderOption {
 	}
 }
 
+// ReadLittleEndianVariableLengthOption is like ReadVariableLineLengthOption but reads
+// the 4-byte record-length prefix as little-endian (Intel byte order) instead of big-endian.
+// Use this for X937 files produced by JHA teller systems on Windows.
+func ReadLittleEndianVariableLengthOption() ReaderOption {
+	scanLittleEndianLines := func(data []byte, atEOF bool) (advance int, token []byte, err error) {
+		if atEOF && len(data) == 0 {
+			return 0, nil, nil
+		} else if len(data) < 4 && atEOF {
+			return 0, nil, io.ErrUnexpectedEOF
+		} else if len(data) < 4 {
+			return 0, nil, nil
+		}
+		dataLen := int(binary.LittleEndian.Uint32(data[0:4]))
+		lineLen := 4 + dataLen
+		if lineLen <= len(data) {
+			return lineLen, data[4:lineLen], nil
+		} else if lineLen > len(data) && atEOF {
+			return 0, nil, io.ErrUnexpectedEOF
+		}
+		return 0, nil, nil
+	}
+	return func(r *Reader) {
+		r.scanner.Split(scanLittleEndianLines)
+	}
+}
+
 // ReadEbcdicEncodingOption allows Reader to decode scanned lines from EBCDIC to UTF-8
 func ReadEbcdicEncodingOption() ReaderOption {
 	return func(r *Reader) {
