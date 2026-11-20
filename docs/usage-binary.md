@@ -11,10 +11,10 @@ menubar: docs-menu
 Download the [latest Moov ImageCashLetter server release](https://github.com/moov-io/imagecashletter/releases) for your operating system and run it from a terminal.
 
 ```sh
-$ ./imagecashletter-darwin-amd64
-ts=2019-06-20T23:23:44.870717Z caller=main.go:75 startup="Starting imagecashletter server version v0.2.0"
-ts=2019-06-20T23:23:44.871623Z caller=main.go:135 transport=HTTP addr=:8083
-ts=2019-06-20T23:23:44.871692Z caller=main.go:125 admin="listening on :9093"
+$ ./imagecashletter-linux-amd64
+ts=2026-11-14T16:00:06Z msg="Starting moov-io/imagecashletter server version v0.17.1" level=info package=main
+ts=2026-11-14T16:00:06Z msg="admin server listening on [::]:9093" level=info package=main
+ts=2026-11-14T16:00:06Z msg="binding to :8083 for HTTP server" level=info package=main
 ```
 
 ## Connecting to Moov ImageCashLetter

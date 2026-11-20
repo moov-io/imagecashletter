@@ -172,14 +172,16 @@ func main() {
 		imagecashletter.WriteEbcdicEncodingOption(),
 	}
 
-	fd, err := os.Create(filepath.Join("examples", "imagecashletter-write", "iclFile.x937"))
+	fd, err := os.CreateTemp("", "iclFile-*.x937")
 	if err != nil {
 		log.Fatalf("could not create output file: %v\n", err)
 	}
+	defer fd.Close()
 
 	w := imagecashletter.NewWriter(fd, opts...)
 	if err = w.Write(file); err != nil {
 		log.Fatalf("Unexpected error: %s\n", err)
 	}
 	w.Flush()
+	fmt.Printf("wrote Image Cash Letter file to %s\n", fd.Name())
 }
