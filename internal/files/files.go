@@ -335,7 +335,7 @@ func deleteFile(logger log.Logger, repo storage.ICLFileRepository) http.HandlerF
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(`{"error": null}`)
+		json.NewEncoder(w).Encode(map[string]interface{}{"error": nil})
 	}
 }
 
@@ -422,7 +422,7 @@ func validateFile(logger log.Logger, repo storage.ICLFileRepository) http.Handle
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(`{"error": null}`)
+		json.NewEncoder(w).Encode(map[string]interface{}{"error": nil})
 	}
 }
 
@@ -527,6 +527,6 @@ func removeCashLetterFromFile(logger log.Logger, repo storage.ICLFileRepository)
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(`{"error": null}`)
+		json.NewEncoder(w).Encode(map[string]interface{}{"error": nil})
 	}
 }
