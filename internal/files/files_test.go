@@ -297,6 +297,7 @@ func TestFiles_deleteFile(t *testing.T) {
 		resp := env.deleteFile(t, f1)
 
 		require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+		assert.JSONEq(t, `{"error": null}`, resp.Body.String())
 
 		listResp, files := env.listFiles(t)
 		require.Equal(t, http.StatusOK, listResp.Code, listResp.Body)
@@ -365,7 +366,7 @@ func TestFiles_validateFile(t *testing.T) {
 		resp := env.validateFile(t, f.ID)
 
 		require.Equal(t, http.StatusOK, resp.Code, resp.Body)
-		assert.Contains(t, resp.Body.String(), `"{\"error\": null}"`)
+		assert.JSONEq(t, `{"error": null}`, resp.Body.String())
 	})
 
 	t.Run("invalid file", func(t *testing.T) {
@@ -442,6 +443,7 @@ func TestFiles_removeCashLetterFromFile(t *testing.T) {
 		resp := env.removeCashLetter(t, f.ID, cashLetterId)
 
 		require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+		assert.JSONEq(t, `{"error": null}`, resp.Body.String())
 		file, err := env.repo.GetFile(f.ID)
 		require.NoError(t, err)
 		require.Len(t, file.CashLetters, 1)
