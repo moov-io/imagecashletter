@@ -297,19 +297,17 @@ func (w *Writer) writeReturnImageView(rd *ReturnDetail) error {
 
 // writeImageView writes ImageViews (Detail, Data, Analysis) in the order expected by the FRB
 func (w *Writer) writeImageView(ivDetail []ImageViewDetail, ivData []ImageViewData, ivAnalysis []ImageViewAnalysis) error {
+	// get num of ImageViewDeails
+	detailCount := len(ivDetail)
 
-	// TODO: Add validator to ensure that each imageViewDetail has a corresponding imageViewData and imageViewAnalysis
-	// for now enforce that all images have data and analysis or no images have data and analysis
-
-	if len(ivData) > 0 && len(ivData) != len(ivDetail) {
-		// should be same number of imageViewData as imageViewDetail
-		msg := fmt.Sprintf(msgBundleImageDetailCount, len(ivData))
+	// num of details must match num of data
+	if detailCount != len(ivData) {
+msg := fmt.Sprintf("ImageViewData count (%d) does not match ImageViewDetail count (%d)", len(ivData), detailCount)
 		return &BundleError{FieldName: "ImageViewData", Msg: msg}
 	}
-
-	if len(ivAnalysis) > 0 && len(ivAnalysis) != len(ivDetail) {
-		// should same number of imageViewAnalysis and imageViewDetail
-		msg := fmt.Sprintf(msgBundleImageDetailCount, len(ivAnalysis))
+	// num of details must match num of analysis
+	if detailCount != len(ivAnalysis) {
+msg := fmt.Sprintf("ImageViewAnalysis count (%d) does not match ImageViewDetail count (%d)", len(ivAnalysis), detailCount)
 		return &BundleError{FieldName: "ImageViewAnalysis", Msg: msg}
 	}
 
@@ -318,17 +316,11 @@ func (w *Writer) writeImageView(ivDetail []ImageViewDetail, ivData []ImageViewDa
 		if err := w.writeLine(&ivDetail[i]); err != nil {
 			return err
 		}
-		if len(ivData) > 0 && len(ivData) >= i-1 {
-			ivData := ivData[i]
-			if err := w.writeLine(&ivData); err != nil {
-				return err
-			}
+		if err := w.writeLine(&ivData[i]); err != nil {
+			return err
 		}
-		if len(ivAnalysis) > 0 && len(ivAnalysis) >= i-1 {
-			ivAnalysis := ivAnalysis[i]
-			if err := w.writeLine(&ivAnalysis); err != nil {
-				return err
-			}
+		if err := w.writeLine(&ivAnalysis[i]); err != nil {
+			return err
 		}
 	}
 
